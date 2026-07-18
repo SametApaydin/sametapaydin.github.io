@@ -1,0 +1,306 @@
+<meta name="robots" content="noindex, nofollow">
+<title>Bilateral-Data Visualization Catalog — Design Reference for IPM</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb;
+    --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --border: rgba(11,11,11,0.10); --accent: #2a78d6; --grid: #e1e0d9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19;
+      --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+      --border: rgba(255,255,255,0.10); --accent: #3987e5; --grid: #2c2c2a;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19;
+    --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --border: rgba(255,255,255,0.10); --accent: #3987e5; --grid: #2c2c2a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.6; font-size: 15px;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 40px 20px 80px; }
+  h1 { font-size: 26px; font-weight: 700; margin: 0 0 8px; }
+  .kicker { font-size: 12px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  .lede { font-size: 16px; color: var(--ink-2); margin: 0 0 6px; }
+  .meta { font-size: 12.5px; color: var(--muted); margin-bottom: 36px; }
+  h2 { font-size: 19px; font-weight: 650; margin: 44px 0 6px; padding-top: 20px; border-top: 1px solid var(--border); }
+  h2 .num { color: var(--accent); margin-right: 8px; }
+  p { margin: 10px 0; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 20px; margin: 18px 0;
+  }
+  .card h3 { margin: 0 0 2px; font-size: 15.5px; }
+  .card h3 a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--border); }
+  .card h3 a:hover { border-color: var(--accent); }
+  .card .who { font-size: 12.5px; color: var(--muted); margin-bottom: 10px; }
+  .tag {
+    display: inline-block; font-size: 11px; font-weight: 650; letter-spacing: .03em;
+    color: var(--accent); border: 1px solid var(--border); border-radius: 999px;
+    padding: 2px 10px; margin: 0 6px 8px 0; text-transform: uppercase;
+  }
+  .borrow {
+    margin-top: 10px; padding: 10px 14px; border-left: 3px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
+    border-radius: 0 8px 8px 0; font-size: 14px;
+  }
+  .borrow strong { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 16px 0; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-size: 11.5px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
+  .toc { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; font-size: 14px; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc ol { margin: 6px 0 0; padding-left: 22px; }
+  .toc li { margin: 3px 0; }
+  code { background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px; font-size: 13px; }
+  .verdict { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; margin-top: 18px; }
+  .verdict h3 { margin-top: 0; }
+</style>
+
+<div class="wrap">
+  <div class="kicker">Design reference · IPM Türkiye dependency project</div>
+  <h1>How the world visualizes bilateral data</h1>
+  <p class="lede">A survey of fifteen well-known interactive projects that visualize dyadic data —
+  trade, migration, energy, influence — cataloged by visualization paradigm, with notes on what each
+  contributes to a Türkiye trade-dependence (HHI) dashboard.</p>
+  <p class="meta">Prepared July 2026 · companion to the three interactive prototypes built on synthetic dependency data</p>
+
+  <div class="toc">
+    <strong>Contents</strong>
+    <ol>
+      <li><a href="#relational">Relational paradigm — chord, radial, slope</a> (5 projects)</li>
+      <li><a href="#geographic">Geographic paradigm — flow maps</a> (4 projects)</li>
+      <li><a href="#matrix">Matrix &amp; decomposition paradigm</a> (3 projects)</li>
+      <li><a href="#statistical">Statistical-chart paradigm — scatter, treemap, rankings</a> (3 projects)</li>
+      <li><a href="#synthesis">Synthesis: which paradigm answers which question</a></li>
+    </ol>
+  </div>
+
+  <h2 id="relational"><span class="num">1</span>Relational paradigm — the dyad as a drawn connection</h2>
+  <p>These projects treat each country-pair as a visible object: a ribbon, an arc, a line. Their
+  strength is <em>who-to-whom at a glance</em>; their cost is clutter past ~30 entities, which every
+  good example solves by aggressive grouping (regions) or top-N filtering.</p>
+
+  <div class="card">
+    <h3><a href="https://download.gsb.bund.de/BIB/global_flow/VID%20WP%20Visualising%20Migration%20Flow%20Data%20with%20Circular%20Plots.pdf">Global Migration Flows — circular plot</a></h3>
+    <div class="who">Guy Abel, Nicola Sander, Ramon Bauer · Vienna Institute of Demography / Wittgenstein Centre · featured in <em>Science</em> (2014) and <em>The Economist</em></div>
+    <span class="tag">Chord diagram</span><span class="tag">Directional ribbons</span><span class="tag">Time periods</span>
+    <p>The most cited bilateral-flow visualization in academia. World regions sit on a circle; migration
+    between each pair is a ribbon whose width at each end encodes directional volume. Direction is
+    read from a gap convention (the ribbon detaches from its origin arc). Five-year period stepping
+    turns it into a story of shifting corridors.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> The arc-with-ribbons form is the single best
+    "one picture of the whole dependency structure" — Türkiye's arc vs. all partner arcs, ribbon width =
+    trade value, and (their innovation) asymmetric ribbon ends for the import/export mirror.</div>
+  </div>
+
+  <div class="card">
+    <h3><a href="https://blogs.worldbank.org/en/opendata/interactive-chord-diagram-visualize-trade">World Bank — bilateral trade chord</a></h3>
+    <div class="who">World Bank Open Data blog · d3.js</div>
+    <span class="tag">Chord diagram</span><span class="tag">Imbalance encoding</span>
+    <p>One country vs. top partners plus "others." Its clever detail: the connecting band takes the
+    color of the country that imports more, so trade <em>imbalance direction</em> is visible without
+    reading a single number. Hover reveals exports/imports/balance per dyad.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> Color-the-ribbon-by-dominant-side is a perfect
+    fit for a dependence index: paint each dyad by which side holds the concentration risk.</div>
+  </div>
+
+  <div class="card">
+    <h3><a href="https://peoplemov.in">peoplemovin</a></h3>
+    <div class="who">Carlo Zapponi (2011) · featured in multiple dataviz books</div>
+    <span class="tag">Slopegraph / flow columns</span>
+    <p>Two columns — origins left, destinations right — joined by flowing bands. Click a country and
+    only its flows remain, everything else fades. Proof that a bilateral matrix doesn't need a circle
+    or a map: two sorted lists and bands can be clearer, especially on mobile.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> The click-to-isolate interaction, and the
+    two-column form as the accessible fallback for the chord (same data, screen-reader-friendlier).</div>
+  </div>
+
+  <div class="card">
+    <h3><a href="https://www.therefugeeproject.org">The Refugee Project</a></h3>
+    <div class="who">Hyperakt &amp; Ekene Ijeoma (2014) · UNHCR data</div>
+    <span class="tag">Radial map</span><span class="tag">Temporal narrative</span>
+    <p>Refugee flows as radial bursts from each origin country on a world map, with a year scrubber and
+    embedded historical annotations explaining <em>why</em> each spike happened. The gold standard for
+    pairing dyadic data with narrative context.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> Annotated time scrubbing — your chart pack's
+    "2022: sanctions begin" callouts belong <em>inside</em> the interactive, not only in the PDF.</div>
+  </div>
+
+  <div class="card">
+    <h3><a href="https://oec.world/en">Observatory of Economic Complexity — rings &amp; profiles</a></h3>
+    <div class="who">César Hidalgo / Datawheel · MIT Media Lab origin</div>
+    <span class="tag">Rings</span><span class="tag">Linked views</span>
+    <p>Beyond its treemaps, the OEC's country-pair profile pages chain a dozen chart types off one
+    dyad selection (Türkiye→Germany: what, how much, since when, vs. whom). The lesson is architectural:
+    one <em>selection state</em>, many synchronized views.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> The dyad-profile page pattern: select
+    Türkiye–China once, and every panel (treemap, time series, rank) re-scopes to that pair.</div>
+  </div>
+
+  <h2 id="geographic"><span class="num">2</span>Geographic paradigm — the dyad as a path on a map</h2>
+  <p>Flow maps put the connection in physical space. They win when geography <em>is</em> the story
+  (chokepoints, neighborhoods, regions); they lose when it isn't — long thin arrows to distant partners
+  dominate the ink while the analytically important number (concentration) hides in arrow width.</p>
+
+  <div class="card">
+    <h3><a href="https://resourcetrade.earth">resourcetrade.earth</a></h3>
+    <div class="who">Chatham House · Applied Works · UN Comtrade-based CHRTD database (200+ countries, 1,350 resources)</div>
+    <span class="tag">Arc flow map</span><span class="tag">Sankey</span><span class="tag">Faceted filters</span>
+    <p>The closest existing product to your project: bilateral <em>resource</em> trade with year,
+    resource-category and country filters, curved arcs on a world map plus a sankey breakdown, and a
+    mirrored exporter/importer perspective. Also notable for surfacing its data-cleaning methodology
+    (mirror reconciliation, outlier flagging) — the same BACI-style problems your index faces.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> Almost everything: the filter grammar
+    (year × category × partner), the map+sankey pairing, and the honesty about reconciliation. This is
+    the reference product for the flow-map prototype.</div>
+  </div>
+
+  <div class="card">
+    <h3><a href="https://www.flowmap.blue">FlowmapBlue</a></h3>
+    <div class="who">Ilya Boyandin · deck.gl / Mapbox · used by MTA, Eurocontrol, AECOM</div>
+    <span class="tag">OD flow map</span><span class="tag">Clustering</span><span class="tag">Animation</span>
+    <p>A general-purpose origin-destination renderer: feed it a locations sheet and a flows sheet, get
+    an interactive flow map with automatic clustering at low zoom, directional animation, and
+    time filtering. Its clustering solves the classic flow-map hairball.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> Cluster-partners-by-region at rest, expand on
+    zoom/click; animate direction subtly (dashes drifting) rather than with arrowheads.</div>
+  </div>
+
+  <div class="card">
+    <h3><a href="https://shipmap.org">Shipmap.org</a></h3>
+    <div class="who">Kiln (Duncan Clark &amp; Robin Houston) · UCL Energy Institute · multiple awards</div>
+    <span class="tag">Animated particles</span><span class="tag">Ambient narrative</span>
+    <p>A year of global merchant shipping as moving dots with a narrated tour. Not an analysis tool —
+    an argument that trade <em>physically moves</em>, made unforgettable. The Bosphorus and the canals
+    (your chokepoint stories) are visibly the densest pixels on Earth.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> Restraint version: a light particle drift along
+    Türkiye's top-10 corridors as the flow map's idle state — atmosphere, not analysis.</div>
+  </div>
+
+  <div class="card">
+    <h3><a href="https://app.electricitymaps.com/map">Electricity Maps</a></h3>
+    <div class="who">Electricity Maps ApS (ex-Tomorrow) · live grid data</div>
+    <span class="tag">Choropleth + flow arrows</span><span class="tag">Live dyads</span>
+    <p>Countries shaded by carbon intensity; cross-border interconnector flows drawn as animated arrows
+    whose direction and size update live. The best example of layering a <em>country attribute</em>
+    (choropleth) under <em>dyadic flows</em> (arrows) without either drowning the other.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> The two-layer trick: shade partners by
+    dependency index (attribute), draw flows on top (dyads) — exactly the import-HHI map you need.</div>
+  </div>
+
+  <h2 id="matrix"><span class="num">3</span>Matrix &amp; decomposition paradigm — the dyad as a cell</h2>
+  <p>The matrix is the least glamorous and most analytically honest form: every dyad×sector gets equal
+  space, nothing occludes, and sorting <em>is</em> the analysis. Rare in public dashboards precisely
+  because it rewards expert readers — which is who IPM's audience is.</p>
+
+  <div class="card">
+    <h3><a href="https://power.lowyinstitute.org">Lowy Institute — Asia Power Index</a></h3>
+    <div class="who">Lowy Institute (annual since 2018)</div>
+    <span class="tag">Indicator matrix</span><span class="tag">Weighted index</span><span class="tag">Adjustable weights</span>
+    <p>A composite influence index decomposed into 8 resource + 4 influence measures per country, with
+    the killer feature: users can <em>re-weight the index live</em> and watch rankings reshuffle. Total
+    methodological transparency as an interaction, not a PDF appendix.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> Expose the index formula as controls — let a
+    reader toggle the elasticity term (σ) or the EU-as-one-supplier assumption and watch Türkiye's
+    number move. That's your chart-pack story 13 as an interaction.</div>
+  </div>
+
+  <div class="card">
+    <h3><a href="https://github.com/owid/owid-grapher">Our World in Data — Grapher</a></h3>
+    <div class="who">Global Change Data Lab · open source</div>
+    <span class="tag">Small multiples</span><span class="tag">Chart/map/table triad</span>
+    <p>Every OWID chart ships as chart + map + table views of the same data with a country picker and
+    year scrubber — a uniform grammar across thousands of datasets. Their heatmap/matrix views handle
+    entity×year grids; their design system proves consistency beats novelty for institutional
+    publishing.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> The chart/map/table triad as a contract for
+    every visualization (we already follow it), and their downloadable-data footer on every chart.</div>
+  </div>
+
+  <div class="card">
+    <h3><a href="https://oec.world/en/profile/bilateral-country/tur/partner/chn">OEC / UN Comtrade Labs — bilateral matrices</a></h3>
+    <div class="who">Datawheel · UN Statistics Division experiments</div>
+    <span class="tag">Adjacency matrix</span><span class="tag">Reorderable</span>
+    <p>Product×partner matrices with sortable rows/columns and cell shading by value or growth. The
+    reorderable matrix (Bertin's idea, 1967) remains the only form where a 50×40 dyadic dataset is
+    fully readable — every other paradigm samples or aggregates it.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> Sector×partner HHI-contribution cells with
+    click-to-sort on any row/column, plus marginal bar totals — the "concentration fingerprint."</div>
+  </div>
+
+  <h2 id="statistical"><span class="num">4</span>Statistical-chart paradigm — the dyad as a data point</h2>
+  <p>Sometimes the honest chart is an ordinary one. These projects visualize dyadic or panel data with
+  scatter, treemap, and ranking forms — trading the visible connection for statistical clarity.</p>
+
+  <div class="card">
+    <h3><a href="https://www.gapminder.org/tools/">Gapminder Tools</a></h3>
+    <div class="who">Hans Rosling / Gapminder Foundation</div>
+    <span class="tag">Animated scatter</span><span class="tag">Trails</span>
+    <p>The animated bubble chart that taught the world to watch panel data move. Its underrated
+    features: per-country <em>trails</em> that turn animation into a drawn trajectory, and the
+    play/scrub contract every time-slider since has copied.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> Trails. Your "risk migrated, not grew" headline
+    is literally a trajectory: plot each partner as (trade share, concentration contribution) and let
+    China's 30-year trail draw the migration.</div>
+  </div>
+
+  <div class="card">
+    <h3><a href="https://atlas.hks.harvard.edu">Atlas of Economic Complexity</a></h3>
+    <div class="who">Harvard Growth Lab (already replicated in our Trade Explorer)</div>
+    <span class="tag">Treemap</span><span class="tag">Product space</span><span class="tag">Rankings</span>
+    <p>Covered extensively in this project already; listed here for completeness as the origin of the
+    treemap-plus-product-space grammar and the direct ancestor of your chart pack's aesthetics.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> Already borrowed — see the Trade Explorer
+    prototype.</div>
+  </div>
+
+  <div class="card">
+    <h3><a href="https://www.bruegel.org/dataset/eu-trade-dependencies">Bruegel / ECB-style dependency monitors</a></h3>
+    <div class="who">European think-tank dashboards (Bruegel datasets, ECB dependency papers)</div>
+    <span class="tag">Ranked bars</span><span class="tag">Threshold lists</span>
+    <p>The policy-shop house style: "products where supplier X exceeds N% of imports" as ranked,
+    filterable bar lists — your chart-pack stories 12 and 14 are this form. Less a visualization
+    innovation than proof that <em>threshold + ranked bars</em> is what policymakers actually cite.</p>
+    <div class="borrow"><strong>Borrow for IPM</strong> A "chokepoint screener" table view: filter
+    dyad×sector cells by share threshold, sort by value — the citable output format.</div>
+  </div>
+
+  <h2 id="synthesis"><span class="num">5</span>Synthesis — which paradigm answers which question</h2>
+
+  <table>
+    <thead><tr><th>Question about Türkiye's dependence</th><th>Best paradigm</th><th>Exemplar</th><th>Prototype</th></tr></thead>
+    <tbody>
+      <tr><td>Who holds the risk, in one picture? How asymmetric is each relationship?</td><td>Chord / circular ribbons</td><td>Abel-Sander, World Bank chord</td><td><strong>A — Dependency Wheel</strong></td></tr>
+      <tr><td>Where is the risk? Does geography (neighborhood, chokepoints) explain it?</td><td>Flow map, attribute + flows layered</td><td>resourcetrade.earth, Electricity Maps</td><td><strong>B — Flow Atlas</strong></td></tr>
+      <tr><td>Which sector×partner cells drive the index? What exactly should procurement fix?</td><td>Reorderable matrix + decomposition</td><td>Lowy, Bertin matrices, Bruegel screeners</td><td><strong>C — Risk Matrix</strong></td></tr>
+      <tr><td>How did it evolve? (already covered)</td><td>Animated scatter, treemap, rankings</td><td>Gapminder, Atlas</td><td>Trade Explorer (built earlier)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="verdict">
+    <h3>Design verdict for the three prototypes</h3>
+    <p><strong>A — Dependency Wheel</strong> (relational): Türkiye-centered chord with partner arcs,
+    ribbon width = trade value, ribbon color = who-depends-on-whom, import/export mirror toggle,
+    30-year scrubber with annotated events, click-to-isolate a dyad.</p>
+    <p><strong>B — Flow Atlas</strong> (geographic): tile-free real-geometry world map (simplified
+    coastlines), partners shaded by dependency contribution, curved flows on top, sector filter,
+    both directions, cluster-by-region at rest.</p>
+    <p><strong>C — Risk Matrix</strong> (analytical): sector × partner HHI-contribution heatmap,
+    sortable both axes, marginal totals, threshold screener table, and a live "what counts as one
+    supplier" toggle (EU-27 merged vs. separate) à la Lowy's re-weighting.</p>
+    <p style="color:var(--muted); font-size:13px; margin-bottom:0">All three run on the same synthetic
+    dependency dataset (44 partners × 16 sectors × 30 years × imports/exports, seeded deterministic),
+    so they can be compared fairly — and swapped to the real BACI-derived index without changing the
+    rendering layer.</p>
+  </div>
+</div>

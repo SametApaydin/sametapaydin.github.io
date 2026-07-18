@@ -1,0 +1,165 @@
+<meta name="robots" content="noindex, nofollow">
+<title>IPM Dashboard Project — All Prototypes</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb;
+    --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --border: rgba(11,11,11,0.10); --accent: #2a78d6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19;
+      --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+      --border: rgba(255,255,255,0.10); --accent: #3987e5;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19;
+    --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --border: rgba(255,255,255,0.10); --accent: #3987e5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 44px 20px 80px; }
+  .kicker { font-size: 12px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  h1 { font-size: 26px; font-weight: 700; margin: 0 0 8px; }
+  .lede { font-size: 15px; color: var(--ink-2); margin: 0 0 6px; max-width: 720px; }
+  .meta { font-size: 12.5px; color: var(--muted); margin-bottom: 8px; }
+  .note-pill {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px;
+    color: var(--muted); border: 1px solid var(--border); border-radius: 999px;
+    padding: 4px 12px; margin-bottom: 30px;
+  }
+
+  h2 { font-size: 15px; font-weight: 650; margin: 34px 0 4px; }
+  .sec-sub { font-size: 12.5px; color: var(--muted); margin: 0 0 14px; }
+
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+
+  a.card {
+    display: block; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px 18px; text-decoration: none; color: var(--ink);
+    transition: border-color .12s ease, transform .12s ease;
+  }
+  a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card .top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .card .emoji { font-size: 24px; flex: none; }
+  .card h3 { font-size: 15.5px; font-weight: 650; margin: 0; }
+  .card .paradigm { font-size: 11px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin-left: auto; text-align: right; }
+  .card p { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
+  .card .screeners { font-size: 11.5px; color: var(--muted); }
+  .card .screeners strong { color: var(--ink-2); font-weight: 600; }
+  .card .open { display: inline-block; margin-top: 10px; font-size: 12.5px; font-weight: 650; color: var(--accent); }
+
+  footer {
+    margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--muted); line-height: 1.65;
+  }
+  footer strong { color: var(--ink-2); }
+</style>
+
+<div class="wrap">
+  <div class="kicker">Project hub · IPM Türkiye trade-dependence dashboards</div>
+  <h1>All prototypes, one page</h1>
+  <p class="lede">Everything built in this project — from the first Atlas replica to the full family of
+    dependency-index prototypes. Each card opens the live interactive artifact.</p>
+  <p class="meta">July 2026 · Sabancı University IPM · all trade values synthetic (seeded, deterministic)</p>
+  <span class="note-pill">● Self-hosted edition — every card opens the page from this same folder</span>
+
+  <h2>Phase 1 — Atlas of Economic Complexity replicas</h2>
+  <p class="sec-sub">How hard is a Growth-Lab-grade visualization? These answer it by rebuilding one from scratch.</p>
+  <div class="grid">
+    <a class="card" href="trade-atlas-demo.html">
+      <div class="top"><span class="emoji">🌳</span><h3>Export Treemap Demo</h3><span class="paradigm">Treemap</span></div>
+      <p>The first prototype: squarified export treemap with drill-down plus a stacked trend view, for fictional countries.</p>
+      <div class="screeners"><strong>Extras:</strong> section drill-down · table view · country switcher</div>
+      <span class="open">Open →</span>
+    </a>
+    <a class="card" href="atlas-dashboard.html">
+      <div class="top"><span class="emoji">🌍</span><h3>Trade Explorer</h3><span class="paradigm">Full dashboard</span></div>
+      <p>The full Atlas explore page replica: treemap, time series, market share, geo map, product-space network, complexity scatter and rankings — seven views, one dashboard.</p>
+      <div class="screeners"><strong>Extras:</strong> year animation · CSV download · product space with RCA · 44 countries</div>
+      <span class="open">Open →</span>
+    </a>
+  </div>
+
+  <h2>Phase 2 — Design research</h2>
+  <p class="sec-sub">What the world's best bilateral-data projects do, and what to borrow.</p>
+  <div class="grid">
+    <a class="card" href="bilateral-viz-catalog.html">
+      <div class="top"><span class="emoji">🧭</span><h3>Bilateral-Viz Catalog</h3><span class="paradigm">Survey</span></div>
+      <p>Fifteen well-known projects — OEC, resourcetrade.earth, Abel–Sander, flowmap.blue, Lowy, Gapminder and more — organized by paradigm, each with a "borrow for IPM" note.</p>
+      <div class="screeners"><strong>Use it as:</strong> the design-reference document for the team</div>
+      <span class="open">Open →</span>
+    </a>
+  </div>
+
+  <h2>Phase 3 — Dependency-index prototypes</h2>
+  <p class="sec-sub">Six paradigms on one synthetic HHI dataset (43 partners × 16 sectors × 30 years × imports/exports).
+    Every artifact ships with screeners — filterable, citable tables in the style of the chokepoint screener.</p>
+  <div class="grid">
+    <a class="card" href="dependency-wheel.html">
+      <div class="top"><span class="emoji">🎡</span><h3>Dependency Wheel</h3><span class="paradigm">Chord</span></div>
+      <p>Türkiye-centered chord diagram — ribbon width is money, color is who-needs-whom-more. Click any partner for its 30-year dyad profile.</p>
+      <div class="screeners"><strong>Screeners:</strong> asymmetry (one-way dependence, ratio threshold)</div>
+      <span class="open">Open →</span>
+    </a>
+    <a class="card" href="flow-atlas.html">
+      <div class="top"><span class="emoji">🗺️</span><h3>Flow Atlas</h3><span class="paradigm">Flow map</span></div>
+      <p>Trade corridors on a real-geography map — node color carries the risk, corridor width the money, dash drift the direction.</p>
+      <div class="screeners"><strong>Screeners:</strong> corridor (share, risk contribution, largest cargo)</div>
+      <span class="open">Open →</span>
+    </a>
+    <a class="card" href="risk-matrix.html">
+      <div class="top"><span class="emoji">🔬</span><h3>Risk Matrix</h3><span class="paradigm">Matrix</span></div>
+      <p>The concentration fingerprint: every sector × partner cell, sortable both ways, with per-sector HHI bars and a live "EU-27 as one supplier" methodology toggle.</p>
+      <div class="screeners"><strong>Screeners:</strong> chokepoint (the original) · EU stress-test KPI</div>
+      <span class="open">Open →</span>
+    </a>
+    <a class="card" href="risk-migration.html">
+      <div class="top"><span class="emoji">🛰️</span><h3>Risk Migration</h3><span class="paradigm">Trails scatter</span></div>
+      <p>Gapminder's trails applied to dependence: every partner in motion across the share × concentration plane, quadrants annotated.</p>
+      <div class="screeners"><strong>Screeners:</strong> danger-quadrant · biggest-movers</div>
+      <span class="open">Open →</span>
+    </a>
+    <a class="card" href="index-anatomy.html">
+      <div class="top"><span class="emoji">🫀</span><h3>Index Anatomy</h3><span class="paradigm">Sankey</span></div>
+      <p>The index formula drawn as plumbing: total → sectors → partners, band color = sector HHI. Dark fat bands are where the index lives.</p>
+      <div class="screeners"><strong>Screeners:</strong> dominant-path · index-anatomy (ranked terms, cumulative %)</div>
+      <span class="open">Open →</span>
+    </a>
+    <a class="card" href="long-rotation.html">
+      <div class="top"><span class="emoji">🎞️</span><h3>The Long Rotation</h3><span class="paradigm">Small multiples</span></div>
+      <p>Sixteen sector panels: risk-contribution lines with dominant-partner ownership strips. Where the strip changes color, the dependence changed hands.</p>
+      <div class="screeners"><strong>Screeners:</strong> rotation (handovers, "rotated east" filter) · risk-shift</div>
+      <span class="open">Open →</span>
+    </a>
+  </div>
+
+  <h2>Phase 4 — The public-facing form</h2>
+  <p class="sec-sub">Same data, narrative genre — for the IPM website's front door rather than the analyst's desk.</p>
+  <div class="grid">
+    <a class="card" href="fourteen-pictures.html">
+      <div class="top"><span class="emoji">📜</span><h3>Fourteen Pictures</h3><span class="paradigm">Scrollytelling</span></div>
+      <p>"The risk didn't grow. It migrated." — seven scroll-driven scenes with one persistent morphing chart, mirroring the real chart pack's stories, ending in an explorable table.</p>
+      <div class="screeners"><strong>Screeners:</strong> explore-the-numbers (dominant cells, any year, both flows)</div>
+      <span class="open">Open →</span>
+    </a>
+  </div>
+
+  <footer>
+    <strong>How these fit together:</strong> Phase 1 proved the rendering layer is the easy part; Phase 2
+    chose the paradigms worth building; Phase 3 built each paradigm on one shared synthetic generator —
+    the same shape as the real BACI-derived HHI panel, so swapping in real data means replacing a single
+    function; Phase 4 shows the storytelling form for the public page. Eleven screeners across the family
+    turn every view into citable output. All pages are single self-contained HTML files with no external
+    dependencies, ready to host on the IPM site as-is.
+  </footer>
+</div>

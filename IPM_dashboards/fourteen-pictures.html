@@ -1,0 +1,624 @@
+<meta name="robots" content="noindex, nofollow">
+<title>Türkiye's Trade Dependence — A Scroll Story (Synthetic)</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --page: #f9f9f7;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781;
+    --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --accent: #2a78d6; --warn: #e34948; --good: #1baf7a; --gold: #eda100; --violet: #4a3aa7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #898781;
+      --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+      --accent: #3987e5; --warn: #e66767; --good: #199e70; --gold: #c98500; --violet: #9085e9;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --accent: #3987e5; --warn: #e66767; --good: #199e70; --gold: #c98500; --violet: #9085e9;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  .hero { max-width: 720px; margin: 0 auto; padding: 72px 20px 40px; text-align: center; }
+  .hero .kicker { font-size: 12px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+  .hero h1 { font-size: 34px; font-weight: 700; margin: 0 0 14px; line-height: 1.2; }
+  .hero p { font-size: 16px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 10px; }
+  .disclaimer {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px;
+    color: var(--text-muted); margin-top: 14px;
+    border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px;
+  }
+  .scroll-cue { margin-top: 34px; font-size: 12px; color: var(--text-muted); }
+
+  .scrolly { position: relative; max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  .sticky-pane {
+    position: sticky; top: 0; height: 100vh; display: flex; align-items: center;
+    justify-content: center; z-index: 0;
+  }
+  .chart-holder {
+    width: 100%; max-width: 760px; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 14px; padding: 18px 18px 12px;
+  }
+  .chart-holder h2 { font-size: 15px; font-weight: 650; margin: 0 0 2px; }
+  .chart-holder .c-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .chart-holder svg { display: block; width: 100%; height: auto; }
+
+  .steps { position: relative; z-index: 1; pointer-events: none; }
+  .step {
+    max-width: 400px; margin: 0 0 78vh 4vw; pointer-events: auto;
+  }
+  .step:first-child { margin-top: -62vh; }
+  .step:last-child { margin-bottom: 60vh; }
+  @media (max-width: 900px) { .step { margin-left: 0; max-width: 92%; } }
+  .step .card {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 20px; box-shadow: 0 6px 22px rgba(0,0,0,.08);
+  }
+  .step .num { font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--accent); text-transform: uppercase; margin-bottom: 4px; }
+  .step h3 { font-size: 16.5px; font-weight: 650; margin: 0 0 8px; }
+  .step p { font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; margin: 0; }
+  .step strong { color: var(--text-primary); }
+
+  .explore { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
+  .explore h2 { font-size: 20px; font-weight: 650; margin: 0 0 6px; }
+  .explore p.e-sub { font-size: 13px; color: var(--text-muted); margin: 0 0 14px; }
+  .explore .yr { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .explore .yr input[type="range"] { flex: 1; accent-color: var(--accent); }
+  .explore .yr .year-label { font-size: 15px; font-weight: 650; min-width: 46px; text-align: right; }
+  .explore .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--surface-1); margin-bottom: 12px; }
+  .explore .seg button {
+    font-family: inherit; font-size: 13px; padding: 7px 14px; cursor: pointer;
+    background: transparent; color: var(--text-secondary); border: none; border-right: 1px solid var(--border);
+  }
+  .explore .seg button:last-child { border-right: none; }
+  .explore .seg button[aria-pressed="true"] { background: var(--accent); color: #fff; font-weight: 600; }
+
+  table.data-table {
+    width: 100%; border-collapse: collapse; font-size: 12.5px; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  }
+  table.data-table th, table.data-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  table.data-table th { color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .02em; }
+  table.data-table td.num, table.data-table th.num { text-align: right; }
+  table.data-table td.num { font-variant-numeric: tabular-nums; }
+  table.data-table tr:last-child td { border-bottom: none; }
+  .flag { color: var(--warn); font-weight: 700; }
+
+  footer.note {
+    max-width: 860px; margin: 0 auto; padding: 0 20px 60px;
+    font-size: 12px; color: var(--text-muted); line-height: 1.6;
+  }
+  footer.note strong { color: var(--text-secondary); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chart-holder * { transition: none !important; }
+  }
+</style>
+
+<div class="hero">
+  <div class="kicker">A scroll story · synthetic data</div>
+  <h1>The risk didn't grow.<br>It migrated.</h1>
+  <p>Thirty years of Türkiye's trade dependence in seven scenes — a narrative prototype in the
+    genre of The Pudding and the chart pack this project mirrors. One chart stays on screen;
+    the story rewrites it as you scroll.</p>
+  <span class="disclaimer">● Every number is generated — the storytelling form is what's being demonstrated</span>
+  <div class="scroll-cue">scroll ↓</div>
+</div>
+
+<div class="scrolly">
+  <div class="sticky-pane">
+    <div class="chart-holder">
+      <h2 id="chartTitle">Türkiye's import concentration, 1995–2024</h2>
+      <div class="c-sub" id="chartSub">index ×1000 · synthetic</div>
+      <svg id="stage" viewBox="0 0 720 400" role="img" aria-label="Story chart"></svg>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step" data-step="0"><div class="card">
+      <div class="num">Scene 1 / 7</div>
+      <h3>Thirty years, one line</h3>
+      <p>For two decades Türkiye's import concentration drifted inside a narrow band — then climbed
+        steeply after 2019. Anyone reading only this line sees <strong>one late surge</strong> and
+        twenty quiet years. The line is telling the truth — and hiding the bigger story.</p>
+    </div></div>
+
+    <div class="step" data-step="1"><div class="card">
+      <div class="num">Scene 2 / 7</div>
+      <h3>Underneath, everything changed</h3>
+      <p>Decompose the same index by partner and the flat line explodes. <strong>Germany and the EU
+        fall for three decades; China rises from nothing; Russia holds and then surges.</strong> The
+        concentration didn't grow — it changed owners. This is the finding the whole project hangs on.</p>
+    </div></div>
+
+    <div class="step" data-step="2"><div class="card">
+      <div class="num">Scene 3 / 7</div>
+      <h3>The export mirror</h3>
+      <p>Run the same index on exports and the story inverts. In 1995 Türkiye was an
+        apparel-to-Germany monoculture; today no single buyer dominates. <strong>Export risk simply
+        fell</strong> — the one unambiguous success in the panel, and the reason the import side
+        stands out.</p>
+    </div></div>
+
+    <div class="step" data-step="3"><div class="card">
+      <div class="num">Scene 4 / 7</div>
+      <h3>Size is not risk</h3>
+      <p>Compare each partner's <strong>share of trade</strong> (pale) with their <strong>share of
+        risk</strong> (dark). Germany is big and exactly proportional. China and Russia carry roughly
+        <strong>twice their weight</strong> — because what they supply is concentrated. This is what
+        the squared term in the HHI is for.</p>
+    </div></div>
+
+    <div class="step" data-step="4"><div class="card">
+      <div class="num">Scene 5 / 7</div>
+      <h3>What counts as one supplier?</h3>
+      <p>Methodology is a lever. Count the EU-27 as a single supplier — one customs union, one
+        sanctions policy — and Türkiye's measured concentration <strong>jumps by half</strong>. The
+        index is honest only if this choice is visible, so the real dashboard exposes it as a toggle.</p>
+    </div></div>
+
+    <div class="step" data-step="5"><div class="card">
+      <div class="num">Scene 6 / 7</div>
+      <h3>The chokepoints a value-weighted index can't see</h3>
+      <p>Some dependence is invisible to any aggregate: sectors where one partner supplies
+        <strong>more than half of everything</strong>. Small money, absolute leverage. These cells are
+        flagged, not weighted — a screener, not a chart.</p>
+    </div></div>
+
+    <div class="step" data-step="6"><div class="card">
+      <div class="num">Scene 7 / 7</div>
+      <h3>What Ankara holds</h3>
+      <p>Dependence tables turn both ways. On the export side sit the sectors where <strong>Türkiye is
+        the concentrated buyer's problem</strong> — niches where one customer takes most of what
+        Türkiye sells, and mirrors where the leverage is Ankara's. A dependence index worth publishing
+        shows both directions.</p>
+    </div></div>
+  </div>
+</div>
+
+<div class="explore">
+  <h2>Explore the numbers behind the story</h2>
+  <p class="e-sub">The story's citable core: dominant sector–partner cells at any year, both directions. (The full interactive suite lives in the companion prototypes.)</p>
+  <div class="seg" id="flowSeg">
+    <button data-v="imports" aria-pressed="true">Imports</button>
+    <button data-v="exports" aria-pressed="false">Exports</button>
+  </div>
+  <div class="yr">
+    <input type="range" id="yearSlider" min="1995" max="2024" step="1" value="2024" aria-label="Year">
+    <span class="year-label" id="yearLabel">2024</span>
+  </div>
+  <div id="screenWrap"></div>
+</div>
+
+<footer class="note">
+  <strong>About this prototype:</strong> a scroll-driven narrative ("scrollytelling") in the genre of
+  The Pudding, NYT interactives and The Refugee Project — the form for the public-facing page rather
+  than the analyst's workbench. One SVG stage persists while IntersectionObserver swaps scenes; all
+  charts derive from the same synthetic generator as the companion prototypes; motion respects
+  prefers-reduced-motion. Scenes mirror the real chart pack's stories 1, 2, 3, 12, 13 and 14.
+</footer>
+
+<script>
+(function () {
+"use strict";
+
+/* ============================ synthetic data (shared model) ============================ */
+
+var YEAR_MIN = 1995, YEAR_MAX = 2024;
+
+var SECTORS = [
+  { id: "energy",   name: "Energy & fuels",        w: 1.6 },
+  { id: "mach",     name: "Machinery",             w: 1.3 },
+  { id: "elec",     name: "Electronics",           w: 1.25 },
+  { id: "vehi",     name: "Vehicles",              w: 1.1 },
+  { id: "steel",    name: "Iron & steel",          w: 1.0 },
+  { id: "chem",     name: "Chemicals",             w: 1.0 },
+  { id: "pharma",   name: "Pharmaceuticals",       w: 0.7 },
+  { id: "plast",    name: "Plastics & rubber",     w: 0.8 },
+  { id: "text",     name: "Textiles & apparel",    w: 0.9 },
+  { id: "agri",     name: "Agriculture",           w: 0.8 },
+  { id: "food",     name: "Processed food",        w: 0.6 },
+  { id: "metal",    name: "Metals & mining",       w: 0.85 },
+  { id: "prec",     name: "Precision instruments", w: 0.55 },
+  { id: "wood",     name: "Wood & paper",          w: 0.4 },
+  { id: "glass",    name: "Glass & ceramics",      w: 0.4 },
+  { id: "serv",     name: "Services",              w: 0.7 }
+];
+
+var PARTNERS = [
+  ["Germany","eu"],["China","asia"],["Russia","cis"],["United States","am"],
+  ["Italy","eu"],["France","eu"],["United Kingdom","eur"],["Spain","eu"],
+  ["Netherlands","eu"],["Iraq","mena"],["United Arab Emirates","mena"],
+  ["Saudi Arabia","mena"],["Egypt","mena"],["Israel","mena"],["Iran","mena"],
+  ["Azerbaijan","cis"],["Ukraine","cis"],["Kazakhstan","cis"],["Georgia","cis"],
+  ["Uzbekistan","cis"],["India","asia"],["South Korea","asia"],["Japan","asia"],
+  ["Vietnam","asia"],["Malaysia","asia"],["Indonesia","asia"],["Poland","eu"],
+  ["Romania","eu"],["Bulgaria","eu"],["Greece","eu"],["Belgium","eu"],
+  ["Switzerland","eur"],["Brazil","am"],["Mexico","am"],["Canada","am"],
+  ["Algeria","mena"],["Morocco","mena"],["Libya","mena"],["Qatar","mena"],
+  ["Nigeria","afr"],["South Africa","afr"],["Ethiopia","afr"],["Turkmenistan","cis"]
+].map(function (c) { return { name: c[0], region: c[1] }; });
+
+var EU_SET = {};
+PARTNERS.forEach(function (p) { if (p.region === "eu") EU_SET[p.name] = 1; });
+
+var BIAS = {
+  "imports|Russia|energy": 5.0, "imports|Azerbaijan|energy": 9.0, "imports|Iran|energy": 4.0,
+  "imports|Algeria|energy": 6.0, "imports|Qatar|energy": 7.0, "imports|Turkmenistan|energy": 7.0, "imports|Libya|energy": 5.0,
+  "imports|China|elec": 5.5, "imports|China|mach": 2.6, "imports|China|text": 1.6,
+  "imports|Germany|elec": 2.4, "imports|Japan|elec": 2.2,
+  "imports|Germany|mach": 3.4, "imports|Germany|vehi": 3.0, "imports|Germany|chem": 2.0,
+  "imports|South Korea|elec": 1.9, "imports|Japan|vehi": 1.6, "imports|Japan|prec": 1.9,
+  "imports|Russia|steel": 2.6, "imports|Ukraine|steel": 2.0, "imports|Ukraine|agri": 2.2,
+  "imports|Russia|agri": 2.4, "imports|United States|pharma": 1.8, "imports|Switzerland|pharma": 2.3,
+  "imports|India|chem": 1.7, "imports|Italy|mach": 1.9, "imports|France|vehi": 1.5,
+  "exports|Germany|text": 6.0, "exports|Germany|vehi": 2.6, "exports|Germany|food": 1.8,
+  "exports|United Kingdom|text": 1.9, "exports|United States|steel": 1.5,
+  "exports|Iraq|food": 2.8, "exports|Iraq|plast": 2.0, "exports|Iraq|steel": 1.8,
+  "exports|Italy|vehi": 2.0, "exports|France|vehi": 1.8, "exports|Spain|vehi": 1.7,
+  "exports|Israel|steel": 1.5, "exports|Egypt|plast": 1.6, "exports|Russia|food": 1.9,
+  "exports|Russia|text": 1.6, "exports|United States|mach": 1.4, "exports|Netherlands|agri": 1.5,
+  "exports|China|metal": 2.8, "exports|China|glass": 2.2, "exports|Azerbaijan|serv": 1.8,
+  "exports|Georgia|serv": 1.7, "exports|Romania|serv": 1.6
+};
+
+var SIZE = {
+  "China": 11, "Germany": 8.5, "Russia": 8, "United States": 6, "Italy": 4.5,
+  "France": 4, "United Kingdom": 3.5, "Japan": 3.5, "South Korea": 3.2,
+  "Netherlands": 3, "Spain": 3, "India": 3, "Iraq": 2.8, "United Arab Emirates": 2.6,
+  "Switzerland": 2.5, "Poland": 2.5, "Brazil": 2.4, "Azerbaijan": 2.2, "Iran": 2.2
+};
+
+function eraMult(flow, partner, year) {
+  var t = (year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN);
+  if (flow === "imports" && partner === "China") return (0.10 + 0.90 * Math.pow(t, 1.6)) * 2.6;
+  if (flow === "exports" && partner === "China") return 0.25 + 0.75 * t;
+  if (partner === "Russia" && year >= 2022) return flow === "imports" ? 1.22 : 1.15;
+  if (partner === "Ukraine" && year >= 2022) return 0.45;
+  if (flow === "exports" && partner === "Iraq") return year >= 2010 && year <= 2014 ? 1.9 : 1.0;
+  if (flow === "exports" && partner === "Germany") return 1.9 - 1.1 * t;
+  return 1.0;
+}
+
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hashSeed(str) {
+  var h = 0;
+  for (var i = 0; i < str.length; i++) h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
+  return h;
+}
+
+var PETRO = { "Azerbaijan": 1, "Qatar": 1, "Turkmenistan": 1, "Libya": 1, "Algeria": 1 };
+
+var trajCache = {};
+function dyadValue(flow, partner, sectorId, year) {
+  var key = flow + "|" + partner + "|" + sectorId;
+  var t = trajCache[key];
+  if (!t) {
+    var r = mulberry32(hashSeed(key));
+    t = {
+      base: Math.exp(r() * 2.9) * 3.2e7,
+      growth: -0.01 + r() * 0.075,
+      amp: 0.05 + r() * 0.15,
+      phase: r() * 6.283, period: 6 + r() * 9,
+      size: SIZE[partner] || (0.5 + Math.exp(mulberry32(hashSeed(partner + "|size"))() * 1.1))
+    };
+    trajCache[key] = t;
+  }
+  var sec = SECTORS.find(function (s) { return s.id === sectorId; });
+  var bias = BIAS[flow + "|" + partner + "|" + sectorId] || 1;
+  if (flow === "imports" && PETRO[partner] && sectorId !== "energy") bias *= 0.22;
+  var dy = year - YEAR_MIN;
+  return t.base * t.size * sec.w * bias * eraMult(flow, partner, year) *
+    Math.pow(1 + t.growth, dy) * (1 + t.amp * Math.sin(6.283 * dy / t.period + t.phase));
+}
+
+/* aggregate index (Σ sector-share × sector-HHI), plus per-partner risk decomposition */
+var aggCache = {};
+function aggregate(flow, year, euMerged) {
+  var ck = flow + "|" + year + "|" + (euMerged ? 1 : 0);
+  if (aggCache[ck]) return aggCache[ck];
+  var grand = 0, secData = [];
+  SECTORS.forEach(function (sec) {
+    var byName = {};
+    PARTNERS.forEach(function (p) {
+      var nm = euMerged && EU_SET[p.name] ? "EU-27" : p.name;
+      byName[nm] = (byName[nm] || 0) + dyadValue(flow, p.name, sec.id, year);
+    });
+    var tot = 0;
+    Object.keys(byName).forEach(function (nm) { tot += byName[nm]; });
+    var hhi = 0;
+    Object.keys(byName).forEach(function (nm) { hhi += Math.pow(byName[nm] / tot, 2); });
+    secData.push({ id: sec.id, name: sec.name, tot: tot, hhi: hhi, byName: byName });
+    grand += tot;
+  });
+  var index = 0;
+  secData.forEach(function (s) { index += (s.tot / grand) * s.hhi; });
+
+  /* per-partner share of the risk: Σ over sectors of secWeight × (partner share in sector)² */
+  var riskBy = {}, shareBy = {};
+  secData.forEach(function (s) {
+    var w = s.tot / grand;
+    Object.keys(s.byName).forEach(function (nm) {
+      var sh = s.byName[nm] / s.tot;
+      riskBy[nm] = (riskBy[nm] || 0) + w * sh * sh;
+      shareBy[nm] = (shareBy[nm] || 0) + s.byName[nm];
+    });
+  });
+  Object.keys(shareBy).forEach(function (nm) { shareBy[nm] /= grand; });
+  var out = { grand: grand, index: index, secData: secData, riskBy: riskBy, shareBy: shareBy };
+  aggCache[ck] = out;
+  return out;
+}
+
+/* ============================ svg helpers ============================ */
+
+var svgNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs) {
+  var e = document.createElementNS(svgNS, tag);
+  for (var k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+function escapeHtml(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function fmtUSD(v) {
+  if (v >= 1e9) return "$" + (v / 1e9).toFixed(v >= 1e10 ? 0 : 1) + "B";
+  if (v >= 1e6) return "$" + (v / 1e6).toFixed(0) + "M";
+  return "$" + Math.round(v);
+}
+
+var stage = document.getElementById("stage");
+var chartTitle = document.getElementById("chartTitle");
+var chartSub = document.getElementById("chartSub");
+var SW = 720, SH = 400;
+var SM = { l: 52, r: 18, t: 18, b: 34 };
+
+function clearStage() { stage.innerHTML = ""; }
+function lineChartFrame(maxY, yFmt, xYears) {
+  var plotW = SW - SM.l - SM.r, plotH = SH - SM.t - SM.b;
+  var xF = function (i, n) { return SM.l + i / (n - 1) * plotW; };
+  var yF = function (v) { return SM.t + (1 - v / maxY) * plotH; };
+  for (var t = 0; t <= 4; t++) {
+    var val = maxY / 4 * t, y = yF(val);
+    stage.appendChild(el("line", { x1: SM.l, x2: SW - SM.r, y1: y, y2: y, stroke: "var(--grid)", "stroke-width": 1 }));
+    var lbl = el("text", { x: SM.l - 7, y: y + 4, "text-anchor": "end", "font-size": "11", fill: "var(--text-muted)" });
+    lbl.textContent = yFmt(val);
+    stage.appendChild(lbl);
+  }
+  if (xYears) {
+    [0, 15, 29].forEach(function (i) {
+      var lbl = el("text", { x: xF(i, 30), y: SH - 10, "text-anchor": "middle", "font-size": "11", fill: "var(--text-muted)" });
+      lbl.textContent = YEAR_MIN + i;
+      stage.appendChild(lbl);
+    });
+  }
+  return { xF: xF, yF: yF, plotH: plotH };
+}
+function seriesLine(vals, frame, color, width, label) {
+  var n = vals.length;
+  var d = vals.map(function (v, i) { return (i ? "L" : "M") + frame.xF(i, n) + "," + frame.yF(v); }).join("");
+  stage.appendChild(el("path", { d: d, fill: "none", stroke: color, "stroke-width": width || 2, "stroke-linejoin": "round" }));
+  if (label) {
+    var lbl = el("text", { x: frame.xF(n - 1, n) - 4, y: frame.yF(vals[n - 1]) - 8, "text-anchor": "end", "font-size": "11.5", "font-weight": "650", fill: "var(--text-primary)" });
+    lbl.textContent = label;
+    stage.appendChild(lbl);
+  }
+}
+
+/* ============================ scenes ============================ */
+
+function idxSeries(flow, euMerged) {
+  var out = [];
+  for (var y = YEAR_MIN; y <= YEAR_MAX; y++) out.push(aggregate(flow, y, !!euMerged).index * 1000);
+  return out;
+}
+function riskShareSeries(flow, name) {
+  var out = [];
+  for (var y = YEAR_MIN; y <= YEAR_MAX; y++) {
+    var A = aggregate(flow, y, false);
+    var v = 0;
+    if (name === "EU") {
+      Object.keys(A.riskBy).forEach(function (nm) { if (EU_SET[nm]) v += A.riskBy[nm]; });
+    } else v = A.riskBy[name] || 0;
+    out.push(v / A.index * 100);
+  }
+  return out;
+}
+
+function scene0() {
+  chartTitle.textContent = "Türkiye's import concentration, 1995–2024";
+  chartSub.textContent = "aggregate index ×1000 — Σ(sector share × sector HHI) · synthetic";
+  clearStage();
+  var vals = idxSeries("imports");
+  var frame = lineChartFrame(Math.max.apply(null, vals) * 1.25, function (v) { return v.toFixed(0); }, true);
+  seriesLine(vals, frame, "var(--accent)", 2.5);
+}
+
+function scene1() {
+  chartTitle.textContent = "Who owns the risk — share of the import index by partner";
+  chartSub.textContent = "% of the aggregate index attributable to each partner's share² terms · synthetic";
+  clearStage();
+  var frame = lineChartFrame(70, function (v) { return v.toFixed(0) + "%"; }, true);
+  seriesLine(riskShareSeries("imports", "EU"), frame, "var(--violet)", 2, "EU-27");
+  seriesLine(riskShareSeries("imports", "China"), frame, "var(--accent)", 2, "China");
+  seriesLine(riskShareSeries("imports", "Russia"), frame, "var(--warn)", 2, "Russia");
+  seriesLine(riskShareSeries("imports", "United States"), frame, "var(--gold)", 2, "USA");
+}
+
+function scene2() {
+  chartTitle.textContent = "The export mirror — same index, other direction";
+  chartSub.textContent = "aggregate index ×1000, exports vs imports · synthetic";
+  clearStage();
+  var imp = idxSeries("imports"), exp = idxSeries("exports");
+  var maxY = Math.max(Math.max.apply(null, imp), Math.max.apply(null, exp)) * 1.2;
+  var frame = lineChartFrame(maxY, function (v) { return v.toFixed(0); }, true);
+  seriesLine(imp, frame, "var(--baseline)", 2, "imports");
+  seriesLine(exp, frame, "var(--good)", 2.5, "exports");
+}
+
+function scene3() {
+  chartTitle.textContent = "Size is not risk — trade share vs risk share, 2024";
+  chartSub.textContent = "pale = % of imports · dark = % of the import risk index · synthetic";
+  clearStage();
+  var A = aggregate("imports", YEAR_MAX, false);
+  var names = Object.keys(A.shareBy).sort(function (a, b) { return A.shareBy[b] - A.shareBy[a]; }).slice(0, 7);
+  var maxV = Math.max.apply(null, names.map(function (n) {
+    return Math.max(A.shareBy[n] * 100, A.riskBy[n] / A.index * 100);
+  })) * 1.15;
+  var rowH = (SH - SM.t - 20) / names.length;
+  names.forEach(function (n, i) {
+    var y = SM.t + i * rowH;
+    var share = A.shareBy[n] * 100, risk = A.riskBy[n] / A.index * 100;
+    var scale = (SW - 190 - SM.r) / maxV;
+    var lbl = el("text", { x: 178, y: y + rowH / 2 + 4, "text-anchor": "end", "font-size": "12", fill: "var(--text-secondary)" });
+    lbl.textContent = n;
+    stage.appendChild(lbl);
+    stage.appendChild(el("rect", { x: 186, y: y + rowH / 2 - 13, width: share * scale, height: 10, rx: 3, fill: "var(--accent)", opacity: "0.30" }));
+    stage.appendChild(el("rect", { x: 186, y: y + rowH / 2 + 1, width: risk * scale, height: 10, rx: 3, fill: "var(--accent)" }));
+    var mult = risk / share;
+    var mlbl = el("text", { x: 186 + Math.max(share, risk) * scale + 8, y: y + rowH / 2 + 6, "font-size": "11.5", "font-weight": mult >= 1.5 ? "700" : "400", fill: mult >= 1.5 ? "var(--warn)" : "var(--text-muted)" });
+    mlbl.textContent = mult.toFixed(1) + "×";
+    stage.appendChild(mlbl);
+  });
+}
+
+function scene4() {
+  chartTitle.textContent = "What counts as one supplier? The EU-27 stress test";
+  chartSub.textContent = "aggregate import index ×1000, EU members counted separately vs as one · synthetic";
+  clearStage();
+  var sep = idxSeries("imports", false), mer = idxSeries("imports", true);
+  var maxY = Math.max.apply(null, mer) * 1.2;
+  var frame = lineChartFrame(maxY, function (v) { return v.toFixed(0); }, true);
+  seriesLine(sep, frame, "var(--accent)", 2, "EU separate");
+  seriesLine(mer, frame, "var(--violet)", 2.5, "EU as ONE");
+}
+
+function scene5() {
+  chartTitle.textContent = "Chokepoints — sectors with a dominant supplier, 2024";
+  chartSub.textContent = "top supplier's share of the sector; flag, don't weight · synthetic";
+  clearStage();
+  var A = aggregate("imports", YEAR_MAX, false);
+  var rows = A.secData.map(function (s) {
+    var top = null, topV = 0;
+    Object.keys(s.byName).forEach(function (nm) { if (s.byName[nm] > topV) { topV = s.byName[nm]; top = nm; } });
+    return { sec: s.name, top: top, share: topV / s.tot };
+  }).sort(function (a, b) { return b.share - a.share; }).slice(0, 7);
+  var rowH = (SH - SM.t - 20) / rows.length;
+  rows.forEach(function (r, i) {
+    var y = SM.t + i * rowH;
+    var scale = (SW - 210 - SM.r) / 1.0;
+    var lbl = el("text", { x: 198, y: y + rowH / 2 + 4, "text-anchor": "end", "font-size": "12", fill: "var(--text-secondary)" });
+    lbl.textContent = r.sec;
+    stage.appendChild(lbl);
+    var danger = r.share >= 0.5;
+    stage.appendChild(el("rect", { x: 206, y: y + rowH / 2 - 7, width: r.share * scale, height: 13, rx: 3, fill: danger ? "var(--warn)" : "var(--accent)", opacity: danger ? "1" : "0.55" }));
+    var vlbl = el("text", { x: 206 + r.share * scale + 8, y: y + rowH / 2 + 4, "font-size": "11.5", "font-weight": "650", fill: "var(--text-primary)" });
+    vlbl.textContent = r.top + " " + (r.share * 100).toFixed(0) + "%";
+    stage.appendChild(vlbl);
+  });
+}
+
+function scene6() {
+  chartTitle.textContent = "What Ankara holds — Türkiye as the dominant seller, 2024";
+  chartSub.textContent = "export sectors by single-buyer share — where the leverage is mutual · synthetic";
+  clearStage();
+  var A = aggregate("exports", YEAR_MAX, false);
+  var rows = A.secData.map(function (s) {
+    var top = null, topV = 0;
+    Object.keys(s.byName).forEach(function (nm) { if (s.byName[nm] > topV) { topV = s.byName[nm]; top = nm; } });
+    return { sec: s.name, top: top, share: topV / s.tot, tot: s.tot };
+  }).sort(function (a, b) { return b.share - a.share; }).slice(0, 7);
+  var rowH = (SH - SM.t - 20) / rows.length;
+  rows.forEach(function (r, i) {
+    var y = SM.t + i * rowH;
+    var scale = (SW - 210 - SM.r) / 1.0;
+    var lbl = el("text", { x: 198, y: y + rowH / 2 + 4, "text-anchor": "end", "font-size": "12", fill: "var(--text-secondary)" });
+    lbl.textContent = r.sec;
+    stage.appendChild(lbl);
+    stage.appendChild(el("rect", { x: 206, y: y + rowH / 2 - 7, width: r.share * scale, height: 13, rx: 3, fill: "var(--good)" }));
+    var vlbl = el("text", { x: 206 + r.share * scale + 8, y: y + rowH / 2 + 4, "font-size": "11.5", "font-weight": "650", fill: "var(--text-primary)" });
+    vlbl.textContent = "→ " + r.top + " " + (r.share * 100).toFixed(0) + "% · " + fmtUSD(r.tot);
+    stage.appendChild(vlbl);
+  });
+}
+
+var SCENES = [scene0, scene1, scene2, scene3, scene4, scene5, scene6];
+var currentScene = -1;
+function showScene(i) {
+  if (i === currentScene) return;
+  currentScene = i;
+  SCENES[i]();
+}
+
+/* ============================ scroll driver ============================ */
+
+var steps = document.querySelectorAll(".step");
+var observer = new IntersectionObserver(function (entries) {
+  entries.forEach(function (entry) {
+    if (entry.isIntersecting) {
+      showScene(+entry.target.getAttribute("data-step"));
+    }
+  });
+}, { rootMargin: "-45% 0px -45% 0px" });
+steps.forEach(function (s) { observer.observe(s); });
+
+showScene(0);
+
+/* ============================ explorer screener ============================ */
+
+var exp = { flow: "imports", year: YEAR_MAX };
+var screenWrap = document.getElementById("screenWrap");
+
+function renderExplorer() {
+  var A = aggregate(exp.flow, exp.year, false);
+  var rows = A.secData.map(function (s) {
+    var top = null, topV = 0;
+    Object.keys(s.byName).forEach(function (nm) { if (s.byName[nm] > topV) { topV = s.byName[nm]; top = nm; } });
+    return { sec: s.name, top: top, share: topV / s.tot, hhi: s.hhi, tot: s.tot };
+  }).sort(function (a, b) { return b.share - a.share; });
+  screenWrap.innerHTML = '<table class="data-table"><thead><tr><th>Sector</th><th>Dominant partner</th>' +
+    '<th class="num">Share of sector</th><th class="num">Sector value</th><th class="num">Sector HHI ×1000</th></tr></thead><tbody>' +
+    rows.map(function (r) {
+      return "<tr><td>" + escapeHtml(r.sec) + "</td><td>" +
+        (r.share >= 0.5 ? "<span class='flag'>" + escapeHtml(r.top) + "</span>" : escapeHtml(r.top)) + "</td>" +
+        "<td class='num'>" + (r.share * 100).toFixed(1) + "%</td><td class='num'>" + fmtUSD(r.tot) + "</td>" +
+        "<td class='num'>" + (r.hhi * 1000).toFixed(0) + "</td></tr>";
+    }).join("") + "</tbody></table>";
+}
+
+document.querySelectorAll("#flowSeg button").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll("#flowSeg button").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+    btn.setAttribute("aria-pressed", "true");
+    exp.flow = btn.getAttribute("data-v");
+    renderExplorer();
+  });
+});
+var yearSlider = document.getElementById("yearSlider");
+var yearLabel = document.getElementById("yearLabel");
+yearSlider.addEventListener("input", function () {
+  exp.year = +yearSlider.value;
+  yearLabel.textContent = exp.year;
+  renderExplorer();
+});
+
+renderExplorer();
+})();
+</script>

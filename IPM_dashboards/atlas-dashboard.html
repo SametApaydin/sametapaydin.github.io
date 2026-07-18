@@ -1,0 +1,1468 @@
+<meta name="robots" content="noindex, nofollow">
+<title>Trade Explorer — Synthetic Atlas-Style Dashboard</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page:           #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --grid:           #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-1: #2a78d6; --series-2: #1baf7a; --series-3: #eda100; --series-4: #008300;
+    --series-5: #4a3aa7; --series-6: #e34948; --series-7: #e87ba4; --series-8: #eb6834;
+    --seq-100:#cde2fb; --seq-200:#9ec5f4; --seq-300:#6da7ec; --seq-400:#3987e5;
+    --seq-500:#256abf; --seq-600:#184f95; --seq-700:#0d366b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #898781;
+      --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+      --series-1: #3987e5; --series-2: #199e70; --series-3: #c98500; --series-4: #008300;
+      --series-5: #9085e9; --series-6: #e66767; --series-7: #d55181; --series-8: #d95926;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --series-1: #3987e5; --series-2: #199e70; --series-3: #c98500; --series-4: #008300;
+    --series-5: #9085e9; --series-6: #e66767; --series-7: #d55181; --series-8: #d95926;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page); color: var(--text-primary);
+    min-height: 100vh; padding: 20px 16px 48px;
+  }
+  .frame { max-width: 1280px; margin: 0 auto; }
+
+  header.masthead { margin-bottom: 14px; }
+  header.masthead h1 { font-size: 20px; font-weight: 650; margin: 0 0 4px; }
+  header.masthead p { font-size: 13px; color: var(--text-secondary); margin: 0; max-width: 760px; line-height: 1.5; }
+  .disclaimer {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px;
+    color: var(--text-muted); margin-top: 8px;
+    border: 1px solid var(--border); border-radius: 999px; padding: 4px 11px;
+  }
+
+  .layout { display: grid; grid-template-columns: 236px 1fr; gap: 14px; align-items: start; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+
+  /* ---------- sidebar ---------- */
+  aside.controls {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px; display: flex; flex-direction: column; gap: 16px;
+    position: sticky; top: 14px;
+  }
+  .ctl-group label.ctl-label {
+    display: block; font-size: 11px; font-weight: 650; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 7px;
+  }
+  select {
+    width: 100%; font-family: inherit; font-size: 13px; color: var(--text-primary);
+    background: var(--page); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
+  }
+  .segmented { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .segmented button {
+    flex: 1; font-family: inherit; font-size: 12.5px; padding: 8px 6px; cursor: pointer;
+    background: transparent; color: var(--text-secondary); border: none;
+    border-right: 1px solid var(--border);
+  }
+  .segmented button:last-child { border-right: none; }
+  .segmented button[aria-pressed="true"] { background: var(--series-1); color: #fff; font-weight: 600; }
+  .ctl-hint { font-size: 11px; color: var(--text-muted); margin-top: 6px; line-height: 1.45; }
+
+  .side-actions { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); padding-top: 14px; }
+  .side-actions button {
+    font-family: inherit; font-size: 12.5px; padding: 8px 10px; cursor: pointer;
+    background: var(--page); color: var(--text-primary);
+    border: 1px solid var(--border); border-radius: 8px; text-align: left;
+  }
+  .side-actions button:hover { border-color: var(--baseline); }
+
+  /* ---------- main column ---------- */
+  main { min-width: 0; }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+  @media (max-width: 720px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+  .kpi {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px;
+  }
+  .kpi .k-label { font-size: 11.5px; color: var(--text-muted); margin-bottom: 4px; }
+  .kpi .k-value { font-size: 22px; font-weight: 650; }
+  .kpi .k-delta { font-size: 11.5px; margin-top: 3px; color: var(--text-muted); }
+  .kpi .k-delta.up { color: #006300; }
+  @media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .kpi .k-delta.up { color: #0ca30c; } }
+  :root[data-theme="dark"] .kpi .k-delta.up { color: #0ca30c; }
+  .kpi .k-delta.down { color: var(--series-6); }
+
+  .viewbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .viewtabs { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--surface-1); }
+  .viewtabs button {
+    font-family: inherit; font-size: 13px; padding: 8px 14px; cursor: pointer;
+    background: transparent; color: var(--text-secondary); border: none; border-right: 1px solid var(--border);
+  }
+  .viewtabs button:last-child { border-right: none; }
+  .viewtabs button[aria-pressed="true"] { background: var(--series-1); color: #fff; font-weight: 600; }
+  .viewbar .spacer { flex: 1; }
+  .tv-toggle {
+    font-family: inherit; font-size: 12.5px; padding: 7px 12px; cursor: pointer;
+    background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px;
+  }
+  .tv-toggle[aria-pressed="true"] { background: var(--series-1); color: #fff; }
+
+  .breadcrumb { font-size: 12.5px; color: var(--text-secondary); min-height: 20px; margin-bottom: 6px; }
+  .breadcrumb button {
+    background: none; border: none; padding: 0; font: inherit; color: var(--series-1);
+    cursor: pointer; text-decoration: underline;
+  }
+
+  .chart-card {
+    position: relative; background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px; transition: opacity .15s ease;
+  }
+  .chart-card.is-refetching { opacity: .45; }
+  svg { display: block; width: 100%; height: auto; }
+  .chart-title { font-size: 13.5px; font-weight: 600; margin: 2px 2px 10px; }
+  .chart-title .sub { font-weight: 400; color: var(--text-muted); }
+
+  .cell rect { stroke: var(--surface-1); stroke-width: 2; transition: opacity .12s ease; }
+  .cell.clickable rect { cursor: pointer; }
+  .cell:hover rect { opacity: .85; }
+  .cell text { pointer-events: none; font-size: 11.5px; }
+  .cell text.name { font-weight: 600; }
+  .cell text.value { opacity: .85; }
+  .cell.dim rect { opacity: .18; }
+  .cell.dim text { opacity: 0; }
+
+  .tile rect { stroke: var(--surface-1); stroke-width: 2; rx: 3; cursor: default; }
+  .tile:hover rect { stroke: var(--text-primary); stroke-width: 1.5; }
+  .tile text { pointer-events: none; font-size: 8.5px; font-weight: 600; }
+  .tile.reporter rect { stroke: var(--text-primary); stroke-width: 2; }
+
+  .edge { stroke: var(--grid); stroke-width: 1; }
+  .node circle { stroke: var(--surface-1); stroke-width: 1.5; transition: opacity .12s ease; }
+  .node:hover circle { stroke: var(--text-primary); }
+  .node.hollow circle { fill: var(--surface-1); stroke: var(--baseline); }
+  .node.hollow:hover circle { stroke: var(--text-primary); }
+  .node.dim { opacity: .12; }
+
+  .bubble circle { stroke: var(--surface-1); stroke-width: 2; transition: opacity .12s ease; }
+  .bubble:hover circle { stroke: var(--text-primary); }
+  .bubble.sel circle { stroke: var(--text-primary); stroke-width: 2; }
+  .bubble.dim { opacity: .12; }
+  .bubble text { pointer-events: none; font-size: 11px; font-weight: 650; fill: var(--text-primary); }
+
+  .bump-line { fill: none; stroke: var(--baseline); stroke-width: 1.1; opacity: .55; }
+  .bump-line.hl { stroke: var(--series-1); stroke-width: 2.5; opacity: 1; }
+  .bump-label { font-size: 11px; fill: var(--text-muted); }
+  .bump-label.hl { fill: var(--text-primary); font-weight: 650; }
+
+  .legend li.info { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-muted); padding: 4px 6px; }
+  .swatch.hollow { background: var(--surface-1); border: 1.5px solid var(--baseline); }
+
+  .grid-line { stroke: var(--grid); stroke-width: 1; }
+  .axis-label { fill: var(--text-muted); font-size: 11px; }
+  .crosshair { stroke: var(--baseline); stroke-width: 1; pointer-events: none; }
+  .area-path { transition: opacity .12s ease; }
+  .area-dim { opacity: .14; }
+
+  /* year slider */
+  .year-row {
+    display: flex; align-items: center; gap: 12px; margin-top: 10px;
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px;
+  }
+  .year-row.disabled { opacity: .4; pointer-events: none; }
+  .year-row button.play {
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--page); color: var(--text-primary); font-size: 13px; cursor: pointer; flex: none;
+  }
+  .year-row input[type="range"] { flex: 1; accent-color: var(--series-1); }
+  .year-row .year-label { font-size: 15px; font-weight: 650; min-width: 46px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 12px; padding: 0; list-style: none; }
+  .legend button {
+    display: flex; align-items: center; gap: 7px; background: none; border: none;
+    font: inherit; font-size: 12px; color: var(--text-secondary); cursor: pointer; padding: 4px 6px; border-radius: 6px;
+  }
+  .legend button:hover { background: var(--border); }
+  .legend button[aria-pressed="true"] { color: var(--text-primary); font-weight: 600; }
+  .swatch { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+
+  .scale-legend { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 11px; color: var(--text-muted); }
+  .scale-legend .ramp { display: flex; height: 10px; border-radius: 3px; overflow: hidden; flex: none; }
+  .scale-legend .ramp span { width: 26px; height: 10px; }
+
+  .tooltip {
+    position: absolute; pointer-events: none; z-index: 5;
+    background: var(--text-primary); color: var(--page);
+    font-size: 12px; line-height: 1.45; padding: 8px 10px; border-radius: 7px;
+    max-width: 240px; opacity: 0; transform: translate(-50%, -100%); transition: opacity .08s ease;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18);
+  }
+  .tooltip .t-value { font-weight: 700; font-size: 13px; }
+  .tooltip .t-row { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+  .tooltip .t-key { width: 9px; height: 2px; border-radius: 1px; flex: none; }
+
+  table.data-table {
+    width: 100%; border-collapse: collapse; font-size: 12.5px; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  }
+  table.data-table th, table.data-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  table.data-table th { color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .02em; }
+  table.data-table td.num, table.data-table th.num { text-align: right; }
+  table.data-table td.num { font-variant-numeric: tabular-nums; }
+  table.data-table tr:last-child td { border-bottom: none; }
+  .key-dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 7px; vertical-align: -1px; }
+  #tableWrap { max-height: 520px; overflow: auto; border-radius: 12px; }
+
+  footer.note {
+    margin-top: 20px; font-size: 12px; color: var(--text-muted); line-height: 1.6;
+    border-top: 1px solid var(--border); padding-top: 12px;
+  }
+  footer.note strong { color: var(--text-secondary); }
+</style>
+
+<div class="viz-root">
+  <div class="frame">
+    <header class="masthead">
+      <h1>Trade Explorer</h1>
+      <p>An Atlas-of-Economic-Complexity-style interactive dashboard: pick a country, switch between
+        exports and imports, break trade down by product or partner, and explore it as a treemap,
+        time series, market-share chart, or map.</p>
+      <span class="disclaimer">● All trade values are synthetic — generated deterministically in your browser. Country and product names are real; the numbers are not.</span>
+    </header>
+
+    <div class="layout">
+      <aside class="controls">
+        <div class="ctl-group">
+          <label class="ctl-label" for="countrySel">Country</label>
+          <select id="countrySel"></select>
+        </div>
+        <div class="ctl-group">
+          <span class="ctl-label">Trade flow</span>
+          <div class="segmented" id="flowSeg">
+            <button data-v="exports" aria-pressed="true">Exports</button>
+            <button data-v="imports" aria-pressed="false">Imports</button>
+          </div>
+        </div>
+        <div class="ctl-group">
+          <span class="ctl-label">Breakdown</span>
+          <div class="segmented" id="modeSeg">
+            <button data-v="products" aria-pressed="true">Products</button>
+            <button data-v="partners" aria-pressed="false">Partners</button>
+          </div>
+          <div class="ctl-hint">Products: what is traded. Partners: with whom.</div>
+        </div>
+        <div class="ctl-group" id="detailGroup">
+          <label class="ctl-label" for="detailSel">Product detail</label>
+          <select id="detailSel">
+            <option value="section">Section</option>
+            <option value="hs2" selected>HS2 group</option>
+            <option value="hs4">HS4 product</option>
+          </select>
+          <div class="ctl-hint">Granularity of treemap cells. Click a cell to drill in.</div>
+        </div>
+        <div class="side-actions">
+          <button id="csvBtn">⬇ Download data (CSV)</button>
+          <button id="linkBtn">🔗 Copy link</button>
+        </div>
+      </aside>
+
+      <main>
+        <div class="kpis" id="kpis"></div>
+
+        <div class="viewbar">
+          <div class="viewtabs" id="viewTabs">
+            <button data-v="treemap" aria-pressed="true">Treemap</button>
+            <button data-v="time" aria-pressed="false">Over time</button>
+            <button data-v="share" aria-pressed="false">Market share</button>
+            <button data-v="map" aria-pressed="false">Geo map</button>
+            <button data-v="space" aria-pressed="false">Product space</button>
+            <button data-v="scatter" aria-pressed="false">Complexity</button>
+            <button data-v="rank" aria-pressed="false">Rankings</button>
+          </div>
+          <div class="spacer"></div>
+          <button class="tv-toggle" id="tableToggle" aria-pressed="false">View as table</button>
+        </div>
+
+        <div class="breadcrumb" id="breadcrumb"></div>
+
+        <div class="chart-card" id="chartCard">
+          <div class="chart-title" id="chartTitle"></div>
+          <svg id="mainSvg" viewBox="0 0 1000 560" role="img" aria-label="Trade visualization"></svg>
+          <div class="tooltip" id="tooltip"></div>
+        </div>
+
+        <div class="year-row" id="yearRow">
+          <button class="play" id="playBtn" aria-label="Play year animation">▶</button>
+          <input type="range" id="yearSlider" min="1995" max="2025" step="1" value="2025" aria-label="Year">
+          <span class="year-label" id="yearLabel">2025</span>
+        </div>
+
+        <ul class="legend" id="legend"></ul>
+        <div class="scale-legend" id="scaleLegend" style="display:none"></div>
+
+        <div id="tableWrap" style="display:none; margin-top:12px;"></div>
+
+        <footer class="note">
+          <strong>About this demo:</strong> the layout algorithms (squarified treemap, stacked-area,
+          tile cartogram), interaction model (drill-down, crosshair tooltips, isolate-on-legend-click,
+          year animation), and control structure mirror the real Atlas explore page. Values are produced
+          by a seeded random-number generator so each country has a stable, plausible-looking — but
+          entirely fictional — trade profile that evolves smoothly over 1995–2025.
+        </footer>
+      </main>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+"use strict";
+
+/* ============================== data model ============================== */
+
+var SECTIONS = [
+  { id:"mach",  name:"Machinery & Electronics", color:"var(--series-1)", w:1.4, hs2:[
+    { code:"84", name:"Industrial machinery",  leaves:["Turbines & engines","Pumps & compressors","Machining centres","Lifting equipment"] },
+    { code:"85", name:"Electrical machinery",  leaves:["Integrated circuits","Insulated cable","Transformers","Telephony equipment"] },
+    { code:"90", name:"Precision instruments", leaves:["Medical instruments","Measuring devices","Optical elements","Orthopedic appliances"] },
+    { code:"91", name:"Computing equipment",   leaves:["Data processing units","Storage units","Display modules","Input devices"] } ] },
+  { id:"chem",  name:"Chemicals & Pharma", color:"var(--series-2)", w:1.1, hs2:[
+    { code:"29", name:"Organic chemicals",     leaves:["Cyclic hydrocarbons","Carboxylic acids","Amine compounds","Heterocyclics"] },
+    { code:"30", name:"Pharmaceuticals",       leaves:["Packaged medicaments","Vaccines & sera","Active ingredients","Diagnostic reagents"] },
+    { code:"39", name:"Plastics",              leaves:["Polymer resins","Plastic sheeting","Plastic packaging","Technical mouldings"] },
+    { code:"33", name:"Cosmetics & oils",      leaves:["Essential oils","Beauty preparations","Soaps & surfactants","Fragrance blends"] } ] },
+  { id:"agri",  name:"Agriculture & Food", color:"var(--series-3)", w:1.0, hs2:[
+    { code:"08", name:"Fruits & nuts",         leaves:["Citrus fruit","Tree nuts","Tropical fruit","Dried fruit"] },
+    { code:"10", name:"Cereals",               leaves:["Wheat & meslin","Maize (corn)","Rice","Barley"] },
+    { code:"02", name:"Meat & fish",           leaves:["Bovine meat","Poultry cuts","Frozen fish","Crustaceans"] },
+    { code:"22", name:"Beverages",             leaves:["Wine of fresh grapes","Spirits","Mineral waters","Fruit juices"] } ] },
+  { id:"metl",  name:"Metals & Mining", color:"var(--series-4)", w:1.2, hs2:[
+    { code:"72", name:"Iron & steel",          leaves:["Flat-rolled steel","Steel bars & rods","Stainless products","Ferroalloys"] },
+    { code:"74", name:"Copper & alloys",       leaves:["Refined copper","Copper wire","Copper tubes","Copper scrap"] },
+    { code:"76", name:"Aluminium",             leaves:["Unwrought aluminium","Aluminium plate","Aluminium structures","Aluminium foil"] },
+    { code:"26", name:"Ores & concentrates",   leaves:["Iron ore","Copper ore","Zinc concentrate","Precious-metal ore"] } ] },
+  { id:"text",  name:"Textiles & Apparel", color:"var(--series-5)", w:0.75, hs2:[
+    { code:"61", name:"Knit apparel",          leaves:["Knit sweaters","T-shirts & vests","Knit dresses","Hosiery"] },
+    { code:"62", name:"Woven apparel",         leaves:["Suits & jackets","Woven trousers","Shirts & blouses","Outerwear"] },
+    { code:"52", name:"Cotton & yarns",        leaves:["Raw cotton","Cotton yarn","Woven cotton fabric","Denim fabric"] },
+    { code:"64", name:"Footwear",              leaves:["Leather footwear","Sports footwear","Rubber footwear","Footwear parts"] } ] },
+  { id:"vehi",  name:"Vehicles & Transport", color:"var(--series-6)", w:0.95, hs2:[
+    { code:"87", name:"Road vehicles",         leaves:["Passenger cars","Goods vehicles","Vehicle parts","Motorcycles"] },
+    { code:"88", name:"Aircraft",              leaves:["Aeroplane parts","Light aircraft","Avionics assemblies","Landing gear"] },
+    { code:"89", name:"Ships & boats",         leaves:["Cargo vessels","Pleasure craft","Tugs & dredgers","Marine structures"] },
+    { code:"86", name:"Rail equipment",        leaves:["Rail cars","Locomotive parts","Track fixtures","Signalling gear"] } ] },
+  { id:"ston",  name:"Stone, Glass & Minerals", color:"var(--series-7)", w:0.6, hs2:[
+    { code:"71", name:"Gems & precious metals",leaves:["Gold, unwrought","Diamonds","Jewellery","Silver, semi-manufactured"] },
+    { code:"70", name:"Glass & glassware",     leaves:["Float glass","Glass containers","Glass fibres","Laboratory glassware"] },
+    { code:"68", name:"Stone articles",        leaves:["Worked granite","Marble slabs","Abrasive products","Cement articles"] },
+    { code:"69", name:"Ceramics",              leaves:["Ceramic tiles","Porcelain tableware","Refractory bricks","Sanitary ceramics"] } ] },
+  { id:"misc",  name:"Services & Other", color:"var(--series-8)", w:0.7, hs2:[
+    { code:"98", name:"ICT services",          leaves:["Software licensing","Cloud services","IT consulting","Data services"] },
+    { code:"97", name:"Travel & tourism",      leaves:["Tourism receipts","Business travel","Education travel","Health travel"] },
+    { code:"96", name:"Transport services",    leaves:["Sea freight","Air freight","Logistics handling","Passenger transport"] },
+    { code:"95", name:"Financial services",    leaves:["Insurance services","Banking services","Investment services","Payment processing"] } ] }
+];
+
+var REGIONS = [
+  { id:"nam", name:"North America",          color:"var(--series-1)" },
+  { id:"lac", name:"Latin America",          color:"var(--series-2)" },
+  { id:"eca", name:"Europe & Central Asia",  color:"var(--series-3)" },
+  { id:"mena",name:"Middle East & N. Africa",color:"var(--series-4)" },
+  { id:"ssa", name:"Sub-Saharan Africa",     color:"var(--series-5)" },
+  { id:"eap", name:"East Asia & Pacific",    color:"var(--series-6)" },
+  { id:"sas", name:"South Asia",             color:"var(--series-7)" }
+];
+
+/* name, region, tile col, tile row */
+var COUNTRIES = [
+  ["Canada","nam",2,1],["United States","nam",2,2],["Mexico","nam",2,3],
+  ["Colombia","lac",3,4],["Peru","lac",3,5],["Brazil","lac",4,5],["Chile","lac",3,6],["Argentina","lac",4,6],
+  ["United Kingdom","eca",8,1],["Netherlands","eca",9,1],["Sweden","eca",10,0],["France","eca",8,2],
+  ["Germany","eca",9,2],["Poland","eca",10,2],["Ukraine","eca",11,2],["Spain","eca",8,3],
+  ["Italy","eca",9,3],["Turkey","eca",11,3],["Russia","eca",13,1],["Kazakhstan","eca",13,2],
+  ["Morocco","mena",8,4],["Algeria","mena",9,4],["Egypt","mena",10,4],["Saudi Arabia","mena",11,4],["United Arab Emirates","mena",12,4],
+  ["Ghana","ssa",8,5],["Nigeria","ssa",9,5],["Ethiopia","ssa",11,5],["Kenya","ssa",11,6],["South Africa","ssa",10,7],
+  ["China","eap",15,3],["South Korea","eap",17,2],["Japan","eap",18,2],["Philippines","eap",18,4],
+  ["Vietnam","eap",16,4],["Thailand","eap",16,5],["Malaysia","eap",16,6],["Indonesia","eap",17,6],
+  ["Australia","eap",18,7],["New Zealand","eap",19,8],
+  ["Pakistan","sas",13,3],["India","sas",14,4],["Bangladesh","sas",15,4],["Sri Lanka","sas",14,5]
+].map(function (c) { return { name:c[0], region:c[1], col:c[2], row:c[3] }; });
+
+var YEAR_MIN = 1995, YEAR_MAX = 2025;
+
+/* ---- seeded RNG ---- */
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hashSeed(str) {
+  var h = 0;
+  for (var i = 0; i < str.length; i++) h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
+  return h;
+}
+
+/* leaf trajectory params, cached */
+var trajCache = {};
+function traj(key) {
+  if (trajCache[key]) return trajCache[key];
+  var r = mulberry32(hashSeed(key));
+  var t = {
+    base:   Math.exp(r() * 3.2) * 2e6,
+    growth: -0.03 + r() * 0.12,
+    amp:    0.04 + r() * 0.16,
+    phase:  r() * 6.283,
+    period: 6 + r() * 10
+  };
+  trajCache[key] = t;
+  return t;
+}
+function evalTraj(t, year, mult) {
+  var dy = year - YEAR_MIN;
+  return t.base * mult * Math.pow(1 + t.growth, dy) * (1 + t.amp * Math.sin(6.283 * dy / t.period + t.phase));
+}
+function countryScale(country) {
+  var r = mulberry32(hashSeed(country + "|size"));
+  return Math.exp(r() * 2.4);
+}
+function specialization(country, flow, groupId) {
+  var r = mulberry32(hashSeed(country + "|" + flow + "|spec|" + groupId));
+  return 0.25 + Math.exp(r() * 1.6) - 1;
+}
+
+function leafValue(country, flow, sec, leafKey, year) {
+  var t = traj(country + "|" + flow + "|" + leafKey);
+  return evalTraj(t, year, sec.w * specialization(country, flow, sec.id) * countryScale(country));
+}
+function partnerValue(country, flow, partner, year) {
+  var t = traj(country + "|" + flow + "|pt|" + partner.name);
+  var affinity = specialization(country, flow, "rg-" + partner.region);
+  return evalTraj(t, year, affinity * countryScale(country) * countryScale(partner.name) * 0.9);
+}
+
+/* aggregated product tree for a given (country, flow, year) */
+function productData(country, flow, year) {
+  return SECTIONS.map(function (sec) {
+    var hs2 = sec.hs2.map(function (g) {
+      var leaves = g.leaves.map(function (leafName, i) {
+        var key = sec.id + "|" + g.code + "|" + i;
+        return { name: leafName, value: leafValue(country, flow, sec, key, year), sectionId: sec.id, hs2: g.code };
+      });
+      return { code: g.code, name: g.name, sectionId: sec.id,
+               value: leaves.reduce(function (s, l) { return s + l.value; }, 0), leaves: leaves };
+    });
+    return { id: sec.id, name: sec.name, color: sec.color,
+             value: hs2.reduce(function (s, g) { return s + g.value; }, 0), hs2: hs2 };
+  });
+}
+function partnerData(country, flow, year) {
+  return COUNTRIES.filter(function (c) { return c.name !== country; }).map(function (c) {
+    return { name: c.name, region: c.region, col: c.col, row: c.row,
+             color: REGIONS.find(function (r) { return r.id === c.region; }).color,
+             value: partnerValue(country, flow, c, year) };
+  });
+}
+function totalTrade(country, flow, year) {
+  return productData(country, flow, year).reduce(function (s, d) { return s + d.value; }, 0);
+}
+
+/* ---- country-level synthetic indicators ---- */
+function eciOf(country, year) {
+  var r = mulberry32(hashSeed(country + "|eci"));
+  var base = r() * 4 - 1.8, drift = (r() - 0.5) * 0.055;
+  var amp = 0.12 + r() * 0.25, period = 7 + r() * 9, phase = r() * 6.283;
+  var dy = year - YEAR_MIN;
+  return base + drift * dy + amp * Math.sin(6.283 * dy / period + phase);
+}
+function gdppcOf(country, year) {
+  var r = mulberry32(hashSeed(country + "|gdp"));
+  var base = 700 * Math.exp(r() * 4.4), g = 0.005 + r() * 0.04;
+  var amp = 0.02 + r() * 0.04, period = 6 + r() * 8, phase = r() * 6.283;
+  var dy = year - YEAR_MIN;
+  return base * Math.pow(1 + g, dy) * (1 + amp * Math.sin(6.283 * dy / period + phase));
+}
+function popOf(country, year) {
+  var r = mulberry32(hashSeed(country + "|pop"));
+  var base = 2e6 * Math.exp(r() * 6.4), g = 0.002 + r() * 0.018;
+  return base * Math.pow(1 + g, year - YEAR_MIN);
+}
+function eciRankings(year) {
+  return COUNTRIES.map(function (c) { return { name: c.name, region: c.region, eci: eciOf(c.name, year) }; })
+    .sort(function (a, b) { return b.eci - a.eci; });
+}
+
+/* revealed comparative advantage: >1 means the country exports the product competitively */
+function rcaOf(country, flow, sec, leafKey, year) {
+  var r = mulberry32(hashSeed(country + "|" + flow + "|rca|" + leafKey));
+  var noise = Math.exp(r() * 1.6 - 0.8);
+  var drift = Math.pow(1 + (r() - 0.45) * 0.04, year - YEAR_MIN);
+  return (specialization(country, flow, sec.id) * countryScale(country) / 7) * noise * drift;
+}
+
+/* ---- product-space layout: static node positions + edges, computed once ---- */
+var PS_LAYOUT = null;
+function productSpaceLayout() {
+  if (PS_LAYOUT) return PS_LAYOUT;
+  var cx = 500, cy = 285, nodes = [], edges = [], byKey = {};
+  SECTIONS.forEach(function (sec, si) {
+    var sa = (si / SECTIONS.length) * 6.283 - 1.5708;
+    var scx = cx + Math.cos(sa) * 330, scy = cy + Math.sin(sa) * 190;
+    sec.hs2.forEach(function (g, gi) {
+      var ga = (gi / sec.hs2.length) * 6.283 + sa;
+      var gcx = scx + Math.cos(ga) * 58, gcy = scy + Math.sin(ga) * 42;
+      g.leaves.forEach(function (leafName, li) {
+        var key = sec.id + "|" + g.code + "|" + li;
+        var r = mulberry32(hashSeed("pos|" + key));
+        var la = r() * 6.283, lr = 8 + r() * 26;
+        var node = {
+          key: key, name: leafName, sectionId: sec.id, color: sec.color,
+          x: gcx + Math.cos(la) * lr, y: gcy + Math.sin(la) * lr * 0.75
+        };
+        byKey[key] = node;
+        nodes.push(node);
+      });
+      for (var li2 = 0; li2 < g.leaves.length - 1; li2++) {
+        edges.push([sec.id + "|" + g.code + "|" + li2, sec.id + "|" + g.code + "|" + (li2 + 1)]);
+      }
+    });
+    for (var gi2 = 0; gi2 < sec.hs2.length - 1; gi2++) {
+      edges.push([sec.id + "|" + sec.hs2[gi2].code + "|0", sec.id + "|" + sec.hs2[gi2 + 1].code + "|0"]);
+    }
+    var nb = SECTIONS[(si + 1) % SECTIONS.length];
+    var rr = mulberry32(hashSeed("xedge|" + sec.id));
+    var gA = sec.hs2[Math.floor(rr() * sec.hs2.length)], gB = nb.hs2[Math.floor(rr() * nb.hs2.length)];
+    edges.push([sec.id + "|" + gA.code + "|" + Math.floor(rr() * 4), nb.id + "|" + gB.code + "|" + Math.floor(rr() * 4)]);
+  });
+  PS_LAYOUT = { nodes: nodes, edges: edges, byKey: byKey };
+  return PS_LAYOUT;
+}
+
+/* ============================== helpers ============================== */
+
+function fmtUSD(v) {
+  if (v >= 1e9) return "$" + (v / 1e9).toFixed(v >= 1e10 ? 0 : 1) + "B";
+  if (v >= 1e6) return "$" + (v / 1e6).toFixed(v >= 1e7 ? 0 : 1) + "M";
+  if (v >= 1e3) return "$" + (v / 1e3).toFixed(0) + "K";
+  return "$" + Math.round(v);
+}
+function escapeHtml(s) {
+  var d = document.createElement("div"); d.textContent = s; return d.innerHTML;
+}
+var svgNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs) {
+  var e = document.createElementNS(svgNS, tag);
+  for (var k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+function resolvedHex(cssVar) {
+  var probe = document.createElement("div");
+  probe.style.color = cssVar;
+  document.body.appendChild(probe);
+  var rgb = getComputedStyle(probe).color;
+  document.body.removeChild(probe);
+  var m = rgb.match(/\d+/g).map(Number);
+  return "#" + m.slice(0, 3).map(function (n) { return n.toString(16).padStart(2, "0"); }).join("");
+}
+function relLuminance(hex) {
+  var c = hex.replace("#", "");
+  var ch = [0, 2, 4].map(function (i) {
+    var v = parseInt(c.substr(i, 2), 16) / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+}
+function labelColorFor(hex) {
+  var L = relLuminance(hex);
+  return (1.05 / (L + 0.05)) >= ((L + 0.05) / 0.05) ? "#ffffff" : "#0b0b0b";
+}
+
+/* squarified treemap */
+function worstRatio(row, side) {
+  var sum = 0, maxA = -Infinity, minA = Infinity;
+  for (var i = 0; i < row.length; i++) {
+    sum += row[i].area;
+    if (row[i].area > maxA) maxA = row[i].area;
+    if (row[i].area < minA) minA = row[i].area;
+  }
+  return Math.max((side * side * maxA) / (sum * sum), (sum * sum) / (side * side * minA));
+}
+function layoutRow(nodes, x, y, w, h, out) {
+  if (!nodes.length) return;
+  if (nodes.length === 1) { out.push(Object.assign({}, nodes[0], { x: x, y: y, w: w, h: h })); return; }
+  var side = Math.min(w, h);
+  var row = [nodes[0]], rowSum = nodes[0].area, best = worstRatio(row, side), i = 1;
+  for (; i < nodes.length; i++) {
+    var testRow = row.concat(nodes[i]);
+    var tw = worstRatio(testRow, side);
+    if (tw <= best) { row = testRow; rowSum += nodes[i].area; best = tw; }
+    else break;
+  }
+  var wide = w >= h, thickness = rowSum / side, offset = 0;
+  row.forEach(function (n) {
+    if (wide) {
+      var rh = (n.area / rowSum) * h;
+      out.push(Object.assign({}, n, { x: x, y: y + offset, w: thickness, h: rh }));
+      offset += rh;
+    } else {
+      var rw = (n.area / rowSum) * w;
+      out.push(Object.assign({}, n, { x: x + offset, y: y, w: rw, h: thickness }));
+      offset += rw;
+    }
+  });
+  if (wide) layoutRow(nodes.slice(row.length), x + thickness, y, w - thickness, h, out);
+  else layoutRow(nodes.slice(row.length), x, y + thickness, w, h - thickness, out);
+}
+function squarify(items, x, y, w, h) {
+  var total = items.reduce(function (s, n) { return s + n.value; }, 0);
+  if (total <= 0) return [];
+  var scaled = items.map(function (n) { return Object.assign({}, n, { area: (n.value / total) * w * h }); })
+    .sort(function (a, b) { return b.area - a.area; });
+  var out = [];
+  layoutRow(scaled, x, y, w, h, out);
+  return out;
+}
+
+/* ============================== state & dom ============================== */
+
+var state = {
+  country: "Turkey", flow: "exports", mode: "products", detail: "hs2",
+  view: "treemap", year: YEAR_MAX, drill: [], isolate: null, table: false, playing: false
+};
+
+var mainSvg = document.getElementById("mainSvg");
+var tooltip = document.getElementById("tooltip");
+var chartCard = document.getElementById("chartCard");
+var chartTitle = document.getElementById("chartTitle");
+var legendEl = document.getElementById("legend");
+var scaleLegendEl = document.getElementById("scaleLegend");
+var breadcrumbEl = document.getElementById("breadcrumb");
+var tableWrap = document.getElementById("tableWrap");
+var kpisEl = document.getElementById("kpis");
+var yearRow = document.getElementById("yearRow");
+var yearSlider = document.getElementById("yearSlider");
+var yearLabel = document.getElementById("yearLabel");
+var playBtn = document.getElementById("playBtn");
+
+function showTooltip(evt, html) {
+  tooltip.innerHTML = html;
+  tooltip.style.opacity = "1";
+  var rect = chartCard.getBoundingClientRect();
+  tooltip.style.left = (evt.clientX - rect.left) + "px";
+  tooltip.style.top = Math.max(64, evt.clientY - rect.top) + "px";
+}
+function hideTooltip() { tooltip.style.opacity = "0"; }
+
+/* ============================== KPIs ============================== */
+
+function renderKpis() {
+  var tot = totalTrade(state.country, state.flow, state.year);
+  var prev = totalTrade(state.country, state.flow, Math.max(YEAR_MIN, state.year - 1));
+  var yoy = prev > 0 ? ((tot - prev) / prev) * 100 : 0;
+
+  var prods = productData(state.country, state.flow, state.year);
+  var leaves = [];
+  prods.forEach(function (s) { s.hs2.forEach(function (g) { leaves = leaves.concat(g.leaves); }); });
+  leaves.sort(function (a, b) { return b.value - a.value; });
+  var top = leaves[0];
+
+  var parts = partnerData(state.country, state.flow, state.year).sort(function (a, b) { return b.value - a.value; });
+  var topPartner = parts[0];
+  var partTotal = parts.reduce(function (s, p) { return s + p.value; }, 0);
+
+  var eciRank = eciRankings(state.year).findIndex(function (r) { return r.name === state.country; }) + 1;
+
+  var flowWord = state.flow === "exports" ? "exports" : "imports";
+  var items = [
+    { label: "Total " + flowWord + " (" + state.year + ")", value: fmtUSD(tot),
+      delta: (yoy >= 0 ? "+" : "") + yoy.toFixed(1) + "% vs " + (state.year - 1), dir: yoy >= 0 ? "up" : "down" },
+    { label: "Top product", value: top.name, small: true, delta: fmtUSD(top.value) + " · " + (top.value / tot * 100).toFixed(1) + "% of total" },
+    { label: "Top partner", value: topPartner.name, small: true, delta: fmtUSD(topPartner.value) + " · " + (topPartner.value / partTotal * 100).toFixed(1) + "% of total" },
+    { label: "Complexity rank (synthetic)", value: "#" + eciRank, delta: "of " + COUNTRIES.length + " countries" }
+  ];
+  kpisEl.innerHTML = "";
+  items.forEach(function (it) {
+    var d = document.createElement("div");
+    d.className = "kpi";
+    var lbl = document.createElement("div"); lbl.className = "k-label"; lbl.textContent = it.label;
+    var val = document.createElement("div"); val.className = "k-value"; val.textContent = it.value;
+    if (it.small) val.style.fontSize = "15px";
+    d.appendChild(lbl); d.appendChild(val);
+    if (it.delta) {
+      var del = document.createElement("div");
+      del.className = "k-delta" + (it.dir ? " " + it.dir : "");
+      del.textContent = it.delta;
+      d.appendChild(del);
+    }
+    kpisEl.appendChild(d);
+  });
+}
+
+/* ============================== treemap view ============================== */
+
+function treemapItems() {
+  var W = 1000, H = 560;
+  if (state.mode === "partners") {
+    var parts = partnerData(state.country, state.flow, state.year);
+    return { items: parts.map(function (p) {
+      return { name: p.name, value: p.value, color: p.color, groupId: p.region, clickable: false };
+    }), W: W, H: H };
+  }
+  var data = productData(state.country, state.flow, state.year);
+  var items = [];
+  if (state.drill.length === 0) {
+    if (state.detail === "section") {
+      items = data.map(function (s) { return { name: s.name, value: s.value, color: s.color, groupId: s.id, clickable: true, drillTo: [s.id] }; });
+    } else if (state.detail === "hs2") {
+      data.forEach(function (s) { s.hs2.forEach(function (g) {
+        items.push({ name: g.name, value: g.value, color: s.color, groupId: s.id, clickable: true, drillTo: [s.id, g.code] });
+      }); });
+    } else {
+      data.forEach(function (s) { s.hs2.forEach(function (g) { g.leaves.forEach(function (l) {
+        items.push({ name: l.name, value: l.value, color: s.color, groupId: s.id, clickable: false });
+      }); }); });
+    }
+  } else if (state.drill.length === 1) {
+    var sec = data.find(function (s) { return s.id === state.drill[0]; });
+    sec.hs2.forEach(function (g) {
+      items.push({ name: g.name, value: g.value, color: sec.color, groupId: sec.id, clickable: true, drillTo: [sec.id, g.code] });
+    });
+  } else {
+    var sec2 = data.find(function (s) { return s.id === state.drill[0]; });
+    var grp = sec2.hs2.find(function (g) { return g.code === state.drill[1]; });
+    grp.leaves.forEach(function (l) {
+      items.push({ name: l.name, value: l.value, color: sec2.color, groupId: sec2.id, clickable: false });
+    });
+  }
+  return { items: items, W: W, H: H };
+}
+
+function renderTreemap() {
+  var cfg = treemapItems();
+  mainSvg.setAttribute("viewBox", "0 0 " + cfg.W + " " + cfg.H);
+  mainSvg.innerHTML = "";
+  var total = cfg.items.reduce(function (s, n) { return s + n.value; }, 0);
+  var rects = squarify(cfg.items, 2, 2, cfg.W - 4, cfg.H - 4);
+
+  rects.forEach(function (r) {
+    var g = el("g", { class: "cell" + (r.clickable ? " clickable" : "") });
+    g.appendChild(el("rect", {
+      x: r.x, y: r.y, width: Math.max(0, r.w - 2), height: Math.max(0, r.h - 2),
+      rx: 3, style: "fill:" + r.color
+    }));
+    var labelColor = labelColorFor(resolvedHex(r.color));
+    if (r.w > 58 && r.h > 26) {
+      var maxChars = Math.max(3, Math.floor(r.w / 6.4) - 1);
+      var name = el("text", { class: "name", x: r.x + 8, y: r.y + 17, fill: labelColor });
+      name.textContent = r.name.length > maxChars ? r.name.slice(0, maxChars) + "…" : r.name;
+      g.appendChild(name);
+      if (r.h > 42) {
+        var val = el("text", { class: "value", x: r.x + 8, y: r.y + 33, fill: labelColor });
+        val.textContent = fmtUSD(r.value);
+        g.appendChild(val);
+      }
+    }
+    g.addEventListener("mousemove", function (evt) {
+      showTooltip(evt,
+        '<div class="t-row"><span class="t-key" style="background:' + r.color + '"></span>' + escapeHtml(r.name) + '</div>' +
+        '<div class="t-value">' + fmtUSD(r.value) + '</div>' +
+        '<div style="opacity:.75">' + (r.value / total * 100).toFixed(1) + '% of shown total' +
+        (r.clickable ? ' · click to drill in' : '') + '</div>');
+    });
+    g.addEventListener("mouseleave", hideTooltip);
+    if (r.clickable) {
+      g.addEventListener("click", function () { state.drill = r.drillTo; renderAll(); });
+    }
+    if (state.isolate && r.groupId !== state.isolate) g.classList.add("dim");
+    mainSvg.appendChild(g);
+  });
+}
+
+/* ============================== time views ============================== */
+
+function seriesOverYears() {
+  var years = [];
+  for (var y = YEAR_MIN; y <= YEAR_MAX; y++) years.push(y);
+  var groups = state.mode === "products" ? SECTIONS.map(function (s) { return { id: s.id, name: s.name, color: s.color }; })
+                                         : REGIONS.map(function (r) { return { id: r.id, name: r.name, color: r.color }; });
+  var series = groups.map(function (grp) { return { id: grp.id, name: grp.name, color: grp.color, values: [] }; });
+  years.forEach(function (year, yi) {
+    if (state.mode === "products") {
+      var data = productData(state.country, state.flow, year);
+      series.forEach(function (ser) {
+        ser.values[yi] = data.find(function (s) { return s.id === ser.id; }).value;
+      });
+    } else {
+      var parts = partnerData(state.country, state.flow, year);
+      series.forEach(function (ser) {
+        ser.values[yi] = parts.filter(function (p) { return p.region === ser.id; })
+          .reduce(function (s, p) { return s + p.value; }, 0);
+      });
+    }
+  });
+  return { years: years, series: series };
+}
+
+function renderStacked(normalized) {
+  var data = seriesOverYears();
+  var W = 1000, H = 460;
+  mainSvg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  mainSvg.innerHTML = "";
+  var margin = { top: 14, right: 16, bottom: 30, left: 58 };
+  var plotW = W - margin.left - margin.right, plotH = H - margin.top - margin.bottom;
+  var n = data.years.length;
+
+  var totals = [];
+  for (var i = 0; i < n; i++) {
+    var s = 0;
+    data.series.forEach(function (ser) { s += ser.values[i]; });
+    totals.push(s);
+  }
+  var maxY = normalized ? 1 : Math.max.apply(null, totals) * 1.06;
+
+  var xFor = function (i) { return margin.left + (i / (n - 1)) * plotW; };
+  var yFor = function (v) { return margin.top + plotH - (v / maxY) * plotH; };
+
+  var ticks = 4;
+  for (var t = 0; t <= ticks; t++) {
+    var val = (maxY / ticks) * t;
+    var y = yFor(val);
+    mainSvg.appendChild(el("line", { class: "grid-line", x1: margin.left, x2: W - margin.right, y1: y, y2: y }));
+    var lbl = el("text", { class: "axis-label", x: margin.left - 8, y: y + 4, "text-anchor": "end" });
+    lbl.textContent = normalized ? Math.round(val * 100) + "%" : fmtUSD(val);
+    mainSvg.appendChild(lbl);
+  }
+  [0, 10, 20, n - 1].forEach(function (i) {
+    if (i >= n) return;
+    var lbl = el("text", { class: "axis-label", x: xFor(i), y: H - 8, "text-anchor": "middle" });
+    lbl.textContent = data.years[i];
+    mainSvg.appendChild(lbl);
+  });
+
+  var cumulative = new Array(n).fill(0);
+  data.series.forEach(function (ser) {
+    var topPts = [], basePts = [];
+    for (var i = 0; i < n; i++) {
+      var v = normalized ? ser.values[i] / totals[i] : ser.values[i];
+      var base = cumulative[i], top = base + v;
+      topPts.push([xFor(i), yFor(top)]);
+      basePts.push([xFor(i), yFor(base)]);
+      cumulative[i] = top;
+    }
+    var d = "M" + topPts.map(function (p) { return p.join(","); }).join("L") +
+      "L" + basePts.slice().reverse().map(function (p) { return p.join(","); }).join("L") + "Z";
+    var path = el("path", { d: d, style: "fill:" + ser.color, class: "area-path", opacity: "0.88" });
+    if (state.isolate && ser.id !== state.isolate) path.classList.add("area-dim");
+    mainSvg.appendChild(path);
+  });
+
+  var crosshair = el("line", { class: "crosshair", x1: 0, x2: 0, y1: margin.top, y2: margin.top + plotH, style: "display:none" });
+  mainSvg.appendChild(crosshair);
+  var hit = el("rect", { x: margin.left, y: margin.top, width: plotW, height: plotH, fill: "transparent" });
+  hit.addEventListener("mousemove", function (evt) {
+    var rect = mainSvg.getBoundingClientRect();
+    var mx = (evt.clientX - rect.left) * (W / rect.width);
+    var i = Math.round(((mx - margin.left) / plotW) * (n - 1));
+    i = Math.max(0, Math.min(n - 1, i));
+    var xPix = xFor(i);
+    crosshair.setAttribute("x1", xPix); crosshair.setAttribute("x2", xPix);
+    crosshair.style.display = "block";
+    var rows = data.series.slice().reverse().map(function (ser) {
+      var v = ser.values[i];
+      var txt = normalized ? (v / totals[i] * 100).toFixed(1) + "%" : fmtUSD(v);
+      return '<div class="t-row"><span class="t-key" style="background:' + ser.color + '"></span>' + escapeHtml(ser.name) +
+        '<span style="margin-left:auto;font-weight:600;padding-left:10px">' + txt + '</span></div>';
+    }).join("");
+    showTooltip(evt, '<div class="t-value">' + data.years[i] + '</div>' + rows);
+  });
+  hit.addEventListener("mouseleave", function () { crosshair.style.display = "none"; hideTooltip(); });
+  mainSvg.appendChild(hit);
+}
+
+/* ============================== geo map view ============================== */
+
+var SEQ_STEPS = ["var(--seq-100)","var(--seq-200)","var(--seq-300)","var(--seq-400)","var(--seq-500)","var(--seq-600)","var(--seq-700)"];
+
+function renderGeoMap() {
+  var parts = partnerData(state.country, state.flow, state.year);
+  var maxV = Math.max.apply(null, parts.map(function (p) { return p.value; }));
+  var minV = Math.min.apply(null, parts.map(function (p) { return p.value; }));
+  var logMin = Math.log(minV), logMax = Math.log(maxV);
+
+  var maxCol = 0, maxRow = 0;
+  COUNTRIES.forEach(function (c) { if (c.col > maxCol) maxCol = c.col; if (c.row > maxRow) maxRow = c.row; });
+  var cellSize = 46, pad = 4;
+  var W = (maxCol + 1) * cellSize + pad * 2, H = (maxRow + 1) * cellSize + pad * 2;
+  mainSvg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  mainSvg.innerHTML = "";
+
+  var reporter = COUNTRIES.find(function (c) { return c.name === state.country; });
+  var total = parts.reduce(function (s, p) { return s + p.value; }, 0);
+
+  COUNTRIES.forEach(function (c) {
+    var isReporter = c.name === state.country;
+    var g = el("g", { class: "tile" + (isReporter ? " reporter" : "") });
+    var x = pad + c.col * cellSize, y = pad + c.row * cellSize;
+    var fill, p = null;
+    if (isReporter) {
+      fill = "var(--text-primary)";
+    } else {
+      p = parts.find(function (q) { return q.name === c.name; });
+      var t = (Math.log(p.value) - logMin) / (logMax - logMin || 1);
+      fill = SEQ_STEPS[Math.max(0, Math.min(6, Math.floor(t * 6.999)))];
+    }
+    g.appendChild(el("rect", { x: x, y: y, width: cellSize - 3, height: cellSize - 3, rx: 5, style: "fill:" + fill }));
+    var hex = resolvedHex(fill);
+    var abbr = c.name.split(/\s+/).map(function (w) { return w[0]; }).join("").toUpperCase();
+    if (abbr.length < 2) abbr = c.name.slice(0, 3).toUpperCase();
+    var txt = el("text", { x: x + (cellSize - 3) / 2, y: y + (cellSize - 3) / 2 + 3, "text-anchor": "middle", fill: labelColorFor(hex) });
+    txt.textContent = abbr;
+    g.appendChild(txt);
+    g.addEventListener("mousemove", function (evt) {
+      if (isReporter) {
+        showTooltip(evt, '<div class="t-value">' + escapeHtml(c.name) + '</div><div style="opacity:.75">Selected country</div>');
+      } else {
+        showTooltip(evt,
+          '<div class="t-value">' + escapeHtml(c.name) + '</div>' +
+          '<div>' + fmtUSD(p.value) + ' · ' + (p.value / total * 100).toFixed(1) + '% of ' + state.flow + '</div>' +
+          '<div style="opacity:.75">' + escapeHtml(REGIONS.find(function (r) { return r.id === c.region; }).name) + '</div>');
+      }
+    });
+    g.addEventListener("mouseleave", hideTooltip);
+    mainSvg.appendChild(g);
+  });
+}
+
+/* ============================== product space view ============================== */
+
+function productSpaceNodes() {
+  var layout = productSpaceLayout();
+  var data = productData(state.country, state.flow, state.year);
+  var out = [];
+  data.forEach(function (sec) {
+    sec.hs2.forEach(function (g) {
+      g.leaves.forEach(function (l, li) {
+        var key = sec.id + "|" + g.code + "|" + li;
+        var pos = layout.byKey[key];
+        out.push({
+          key: key, name: l.name, sectionId: sec.id, sectionName: sec.name, color: sec.color,
+          hs2Name: g.name, x: pos.x, y: pos.y, value: l.value,
+          rca: rcaOf(state.country, state.flow, sec, key, state.year)
+        });
+      });
+    });
+  });
+  return out;
+}
+
+function renderProductSpace() {
+  var W = 1000, H = 570;
+  mainSvg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  mainSvg.innerHTML = "";
+  var layout = productSpaceLayout();
+  var nodes = productSpaceNodes();
+  var byKey = {};
+  nodes.forEach(function (n) { byKey[n.key] = n; });
+  var maxV = Math.max.apply(null, nodes.map(function (n) { return n.value; }));
+
+  layout.edges.forEach(function (e) {
+    var a = byKey[e[0]], b = byKey[e[1]];
+    mainSvg.appendChild(el("line", { class: "edge", x1: a.x, y1: a.y, x2: b.x, y2: b.y }));
+  });
+
+  nodes.slice().sort(function (a, b) { return b.value - a.value; }).forEach(function (n) {
+    var exported = n.rca >= 1;
+    var g = el("g", { class: "node" + (exported ? "" : " hollow") });
+    var r = 3.5 + 9.5 * Math.sqrt(n.value / maxV);
+    g.appendChild(el("circle", { cx: n.x, cy: n.y, r: r, style: exported ? "fill:" + n.color : "" }));
+    g.appendChild(el("circle", { cx: n.x, cy: n.y, r: Math.max(r + 6, 12), fill: "transparent", stroke: "none" }));
+    g.addEventListener("mousemove", function (evt) {
+      showTooltip(evt,
+        '<div class="t-row"><span class="t-key" style="background:' + n.color + '"></span>' + escapeHtml(n.name) + '</div>' +
+        '<div class="t-value">' + fmtUSD(n.value) + '</div>' +
+        '<div style="opacity:.75">' + escapeHtml(n.hs2Name) + ' · ' + escapeHtml(n.sectionName) + '</div>' +
+        '<div style="opacity:.75">RCA ' + n.rca.toFixed(2) + (exported ? ' — competitive' : ' — below advantage') + '</div>');
+    });
+    g.addEventListener("mouseleave", hideTooltip);
+    if (state.isolate && n.sectionId !== state.isolate) g.classList.add("dim");
+    mainSvg.appendChild(g);
+  });
+}
+
+/* ============================== complexity scatter view ============================== */
+
+function renderScatter() {
+  var W = 1000, H = 520;
+  mainSvg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  mainSvg.innerHTML = "";
+  var margin = { top: 20, right: 24, bottom: 42, left: 52 };
+  var plotW = W - margin.left - margin.right, plotH = H - margin.top - margin.bottom;
+
+  var pts = COUNTRIES.map(function (c) {
+    return {
+      name: c.name, region: c.region,
+      color: REGIONS.find(function (r) { return r.id === c.region; }).color,
+      gdp: gdppcOf(c.name, state.year), eci: eciOf(c.name, state.year), pop: popOf(c.name, state.year)
+    };
+  });
+  var maxPop = Math.max.apply(null, pts.map(function (p) { return p.pop; }));
+  var gdpLo = Math.log10(400), gdpHi = Math.log10(150000);
+  var eciLo = -3, eciHi = 4;
+  var xFor = function (gdp) { return margin.left + (Math.log10(gdp) - gdpLo) / (gdpHi - gdpLo) * plotW; };
+  var yFor = function (eci) { return margin.top + plotH - (eci - eciLo) / (eciHi - eciLo) * plotH; };
+
+  [1000, 3000, 10000, 30000, 100000].forEach(function (g) {
+    var x = xFor(g);
+    mainSvg.appendChild(el("line", { class: "grid-line", x1: x, x2: x, y1: margin.top, y2: margin.top + plotH }));
+    var lbl = el("text", { class: "axis-label", x: x, y: H - 22, "text-anchor": "middle" });
+    lbl.textContent = g >= 1000 ? "$" + (g / 1000) + "k" : "$" + g;
+    mainSvg.appendChild(lbl);
+  });
+  [-2, -1, 0, 1, 2, 3].forEach(function (e) {
+    var y = yFor(e);
+    mainSvg.appendChild(el("line", { class: "grid-line", x1: margin.left, x2: W - margin.right, y1: y, y2: y }));
+    var lbl = el("text", { class: "axis-label", x: margin.left - 8, y: y + 4, "text-anchor": "end" });
+    lbl.textContent = e;
+    mainSvg.appendChild(lbl);
+  });
+  var xCap = el("text", { class: "axis-label", x: W - margin.right, y: H - 6, "text-anchor": "end" });
+  xCap.textContent = "GDP per capita (log scale) →";
+  mainSvg.appendChild(xCap);
+  var yCap = el("text", { class: "axis-label", x: margin.left, y: 12, "text-anchor": "start" });
+  yCap.textContent = "↑ Economic complexity index (synthetic)";
+  mainSvg.appendChild(yCap);
+
+  pts.slice().sort(function (a, b) { return b.pop - a.pop; }).forEach(function (p) {
+    var sel = p.name === state.country;
+    var g = el("g", { class: "bubble" + (sel ? " sel" : "") });
+    var r = 4 + 19 * Math.sqrt(p.pop / maxPop);
+    var x = xFor(p.gdp), y = yFor(p.eci);
+    g.appendChild(el("circle", { cx: x, cy: y, r: r, style: "fill:" + p.color, opacity: sel ? "1" : "0.82" }));
+    if (sel) {
+      var lbl = el("text", { x: x, y: y - r - 7, "text-anchor": "middle" });
+      lbl.textContent = p.name;
+      g.appendChild(lbl);
+    }
+    g.addEventListener("mousemove", function (evt) {
+      showTooltip(evt,
+        '<div class="t-row"><span class="t-key" style="background:' + p.color + '"></span>' + escapeHtml(p.name) + '</div>' +
+        '<div class="t-value">ECI ' + p.eci.toFixed(2) + '</div>' +
+        '<div>GDP pc ' + fmtUSD(p.gdp) + ' · pop ' + (p.pop / 1e6).toFixed(1) + 'M</div>' +
+        '<div style="opacity:.75">' + escapeHtml(REGIONS.find(function (rg) { return rg.id === p.region; }).name) + '</div>');
+    });
+    g.addEventListener("mouseleave", hideTooltip);
+    if (state.isolate && p.region !== state.isolate) g.classList.add("dim");
+    mainSvg.appendChild(g);
+  });
+}
+
+/* ============================== rankings bump view ============================== */
+
+function renderRankings() {
+  var W = 1000, H = 540;
+  mainSvg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  mainSvg.innerHTML = "";
+  var margin = { top: 18, right: 170, bottom: 30, left: 44 };
+  var plotW = W - margin.left - margin.right, plotH = H - margin.top - margin.bottom;
+
+  var years = [];
+  for (var y = YEAR_MIN; y <= YEAR_MAX; y++) years.push(y);
+  var n = years.length, N = COUNTRIES.length;
+
+  var rankOf = {};
+  COUNTRIES.forEach(function (c) { rankOf[c.name] = []; });
+  years.forEach(function (year, yi) {
+    eciRankings(year).forEach(function (row, i) { rankOf[row.name][yi] = i + 1; });
+  });
+
+  var xFor = function (i) { return margin.left + (i / (n - 1)) * plotW; };
+  var yFor = function (rank) { return margin.top + ((rank - 1) / (N - 1)) * plotH; };
+
+  [1, 10, 20, 30, 40].forEach(function (r) {
+    var yy = yFor(r);
+    mainSvg.appendChild(el("line", { class: "grid-line", x1: margin.left, x2: W - margin.right, y1: yy, y2: yy }));
+    var lbl = el("text", { class: "axis-label", x: margin.left - 8, y: yy + 4, "text-anchor": "end" });
+    lbl.textContent = "#" + r;
+    mainSvg.appendChild(lbl);
+  });
+  [0, 10, 20, n - 1].forEach(function (i) {
+    var lbl = el("text", { class: "axis-label", x: xFor(i), y: H - 8, "text-anchor": "middle" });
+    lbl.textContent = years[i];
+    mainSvg.appendChild(lbl);
+  });
+
+  function pathFor(name) {
+    return rankOf[name].map(function (r, i) { return (i ? "L" : "M") + xFor(i) + "," + yFor(r); }).join("");
+  }
+  COUNTRIES.forEach(function (c) {
+    if (c.name === state.country) return;
+    mainSvg.appendChild(el("path", { class: "bump-line", d: pathFor(c.name) }));
+  });
+  mainSvg.appendChild(el("path", { class: "bump-line hl", d: pathFor(state.country) }));
+
+  var finalRanks = eciRankings(YEAR_MAX);
+  finalRanks.slice(0, 3).forEach(function (row) {
+    if (row.name === state.country) return;
+    var lbl = el("text", { class: "bump-label", x: W - margin.right + 8, y: yFor(rankOf[row.name][n - 1]) + 4 });
+    lbl.textContent = "#" + rankOf[row.name][n - 1] + " " + row.name;
+    mainSvg.appendChild(lbl);
+  });
+  var selRank = rankOf[state.country][n - 1];
+  var selLbl = el("text", { class: "bump-label hl", x: W - margin.right + 8, y: yFor(selRank) + 4 });
+  selLbl.textContent = "#" + selRank + " " + state.country;
+  mainSvg.appendChild(selLbl);
+
+  var crosshair = el("line", { class: "crosshair", x1: 0, x2: 0, y1: margin.top, y2: margin.top + plotH, style: "display:none" });
+  mainSvg.appendChild(crosshair);
+  var hit = el("rect", { x: margin.left, y: margin.top, width: plotW, height: plotH, fill: "transparent" });
+  hit.addEventListener("mousemove", function (evt) {
+    var rect = mainSvg.getBoundingClientRect();
+    var mx = (evt.clientX - rect.left) * (W / rect.width);
+    var i = Math.max(0, Math.min(n - 1, Math.round(((mx - margin.left) / plotW) * (n - 1))));
+    var xPix = xFor(i);
+    crosshair.setAttribute("x1", xPix); crosshair.setAttribute("x2", xPix);
+    crosshair.style.display = "block";
+    var top3 = eciRankings(years[i]).slice(0, 3);
+    var rows = top3.map(function (row, j) {
+      return '<div class="t-row">#' + (j + 1) + ' ' + escapeHtml(row.name) +
+        '<span style="margin-left:auto;padding-left:10px;opacity:.75">' + row.eci.toFixed(2) + '</span></div>';
+    }).join("");
+    showTooltip(evt,
+      '<div class="t-value">' + years[i] + '</div>' +
+      '<div class="t-row" style="font-weight:600">#' + rankOf[state.country][i] + ' ' + escapeHtml(state.country) + ' (selected)</div>' + rows);
+  });
+  hit.addEventListener("mouseleave", function () { crosshair.style.display = "none"; hideTooltip(); });
+  mainSvg.appendChild(hit);
+}
+
+/* ============================== chrome ============================== */
+
+function renderBreadcrumb() {
+  breadcrumbEl.innerHTML = "";
+  if (state.view !== "treemap" || state.mode !== "products" || state.drill.length === 0) return;
+  var data = productData(state.country, state.flow, state.year);
+  var allBtn = document.createElement("button");
+  allBtn.textContent = "All products";
+  allBtn.addEventListener("click", function () { state.drill = []; renderAll(); });
+  breadcrumbEl.appendChild(allBtn);
+  var sec = data.find(function (s) { return s.id === state.drill[0]; });
+  if (state.drill.length === 1) {
+    breadcrumbEl.appendChild(document.createTextNode("  ›  " + sec.name));
+  } else {
+    breadcrumbEl.appendChild(document.createTextNode("  ›  "));
+    var secBtn = document.createElement("button");
+    secBtn.textContent = sec.name;
+    secBtn.addEventListener("click", function () { state.drill = [state.drill[0]]; renderAll(); });
+    breadcrumbEl.appendChild(secBtn);
+    var grp = sec.hs2.find(function (g) { return g.code === state.drill[1]; });
+    breadcrumbEl.appendChild(document.createTextNode("  ›  " + grp.name));
+  }
+}
+
+function renderLegend() {
+  legendEl.innerHTML = "";
+  scaleLegendEl.style.display = "none";
+  legendEl.style.display = "flex";
+
+  if (state.view === "map") {
+    legendEl.style.display = "none";
+    scaleLegendEl.style.display = "flex";
+    scaleLegendEl.innerHTML = "";
+    var lo = document.createElement("span"); lo.textContent = "lower trade";
+    var ramp = document.createElement("span"); ramp.className = "ramp";
+    SEQ_STEPS.forEach(function (s) {
+      var sw = document.createElement("span"); sw.style.background = s; ramp.appendChild(sw);
+    });
+    var hi = document.createElement("span"); hi.textContent = "higher trade (log scale)";
+    scaleLegendEl.appendChild(lo); scaleLegendEl.appendChild(ramp); scaleLegendEl.appendChild(hi);
+    return;
+  }
+
+  if (state.view === "rank") { legendEl.style.display = "none"; return; }
+
+  var groups = (state.view === "space" || (state.mode === "products" && state.view !== "scatter")) ? SECTIONS : REGIONS;
+  if (state.view === "scatter") groups = REGIONS;
+  groups.forEach(function (grp) {
+    var li = document.createElement("li");
+    var btn = document.createElement("button");
+    btn.setAttribute("aria-pressed", String(state.isolate === grp.id));
+    var sw = document.createElement("span"); sw.className = "swatch"; sw.style.background = grp.color;
+    var lbl = document.createElement("span"); lbl.textContent = grp.name;
+    btn.appendChild(sw); btn.appendChild(lbl);
+    btn.addEventListener("click", function () {
+      state.isolate = state.isolate === grp.id ? null : grp.id;
+      renderAll();
+    });
+    li.appendChild(btn);
+    legendEl.appendChild(li);
+  });
+  if (state.view === "space") {
+    var info = document.createElement("li");
+    info.className = "info";
+    var sw = document.createElement("span"); sw.className = "swatch hollow";
+    var txt = document.createElement("span"); txt.textContent = "Hollow: not competitively exported (RCA < 1)";
+    info.appendChild(sw); info.appendChild(txt);
+    legendEl.appendChild(info);
+  }
+}
+
+function currentTableRows() {
+  if (state.view === "time" || state.view === "share") {
+    var data = seriesOverYears();
+    var header = ["Group"].concat(data.years.filter(function (_, i) { return i % 5 === 0 || i === data.years.length - 1; }));
+    var yearsShown = data.years.map(function (y, i) { return { y: y, i: i }; })
+      .filter(function (o, i) { return i % 5 === 0 || i === data.years.length - 1; });
+    var rows = data.series.map(function (ser) {
+      return { color: ser.color, cells: [ser.name].concat(yearsShown.map(function (o) { return fmtUSD(ser.values[o.i]); })) };
+    });
+    return { header: ["Group"].concat(yearsShown.map(function (o) { return String(o.y); })), rows: rows, numFrom: 1 };
+  }
+  if (state.view === "space") {
+    var nodes = productSpaceNodes().sort(function (a, b) { return b.rca - a.rca; });
+    return {
+      header: ["Section", "Product", "Value (" + state.year + ")", "RCA", "Competitive"],
+      rows: nodes.map(function (nd) {
+        return { color: nd.color, cells: [nd.sectionName, nd.name, fmtUSD(nd.value), nd.rca.toFixed(2), nd.rca >= 1 ? "Yes" : "No"] };
+      }),
+      numFrom: 2
+    };
+  }
+  if (state.view === "scatter") {
+    var cs = COUNTRIES.map(function (c) {
+      return {
+        name: c.name, region: c.region,
+        color: REGIONS.find(function (r) { return r.id === c.region; }).color,
+        eci: eciOf(c.name, state.year), gdp: gdppcOf(c.name, state.year), pop: popOf(c.name, state.year)
+      };
+    }).sort(function (a, b) { return b.eci - a.eci; });
+    return {
+      header: ["Country", "Region", "ECI (" + state.year + ")", "GDP per capita", "Population"],
+      rows: cs.map(function (c) {
+        return { color: c.color, cells: [c.name, REGIONS.find(function (r) { return r.id === c.region; }).name, c.eci.toFixed(2), fmtUSD(c.gdp), (c.pop / 1e6).toFixed(1) + "M"] };
+      }),
+      numFrom: 2
+    };
+  }
+  if (state.view === "rank") {
+    var sampleYears = [1995, 2005, 2015, 2025];
+    var ranksByYear = {};
+    sampleYears.forEach(function (y) {
+      ranksByYear[y] = {};
+      eciRankings(y).forEach(function (row, i) { ranksByYear[y][row.name] = i + 1; });
+    });
+    var current = eciRankings(YEAR_MAX);
+    return {
+      header: ["Country", "Region"].concat(sampleYears.map(function (y) { return "Rank " + y; })),
+      rows: current.map(function (row) {
+        var c = COUNTRIES.find(function (q) { return q.name === row.name; });
+        return {
+          color: REGIONS.find(function (r) { return r.id === c.region; }).color,
+          cells: [row.name, REGIONS.find(function (r) { return r.id === c.region; }).name]
+            .concat(sampleYears.map(function (y) { return "#" + ranksByYear[y][row.name]; }))
+        };
+      }),
+      numFrom: 2
+    };
+  }
+  if (state.view === "map" || state.mode === "partners") {
+    var parts = partnerData(state.country, state.flow, state.year).sort(function (a, b) { return b.value - a.value; });
+    var totalP = parts.reduce(function (s, p) { return s + p.value; }, 0);
+    return {
+      header: ["Partner", "Region", "Value (" + state.year + ")", "Share"],
+      rows: parts.map(function (p) {
+        return { color: p.color, cells: [p.name, REGIONS.find(function (r) { return r.id === p.region; }).name, fmtUSD(p.value), (p.value / totalP * 100).toFixed(1) + "%"] };
+      }),
+      numFrom: 2
+    };
+  }
+  var data = productData(state.country, state.flow, state.year);
+  var total = data.reduce(function (s, d) { return s + d.value; }, 0);
+  var rows = [];
+  data.forEach(function (sec) { sec.hs2.forEach(function (g) { g.leaves.forEach(function (l) {
+    rows.push({ color: sec.color, value: l.value,
+      cells: [sec.name, g.code + " · " + g.name, l.name, fmtUSD(l.value), (l.value / total * 100).toFixed(2) + "%"] });
+  }); }); });
+  rows.sort(function (a, b) { return b.value - a.value; });
+  return { header: ["Section", "HS2 group", "Product", "Value (" + state.year + ")", "Share"], rows: rows, numFrom: 3 };
+}
+
+function renderTable() {
+  if (!state.table) { tableWrap.style.display = "none"; return; }
+  tableWrap.style.display = "block";
+  var t = currentTableRows();
+  var html = '<table class="data-table"><thead><tr>' +
+    t.header.map(function (h, i) { return "<th" + (i >= t.numFrom ? " class='num'" : "") + ">" + escapeHtml(h) + "</th>"; }).join("") +
+    "</tr></thead><tbody>" +
+    t.rows.map(function (r) {
+      return "<tr>" + r.cells.map(function (c, i) {
+        var cell = escapeHtml(String(c));
+        if (i === 0) cell = "<span class='key-dot' style='background:" + r.color + "'></span>" + cell;
+        return "<td" + (i >= t.numFrom ? " class='num'" : "") + ">" + cell + "</td>";
+      }).join("") + "</tr>";
+    }).join("") + "</tbody></table>";
+  tableWrap.innerHTML = html;
+}
+
+function renderTitle() {
+  var flowWord = state.flow === "exports" ? "export" : "import";
+  var what = state.mode === "products" ? "products" : "trade partners";
+  var t = "";
+  if (state.view === "treemap") t = "What does " + state.country + " " + state.flow.slice(0, -1) + "? — " + flowWord + " " + what + ", " + state.year;
+  if (state.view === "time")    t = state.country + " " + flowWord + "s by " + (state.mode === "products" ? "section" : "region") + ", " + YEAR_MIN + "–" + YEAR_MAX;
+  if (state.view === "share")   t = state.country + " " + flowWord + " market share by " + (state.mode === "products" ? "section" : "region") + ", " + YEAR_MIN + "–" + YEAR_MAX;
+  if (state.view === "map")     t = "Where does " + state.country + " " + state.flow.slice(0, -1) + " " + (state.flow === "exports" ? "to" : "from") + "? — " + state.year;
+  if (state.view === "space")   t = state.country + " product space, " + state.year + " — filled nodes are competitively exported (RCA ≥ 1)";
+  if (state.view === "scatter") t = "Complexity vs. income, " + state.year + " — bubble size is population, color is region";
+  if (state.view === "rank")    t = "Economic complexity rankings, " + YEAR_MIN + "–" + YEAR_MAX + " — " + state.country + " highlighted";
+  chartTitle.innerHTML = escapeHtml(t) + ' <span class="sub">· synthetic data</span>';
+}
+
+function renderAll() {
+  var isTimeView = state.view === "time" || state.view === "share" || state.view === "rank";
+  yearRow.classList.toggle("disabled", isTimeView);
+  document.getElementById("detailGroup").style.display =
+    (state.mode === "products" && state.view === "treemap") ? "block" : "none";
+
+  renderKpis();
+  renderTitle();
+  renderBreadcrumb();
+  chartCard.style.display = state.table ? "none" : "block";
+  if (!state.table) {
+    if (state.view === "treemap") renderTreemap();
+    else if (state.view === "time") renderStacked(false);
+    else if (state.view === "share") renderStacked(true);
+    else if (state.view === "space") renderProductSpace();
+    else if (state.view === "scatter") renderScatter();
+    else if (state.view === "rank") renderRankings();
+    else renderGeoMap();
+  }
+  renderLegend();
+  renderTable();
+}
+
+function refetch() {
+  chartCard.classList.add("is-refetching");
+  setTimeout(function () { renderAll(); chartCard.classList.remove("is-refetching"); }, 80);
+}
+
+/* ============================== wiring ============================== */
+
+var countrySel = document.getElementById("countrySel");
+COUNTRIES.map(function (c) { return c.name; }).sort().forEach(function (name) {
+  var opt = document.createElement("option");
+  opt.value = name; opt.textContent = name;
+  if (name === state.country) opt.selected = true;
+  countrySel.appendChild(opt);
+});
+countrySel.addEventListener("change", function () {
+  state.country = countrySel.value; state.drill = []; state.isolate = null;
+  refetch();
+});
+
+function wireSegmented(id, onPick) {
+  document.querySelectorAll("#" + id + " button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll("#" + id + " button").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+      btn.setAttribute("aria-pressed", "true");
+      onPick(btn.getAttribute("data-v"));
+    });
+  });
+}
+wireSegmented("flowSeg", function (v) { state.flow = v; state.drill = []; refetch(); });
+wireSegmented("modeSeg", function (v) {
+  state.mode = v; state.drill = []; state.isolate = null;
+  if (v === "partners" && state.view === "treemap") { /* fine */ }
+  refetch();
+});
+wireSegmented("viewTabs", function (v) {
+  state.view = v; state.isolate = null;
+  if (v === "map") { state.mode = "partners"; syncModeSeg(); }
+  stopPlaying();
+  renderAll();
+});
+function syncModeSeg() {
+  document.querySelectorAll("#modeSeg button").forEach(function (b) {
+    b.setAttribute("aria-pressed", String(b.getAttribute("data-v") === state.mode));
+  });
+}
+
+document.getElementById("detailSel").addEventListener("change", function (e) {
+  state.detail = e.target.value; state.drill = [];
+  renderAll();
+});
+
+yearSlider.addEventListener("input", function () {
+  state.year = +yearSlider.value;
+  yearLabel.textContent = state.year;
+  renderAll();
+});
+
+var playTimer = null;
+function stopPlaying() {
+  state.playing = false;
+  playBtn.textContent = "▶";
+  if (playTimer) { clearInterval(playTimer); playTimer = null; }
+}
+playBtn.addEventListener("click", function () {
+  if (state.playing) { stopPlaying(); return; }
+  state.playing = true;
+  playBtn.textContent = "❚❚";
+  if (state.year >= YEAR_MAX) state.year = YEAR_MIN;
+  playTimer = setInterval(function () {
+    state.year++;
+    if (state.year >= YEAR_MAX) { state.year = YEAR_MAX; stopPlaying(); }
+    yearSlider.value = state.year;
+    yearLabel.textContent = state.year;
+    renderAll();
+  }, 350);
+});
+
+var tableToggle = document.getElementById("tableToggle");
+tableToggle.addEventListener("click", function () {
+  state.table = !state.table;
+  tableToggle.setAttribute("aria-pressed", String(state.table));
+  tableToggle.textContent = state.table ? "View as chart" : "View as table";
+  renderAll();
+});
+
+document.getElementById("csvBtn").addEventListener("click", function () {
+  var t = currentTableRows();
+  var lines = [t.header.join(",")].concat(t.rows.map(function (r) {
+    return r.cells.map(function (c) {
+      var s = String(c).replace(/"/g, '""');
+      return /[",]/.test(s) ? '"' + s + '"' : s;
+    }).join(",");
+  }));
+  var blob = new Blob([lines.join("\n")], { type: "text/csv" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "synthetic-trade-" + state.country.toLowerCase().replace(/\s+/g, "-") + "-" + state.flow + "-" + state.year + ".csv";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+document.getElementById("linkBtn").addEventListener("click", function () {
+  var btn = this;
+  navigator.clipboard.writeText(location.href).then(function () {
+    var old = btn.textContent;
+    btn.textContent = "✓ Link copied";
+    setTimeout(function () { btn.textContent = old; }, 1400);
+  });
+});
+
+renderAll();
+})();
+</script>

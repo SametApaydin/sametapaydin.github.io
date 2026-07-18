@@ -1,0 +1,191 @@
+<meta name="robots" content="noindex, nofollow">
+<title>Dashboard B — Mosaic Overview (Synthetic)</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb;
+    --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --border: rgba(11,11,11,0.10); --accent: #2a78d6; --warn: #e34948;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19;
+      --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+      --border: rgba(255,255,255,0.10); --accent: #3987e5; --warn: #e66767;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19;
+    --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --border: rgba(255,255,255,0.10); --accent: #3987e5; --warn: #e66767;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55;
+  }
+  .wrap { max-width: 1380px; margin: 0 auto; padding: 26px 18px 60px; }
+
+  .topbar { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .kicker { font-size: 12px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+  .treatment-nav { margin-left: auto; font-size: 12.5px; color: var(--muted); }
+  .treatment-nav a { color: var(--accent); text-decoration: none; font-weight: 650; }
+  .treatment-nav strong { color: var(--ink); }
+  h1 { font-size: 23px; font-weight: 700; margin: 6px 0 6px; }
+  .lede { font-size: 14px; color: var(--ink-2); margin: 0 0 8px; max-width: 820px; }
+  .note-pill {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px;
+    color: var(--muted); border: 1px solid var(--border); border-radius: 999px;
+    padding: 4px 12px; margin-bottom: 18px;
+  }
+
+  .strip { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 16px; font-size: 12.5px; color: var(--ink-2); }
+  .strip .chip {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+    padding: 5px 13px; white-space: nowrap;
+  }
+  .strip .chip b { font-weight: 650; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .mosaic { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 980px) { .mosaic { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  .panel.expanded { grid-column: 1 / -1; }
+  .panel .bar {
+    display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel .bar .emoji { font-size: 17px; }
+  .panel .bar h2 { font-size: 14px; font-weight: 650; margin: 0; }
+  .panel .bar .tagline { font-size: 11.5px; color: var(--muted); margin-left: 2px; }
+  .panel .bar .actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .panel .bar a { font-size: 12px; font-weight: 650; color: var(--accent); text-decoration: none; white-space: nowrap; }
+  .panel .bar button.expand {
+    font-family: inherit; font-size: 12px; color: var(--ink-2); cursor: pointer;
+    background: var(--page); border: 1px solid var(--border); border-radius: 7px; padding: 4px 10px;
+  }
+  .panel .bar button.expand:hover { color: var(--accent); border-color: var(--accent); }
+
+  .viewport { position: relative; height: 470px; overflow: hidden; }
+  .panel.expanded .viewport { height: 82vh; }
+  .viewport iframe {
+    border: none; display: block; background: var(--surface);
+    width: 166.7%; height: 166.7%;
+    transform: scale(0.6); transform-origin: 0 0;
+  }
+  .panel.expanded .viewport iframe { width: 100%; height: 100%; transform: none; }
+
+  footer {
+    margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--muted); line-height: 1.65; max-width: 920px;
+  }
+  footer strong { color: var(--ink-2); }
+  footer a { color: var(--accent); }
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <span class="kicker">IPM Türkiye trade dependence · combined dashboard, treatment B</span>
+    <span class="treatment-nav">Compare treatments: <a href="dashboard-a-tabbed.html">A tabbed</a> ·
+      <strong>B mosaic</strong> ·
+      <a href="dashboard-c-briefing.html">C briefing</a></span>
+  </div>
+  <h1>Dependence Monitor — Mosaic</h1>
+  <p class="lede">All four views on screen at once, slightly zoomed out — the mission-control reading.
+    Every panel stays fully interactive; ⤢ Focus enlarges one panel to full width. Same randomly drawn
+    subgroup as treatments A and C: Risk Matrix, Index Anatomy, Risk Migration, Export Treemap.</p>
+  <span class="note-pill">● All trade values synthetic (seeded, deterministic) — do not cite</span>
+
+  <div class="strip">
+    <span class="chip">Import index 2024 <b>142 ▲</b></span>
+    <span class="chip">Export index 2024 <b>65 ▼</b></span>
+    <span class="chip">Top supplier <b>Russia ~15%</b></span>
+    <span class="chip">Energy chokepoint <b>56%</b></span>
+    <span class="chip">EU-as-one stress <b>+54 pts</b></span>
+  </div>
+
+  <div class="mosaic">
+    <section class="panel">
+      <div class="bar">
+        <span class="emoji">🔬</span><h2>Risk Matrix</h2>
+        <span class="tagline">sector × partner fingerprint</span>
+        <span class="actions">
+          <button class="expand" aria-pressed="false">⤢ Focus</button>
+          <a href="risk-matrix.html" target="_blank" rel="noopener">Full page ↗</a>
+        </span>
+      </div>
+      <div class="viewport"><iframe src="risk-matrix.html" title="Risk Matrix — sector × partner concentration heatmap"></iframe></div>
+    </section>
+
+    <section class="panel">
+      <div class="bar">
+        <span class="emoji">🫀</span><h2>Index Anatomy</h2>
+        <span class="tagline">sankey: total → sectors → partners</span>
+        <span class="actions">
+          <button class="expand" aria-pressed="false">⤢ Focus</button>
+          <a href="index-anatomy.html" target="_blank" rel="noopener">Full page ↗</a>
+        </span>
+      </div>
+      <div class="viewport"><iframe src="index-anatomy.html" title="Index Anatomy — sankey decomposition of the dependence index" loading="lazy"></iframe></div>
+    </section>
+
+    <section class="panel">
+      <div class="bar">
+        <span class="emoji">🛰️</span><h2>Risk Migration</h2>
+        <span class="tagline">30-year partner trails</span>
+        <span class="actions">
+          <button class="expand" aria-pressed="false">⤢ Focus</button>
+          <a href="risk-migration.html" target="_blank" rel="noopener">Full page ↗</a>
+        </span>
+      </div>
+      <div class="viewport"><iframe src="risk-migration.html" title="Risk Migration — partner trails across share and concentration" loading="lazy"></iframe></div>
+    </section>
+
+    <section class="panel">
+      <div class="bar">
+        <span class="emoji">🌳</span><h2>Export Treemap</h2>
+        <span class="tagline">composition demo (fictional countries)</span>
+        <span class="actions">
+          <button class="expand" aria-pressed="false">⤢ Focus</button>
+          <a href="trade-atlas-demo.html" target="_blank" rel="noopener">Full page ↗</a>
+        </span>
+      </div>
+      <div class="viewport"><iframe src="trade-atlas-demo.html" title="Export Treemap demo — squarified treemap with drill-down" loading="lazy"></iframe></div>
+    </section>
+  </div>
+
+  <footer>
+    <strong>What this treatment tests:</strong> simultaneous visibility — matrix, decomposition, trails and
+    composition side-by-side, so a chokepoint spotted in one view can be checked in another without losing
+    place. The cost: each panel renders at 60% scale inside a fixed window (scroll inside a panel to reach
+    its screeners), and four full pages load at once. Compare against the
+    <a href="dashboard-a-tabbed.html">tabbed</a> treatment (one big canvas at a time) and the
+    <a href="dashboard-c-briefing.html">briefing</a> treatment (narrated sequence).
+  </footer>
+</div>
+
+<script>
+(function () {
+  document.querySelectorAll('.panel .expand').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var panel = btn.closest('.panel');
+      var on = !panel.classList.contains('expanded');
+      document.querySelectorAll('.panel.expanded').forEach(function (p) {
+        p.classList.remove('expanded');
+        var b = p.querySelector('.expand');
+        b.setAttribute('aria-pressed', 'false'); b.textContent = '⤢ Focus';
+      });
+      if (on) {
+        panel.classList.add('expanded');
+        btn.setAttribute('aria-pressed', 'true'); btn.textContent = '⤡ Shrink';
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+})();
+</script>

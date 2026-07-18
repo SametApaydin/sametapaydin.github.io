@@ -1,0 +1,715 @@
+<meta name="robots" content="noindex, nofollow">
+<title>Risk Migration — Türkiye's Partners in Motion (Synthetic)</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --page: #f9f9f7;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781;
+    --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --accent: #2a78d6; --warn: #e34948;
+    --r-eu: #2a78d6; --r-am: #1baf7a; --r-mena: #eda100; --r-asia: #4a3aa7;
+    --r-cis: #e34948; --r-eur: #e87ba4; --r-afr: #eb6834;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #898781;
+      --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+      --accent: #3987e5; --warn: #e66767;
+      --r-eu: #3987e5; --r-am: #199e70; --r-mena: #c98500; --r-asia: #9085e9;
+      --r-cis: #e66767; --r-eur: #d55181; --r-afr: #d95926;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --accent: #3987e5; --warn: #e66767;
+    --r-eu: #3987e5; --r-am: #199e70; --r-mena: #c98500; --r-asia: #9085e9;
+    --r-cis: #e66767; --r-eur: #d55181; --r-afr: #d95926;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page); color: var(--text-primary);
+    min-height: 100vh; padding: 22px 16px 56px;
+  }
+  .frame { max-width: 1100px; margin: 0 auto; }
+
+  header h1 { font-size: 20px; font-weight: 650; margin: 0 0 4px; }
+  header p { font-size: 13px; color: var(--text-secondary); margin: 0; max-width: 790px; line-height: 1.5; }
+  .disclaimer {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px;
+    color: var(--text-muted); margin-top: 8px;
+    border: 1px solid var(--border); border-radius: 999px; padding: 4px 11px;
+  }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 12px; }
+  @media (max-width: 720px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+  .kpi { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 11px 14px; }
+  .kpi .k-label { font-size: 11.5px; color: var(--text-muted); margin-bottom: 3px; }
+  .kpi .k-value { font-size: 20px; font-weight: 650; }
+  .kpi .k-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+
+  .controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .controls label.inline { font-size: 12.5px; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
+  .controls input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px; }
+  .segmented { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--surface-1); }
+  .segmented button {
+    font-family: inherit; font-size: 13px; padding: 7px 14px; cursor: pointer;
+    background: transparent; color: var(--text-secondary); border: none; border-right: 1px solid var(--border);
+  }
+  .segmented button:last-child { border-right: none; }
+  .segmented button[aria-pressed="true"] { background: var(--accent); color: #fff; font-weight: 600; }
+  .spacer { flex: 1; }
+  .tv-toggle {
+    font-family: inherit; font-size: 13px; color: var(--text-primary);
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px;
+    padding: 7px 11px; cursor: pointer;
+  }
+  .tv-toggle[aria-pressed="true"] { background: var(--accent); color: #fff; }
+
+  .chart-card {
+    position: relative; background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px;
+  }
+  svg { display: block; width: 100%; height: auto; }
+
+  .grid-line { stroke: var(--grid); stroke-width: 1; }
+  .quad-line { stroke: var(--baseline); stroke-width: 1; stroke-dasharray: none; }
+  .axis-label { fill: var(--text-muted); font-size: 11px; }
+  .quad-label { fill: var(--text-muted); font-size: 10.5px; font-style: italic; }
+
+  .bubble { cursor: pointer; transition: opacity .12s ease; }
+  .bubble circle.body { stroke: var(--surface-1); stroke-width: 2; opacity: .85; }
+  .bubble:hover circle.body { stroke: var(--text-primary); opacity: 1; }
+  .bubble.sel circle.body { stroke: var(--text-primary); stroke-width: 2; opacity: 1; }
+  .bubble.dim { opacity: .12; }
+  .bubble text { pointer-events: none; font-size: 10.5px; font-weight: 650; fill: var(--text-primary); }
+
+  .trail { fill: none; stroke-width: 1.6; opacity: .45; pointer-events: none; }
+  .trail-dot { opacity: .55; pointer-events: none; }
+  .trail.dim, .trail-dot.dim { opacity: .05; }
+
+  .year-row {
+    display: flex; align-items: center; gap: 12px; margin-top: 10px;
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px;
+  }
+  .year-row button.play {
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--page); color: var(--text-primary); font-size: 13px; cursor: pointer; flex: none;
+  }
+  .year-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+  .year-row .year-label { font-size: 15px; font-weight: 650; min-width: 46px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 12px; padding: 0; list-style: none; }
+  .legend button {
+    display: flex; align-items: center; gap: 7px; background: none; border: none;
+    font: inherit; font-size: 12px; color: var(--text-secondary); cursor: pointer; padding: 4px 6px; border-radius: 6px;
+  }
+  .legend button:hover { background: var(--border); }
+  .legend button[aria-pressed="true"] { color: var(--text-primary); font-weight: 600; }
+  .swatch { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+
+  .screener { margin-top: 18px; }
+  .screener h2 { font-size: 15px; font-weight: 650; margin: 0 0 4px; }
+  .screener p.s-sub { font-size: 12.5px; color: var(--text-muted); margin: 0 0 10px; }
+  .screener select { font-family: inherit; font-size: 12.5px; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 7px; padding: 5px 9px; }
+
+  .tooltip {
+    position: absolute; pointer-events: none; z-index: 5;
+    background: var(--text-primary); color: var(--page);
+    font-size: 12px; line-height: 1.45; padding: 8px 10px; border-radius: 7px;
+    max-width: 250px; opacity: 0; transform: translate(-50%, -100%); transition: opacity .08s ease;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18);
+  }
+  .tooltip .t-value { font-weight: 700; font-size: 13px; }
+
+  table.data-table {
+    width: 100%; border-collapse: collapse; font-size: 12.5px; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  }
+  table.data-table th, table.data-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  table.data-table th { color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .02em; }
+  table.data-table td.num, table.data-table th.num { text-align: right; }
+  table.data-table td.num { font-variant-numeric: tabular-nums; }
+  table.data-table tr:last-child td { border-bottom: none; }
+  .up { color: var(--warn); font-weight: 650; }
+  .down { color: var(--r-am); font-weight: 650; }
+  .key-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; vertical-align: -1px; }
+
+  footer.note { margin-top: 20px; font-size: 12px; color: var(--text-muted); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 12px; }
+  footer.note strong { color: var(--text-secondary); }
+</style>
+
+<div class="viz-root">
+  <div class="frame">
+    <header>
+      <h1>Risk Migration</h1>
+      <p>Every partner as a bubble in motion — Gapminder's trails applied to trade dependence.
+        Horizontal: how much of Türkiye's trade the partner carries. Vertical: how <em>concentrated</em>
+        that relationship is across sectors (a one-commodity partner sits high; a diversified one sits low).
+        Press play and thirty years of trails draw the migration of risk.</p>
+      <span class="disclaimer">● Synthetic data — the trajectories are generated, the paradigm is the point (after Gapminder Tools)</span>
+    </header>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="controls">
+      <div class="segmented" id="flowSeg">
+        <button data-v="imports" aria-pressed="true">Imports</button>
+        <button data-v="exports" aria-pressed="false">Exports</button>
+      </div>
+      <label class="inline"><input type="checkbox" id="trailsChk" checked> Show 30-year trails (top partners)</label>
+      <div class="spacer"></div>
+      <button class="tv-toggle" id="tableToggle" aria-pressed="false">View as table</button>
+    </div>
+
+    <div class="chart-card" id="chartCard">
+      <svg id="scatterSvg" viewBox="0 0 1000 560" role="img" aria-label="Scatter of partner share versus basket concentration"></svg>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <div class="year-row">
+      <button class="play" id="playBtn" aria-label="Play year animation">▶</button>
+      <input type="range" id="yearSlider" min="1995" max="2024" step="1" value="2024" aria-label="Year">
+      <span class="year-label" id="yearLabel">2024</span>
+    </div>
+
+    <ul class="legend" id="legend"></ul>
+
+    <div class="screener">
+      <h2>Danger-quadrant screener</h2>
+      <p class="s-sub">Partners that are simultaneously large and concentrated — the structural-risk corner. Share ≥
+        <select id="shareThresh">
+          <option value="0.03">3%</option>
+          <option value="0.05" selected>5%</option>
+          <option value="0.08">8%</option>
+        </select>
+        and basket concentration ≥
+        <select id="hhiThresh">
+          <option value="0.15">0.15</option>
+          <option value="0.22" selected>0.22</option>
+          <option value="0.32">0.32</option>
+        </select>
+      </p>
+      <div id="quadWrap"></div>
+    </div>
+
+    <div class="screener">
+      <h2>Biggest-movers screener</h2>
+      <p class="s-sub">Who migrated — the largest share moves since
+        <select id="sinceSel">
+          <option value="1995" selected>1995</option>
+          <option value="2005">2005</option>
+          <option value="2015">2015</option>
+        </select>
+        (top 10 by absolute change, current flow direction)</p>
+      <div id="moversWrap"></div>
+    </div>
+
+    <div id="tableWrap" style="display:none; margin-top:12px;"></div>
+
+    <footer class="note">
+      <strong>Reading the quadrants:</strong> top-right = large <em>and</em> concentrated (structural
+      risk — the relationship is big and hangs on few sectors); bottom-right = large but diversified
+      (benign size — the Germany pattern); top-left = small but concentrated (hidden chokepoints — cheap
+      to fix, invisible to value-weighted indices); bottom-left = noise. The two screeners below extract
+      the citable lists: who is in the danger corner now, and who moved most. Trails show the path, not
+      just the endpoints — the difference between "China is big" and "China <em>became</em> big."
+    </footer>
+  </div>
+</div>
+
+<script>
+(function () {
+"use strict";
+
+/* ============================ synthetic data (shared model) ============================ */
+
+var YEAR_MIN = 1995, YEAR_MAX = 2024;
+
+var SECTORS = [
+  { id: "energy",   name: "Energy & fuels",        w: 1.6 },
+  { id: "mach",     name: "Machinery",             w: 1.3 },
+  { id: "elec",     name: "Electronics",           w: 1.25 },
+  { id: "vehi",     name: "Vehicles",              w: 1.1 },
+  { id: "steel",    name: "Iron & steel",          w: 1.0 },
+  { id: "chem",     name: "Chemicals",             w: 1.0 },
+  { id: "pharma",   name: "Pharmaceuticals",       w: 0.7 },
+  { id: "plast",    name: "Plastics & rubber",     w: 0.8 },
+  { id: "text",     name: "Textiles & apparel",    w: 0.9 },
+  { id: "agri",     name: "Agriculture",           w: 0.8 },
+  { id: "food",     name: "Processed food",        w: 0.6 },
+  { id: "metal",    name: "Metals & mining",       w: 0.85 },
+  { id: "prec",     name: "Precision instruments", w: 0.55 },
+  { id: "wood",     name: "Wood & paper",          w: 0.4 },
+  { id: "glass",    name: "Glass & ceramics",      w: 0.4 },
+  { id: "serv",     name: "Services",              w: 0.7 }
+];
+
+var REGION_NAMES = {
+  eu: "European Union", eur: "Other Europe", cis: "Russia & CIS", mena: "Middle East & N. Africa",
+  asia: "Asia", am: "Americas", afr: "Sub-Saharan Africa"
+};
+var REGION_COLORS = {
+  eu: "var(--r-eu)", eur: "var(--r-eur)", cis: "var(--r-cis)", mena: "var(--r-mena)",
+  asia: "var(--r-asia)", am: "var(--r-am)", afr: "var(--r-afr)"
+};
+
+var PARTNERS = [
+  ["Germany","eu"],["China","asia"],["Russia","cis"],["United States","am"],
+  ["Italy","eu"],["France","eu"],["United Kingdom","eur"],["Spain","eu"],
+  ["Netherlands","eu"],["Iraq","mena"],["United Arab Emirates","mena"],
+  ["Saudi Arabia","mena"],["Egypt","mena"],["Israel","mena"],["Iran","mena"],
+  ["Azerbaijan","cis"],["Ukraine","cis"],["Kazakhstan","cis"],["Georgia","cis"],
+  ["Uzbekistan","cis"],["India","asia"],["South Korea","asia"],["Japan","asia"],
+  ["Vietnam","asia"],["Malaysia","asia"],["Indonesia","asia"],["Poland","eu"],
+  ["Romania","eu"],["Bulgaria","eu"],["Greece","eu"],["Belgium","eu"],
+  ["Switzerland","eur"],["Brazil","am"],["Mexico","am"],["Canada","am"],
+  ["Algeria","mena"],["Morocco","mena"],["Libya","mena"],["Qatar","mena"],
+  ["Nigeria","afr"],["South Africa","afr"],["Ethiopia","afr"],["Turkmenistan","cis"]
+].map(function (c) { return { name: c[0], region: c[1] }; });
+
+var BIAS = {
+  "imports|Russia|energy": 5.0, "imports|Azerbaijan|energy": 9.0, "imports|Iran|energy": 4.0,
+  "imports|Algeria|energy": 6.0, "imports|Qatar|energy": 7.0, "imports|Turkmenistan|energy": 7.0, "imports|Libya|energy": 5.0,
+  "imports|China|elec": 5.5, "imports|China|mach": 2.6, "imports|China|text": 1.6,
+  "imports|Germany|elec": 2.4, "imports|Japan|elec": 2.2,
+  "imports|Germany|mach": 3.4, "imports|Germany|vehi": 3.0, "imports|Germany|chem": 2.0,
+  "imports|South Korea|elec": 1.9, "imports|Japan|vehi": 1.6, "imports|Japan|prec": 1.9,
+  "imports|Russia|steel": 2.6, "imports|Ukraine|steel": 2.0, "imports|Ukraine|agri": 2.2,
+  "imports|Russia|agri": 2.4, "imports|United States|pharma": 1.8, "imports|Switzerland|pharma": 2.3,
+  "imports|India|chem": 1.7, "imports|Italy|mach": 1.9, "imports|France|vehi": 1.5,
+  "exports|Germany|text": 6.0, "exports|Germany|vehi": 2.6, "exports|Germany|food": 1.8,
+  "exports|United Kingdom|text": 1.9, "exports|United States|steel": 1.5,
+  "exports|Iraq|food": 2.8, "exports|Iraq|plast": 2.0, "exports|Iraq|steel": 1.8,
+  "exports|Italy|vehi": 2.0, "exports|France|vehi": 1.8, "exports|Spain|vehi": 1.7,
+  "exports|Israel|steel": 1.5, "exports|Egypt|plast": 1.6, "exports|Russia|food": 1.9,
+  "exports|Russia|text": 1.6, "exports|United States|mach": 1.4, "exports|Netherlands|agri": 1.5,
+  "exports|China|metal": 2.8, "exports|China|glass": 2.2, "exports|Azerbaijan|serv": 1.8,
+  "exports|Georgia|serv": 1.7, "exports|Romania|serv": 1.6
+};
+
+var SIZE = {
+  "China": 11, "Germany": 8.5, "Russia": 8, "United States": 6, "Italy": 4.5,
+  "France": 4, "United Kingdom": 3.5, "Japan": 3.5, "South Korea": 3.2,
+  "Netherlands": 3, "Spain": 3, "India": 3, "Iraq": 2.8, "United Arab Emirates": 2.6,
+  "Switzerland": 2.5, "Poland": 2.5, "Brazil": 2.4, "Azerbaijan": 2.2, "Iran": 2.2
+};
+
+function eraMult(flow, partner, year) {
+  var t = (year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN);
+  if (flow === "imports" && partner === "China") return (0.10 + 0.90 * Math.pow(t, 1.6)) * 2.6;
+  if (flow === "exports" && partner === "China") return 0.25 + 0.75 * t;
+  if (partner === "Russia" && year >= 2022) return flow === "imports" ? 1.22 : 1.15;
+  if (partner === "Ukraine" && year >= 2022) return 0.45;
+  if (flow === "exports" && partner === "Iraq") return year >= 2010 && year <= 2014 ? 1.9 : 1.0;
+  if (flow === "exports" && partner === "Germany") return 1.9 - 1.1 * t;
+  return 1.0;
+}
+
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hashSeed(str) {
+  var h = 0;
+  for (var i = 0; i < str.length; i++) h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
+  return h;
+}
+
+var PETRO = { "Azerbaijan": 1, "Qatar": 1, "Turkmenistan": 1, "Libya": 1, "Algeria": 1 };
+
+var trajCache = {};
+function dyadValue(flow, partner, sectorId, year) {
+  var key = flow + "|" + partner + "|" + sectorId;
+  var t = trajCache[key];
+  if (!t) {
+    var r = mulberry32(hashSeed(key));
+    t = {
+      base: Math.exp(r() * 2.9) * 3.2e7,
+      growth: -0.01 + r() * 0.075,
+      amp: 0.05 + r() * 0.15,
+      phase: r() * 6.283, period: 6 + r() * 9,
+      size: SIZE[partner] || (0.5 + Math.exp(mulberry32(hashSeed(partner + "|size"))() * 1.1))
+    };
+    trajCache[key] = t;
+  }
+  var sec = SECTORS.find(function (s) { return s.id === sectorId; });
+  var bias = BIAS[flow + "|" + partner + "|" + sectorId] || 1;
+  if (flow === "imports" && PETRO[partner] && sectorId !== "energy") bias *= 0.22;
+  var dy = year - YEAR_MIN;
+  return t.base * t.size * sec.w * bias * eraMult(flow, partner, year) *
+    Math.pow(1 + t.growth, dy) * (1 + t.amp * Math.sin(6.283 * dy / t.period + t.phase));
+}
+
+/* per-partner point: share of Türkiye's trade + basket concentration (HHI across sectors) */
+var pointCache = {};
+function partnerPoints(flow, year) {
+  var ck = flow + "|" + year;
+  if (pointCache[ck]) return pointCache[ck];
+  var rows = PARTNERS.map(function (p) {
+    var total = 0, secVals = [];
+    SECTORS.forEach(function (s) {
+      var v = dyadValue(flow, p.name, s.id, year);
+      secVals.push(v); total += v;
+    });
+    var basketHHI = secVals.reduce(function (acc, v) { return acc + Math.pow(v / total, 2); }, 0);
+    return { name: p.name, region: p.region, value: total, basketHHI: basketHHI };
+  });
+  var grand = rows.reduce(function (s, r) { return s + r.value; }, 0);
+  rows.forEach(function (r) { r.share = r.value / grand; });
+  pointCache[ck] = rows;
+  return rows;
+}
+
+/* ============================ helpers ============================ */
+
+function fmtUSD(v) {
+  if (v >= 1e9) return "$" + (v / 1e9).toFixed(v >= 1e10 ? 0 : 1) + "B";
+  if (v >= 1e6) return "$" + (v / 1e6).toFixed(0) + "M";
+  return "$" + Math.round(v);
+}
+function escapeHtml(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+var svgNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs) {
+  var e = document.createElementNS(svgNS, tag);
+  for (var k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+
+/* ============================ state & dom ============================ */
+
+var state = {
+  flow: "imports", year: YEAR_MAX, trails: true, selected: null, isolate: null,
+  table: false, playing: false, shareThresh: 0.05, hhiThresh: 0.22, since: 1995
+};
+
+var scatterSvg = document.getElementById("scatterSvg");
+var tooltip = document.getElementById("tooltip");
+var chartCard = document.getElementById("chartCard");
+var kpisEl = document.getElementById("kpis");
+var legendEl = document.getElementById("legend");
+var quadWrap = document.getElementById("quadWrap");
+var moversWrap = document.getElementById("moversWrap");
+var tableWrap = document.getElementById("tableWrap");
+
+function showTooltip(evt, html) {
+  tooltip.innerHTML = html;
+  tooltip.style.opacity = "1";
+  var rect = chartCard.getBoundingClientRect();
+  tooltip.style.left = (evt.clientX - rect.left) + "px";
+  tooltip.style.top = Math.max(56, evt.clientY - rect.top) + "px";
+}
+function hideTooltip() { tooltip.style.opacity = "0"; }
+
+/* scales — fixed across years so motion is honest */
+var M = { l: 62, r: 20, t: 24, b: 46 }, W = 1000, H = 560;
+var X_MAX = 0.17, Y_MAX = 0.78;
+function xF(share) { return M.l + Math.min(1, share / X_MAX) * (W - M.l - M.r); }
+function yF(hhi) { return M.t + (1 - Math.min(1, hhi / Y_MAX)) * (H - M.t - M.b); }
+
+/* ============================ KPIs ============================ */
+
+function renderKpis() {
+  var pts = partnerPoints(state.flow, state.year);
+  var danger = pts.filter(function (p) { return p.share >= state.shareThresh && p.basketHHI >= state.hhiThresh; });
+  var wAvgHHI = pts.reduce(function (s, p) { return s + p.share * p.basketHHI; }, 0);
+
+  var then = partnerPoints(state.flow, state.since);
+  var mover = pts.map(function (p) {
+    var old = then.find(function (q) { return q.name === p.name; });
+    return { name: p.name, d: p.share - old.share };
+  }).sort(function (a, b) { return Math.abs(b.d) - Math.abs(a.d); })[0];
+
+  var big = pts.slice().sort(function (a, b) { return b.share - a.share; })[0];
+
+  var items = [
+    { label: "Partners in danger quadrant", value: String(danger.length),
+      sub: "share ≥ " + (state.shareThresh * 100) + "% and basket HHI ≥ " + state.hhiThresh },
+    { label: "Largest partner", value: big.name, small: true,
+      sub: (big.share * 100).toFixed(1) + "% · basket HHI " + big.basketHHI.toFixed(2) },
+    { label: "Biggest mover since " + state.since, value: mover.name, small: true,
+      sub: (mover.d >= 0 ? "+" : "") + (mover.d * 100).toFixed(1) + " pts of share" },
+    { label: "Weighted basket concentration", value: wAvgHHI.toFixed(3),
+      sub: "Σ share × basket-HHI · " + state.year }
+  ];
+  kpisEl.innerHTML = "";
+  items.forEach(function (it) {
+    var d = document.createElement("div");
+    d.className = "kpi";
+    var l = document.createElement("div"); l.className = "k-label"; l.textContent = it.label;
+    var v = document.createElement("div"); v.className = "k-value"; v.textContent = it.value;
+    if (it.small) v.style.fontSize = "15px";
+    var s = document.createElement("div"); s.className = "k-sub"; s.textContent = it.sub;
+    d.appendChild(l); d.appendChild(v); d.appendChild(s);
+    kpisEl.appendChild(d);
+  });
+}
+
+/* ============================ scatter ============================ */
+
+var TRAIL_N = 8, LABEL_N = 7;
+
+function renderScatter() {
+  scatterSvg.innerHTML = "";
+
+  /* gridlines + axes */
+  [0.04, 0.08, 0.12, 0.16].forEach(function (v) {
+    var x = xF(v);
+    scatterSvg.appendChild(el("line", { class: "grid-line", x1: x, x2: x, y1: M.t, y2: H - M.b }));
+    var t = el("text", { class: "axis-label", x: x, y: H - M.b + 16, "text-anchor": "middle" });
+    t.textContent = (v * 100) + "%";
+    scatterSvg.appendChild(t);
+  });
+  [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7].forEach(function (v) {
+    var y = yF(v);
+    scatterSvg.appendChild(el("line", { class: "grid-line", x1: M.l, x2: W - M.r, y1: y, y2: y }));
+    var t = el("text", { class: "axis-label", x: M.l - 8, y: y + 4, "text-anchor": "end" });
+    t.textContent = v.toFixed(1);
+    scatterSvg.appendChild(t);
+  });
+  var xc = el("text", { class: "axis-label", x: W - M.r, y: H - 8, "text-anchor": "end" });
+  xc.textContent = "share of Türkiye's " + state.flow + " →";
+  scatterSvg.appendChild(xc);
+  var yc = el("text", { class: "axis-label", x: M.l, y: 14, "text-anchor": "start" });
+  yc.textContent = "↑ basket concentration (HHI across sectors within the dyad)";
+  scatterSvg.appendChild(yc);
+
+  /* quadrant guides */
+  scatterSvg.appendChild(el("line", { class: "quad-line", x1: xF(state.shareThresh), x2: xF(state.shareThresh), y1: M.t, y2: H - M.b }));
+  scatterSvg.appendChild(el("line", { class: "quad-line", x1: M.l, x2: W - M.r, y1: yF(state.hhiThresh), y2: yF(state.hhiThresh) }));
+  var q1 = el("text", { class: "quad-label", x: W - M.r - 6, y: M.t + 16, "text-anchor": "end" });
+  q1.textContent = "large & concentrated — structural risk";
+  scatterSvg.appendChild(q1);
+  var q2 = el("text", { class: "quad-label", x: W - M.r - 6, y: H - M.b - 8, "text-anchor": "end" });
+  q2.textContent = "large & diversified — benign size";
+  scatterSvg.appendChild(q2);
+  var q3 = el("text", { class: "quad-label", x: M.l + 6, y: M.t + 16, "text-anchor": "start" });
+  q3.textContent = "small & concentrated — hidden chokepoints";
+  scatterSvg.appendChild(q3);
+
+  var pts = partnerPoints(state.flow, state.year);
+  var maxVal = Math.max.apply(null, pts.map(function (p) { return p.value; }));
+  var topByValue = pts.slice().sort(function (a, b) { return b.value - a.value; });
+  var trailSet = {};
+  topByValue.slice(0, TRAIL_N).forEach(function (p) { trailSet[p.name] = true; });
+  if (state.selected) trailSet[state.selected] = true;
+  var labelSet = {};
+  topByValue.slice(0, LABEL_N).forEach(function (p) { labelSet[p.name] = true; });
+
+  /* trails (under bubbles) */
+  if (state.trails) {
+    Object.keys(trailSet).forEach(function (name) {
+      var region = PARTNERS.find(function (p) { return p.name === name; }).region;
+      var col = REGION_COLORS[region];
+      var d = "";
+      for (var y = YEAR_MIN; y <= state.year; y++) {
+        var row = partnerPoints(state.flow, y).find(function (q) { return q.name === name; });
+        d += (y === YEAR_MIN ? "M" : "L") + xF(row.share) + "," + yF(row.basketHHI);
+      }
+      var path = el("path", { class: "trail", d: d, stroke: col });
+      if ((state.isolate && region !== state.isolate) || (state.selected && state.selected !== name)) path.classList.add("dim");
+      scatterSvg.appendChild(path);
+      for (var yy = YEAR_MIN; yy <= state.year; yy += 5) {
+        var rr = partnerPoints(state.flow, yy).find(function (q) { return q.name === name; });
+        var dot = el("circle", { class: "trail-dot", cx: xF(rr.share), cy: yF(rr.basketHHI), r: 2.4, fill: col });
+        if ((state.isolate && region !== state.isolate) || (state.selected && state.selected !== name)) dot.classList.add("dim");
+        scatterSvg.appendChild(dot);
+      }
+    });
+  }
+
+  /* bubbles, big first so small stay clickable */
+  pts.slice().sort(function (a, b) { return b.value - a.value; }).forEach(function (p) {
+    var g = el("g", { class: "bubble" + (state.selected === p.name ? " sel" : "") });
+    var r = 4 + 20 * Math.sqrt(p.value / maxVal);
+    var x = xF(p.share), y = yF(p.basketHHI);
+    g.appendChild(el("circle", { class: "body", cx: x, cy: y, r: r, style: "fill:" + REGION_COLORS[p.region] }));
+    g.appendChild(el("circle", { cx: x, cy: y, r: Math.max(r + 5, 13), fill: "transparent" }));
+    if (labelSet[p.name] || state.selected === p.name) {
+      var lbl = el("text", { x: x, y: y - r - 6, "text-anchor": "middle" });
+      lbl.textContent = p.name;
+      g.appendChild(lbl);
+    }
+    if (state.isolate && p.region !== state.isolate) g.classList.add("dim");
+    g.addEventListener("mousemove", function (evt) {
+      showTooltip(evt,
+        '<div class="t-value">' + escapeHtml(p.name) + '</div>' +
+        '<div>' + (p.share * 100).toFixed(1) + '% of ' + state.flow + ' · ' + fmtUSD(p.value) + '</div>' +
+        '<div style="opacity:.8">basket HHI ' + p.basketHHI.toFixed(2) + ' — ' +
+        (p.basketHHI >= state.hhiThresh ? "concentrated" : "diversified") + ' relationship</div>');
+    });
+    g.addEventListener("mouseleave", hideTooltip);
+    g.addEventListener("click", function () {
+      state.selected = state.selected === p.name ? null : p.name;
+      renderAll();
+    });
+    scatterSvg.appendChild(g);
+  });
+}
+
+/* ============================ legend ============================ */
+
+function renderLegend() {
+  legendEl.innerHTML = "";
+  Object.keys(REGION_NAMES).forEach(function (rid) {
+    var li = document.createElement("li");
+    var btn = document.createElement("button");
+    btn.setAttribute("aria-pressed", String(state.isolate === rid));
+    var sw = document.createElement("span"); sw.className = "swatch"; sw.style.background = REGION_COLORS[rid];
+    var lbl = document.createElement("span"); lbl.textContent = REGION_NAMES[rid];
+    btn.appendChild(sw); btn.appendChild(lbl);
+    btn.addEventListener("click", function () {
+      state.isolate = state.isolate === rid ? null : rid;
+      renderAll();
+    });
+    li.appendChild(btn);
+    legendEl.appendChild(li);
+  });
+}
+
+/* ============================ screeners ============================ */
+
+function renderQuadScreener() {
+  var pts = partnerPoints(state.flow, state.year);
+  var rows = pts.filter(function (p) { return p.share >= state.shareThresh && p.basketHHI >= state.hhiThresh; })
+    .sort(function (a, b) { return b.share * b.basketHHI - a.share * a.basketHHI; });
+  if (!rows.length) {
+    quadWrap.innerHTML = '<p style="font-size:13px;color:var(--text-muted)">No partner clears both thresholds in ' + state.year + ' — the danger corner is empty at these settings.</p>';
+    return;
+  }
+  quadWrap.innerHTML = '<table class="data-table"><thead><tr><th>Partner</th><th>Region</th>' +
+    '<th class="num">Share of ' + state.flow + '</th><th class="num">Basket HHI</th><th class="num">Value</th><th>Top sector in dyad</th></tr></thead><tbody>' +
+    rows.map(function (p) {
+      var topSec = SECTORS.map(function (s) {
+        return { name: s.name, v: dyadValue(state.flow, p.name, s.id, state.year) };
+      }).sort(function (a, b) { return b.v - a.v; })[0];
+      return "<tr><td><span class='key-dot' style='background:" + REGION_COLORS[p.region] + "'></span>" + escapeHtml(p.name) + "</td>" +
+        "<td>" + escapeHtml(REGION_NAMES[p.region]) + "</td><td class='num'>" + (p.share * 100).toFixed(1) + "%</td>" +
+        "<td class='num'>" + p.basketHHI.toFixed(2) + "</td><td class='num'>" + fmtUSD(p.value) + "</td>" +
+        "<td>" + escapeHtml(topSec.name) + "</td></tr>";
+    }).join("") + "</tbody></table>";
+}
+
+function renderMoversScreener() {
+  var now = partnerPoints(state.flow, state.year);
+  var then = partnerPoints(state.flow, state.since);
+  var rows = now.map(function (p) {
+    var old = then.find(function (q) { return q.name === p.name; });
+    return { name: p.name, region: p.region, shareNow: p.share, shareThen: old.share,
+             hhiNow: p.basketHHI, hhiThen: old.basketHHI, d: p.share - old.share };
+  }).sort(function (a, b) { return Math.abs(b.d) - Math.abs(a.d); }).slice(0, 10);
+  moversWrap.innerHTML = '<table class="data-table"><thead><tr><th>Partner</th>' +
+    '<th class="num">Share ' + state.since + '</th><th class="num">Share ' + state.year + '</th>' +
+    '<th class="num">Move</th><th class="num">Basket HHI then → now</th></tr></thead><tbody>' +
+    rows.map(function (r) {
+      var cls = r.d >= 0 ? "up" : "down";
+      var arrow = r.d >= 0 ? "▲" : "▼";
+      return "<tr><td><span class='key-dot' style='background:" + REGION_COLORS[r.region] + "'></span>" + escapeHtml(r.name) + "</td>" +
+        "<td class='num'>" + (r.shareThen * 100).toFixed(1) + "%</td><td class='num'>" + (r.shareNow * 100).toFixed(1) + "%</td>" +
+        "<td class='num'><span class='" + cls + "'>" + arrow + " " + (Math.abs(r.d) * 100).toFixed(1) + " pts</span></td>" +
+        "<td class='num'>" + r.hhiThen.toFixed(2) + " → " + r.hhiNow.toFixed(2) + "</td></tr>";
+    }).join("") + "</tbody></table>";
+}
+
+/* ============================ table ============================ */
+
+function renderTable() {
+  if (!state.table) { tableWrap.style.display = "none"; return; }
+  tableWrap.style.display = "block";
+  var pts = partnerPoints(state.flow, state.year).slice().sort(function (a, b) { return b.share - a.share; });
+  tableWrap.innerHTML = '<table class="data-table"><thead><tr><th>Partner</th><th>Region</th>' +
+    '<th class="num">Value (' + state.year + ')</th><th class="num">Share</th><th class="num">Basket HHI</th></tr></thead><tbody>' +
+    pts.map(function (p) {
+      return "<tr><td><span class='key-dot' style='background:" + REGION_COLORS[p.region] + "'></span>" + escapeHtml(p.name) + "</td>" +
+        "<td>" + escapeHtml(REGION_NAMES[p.region]) + "</td><td class='num'>" + fmtUSD(p.value) + "</td>" +
+        "<td class='num'>" + (p.share * 100).toFixed(2) + "%</td><td class='num'>" + p.basketHHI.toFixed(3) + "</td></tr>";
+    }).join("") + "</tbody></table>";
+}
+
+/* ============================ orchestration ============================ */
+
+function renderAll() {
+  renderKpis();
+  chartCard.style.display = state.table ? "none" : "block";
+  if (!state.table) renderScatter();
+  renderLegend();
+  renderQuadScreener();
+  renderMoversScreener();
+  renderTable();
+}
+
+document.querySelectorAll("#flowSeg button").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll("#flowSeg button").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+    btn.setAttribute("aria-pressed", "true");
+    state.flow = btn.getAttribute("data-v");
+    state.selected = null;
+    renderAll();
+  });
+});
+
+document.getElementById("trailsChk").addEventListener("change", function (e) {
+  state.trails = e.target.checked;
+  renderAll();
+});
+document.getElementById("shareThresh").addEventListener("change", function (e) {
+  state.shareThresh = +e.target.value;
+  renderAll();
+});
+document.getElementById("hhiThresh").addEventListener("change", function (e) {
+  state.hhiThresh = +e.target.value;
+  renderAll();
+});
+document.getElementById("sinceSel").addEventListener("change", function (e) {
+  state.since = +e.target.value;
+  renderAll();
+});
+
+var yearSlider = document.getElementById("yearSlider");
+var yearLabel = document.getElementById("yearLabel");
+yearSlider.addEventListener("input", function () {
+  state.year = +yearSlider.value;
+  yearLabel.textContent = state.year;
+  renderAll();
+});
+
+var playBtn = document.getElementById("playBtn");
+var playTimer = null;
+function stopPlaying() {
+  state.playing = false; playBtn.textContent = "▶";
+  if (playTimer) { clearInterval(playTimer); playTimer = null; }
+}
+playBtn.addEventListener("click", function () {
+  if (state.playing) { stopPlaying(); return; }
+  state.playing = true; playBtn.textContent = "❚❚";
+  if (state.year >= YEAR_MAX) state.year = YEAR_MIN;
+  playTimer = setInterval(function () {
+    state.year++;
+    if (state.year >= YEAR_MAX) { state.year = YEAR_MAX; stopPlaying(); }
+    yearSlider.value = state.year; yearLabel.textContent = state.year;
+    renderAll();
+  }, 380);
+});
+
+var tableToggle = document.getElementById("tableToggle");
+tableToggle.addEventListener("click", function () {
+  state.table = !state.table;
+  tableToggle.setAttribute("aria-pressed", String(state.table));
+  tableToggle.textContent = state.table ? "View as chart" : "View as table";
+  renderAll();
+});
+
+renderAll();
+})();
+</script>

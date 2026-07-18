@@ -1,0 +1,760 @@
+<meta name="robots" content="noindex, nofollow">
+<title>Risk Matrix — Türkiye's Concentration Fingerprint (Synthetic)</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --page: #f9f9f7;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781;
+    --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --accent: #2a78d6; --warn: #e34948;
+    --seq-1: #cde2fb; --seq-2: #9ec5f4; --seq-3: #6da7ec; --seq-4: #3987e5;
+    --seq-5: #256abf; --seq-6: #184f95; --seq-7: #0d366b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #898781;
+      --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+      --accent: #3987e5; --warn: #e66767;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --accent: #3987e5; --warn: #e66767;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page); color: var(--text-primary);
+    min-height: 100vh; padding: 22px 16px 56px;
+  }
+  .frame { max-width: 1140px; margin: 0 auto; }
+
+  header h1 { font-size: 20px; font-weight: 650; margin: 0 0 4px; }
+  header p { font-size: 13px; color: var(--text-secondary); margin: 0; max-width: 800px; line-height: 1.5; }
+  .disclaimer {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px;
+    color: var(--text-muted); margin-top: 8px;
+    border: 1px solid var(--border); border-radius: 999px; padding: 4px 11px;
+  }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 12px; }
+  @media (max-width: 720px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+  .kpi { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 11px 14px; }
+  .kpi .k-label { font-size: 11.5px; color: var(--text-muted); margin-bottom: 3px; }
+  .kpi .k-value { font-size: 20px; font-weight: 650; }
+  .kpi .k-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+
+  .controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .controls label.inline { font-size: 12.5px; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
+  .controls input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px; }
+  .segmented { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--surface-1); }
+  .segmented button {
+    font-family: inherit; font-size: 13px; padding: 7px 14px; cursor: pointer;
+    background: transparent; color: var(--text-secondary); border: none; border-right: 1px solid var(--border);
+  }
+  .segmented button:last-child { border-right: none; }
+  .segmented button[aria-pressed="true"] { background: var(--accent); color: #fff; font-weight: 600; }
+  .spacer { flex: 1; }
+  .tv-toggle {
+    font-family: inherit; font-size: 13px; color: var(--text-primary);
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px;
+    padding: 7px 11px; cursor: pointer;
+  }
+  .tv-toggle[aria-pressed="true"] { background: var(--accent); color: #fff; }
+
+  .chart-card {
+    position: relative; background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px; overflow-x: auto;
+  }
+  svg { display: block; width: 100%; height: auto; min-width: 760px; }
+
+  .cell { stroke: var(--surface-1); stroke-width: 1.5; cursor: pointer; }
+  .cell:hover { stroke: var(--text-primary); }
+  .cell.sel { stroke: var(--text-primary); stroke-width: 2; }
+  .col-label { font-size: 10.5px; fill: var(--text-secondary); cursor: pointer; }
+  .col-label:hover, .row-label:hover { fill: var(--accent); }
+  .col-label.active, .row-label.active { fill: var(--accent); font-weight: 700; }
+  .row-label { font-size: 11.5px; fill: var(--text-secondary); cursor: pointer; }
+  .hhi-bar { fill: var(--accent); opacity: .85; }
+  .hhi-label { font-size: 10.5px; fill: var(--text-muted); }
+  .axis-caption { font-size: 10.5px; fill: var(--text-muted); font-style: italic; }
+
+  .year-row {
+    display: flex; align-items: center; gap: 12px; margin-top: 10px;
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px;
+  }
+  .year-row button.play {
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--page); color: var(--text-primary); font-size: 13px; cursor: pointer; flex: none;
+  }
+  .year-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+  .year-row .year-label { font-size: 15px; font-weight: 650; min-width: 46px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  .legend-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px; margin-top: 12px; font-size: 12px; color: var(--text-secondary); }
+  .legend-row .ramp { display: flex; height: 10px; border-radius: 3px; overflow: hidden; }
+  .legend-row .ramp span { width: 20px; }
+  .legend-row .item { display: flex; align-items: center; gap: 8px; }
+
+  .detail {
+    display: none; margin-top: 12px; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px;
+  }
+  .detail.open { display: block; }
+  .detail h3 { margin: 0 0 2px; font-size: 15px; }
+  .detail .d-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .detail .d-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 18px; margin-bottom: 8px; }
+  .detail .d-stat .l { font-size: 11px; color: var(--text-muted); }
+  .detail .d-stat .v { font-size: 16px; font-weight: 650; }
+  .detail button.close {
+    float: right; background: none; border: 1px solid var(--border); border-radius: 7px;
+    color: var(--text-secondary); font: inherit; font-size: 12px; padding: 4px 10px; cursor: pointer;
+  }
+  .spark-caption { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  .screener { margin-top: 18px; }
+  .screener h2 { font-size: 15px; font-weight: 650; margin: 0 0 4px; }
+  .screener p.s-sub { font-size: 12.5px; color: var(--text-muted); margin: 0 0 10px; }
+  .screener select { font-family: inherit; font-size: 12.5px; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 7px; padding: 5px 9px; }
+
+  .tooltip {
+    position: absolute; pointer-events: none; z-index: 5;
+    background: var(--text-primary); color: var(--page);
+    font-size: 12px; line-height: 1.45; padding: 8px 10px; border-radius: 7px;
+    max-width: 260px; opacity: 0; transform: translate(-50%, -100%); transition: opacity .08s ease;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18);
+  }
+  .tooltip .t-value { font-weight: 700; font-size: 13px; }
+
+  table.data-table {
+    width: 100%; border-collapse: collapse; font-size: 12.5px; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  }
+  table.data-table th, table.data-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  table.data-table th { color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .02em; }
+  table.data-table td.num, table.data-table th.num { text-align: right; }
+  table.data-table td.num { font-variant-numeric: tabular-nums; }
+  table.data-table tr:last-child td { border-bottom: none; }
+  .chokepoint-flag { color: var(--warn); font-weight: 700; }
+
+  footer.note { margin-top: 20px; font-size: 12px; color: var(--text-muted); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 12px; }
+  footer.note strong { color: var(--text-secondary); }
+</style>
+
+<div class="viz-root">
+  <div class="frame">
+    <header>
+      <h1>Risk Matrix</h1>
+      <p>The concentration fingerprint: every sector × partner cell of Türkiye's trade, shaded by the
+        partner's share of that sector. Row bars show each sector's HHI; the toggle re-runs the whole
+        index treating the EU-27 as a single supplier — methodology as an interaction, after the Lowy
+        Institute's re-weighting and Bertin's reorderable matrix. Click labels to sort, cells to drill.</p>
+      <span class="disclaimer">● Synthetic data — the paradigm, the sorting, and the live methodology toggle are the point</span>
+    </header>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="controls">
+      <div class="segmented" id="flowSeg">
+        <button data-v="imports" aria-pressed="true">Imports</button>
+        <button data-v="exports" aria-pressed="false">Exports</button>
+      </div>
+      <label class="inline"><input type="checkbox" id="euMerge"> Treat EU-27 as one supplier</label>
+      <div class="spacer"></div>
+      <button class="tv-toggle" id="tableToggle" aria-pressed="false">View as table</button>
+    </div>
+
+    <div class="chart-card" id="chartCard">
+      <svg id="matrixSvg" role="img" aria-label="Sector by partner concentration matrix"></svg>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <div class="year-row">
+      <button class="play" id="playBtn" aria-label="Play year animation">▶</button>
+      <input type="range" id="yearSlider" min="1995" max="2024" step="1" value="2024" aria-label="Year">
+      <span class="year-label" id="yearLabel">2024</span>
+    </div>
+
+    <div class="legend-row">
+      <div class="item"><span>0%</span>
+        <span class="ramp"><span style="background:var(--seq-1)"></span><span style="background:var(--seq-2)"></span><span style="background:var(--seq-3)"></span><span style="background:var(--seq-4)"></span><span style="background:var(--seq-5)"></span><span style="background:var(--seq-6)"></span><span style="background:var(--seq-7)"></span></span>
+        <span>60%+ — cell = partner's share of the sector (√ scale)</span></div>
+      <div class="item"><span style="display:inline-block;width:26px;height:9px;background:var(--accent);border-radius:2px;opacity:.85"></span><span>row bar = sector HHI ×1000</span></div>
+    </div>
+
+    <div class="detail" id="detailPanel"></div>
+
+    <div class="screener">
+      <h2>Chokepoint screener</h2>
+      <p class="s-sub">Sector–partner cells above a dominance threshold — the citable output. Threshold:
+        <select id="threshSel">
+          <option value="0.3">30%</option>
+          <option value="0.4" selected>40%</option>
+          <option value="0.5">50%</option>
+          <option value="0.6">60%</option>
+        </select>
+      </p>
+      <div id="screenerWrap"></div>
+    </div>
+
+    <div id="tableWrap" style="display:none; margin-top:12px;"></div>
+
+    <footer class="note">
+      <strong>Why a matrix?</strong> The wheel shows relationships and the map shows geography, but only
+      the matrix shows <em>every cell at once</em> — nothing is hidden behind an aggregate. It is where
+      the analytical work happens: sorting columns turns "China is big" into "China is big <em>in exactly
+      these four sectors</em>"; the EU toggle shows how much the index depends on what counts as one
+      supplier (chart-pack story 13); and the screener extracts the defensible sentence — "partner X
+      supplies Y% of sector Z" — that ends up in the report. Aggregate index shown is Σ(sector share ×
+      sector HHI), the chart pack's construction without the elasticity term.
+    </footer>
+  </div>
+</div>
+
+<script>
+(function () {
+"use strict";
+
+/* ============================ synthetic data (shared model) ============================ */
+
+var YEAR_MIN = 1995, YEAR_MAX = 2024;
+
+var SECTORS = [
+  { id: "energy",   name: "Energy & fuels",        w: 1.6 },
+  { id: "mach",     name: "Machinery",             w: 1.3 },
+  { id: "elec",     name: "Electronics",           w: 1.25 },
+  { id: "vehi",     name: "Vehicles",              w: 1.1 },
+  { id: "steel",    name: "Iron & steel",          w: 1.0 },
+  { id: "chem",     name: "Chemicals",             w: 1.0 },
+  { id: "pharma",   name: "Pharmaceuticals",       w: 0.7 },
+  { id: "plast",    name: "Plastics & rubber",     w: 0.8 },
+  { id: "text",     name: "Textiles & apparel",    w: 0.9 },
+  { id: "agri",     name: "Agriculture",           w: 0.8 },
+  { id: "food",     name: "Processed food",        w: 0.6 },
+  { id: "metal",    name: "Metals & mining",       w: 0.85 },
+  { id: "prec",     name: "Precision instruments", w: 0.55 },
+  { id: "wood",     name: "Wood & paper",          w: 0.4 },
+  { id: "glass",    name: "Glass & ceramics",      w: 0.4 },
+  { id: "serv",     name: "Services",              w: 0.7 }
+];
+
+var PARTNERS = [
+  ["Germany","eu"],["China","asia"],["Russia","cis"],["United States","am"],
+  ["Italy","eu"],["France","eu"],["United Kingdom","eur"],["Spain","eu"],
+  ["Netherlands","eu"],["Iraq","mena"],["United Arab Emirates","mena"],
+  ["Saudi Arabia","mena"],["Egypt","mena"],["Israel","mena"],["Iran","mena"],
+  ["Azerbaijan","cis"],["Ukraine","cis"],["Kazakhstan","cis"],["Georgia","cis"],
+  ["Uzbekistan","cis"],["India","asia"],["South Korea","asia"],["Japan","asia"],
+  ["Vietnam","asia"],["Malaysia","asia"],["Indonesia","asia"],["Poland","eu"],
+  ["Romania","eu"],["Bulgaria","eu"],["Greece","eu"],["Belgium","eu"],
+  ["Switzerland","eur"],["Brazil","am"],["Mexico","am"],["Canada","am"],
+  ["Algeria","mena"],["Morocco","mena"],["Libya","mena"],["Qatar","mena"],
+  ["Nigeria","afr"],["South Africa","afr"],["Ethiopia","afr"],["Turkmenistan","cis"]
+].map(function (c) { return { name: c[0], region: c[1] }; });
+
+var EU_MEMBERS = PARTNERS.filter(function (p) { return p.region === "eu"; }).map(function (p) { return p.name; });
+
+var BIAS = {
+  "imports|Russia|energy": 5.0, "imports|Azerbaijan|energy": 9.0, "imports|Iran|energy": 4.0,
+  "imports|Algeria|energy": 6.0, "imports|Qatar|energy": 7.0, "imports|Turkmenistan|energy": 7.0, "imports|Libya|energy": 5.0,
+  "imports|China|elec": 5.5, "imports|China|mach": 2.6, "imports|China|text": 1.6,
+  "imports|Germany|elec": 2.4, "imports|Japan|elec": 2.2,
+  "imports|Germany|mach": 3.4, "imports|Germany|vehi": 3.0, "imports|Germany|chem": 2.0,
+  "imports|South Korea|elec": 1.9, "imports|Japan|vehi": 1.6, "imports|Japan|prec": 1.9,
+  "imports|Russia|steel": 2.6, "imports|Ukraine|steel": 2.0, "imports|Ukraine|agri": 2.2,
+  "imports|Russia|agri": 2.4, "imports|United States|pharma": 1.8, "imports|Switzerland|pharma": 2.3,
+  "imports|India|chem": 1.7, "imports|Italy|mach": 1.9, "imports|France|vehi": 1.5,
+  "exports|Germany|text": 6.0, "exports|Germany|vehi": 2.6, "exports|Germany|food": 1.8,
+  "exports|United Kingdom|text": 1.9, "exports|United States|steel": 1.5,
+  "exports|Iraq|food": 2.8, "exports|Iraq|plast": 2.0, "exports|Iraq|steel": 1.8,
+  "exports|Italy|vehi": 2.0, "exports|France|vehi": 1.8, "exports|Spain|vehi": 1.7,
+  "exports|Israel|steel": 1.5, "exports|Egypt|plast": 1.6, "exports|Russia|food": 1.9,
+  "exports|Russia|text": 1.6, "exports|United States|mach": 1.4, "exports|Netherlands|agri": 1.5,
+  "exports|China|metal": 2.8, "exports|China|glass": 2.2, "exports|Azerbaijan|serv": 1.8,
+  "exports|Georgia|serv": 1.7, "exports|Romania|serv": 1.6
+};
+
+var SIZE = {
+  "China": 11, "Germany": 8.5, "Russia": 8, "United States": 6, "Italy": 4.5,
+  "France": 4, "United Kingdom": 3.5, "Japan": 3.5, "South Korea": 3.2,
+  "Netherlands": 3, "Spain": 3, "India": 3, "Iraq": 2.8, "United Arab Emirates": 2.6,
+  "Switzerland": 2.5, "Poland": 2.5, "Brazil": 2.4, "Azerbaijan": 2.2, "Iran": 2.2
+};
+
+function eraMult(flow, partner, year) {
+  var t = (year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN);
+  if (flow === "imports" && partner === "China") return (0.10 + 0.90 * Math.pow(t, 1.6)) * 2.6;
+  if (flow === "exports" && partner === "China") return 0.25 + 0.75 * t;
+  if (partner === "Russia" && year >= 2022) return flow === "imports" ? 1.22 : 1.15;
+  if (partner === "Ukraine" && year >= 2022) return 0.45;
+  if (flow === "exports" && partner === "Iraq") return year >= 2010 && year <= 2014 ? 1.9 : 1.0;
+  if (flow === "exports" && partner === "Germany") return 1.9 - 1.1 * t;
+  return 1.0;
+}
+
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hashSeed(str) {
+  var h = 0;
+  for (var i = 0; i < str.length; i++) h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
+  return h;
+}
+
+var PETRO = { "Azerbaijan": 1, "Qatar": 1, "Turkmenistan": 1, "Libya": 1, "Algeria": 1 };
+
+var trajCache = {};
+function dyadValue(flow, partner, sectorId, year) {
+  var key = flow + "|" + partner + "|" + sectorId;
+  var t = trajCache[key];
+  if (!t) {
+    var r = mulberry32(hashSeed(key));
+    t = {
+      base: Math.exp(r() * 2.9) * 3.2e7,
+      growth: -0.01 + r() * 0.075,
+      amp: 0.05 + r() * 0.15,
+      phase: r() * 6.283, period: 6 + r() * 9,
+      size: SIZE[partner] || (0.5 + Math.exp(mulberry32(hashSeed(partner + "|size"))() * 1.1))
+    };
+    trajCache[key] = t;
+  }
+  var sec = SECTORS.find(function (s) { return s.id === sectorId; });
+  var bias = BIAS[flow + "|" + partner + "|" + sectorId] || 1;
+  if (flow === "imports" && PETRO[partner] && sectorId !== "energy") bias *= 0.22;
+  var dy = year - YEAR_MIN;
+  return t.base * t.size * sec.w * bias * eraMult(flow, partner, year) *
+    Math.pow(1 + t.growth, dy) * (1 + t.amp * Math.sin(6.283 * dy / t.period + t.phase));
+}
+
+/* ---- matrix assembly: suppliers (possibly with EU merged) × sectors ---- */
+
+function supplierList(euMerged) {
+  if (!euMerged) return PARTNERS.map(function (p) { return { name: p.name, members: [p.name] }; });
+  var list = [{ name: "EU-27", members: EU_MEMBERS }];
+  PARTNERS.forEach(function (p) {
+    if (p.region !== "eu") list.push({ name: p.name, members: [p.name] });
+  });
+  return list;
+}
+
+/* returns { suppliers, matrix: {secId: {supName: value}}, secTotals, supTotals, grandTotal, secHHI, aggIndex } */
+function buildMatrix(flow, year, euMerged) {
+  var sups = supplierList(euMerged);
+  var matrix = {}, secTotals = {}, supTotals = {}, grandTotal = 0;
+  SECTORS.forEach(function (sec) {
+    matrix[sec.id] = {};
+    var st = 0;
+    sups.forEach(function (sup) {
+      var v = 0;
+      sup.members.forEach(function (m) { v += dyadValue(flow, m, sec.id, year); });
+      matrix[sec.id][sup.name] = v;
+      st += v;
+      supTotals[sup.name] = (supTotals[sup.name] || 0) + v;
+    });
+    secTotals[sec.id] = st;
+    grandTotal += st;
+  });
+  var secHHI = {};
+  var aggIndex = 0;
+  SECTORS.forEach(function (sec) {
+    var h = 0;
+    sups.forEach(function (sup) {
+      var sh = matrix[sec.id][sup.name] / secTotals[sec.id];
+      h += sh * sh;
+    });
+    secHHI[sec.id] = h;
+    aggIndex += (secTotals[sec.id] / grandTotal) * h;
+  });
+  return { suppliers: sups, matrix: matrix, secTotals: secTotals, supTotals: supTotals,
+           grandTotal: grandTotal, secHHI: secHHI, aggIndex: aggIndex };
+}
+
+/* ============================ helpers ============================ */
+
+function fmtUSD(v) {
+  if (v >= 1e9) return "$" + (v / 1e9).toFixed(v >= 1e10 ? 0 : 1) + "B";
+  if (v >= 1e6) return "$" + (v / 1e6).toFixed(0) + "M";
+  return "$" + Math.round(v);
+}
+function escapeHtml(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+var svgNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs) {
+  var e = document.createElementNS(svgNS, tag);
+  for (var k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+var SEQ = ["var(--seq-1)","var(--seq-2)","var(--seq-3)","var(--seq-4)","var(--seq-5)","var(--seq-6)","var(--seq-7)"];
+function shareColor(share) {
+  /* sqrt scale mapping 0..0.6+ onto the 7 steps */
+  var t = Math.sqrt(Math.min(1, share / 0.6));
+  return SEQ[Math.max(0, Math.min(6, Math.floor(t * 6.999)))];
+}
+
+/* ============================ state & dom ============================ */
+
+var state = {
+  flow: "imports", year: YEAR_MAX, euMerged: false,
+  sortCol: null, sortRow: null, selCell: null, table: false, playing: false, threshold: 0.4
+};
+
+var matrixSvg = document.getElementById("matrixSvg");
+var tooltip = document.getElementById("tooltip");
+var chartCard = document.getElementById("chartCard");
+var kpisEl = document.getElementById("kpis");
+var detailPanel = document.getElementById("detailPanel");
+var tableWrap = document.getElementById("tableWrap");
+var screenerWrap = document.getElementById("screenerWrap");
+
+function showTooltip(evt, html) {
+  tooltip.innerHTML = html;
+  tooltip.style.opacity = "1";
+  var rect = chartCard.getBoundingClientRect();
+  tooltip.style.left = (evt.clientX - rect.left + chartCard.scrollLeft) + "px";
+  tooltip.style.top = Math.max(56, evt.clientY - rect.top) + "px";
+}
+function hideTooltip() { tooltip.style.opacity = "0"; }
+
+/* ============================ KPIs ============================ */
+
+function renderKpis() {
+  var M = buildMatrix(state.flow, state.year, state.euMerged);
+  var Msep = buildMatrix(state.flow, state.year, false);
+  var Mmerged = buildMatrix(state.flow, state.year, true);
+
+  var worstSec = SECTORS.slice().sort(function (a, b) { return M.secHHI[b.id] - M.secHHI[a.id]; })[0];
+
+  var bigCell = { share: 0 };
+  SECTORS.forEach(function (sec) {
+    M.suppliers.forEach(function (sup) {
+      var sh = M.matrix[sec.id][sup.name] / M.secTotals[sec.id];
+      if (sh > bigCell.share) bigCell = { share: sh, sec: sec.name, sup: sup.name };
+    });
+  });
+
+  var items = [
+    { label: "Aggregate index (×1000)", value: (M.aggIndex * 1000).toFixed(0),
+      sub: "Σ sector-share × sector-HHI · " + state.year + (state.euMerged ? " · EU merged" : "") },
+    { label: "Most concentrated sector", value: worstSec.name, small: true,
+      sub: "HHI ×1000 = " + (M.secHHI[worstSec.id] * 1000).toFixed(0) },
+    { label: "Biggest single cell", value: (bigCell.share * 100).toFixed(0) + "%",
+      sub: bigCell.sup + " share of " + bigCell.sec },
+    { label: "EU-as-one-supplier effect", value: "+" + ((Mmerged.aggIndex - Msep.aggIndex) * 1000).toFixed(0) + " pts",
+      sub: (Msep.aggIndex * 1000).toFixed(0) + " → " + (Mmerged.aggIndex * 1000).toFixed(0) + " when EU-27 counts as one" }
+  ];
+  kpisEl.innerHTML = "";
+  items.forEach(function (it) {
+    var d = document.createElement("div");
+    d.className = "kpi";
+    var l = document.createElement("div"); l.className = "k-label"; l.textContent = it.label;
+    var v = document.createElement("div"); v.className = "k-value"; v.textContent = it.value;
+    if (it.small) v.style.fontSize = "15px";
+    var s = document.createElement("div"); s.className = "k-sub"; s.textContent = it.sub;
+    d.appendChild(l); d.appendChild(v); d.appendChild(s);
+    kpisEl.appendChild(d);
+  });
+}
+
+/* ============================ the matrix ============================ */
+
+var SHOW_COLS = 20;
+
+function orderedData() {
+  var M = buildMatrix(state.flow, state.year, state.euMerged);
+  var sups = M.suppliers.slice().sort(function (a, b) { return M.supTotals[b.name] - M.supTotals[a.name]; })
+    .slice(0, SHOW_COLS);
+  if (state.sortRow) {
+    sups.sort(function (a, b) {
+      return (M.matrix[state.sortRow][b.name] / M.secTotals[state.sortRow]) -
+             (M.matrix[state.sortRow][a.name] / M.secTotals[state.sortRow]);
+    });
+  }
+  var secs = SECTORS.slice();
+  if (state.sortCol) {
+    secs.sort(function (a, b) {
+      return (M.matrix[b.id][state.sortCol] / M.secTotals[b.id]) -
+             (M.matrix[a.id][state.sortCol] / M.secTotals[a.id]);
+    });
+  } else {
+    secs.sort(function (a, b) { return M.secHHI[b.id] - M.secHHI[a.id]; });
+  }
+  return { M: M, sups: sups, secs: secs };
+}
+
+function renderMatrix() {
+  var od = orderedData();
+  var M = od.M, sups = od.sups, secs = od.secs;
+
+  var leftW = 158, topH = 92, cellW = 34, cellH = 26, gapRight = 14, barW = 110;
+  var W = leftW + sups.length * cellW + gapRight + barW + 10;
+  var H = topH + secs.length * cellH + 26;
+  matrixSvg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  matrixSvg.innerHTML = "";
+
+  /* column labels (rotated), clickable to sort rows */
+  sups.forEach(function (sup, j) {
+    var x = leftW + j * cellW + cellW / 2;
+    var lbl = el("text", {
+      class: "col-label" + (state.sortCol === sup.name ? " active" : ""),
+      x: x, y: topH - 8, "text-anchor": "start",
+      transform: "rotate(-52 " + x + " " + (topH - 8) + ")"
+    });
+    lbl.textContent = sup.name + " " + (M.supTotals[sup.name] / M.grandTotal * 100).toFixed(0) + "%";
+    lbl.addEventListener("click", function () {
+      state.sortCol = state.sortCol === sup.name ? null : sup.name;
+      renderAll();
+    });
+    matrixSvg.appendChild(lbl);
+  });
+
+  /* rows */
+  secs.forEach(function (sec, i) {
+    var y = topH + i * cellH;
+    var rl = el("text", {
+      class: "row-label" + (state.sortRow === sec.id ? " active" : ""),
+      x: leftW - 8, y: y + cellH / 2 + 4, "text-anchor": "end"
+    });
+    rl.textContent = sec.name;
+    rl.addEventListener("click", function () {
+      state.sortRow = state.sortRow === sec.id ? null : sec.id;
+      renderAll();
+    });
+    matrixSvg.appendChild(rl);
+
+    sups.forEach(function (sup, j) {
+      var share = M.matrix[sec.id][sup.name] / M.secTotals[sec.id];
+      var rect = el("rect", {
+        class: "cell" + (state.selCell && state.selCell.sec === sec.id && state.selCell.sup === sup.name ? " sel" : ""),
+        x: leftW + j * cellW, y: y, width: cellW - 2, height: cellH - 2, rx: 3,
+        style: "fill:" + shareColor(share)
+      });
+      rect.addEventListener("mousemove", function (evt) {
+        showTooltip(evt,
+          '<div class="t-value">' + escapeHtml(sup.name) + " × " + escapeHtml(sec.name) + '</div>' +
+          '<div>' + (share * 100).toFixed(1) + '% of the sector · ' + fmtUSD(M.matrix[sec.id][sup.name]) + '</div>' +
+          '<div style="opacity:.8">sector HHI ×1000: ' + (M.secHHI[sec.id] * 1000).toFixed(0) + ' · click to drill</div>');
+      });
+      rect.addEventListener("mouseleave", hideTooltip);
+      rect.addEventListener("click", function () {
+        var same = state.selCell && state.selCell.sec === sec.id && state.selCell.sup === sup.name;
+        state.selCell = same ? null : { sec: sec.id, sup: sup.name, supMembers: sup.members };
+        renderAll();
+      });
+      matrixSvg.appendChild(rect);
+    });
+
+    /* HHI marginal bar */
+    var hhi = M.secHHI[sec.id] * 1000;
+    var maxHHI = Math.max.apply(null, SECTORS.map(function (s) { return M.secHHI[s.id] * 1000; }));
+    var bw = (hhi / maxHHI) * barW;
+    matrixSvg.appendChild(el("rect", {
+      class: "hhi-bar", x: leftW + sups.length * cellW + gapRight, y: y + 5,
+      width: bw, height: cellH - 12, rx: 3
+    }));
+    var hl = el("text", { class: "hhi-label", x: leftW + sups.length * cellW + gapRight + bw + 5, y: y + cellH / 2 + 3.5 });
+    hl.textContent = hhi.toFixed(0);
+    matrixSvg.appendChild(hl);
+  });
+
+  /* captions */
+  var cap1 = el("text", { class: "axis-caption", x: leftW, y: H - 8 });
+  cap1.textContent = "columns: top " + sups.length + " suppliers, sorted by " + (state.sortRow ? "their share of the selected sector" : "total value") + " — click a column to sort sectors by that supplier";
+  matrixSvg.appendChild(cap1);
+  var cap2 = el("text", { class: "axis-caption", x: leftW + sups.length * cellW + gapRight, y: topH - 8 });
+  cap2.textContent = "sector HHI ×1000";
+  matrixSvg.appendChild(cap2);
+}
+
+/* ============================ detail ============================ */
+
+function renderDetail() {
+  if (!state.selCell) { detailPanel.className = "detail"; detailPanel.innerHTML = ""; return; }
+  var secId = state.selCell.sec, supName = state.selCell.sup, members = state.selCell.supMembers;
+  var sec = SECTORS.find(function (s) { return s.id === secId; });
+  detailPanel.className = "detail open";
+  detailPanel.innerHTML = "";
+
+  var closeBtn = document.createElement("button");
+  closeBtn.className = "close"; closeBtn.textContent = "✕ clear";
+  closeBtn.addEventListener("click", function () { state.selCell = null; renderAll(); });
+  detailPanel.appendChild(closeBtn);
+
+  var h = document.createElement("h3"); h.textContent = supName + " × " + sec.name;
+  var sub = document.createElement("div"); sub.className = "d-sub";
+  sub.textContent = "Share of Türkiye's " + state.flow + " in this sector, " + YEAR_MIN + "–" + YEAR_MAX;
+  detailPanel.appendChild(h); detailPanel.appendChild(sub);
+
+  /* share history for this cell */
+  var shares = [];
+  for (var y = YEAR_MIN; y <= YEAR_MAX; y++) {
+    var v = 0, tot = 0;
+    var supsAll = supplierList(state.euMerged);
+    supsAll.forEach(function (sp) {
+      var vv = 0;
+      sp.members.forEach(function (m) { vv += dyadValue(state.flow, m, secId, y); });
+      if (sp.name === supName) v = vv;
+      tot += vv;
+    });
+    shares.push(v / tot);
+  }
+  var cur = shares[state.year - YEAR_MIN];
+
+  var grid = document.createElement("div"); grid.className = "d-grid";
+  [
+    ["Share in " + state.year, (cur * 100).toFixed(1) + "%"],
+    ["Share in " + YEAR_MIN, (shares[0] * 100).toFixed(1) + "%"],
+    ["Peak share", (Math.max.apply(null, shares) * 100).toFixed(1) + "% (" + (YEAR_MIN + shares.indexOf(Math.max.apply(null, shares))) + ")"],
+    ["30-year move", ((cur - shares[0]) * 100).toFixed(1) + " pts"]
+  ].forEach(function (pair) {
+    var d = document.createElement("div"); d.className = "d-stat";
+    var l = document.createElement("div"); l.className = "l"; l.textContent = pair[0];
+    var val = document.createElement("div"); val.className = "v"; val.textContent = pair[1];
+    d.appendChild(l); d.appendChild(val); grid.appendChild(d);
+  });
+  detailPanel.appendChild(grid);
+
+  var W = 560, H = 90, m = { t: 8, r: 8, b: 18, l: 8 };
+  var svg = el("svg", { viewBox: "0 0 " + W + " " + H, style: "max-width:560px" });
+  var maxS = Math.max.apply(null, shares) * 1.15;
+  var xF = function (i) { return m.l + i / (shares.length - 1) * (W - m.l - m.r); };
+  var yF = function (s) { return m.t + (1 - s / maxS) * (H - m.t - m.b); };
+  var dPath = shares.map(function (s, i) { return (i ? "L" : "M") + xF(i) + "," + yF(s); }).join("");
+  svg.appendChild(el("line", { x1: m.l, x2: W - m.r, y1: H - m.b, y2: H - m.b, stroke: "var(--grid)", "stroke-width": 1 }));
+  svg.appendChild(el("path", { d: dPath, fill: "none", stroke: "var(--accent)", "stroke-width": 2, "stroke-linejoin": "round" }));
+  var yi = state.year - YEAR_MIN;
+  svg.appendChild(el("circle", { cx: xF(yi), cy: yF(shares[yi]), r: 4, fill: "var(--accent)", stroke: "var(--surface-1)", "stroke-width": 2 }));
+  [0, shares.length - 1].forEach(function (i) {
+    var t = el("text", { x: xF(i), y: H - 4, "text-anchor": i === 0 ? "start" : "end", "font-size": "10", fill: "var(--text-muted)" });
+    t.textContent = YEAR_MIN + i;
+    svg.appendChild(t);
+  });
+  detailPanel.appendChild(svg);
+}
+
+/* ============================ screener & table ============================ */
+
+function renderScreener() {
+  var M = buildMatrix(state.flow, state.year, state.euMerged);
+  var rows = [];
+  SECTORS.forEach(function (sec) {
+    M.suppliers.forEach(function (sup) {
+      var share = M.matrix[sec.id][sup.name] / M.secTotals[sec.id];
+      if (share >= state.threshold) {
+        rows.push({ sec: sec.name, sup: sup.name, share: share,
+                    value: M.matrix[sec.id][sup.name], secValue: M.secTotals[sec.id], hhi: M.secHHI[sec.id] });
+      }
+    });
+  });
+  rows.sort(function (a, b) { return b.share - a.share; });
+  if (!rows.length) {
+    screenerWrap.innerHTML = '<p style="font-size:13px;color:var(--text-muted)">No sector–partner cell reaches ' +
+      (state.threshold * 100).toFixed(0) + '% in ' + state.year + ' — lower the threshold.</p>';
+    return;
+  }
+  screenerWrap.innerHTML = '<table class="data-table"><thead><tr><th>Sector</th><th>Dominant partner</th>' +
+    '<th class="num">Share of sector</th><th class="num">Cell value</th><th class="num">Sector total</th><th class="num">Sector HHI ×1000</th></tr></thead><tbody>' +
+    rows.map(function (r) {
+      return "<tr><td>" + escapeHtml(r.sec) + "</td><td><span class='chokepoint-flag'>" + escapeHtml(r.sup) + "</span></td>" +
+        "<td class='num'>" + (r.share * 100).toFixed(1) + "%</td><td class='num'>" + fmtUSD(r.value) + "</td>" +
+        "<td class='num'>" + fmtUSD(r.secValue) + "</td><td class='num'>" + (r.hhi * 1000).toFixed(0) + "</td></tr>";
+    }).join("") + "</tbody></table>";
+}
+
+function renderTable() {
+  if (!state.table) { tableWrap.style.display = "none"; return; }
+  tableWrap.style.display = "block";
+  var od = orderedData();
+  var html = '<table class="data-table"><thead><tr><th>Sector</th>' +
+    od.sups.map(function (s) { return "<th class='num'>" + escapeHtml(s.name) + "</th>"; }).join("") +
+    '<th class="num">HHI ×1000</th></tr></thead><tbody>' +
+    od.secs.map(function (sec) {
+      return "<tr><td>" + escapeHtml(sec.name) + "</td>" +
+        od.sups.map(function (sup) {
+          var share = od.M.matrix[sec.id][sup.name] / od.M.secTotals[sec.id];
+          return "<td class='num'>" + (share * 100).toFixed(1) + "</td>";
+        }).join("") +
+        "<td class='num'><strong>" + (od.M.secHHI[sec.id] * 1000).toFixed(0) + "</strong></td></tr>";
+    }).join("") + "</tbody></table><p style='font-size:11.5px;color:var(--text-muted)'>Cell values are the partner's percentage share of Türkiye's " +
+    state.flow + " in the sector, " + state.year + ".</p>";
+  tableWrap.innerHTML = html;
+}
+
+/* ============================ orchestration ============================ */
+
+function renderAll() {
+  renderKpis();
+  chartCard.style.display = state.table ? "none" : "block";
+  if (!state.table) renderMatrix();
+  renderDetail();
+  renderScreener();
+  renderTable();
+}
+
+document.querySelectorAll("#flowSeg button").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll("#flowSeg button").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+    btn.setAttribute("aria-pressed", "true");
+    state.flow = btn.getAttribute("data-v");
+    state.selCell = null;
+    renderAll();
+  });
+});
+
+document.getElementById("euMerge").addEventListener("change", function (e) {
+  state.euMerged = e.target.checked;
+  state.selCell = null; state.sortCol = null;
+  renderAll();
+});
+
+document.getElementById("threshSel").addEventListener("change", function (e) {
+  state.threshold = +e.target.value;
+  renderScreener();
+});
+
+var yearSlider = document.getElementById("yearSlider");
+var yearLabel = document.getElementById("yearLabel");
+yearSlider.addEventListener("input", function () {
+  state.year = +yearSlider.value;
+  yearLabel.textContent = state.year;
+  renderAll();
+});
+
+var playBtn = document.getElementById("playBtn");
+var playTimer = null;
+function stopPlaying() {
+  state.playing = false; playBtn.textContent = "▶";
+  if (playTimer) { clearInterval(playTimer); playTimer = null; }
+}
+playBtn.addEventListener("click", function () {
+  if (state.playing) { stopPlaying(); return; }
+  state.playing = true; playBtn.textContent = "❚❚";
+  if (state.year >= YEAR_MAX) state.year = YEAR_MIN;
+  playTimer = setInterval(function () {
+    state.year++;
+    if (state.year >= YEAR_MAX) { state.year = YEAR_MAX; stopPlaying(); }
+    yearSlider.value = state.year; yearLabel.textContent = state.year;
+    renderAll();
+  }, 420);
+});
+
+var tableToggle = document.getElementById("tableToggle");
+tableToggle.addEventListener("click", function () {
+  state.table = !state.table;
+  tableToggle.setAttribute("aria-pressed", String(state.table));
+  tableToggle.textContent = state.table ? "View as matrix" : "View as table";
+  renderAll();
+});
+
+renderAll();
+})();
+</script>

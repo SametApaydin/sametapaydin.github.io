@@ -1,0 +1,174 @@
+<meta name="robots" content="noindex, nofollow">
+<title>Dashboard C — Briefing Sequence (Synthetic)</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb;
+    --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --border: rgba(11,11,11,0.10); --accent: #2a78d6; --warn: #e34948;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19;
+      --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+      --border: rgba(255,255,255,0.10); --accent: #3987e5; --warn: #e66767;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19;
+    --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --border: rgba(255,255,255,0.10); --accent: #3987e5; --warn: #e66767;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 26px 18px 60px; }
+
+  .topbar { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .kicker { font-size: 12px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+  .treatment-nav { margin-left: auto; font-size: 12.5px; color: var(--muted); }
+  .treatment-nav a { color: var(--accent); text-decoration: none; font-weight: 650; }
+  .treatment-nav strong { color: var(--ink); }
+  h1 { font-size: 23px; font-weight: 700; margin: 6px 0 6px; }
+  .lede { font-size: 14px; color: var(--ink-2); margin: 0 0 8px; max-width: 780px; }
+  .note-pill {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px;
+    color: var(--muted); border: 1px solid var(--border); border-radius: 999px;
+    padding: 4px 12px; margin-bottom: 14px;
+  }
+
+  nav.toc {
+    position: sticky; top: 0; z-index: 10; background: var(--page);
+    display: flex; gap: 4px 18px; flex-wrap: wrap; padding: 10px 0;
+    border-bottom: 1px solid var(--border); margin-bottom: 8px;
+    font-size: 12.5px;
+  }
+  nav.toc a { color: var(--ink-2); text-decoration: none; font-weight: 600; }
+  nav.toc a:hover { color: var(--accent); }
+  nav.toc .n { color: var(--accent); font-variant-numeric: tabular-nums; margin-right: 3px; }
+
+  section.act { margin: 34px 0 0; scroll-margin-top: 54px; }
+  .act .act-head { max-width: 780px; }
+  .act .act-no { font-size: 12px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+  .act h2 { font-size: 19px; font-weight: 700; margin: 4px 0 8px; }
+  .act p.body { font-size: 14px; color: var(--ink-2); margin: 0 0 6px; }
+  .act p.readme { font-size: 12.5px; color: var(--muted); margin: 0 0 12px; }
+  .act p.readme b { color: var(--ink-2); font-weight: 600; }
+  .act .open-row { display: flex; align-items: baseline; gap: 12px; margin: 0 0 10px; }
+  .act .open-row a { font-size: 12.5px; font-weight: 650; color: var(--accent); text-decoration: none; }
+  .act iframe {
+    width: 100%; height: 76vh; min-height: 540px; border: 1px solid var(--border);
+    border-radius: 12px; background: var(--surface); display: block;
+  }
+
+  .bridge {
+    max-width: 720px; margin: 22px auto 0; padding: 12px 18px;
+    border-left: 3px solid var(--accent); background: var(--surface);
+    border-radius: 0 10px 10px 0; font-size: 13.5px; color: var(--ink-2);
+  }
+
+  footer {
+    margin-top: 40px; padding-top: 14px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--muted); line-height: 1.65; max-width: 900px;
+  }
+  footer strong { color: var(--ink-2); }
+  footer a { color: var(--accent); }
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <span class="kicker">IPM Türkiye trade dependence · combined dashboard, treatment C</span>
+    <span class="treatment-nav">Compare treatments: <a href="dashboard-a-tabbed.html">A tabbed</a> ·
+      <a href="dashboard-b-mosaic.html">B mosaic</a> ·
+      <strong>C briefing</strong></span>
+  </div>
+  <h1>Dependence Monitor — Briefing</h1>
+  <p class="lede">The same four views as treatments A and B, but ordered as an argument and read top to
+    bottom: where the concentration sits → why the index says what it says → how the risk migrated over
+    thirty years → and a method appendix on the composition view.</p>
+  <span class="note-pill">● All trade values synthetic (seeded, deterministic) — do not cite</span>
+
+  <nav class="toc" aria-label="Briefing sections">
+    <a href="#act-1"><span class="n">1</span> The fingerprint</a>
+    <a href="#act-2"><span class="n">2</span> The anatomy</a>
+    <a href="#act-3"><span class="n">3</span> The migration</a>
+    <a href="#act-4"><span class="n">4</span> Appendix: composition</a>
+  </nav>
+
+  <section class="act" id="act-1">
+    <div class="act-head">
+      <div class="act-no">Act 1 · Where the concentration sits</div>
+      <h2>Türkiye's concentration fingerprint, one cell at a time</h2>
+      <p class="body">Start with the flat map of the problem: every sector crossed with every partner. In the
+        synthetic 2024 panel the import index reads <b>142</b> — after two decades in a flat band near 85 —
+        and the single deepest cell is energy, where one supplier carries <b>56%</b> of the sector.</p>
+      <p class="readme"><b>Try:</b> sort by a sector, click the energy row, then flip the “EU-27 as one
+        supplier” toggle — the aggregate index jumps from 142 to 197, the methodology decision that
+        matters most.</p>
+      <div class="open-row"><a href="risk-matrix.html" target="_blank" rel="noopener">Open full page ↗</a></div>
+    </div>
+    <iframe src="risk-matrix.html" title="Risk Matrix — sector × partner concentration heatmap"></iframe>
+    <div class="bridge">A heatmap shows <em>where</em> the dependence is, but not <em>how much of the
+      headline index</em> each cell explains. For that, follow the money through the formula itself. ↓</div>
+  </section>
+
+  <section class="act" id="act-2">
+    <div class="act-no">Act 2 · Why the index says what it says</div>
+    <div class="act-head">
+      <h2>The index, drawn as plumbing</h2>
+      <p class="body">The aggregate index is a sum: each sector's share of trade times that sector's
+        supplier concentration. This sankey draws every term — total on the left, sectors in the middle,
+        partners on the right. Dark, fat bands are where the index lives; thin pale ones are noise.</p>
+      <p class="readme"><b>Try:</b> the dominant-path screener ranks the terms and shows the cumulative
+        percentage — a handful of sector–partner paths carry most of the headline number.</p>
+      <div class="open-row"><a href="index-anatomy.html" target="_blank" rel="noopener">Open full page ↗</a></div>
+    </div>
+    <iframe src="index-anatomy.html" title="Index Anatomy — sankey decomposition of the dependence index" loading="lazy"></iframe>
+    <div class="bridge">That is the anatomy of a single year. But the defining fact of the synthetic panel —
+      like the real chart pack it echoes — is that the composition <em>moved</em>. ↓</div>
+  </section>
+
+  <section class="act" id="act-3">
+    <div class="act-no">Act 3 · How the risk moved, 1995 → 2024</div>
+    <div class="act-head">
+      <h2>The risk didn't grow. It migrated.</h2>
+      <p class="body">Every partner as a moving point on the share × concentration plane, trailing thirty
+        years of history. Germany drifts out of the danger quadrant as its export monoculture unwinds
+        (it carried ~55% of 1995 export risk); China and Russia march into it on the import side. The
+        export index falls 77 → 65 while the import index climbs.</p>
+      <p class="readme"><b>Try:</b> press play, then use the biggest-movers screener to rank partners by
+        how far they traveled — the danger-quadrant screener lists who sits there today.</p>
+      <div class="open-row"><a href="risk-migration.html" target="_blank" rel="noopener">Open full page ↗</a></div>
+    </div>
+    <iframe src="risk-migration.html" title="Risk Migration — partner trails across share and concentration" loading="lazy"></iframe>
+    <div class="bridge">Matrix, anatomy, migration: the argument is complete. The appendix below is the
+      rendering study that started the project. ↓</div>
+  </section>
+
+  <section class="act" id="act-4">
+    <div class="act-no">Act 4 · Appendix — the composition view</div>
+    <div class="act-head">
+      <h2>Export treemap: the Phase-1 rendering study</h2>
+      <p class="body">Before the dependence index existed, this page answered a feasibility question: can an
+        Atlas-grade squarified treemap with drill-down and a stacked trend view be built from scratch, with
+        no libraries? It uses fictional countries — it is a composition <em>form</em>, not Türkiye data —
+        and it is the natural view to receive the real BACI basket once the data pipeline lands.</p>
+      <div class="open-row"><a href="trade-atlas-demo.html" target="_blank" rel="noopener">Open full page ↗</a></div>
+    </div>
+    <iframe src="trade-atlas-demo.html" title="Export Treemap demo — squarified treemap with drill-down" loading="lazy"></iframe>
+  </section>
+
+  <footer>
+    <strong>What this treatment tests:</strong> the public-website reading — views in a fixed narrative
+    order with connective prose, closest in spirit to the Fourteen Pictures scroll story but built from the
+    unmodified interactive prototypes. Strong for first-time visitors; weaker as a daily analyst tool,
+    since reaching the third view means scrolling past two others. Compare against the
+    <a href="dashboard-a-tabbed.html">tabbed</a> and <a href="dashboard-b-mosaic.html">mosaic</a>
+    treatments, which compose the same randomly drawn subgroup (Risk Matrix, Index Anatomy, Risk
+    Migration, Export Treemap) for the analyst's desk instead.
+  </footer>
+</div>

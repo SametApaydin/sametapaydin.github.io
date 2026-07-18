@@ -1,0 +1,191 @@
+<meta name="robots" content="noindex, nofollow">
+<title>Set 2 · Dashboard B — Mosaic Overview (Synthetic)</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb;
+    --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --border: rgba(11,11,11,0.10); --accent: #2a78d6; --warn: #e34948;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19;
+      --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+      --border: rgba(255,255,255,0.10); --accent: #3987e5; --warn: #e66767;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19;
+    --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --border: rgba(255,255,255,0.10); --accent: #3987e5; --warn: #e66767;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55;
+  }
+  .wrap { max-width: 1380px; margin: 0 auto; padding: 26px 18px 60px; }
+
+  .topbar { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .kicker { font-size: 12px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+  .treatment-nav { margin-left: auto; font-size: 12.5px; color: var(--muted); }
+  .treatment-nav a { color: var(--accent); text-decoration: none; font-weight: 650; }
+  .treatment-nav strong { color: var(--ink); }
+  h1 { font-size: 23px; font-weight: 700; margin: 6px 0 6px; }
+  .lede { font-size: 14px; color: var(--ink-2); margin: 0 0 8px; max-width: 840px; }
+  .note-pill {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px;
+    color: var(--muted); border: 1px solid var(--border); border-radius: 999px;
+    padding: 4px 12px; margin-bottom: 18px;
+  }
+
+  .strip { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 16px; font-size: 12.5px; color: var(--ink-2); }
+  .strip .chip {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+    padding: 5px 13px; white-space: nowrap;
+  }
+  .strip .chip b { font-weight: 650; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .mosaic { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 980px) { .mosaic { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  .panel.expanded { grid-column: 1 / -1; }
+  .panel .bar {
+    display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel .bar .emoji { font-size: 17px; }
+  .panel .bar h2 { font-size: 14px; font-weight: 650; margin: 0; }
+  .panel .bar .tagline { font-size: 11.5px; color: var(--muted); margin-left: 2px; }
+  .panel .bar .actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .panel .bar a { font-size: 12px; font-weight: 650; color: var(--accent); text-decoration: none; white-space: nowrap; }
+  .panel .bar button.expand {
+    font-family: inherit; font-size: 12px; color: var(--ink-2); cursor: pointer;
+    background: var(--page); border: 1px solid var(--border); border-radius: 7px; padding: 4px 10px;
+  }
+  .panel .bar button.expand:hover { color: var(--accent); border-color: var(--accent); }
+
+  .viewport { position: relative; height: 470px; overflow: hidden; }
+  .panel.expanded .viewport { height: 82vh; }
+  .viewport iframe {
+    border: none; display: block; background: var(--surface);
+    width: 166.7%; height: 166.7%;
+    transform: scale(0.6); transform-origin: 0 0;
+  }
+  .panel.expanded .viewport iframe { width: 100%; height: 100%; transform: none; }
+
+  footer {
+    margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--muted); line-height: 1.65; max-width: 920px;
+  }
+  footer strong { color: var(--ink-2); }
+  footer a { color: var(--accent); }
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <span class="kicker">IPM Türkiye trade dependence · combined dashboard set 2, setting B</span>
+    <span class="treatment-nav">Set 2 settings: <a href="dashboard-2a-tabbed.html">A tabbed</a> ·
+      <strong>B mosaic</strong> ·
+      <a href="dashboard-2c-briefing.html">C briefing</a></span>
+  </div>
+  <h1>Who · Where · When — Mosaic</h1>
+  <p class="lede">The complementary subgroup on one screen: who carries the money (wheel), where it flows
+    (map), when it changed hands (rotation), and the public telling (scroll story). Every panel stays
+    fully interactive; ⤢ Focus enlarges one panel to full width.</p>
+  <span class="note-pill">● All trade values synthetic (seeded, deterministic) — do not cite</span>
+
+  <div class="strip">
+    <span class="chip">Import index 2024 <b>142 ▲</b></span>
+    <span class="chip">Export index 2024 <b>65 ▼</b></span>
+    <span class="chip">1995 export risk <b>Germany ~55%</b></span>
+    <span class="chip">Rotation east <b>China ×10</b></span>
+    <span class="chip">Post-2022 <b>Russia bump · Ukraine collapse</b></span>
+  </div>
+
+  <div class="mosaic">
+    <section class="panel">
+      <div class="bar">
+        <span class="emoji">🎡</span><h2>Dependency Wheel</h2>
+        <span class="tagline">who — money &amp; asymmetry</span>
+        <span class="actions">
+          <button class="expand" aria-pressed="false">⤢ Focus</button>
+          <a href="dependency-wheel.html" target="_blank" rel="noopener">Full page ↗</a>
+        </span>
+      </div>
+      <div class="viewport"><iframe src="dependency-wheel.html" title="Dependency Wheel — chord diagram with asymmetry-colored ribbons"></iframe></div>
+    </section>
+
+    <section class="panel">
+      <div class="bar">
+        <span class="emoji">🗺️</span><h2>Flow Atlas</h2>
+        <span class="tagline">where — corridors on real geography</span>
+        <span class="actions">
+          <button class="expand" aria-pressed="false">⤢ Focus</button>
+          <a href="flow-atlas.html" target="_blank" rel="noopener">Full page ↗</a>
+        </span>
+      </div>
+      <div class="viewport"><iframe src="flow-atlas.html" title="Flow Atlas — geographic trade corridors" loading="lazy"></iframe></div>
+    </section>
+
+    <section class="panel">
+      <div class="bar">
+        <span class="emoji">🎞️</span><h2>Long Rotation</h2>
+        <span class="tagline">when — 16 sector panels, ownership strips</span>
+        <span class="actions">
+          <button class="expand" aria-pressed="false">⤢ Focus</button>
+          <a href="long-rotation.html" target="_blank" rel="noopener">Full page ↗</a>
+        </span>
+      </div>
+      <div class="viewport"><iframe src="long-rotation.html" title="The Long Rotation — sector small multiples with ownership strips" loading="lazy"></iframe></div>
+    </section>
+
+    <section class="panel">
+      <div class="bar">
+        <span class="emoji">📜</span><h2>Fourteen Pictures</h2>
+        <span class="tagline">the telling — scroll inside to advance</span>
+        <span class="actions">
+          <button class="expand" aria-pressed="false">⤢ Focus</button>
+          <a href="fourteen-pictures.html" target="_blank" rel="noopener">Full page ↗</a>
+        </span>
+      </div>
+      <div class="viewport"><iframe src="fourteen-pictures.html" title="Fourteen Pictures — scroll-driven narrative" loading="lazy"></iframe></div>
+    </section>
+  </div>
+
+  <footer>
+    <strong>What this setting tests:</strong> simultaneous visibility for a complementary quartet — spot an
+    asymmetric partner in the wheel, check its corridor on the map, then find the sector and year it took
+    over in the rotation panels, without losing place. The cost: each panel renders at 60% scale inside a
+    fixed window (scroll inside a panel to reach its screeners), and four full pages load at once. Compare
+    <a href="dashboard-2a-tabbed.html">setting A (tabbed)</a> and
+    <a href="dashboard-2c-briefing.html">setting C (briefing)</a>.
+  </footer>
+</div>
+
+<script>
+(function () {
+  document.querySelectorAll('.panel .expand').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var panel = btn.closest('.panel');
+      var on = !panel.classList.contains('expanded');
+      document.querySelectorAll('.panel.expanded').forEach(function (p) {
+        p.classList.remove('expanded');
+        var b = p.querySelector('.expand');
+        b.setAttribute('aria-pressed', 'false'); b.textContent = '⤢ Focus';
+      });
+      if (on) {
+        panel.classList.add('expanded');
+        btn.setAttribute('aria-pressed', 'true'); btn.textContent = '⤡ Shrink';
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+})();
+</script>

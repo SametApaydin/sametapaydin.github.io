@@ -1,0 +1,172 @@
+<meta name="robots" content="noindex, nofollow">
+<title>Set 2 · Dashboard C — Briefing Sequence (Synthetic)</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb;
+    --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --border: rgba(11,11,11,0.10); --accent: #2a78d6; --warn: #e34948;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19;
+      --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+      --border: rgba(255,255,255,0.10); --accent: #3987e5; --warn: #e66767;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19;
+    --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --border: rgba(255,255,255,0.10); --accent: #3987e5; --warn: #e66767;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 26px 18px 60px; }
+
+  .topbar { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .kicker { font-size: 12px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+  .treatment-nav { margin-left: auto; font-size: 12.5px; color: var(--muted); }
+  .treatment-nav a { color: var(--accent); text-decoration: none; font-weight: 650; }
+  .treatment-nav strong { color: var(--ink); }
+  h1 { font-size: 23px; font-weight: 700; margin: 6px 0 6px; }
+  .lede { font-size: 14px; color: var(--ink-2); margin: 0 0 8px; max-width: 780px; }
+  .note-pill {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px;
+    color: var(--muted); border: 1px solid var(--border); border-radius: 999px;
+    padding: 4px 12px; margin-bottom: 14px;
+  }
+
+  nav.toc {
+    position: sticky; top: 0; z-index: 10; background: var(--page);
+    display: flex; gap: 4px 18px; flex-wrap: wrap; padding: 10px 0;
+    border-bottom: 1px solid var(--border); margin-bottom: 8px;
+    font-size: 12.5px;
+  }
+  nav.toc a { color: var(--ink-2); text-decoration: none; font-weight: 600; }
+  nav.toc a:hover { color: var(--accent); }
+  nav.toc .n { color: var(--accent); font-variant-numeric: tabular-nums; margin-right: 3px; }
+
+  section.act { margin: 34px 0 0; scroll-margin-top: 54px; }
+  .act .act-head { max-width: 780px; }
+  .act .act-no { font-size: 12px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+  .act h2 { font-size: 19px; font-weight: 700; margin: 4px 0 8px; }
+  .act p.body { font-size: 14px; color: var(--ink-2); margin: 0 0 6px; }
+  .act p.readme { font-size: 12.5px; color: var(--muted); margin: 0 0 12px; }
+  .act p.readme b { color: var(--ink-2); font-weight: 600; }
+  .act .open-row { display: flex; align-items: baseline; gap: 12px; margin: 0 0 10px; }
+  .act .open-row a { font-size: 12.5px; font-weight: 650; color: var(--accent); text-decoration: none; }
+  .act iframe {
+    width: 100%; height: 76vh; min-height: 540px; border: 1px solid var(--border);
+    border-radius: 12px; background: var(--surface); display: block;
+  }
+
+  .bridge {
+    max-width: 720px; margin: 22px auto 0; padding: 12px 18px;
+    border-left: 3px solid var(--accent); background: var(--surface);
+    border-radius: 0 10px 10px 0; font-size: 13.5px; color: var(--ink-2);
+  }
+
+  footer {
+    margin-top: 40px; padding-top: 14px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--muted); line-height: 1.65; max-width: 900px;
+  }
+  footer strong { color: var(--ink-2); }
+  footer a { color: var(--accent); }
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <span class="kicker">IPM Türkiye trade dependence · combined dashboard set 2, setting C</span>
+    <span class="treatment-nav">Set 2 settings: <a href="dashboard-2a-tabbed.html">A tabbed</a> ·
+      <a href="dashboard-2b-mosaic.html">B mosaic</a> ·
+      <strong>C briefing</strong></span>
+  </div>
+  <h1>Who · Where · When — Briefing</h1>
+  <p class="lede">The complementary subgroup read top to bottom as one argument: who holds Türkiye's trade
+    and who needs whom more → where those relationships run on the map → when each sector's dependence
+    changed hands → and, as the finale, the story built for the public page.</p>
+  <span class="note-pill">● All trade values synthetic (seeded, deterministic) — do not cite</span>
+
+  <nav class="toc" aria-label="Briefing sections">
+    <a href="#act-1"><span class="n">1</span> Who</a>
+    <a href="#act-2"><span class="n">2</span> Where</a>
+    <a href="#act-3"><span class="n">3</span> When</a>
+    <a href="#act-4"><span class="n">4</span> The telling</a>
+  </nav>
+
+  <section class="act" id="act-1">
+    <div class="act-head">
+      <div class="act-no">Act 1 · Who holds the trade</div>
+      <h2>The wheel: money and asymmetry in one ring</h2>
+      <p class="body">Start with the partners. Every ribbon is a two-way trade relationship — its width is
+        money, its color is who needs whom more. A thick ribbon isn't automatically a risk; a thick,
+        one-sided one is. In the synthetic 2024 panel Russia and China carry the widest inbound ribbons
+        (~15% and ~14% of imports).</p>
+      <p class="readme"><b>Try:</b> click a partner to open its 30-year dyad profile, then use the
+        asymmetry screener to list the one-way dependences above a ratio threshold.</p>
+      <div class="open-row"><a href="dependency-wheel.html" target="_blank" rel="noopener">Open full page ↗</a></div>
+    </div>
+    <iframe src="dependency-wheel.html" title="Dependency Wheel — chord diagram with asymmetry-colored ribbons"></iframe>
+    <div class="bridge">The wheel abstracts geography away — every partner sits at the same distance. Put
+      the same ribbons back on the map and they become corridors with chokepoints. ↓</div>
+  </section>
+
+  <section class="act" id="act-2">
+    <div class="act-no">Act 2 · Where it flows</div>
+    <div class="act-head">
+      <h2>The atlas: corridors on real geography</h2>
+      <p class="body">The same relationships as routes: corridor width is money, node color is risk, dash
+        drift is direction. Geography adds what the wheel can't say — which dependences share a
+        neighborhood, a strait, a border.</p>
+      <p class="readme"><b>Try:</b> the corridor screener ranks routes by share of trade, risk
+        contribution, and largest cargo.</p>
+      <div class="open-row"><a href="flow-atlas.html" target="_blank" rel="noopener">Open full page ↗</a></div>
+    </div>
+    <iframe src="flow-atlas.html" title="Flow Atlas — geographic trade corridors" loading="lazy"></iframe>
+    <div class="bridge">Wheel and map are both snapshots. The real story of the panel is thirty years of
+      motion — sector by sector, the dependence changed hands. ↓</div>
+  </section>
+
+  <section class="act" id="act-3">
+    <div class="act-no">Act 3 · When it changed hands</div>
+    <div class="act-head">
+      <h2>The long rotation, sixteen sectors at a time</h2>
+      <p class="body">Each panel is one sector: a risk-contribution line with an ownership strip underneath
+        showing which partner dominates it. Where a strip changes color, the dependence changed hands —
+        Germany's 1995 export monoculture (~55% of export risk) unwinds while China's weight on the import
+        side rises roughly tenfold across the panel, and Russia bumps up after 2022.</p>
+      <p class="readme"><b>Try:</b> the rotation screener lists every handover — filter it to “rotated
+        east”; the risk-shift screener ranks sectors by how much their contribution moved.</p>
+      <div class="open-row"><a href="long-rotation.html" target="_blank" rel="noopener">Open full page ↗</a></div>
+    </div>
+    <iframe src="long-rotation.html" title="The Long Rotation — sector small multiples with ownership strips" loading="lazy"></iframe>
+    <div class="bridge">Who, where, when — the analyst's argument is complete. The finale is the same
+      story retold for the public page, as seven scroll-driven scenes. ↓</div>
+  </section>
+
+  <section class="act" id="act-4">
+    <div class="act-no">Act 4 · Finale — the telling</div>
+    <div class="act-head">
+      <h2>“The risk didn't grow. It migrated.”</h2>
+      <p class="body">Everything above, compressed into the narrative genre: seven scenes, one persistent
+        morphing chart, ending in an explorable table. This is the form built for the IPM website's front
+        door rather than the analyst's desk — scroll inside the frame to advance the scenes.</p>
+      <div class="open-row"><a href="fourteen-pictures.html" target="_blank" rel="noopener">Open full page ↗</a></div>
+    </div>
+    <iframe src="fourteen-pictures.html" title="Fourteen Pictures — scroll-driven narrative" loading="lazy"></iframe>
+  </section>
+
+  <footer>
+    <strong>What this setting tests:</strong> the briefing form applied to a complementary quartet — who
+    (wheel) → where (map) → when (rotation) → the telling (scroll story). A scroll story embedded inside
+    a scrolling briefing is the stress case here: the finale frame scrolls independently of the page.
+    Compare <a href="dashboard-2a-tabbed.html">setting A (tabbed)</a> and
+    <a href="dashboard-2b-mosaic.html">setting B (mosaic)</a>, which compose the same four views for the
+    analyst's desk instead.
+  </footer>
+</div>

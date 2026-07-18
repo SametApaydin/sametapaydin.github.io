@@ -1,0 +1,643 @@
+<meta name="robots" content="noindex, nofollow">
+<title>Export Treemap Demo — Synthetic Trade Data</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page:           #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --grid:           #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-1: #2a78d6; --series-2: #1baf7a; --series-3: #eda100; --series-4: #008300;
+    --series-5: #4a3aa7; --series-6: #e34948; --series-7: #e87ba4; --series-8: #eb6834;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page:           #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --grid:           #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --series-1: #3987e5; --series-2: #199e70; --series-3: #c98500; --series-4: #008300;
+      --series-5: #9085e9; --series-6: #e66767; --series-7: #d55181; --series-8: #d95926;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page:           #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --grid:           #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    --series-1: #3987e5; --series-2: #199e70; --series-3: #c98500; --series-4: #008300;
+    --series-5: #9085e9; --series-6: #e66767; --series-7: #d55181; --series-8: #d95926;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 28px 20px 60px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  header h1 { font-size: 22px; font-weight: 650; margin: 0 0 6px; }
+  header p.sub {
+    font-size: 13.5px; color: var(--text-secondary); margin: 0 0 4px; max-width: 720px; line-height: 1.5;
+  }
+  .disclaimer {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--text-muted); margin-top: 10px;
+    border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px;
+  }
+
+  .filters {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin: 22px 0 16px; padding-top: 18px; border-top: 1px solid var(--border);
+  }
+  .filters label { font-size: 12px; color: var(--text-muted); margin-right: 4px; }
+  select, .segmented button, .tv-toggle {
+    font-family: inherit; font-size: 13px; color: var(--text-primary);
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 12px; cursor: pointer;
+  }
+  select { appearance: auto; }
+  .segmented { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .segmented button {
+    border: none; border-radius: 0; background: transparent;
+    border-right: 1px solid var(--border);
+  }
+  .segmented button:last-child { border-right: none; }
+  .segmented button[aria-pressed="true"] {
+    background: var(--series-1); color: #fff;
+  }
+  .tv-toggle[aria-pressed="true"] { background: var(--series-1); color: #fff; }
+  .spacer { flex: 1; }
+
+  .breadcrumb {
+    font-size: 12.5px; color: var(--text-secondary); margin: 0 0 8px; min-height: 18px;
+  }
+  .breadcrumb button {
+    background: none; border: none; padding: 0; font: inherit; color: var(--series-1);
+    cursor: pointer; text-decoration: underline;
+  }
+
+  .chart-card {
+    position: relative; background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px; transition: opacity .15s ease;
+  }
+  .chart-card.is-refetching { opacity: .45; }
+  svg { display: block; width: 100%; height: auto; }
+
+  .cell rect { stroke: var(--surface-1); stroke-width: 2; cursor: pointer; transition: opacity .12s ease; }
+  .cell:hover rect { opacity: .85; }
+  .cell text { pointer-events: none; font-size: 12px; }
+  .cell text.name { font-weight: 600; }
+  .cell text.value { font-weight: 400; opacity: .85; }
+  .cell.dim rect { opacity: .22; }
+  .cell.dim text { opacity: 0; }
+
+  .area-path { transition: opacity .12s ease; }
+  .area-dim { opacity: .15; }
+  .crosshair { stroke: var(--baseline); stroke-width: 1; pointer-events: none; }
+  .axis-label { fill: var(--text-muted); font-size: 11px; }
+  .grid-line { stroke: var(--grid); stroke-width: 1; }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 14px; padding: 0;
+    list-style: none;
+  }
+  .legend li { display: flex; align-items: center; gap: 7px; }
+  .legend button {
+    display: flex; align-items: center; gap: 7px; background: none; border: none;
+    font: inherit; font-size: 12.5px; color: var(--text-secondary); cursor: pointer; padding: 4px 6px;
+    border-radius: 6px;
+  }
+  .legend button:hover { background: var(--border); }
+  .legend button[aria-pressed="true"] { color: var(--text-primary); font-weight: 600; }
+  .swatch { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+
+  .tooltip {
+    position: absolute; pointer-events: none; z-index: 5;
+    background: var(--text-primary); color: var(--page);
+    font-size: 12px; line-height: 1.4; padding: 8px 10px; border-radius: 7px;
+    max-width: 220px; opacity: 0; transform: translate(-50%, -100%); transition: opacity .08s ease;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18);
+  }
+  .tooltip .t-value { font-weight: 700; font-size: 13px; }
+  .tooltip .t-row { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+  .tooltip .t-key { width: 9px; height: 2px; border-radius: 1px; flex: none; }
+
+  table.data-table {
+    width: 100%; border-collapse: collapse; font-size: 13px; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  }
+  table.data-table th, table.data-table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  table.data-table th { color: var(--text-muted); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .02em; }
+  table.data-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.data-table th.num { text-align: right; }
+  table.data-table tr:last-child td { border-bottom: none; }
+  .key-dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 7px; vertical-align: -1px; }
+
+  footer.note {
+    margin-top: 22px; font-size: 12px; color: var(--text-muted); line-height: 1.6;
+    border-top: 1px solid var(--border); padding-top: 14px;
+  }
+  footer.note strong { color: var(--text-secondary); }
+</style>
+
+<div class="viz-root">
+  <div class="wrap">
+    <header>
+      <h1>Export composition explorer</h1>
+      <p class="sub">
+        An Atlas-of-Economic-Complexity-style treemap and trend view, built from scratch to test
+        how far the visualization layer alone gets you. Every number below is randomly generated —
+        no country, product, or trade figure here is real.
+      </p>
+      <span class="disclaimer">● 100% synthetic data — generated in your browser, not fetched from anywhere</span>
+    </header>
+
+    <div class="filters">
+      <div>
+        <label for="country">Country</label>
+        <select id="country"></select>
+      </div>
+      <div class="segmented" id="viewToggle" role="group" aria-label="Chart view">
+        <button data-view="treemap" aria-pressed="true">Treemap</button>
+        <button data-view="trend" aria-pressed="false">Trend over time</button>
+      </div>
+      <div class="spacer"></div>
+      <button class="tv-toggle" id="tableToggle" aria-pressed="false">View as table</button>
+    </div>
+
+    <div class="breadcrumb" id="breadcrumb"></div>
+
+    <div class="chart-card" id="chartCard">
+      <svg id="treemapSvg" viewBox="0 0 1000 540" role="img" aria-label="Treemap of export value by product"></svg>
+      <svg id="trendSvg" viewBox="0 0 1000 420" role="img" aria-label="Export value by section over time" style="display:none"></svg>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <ul class="legend" id="legend"></ul>
+
+    <div id="tableWrap" style="display:none; margin-top:14px;"></div>
+
+    <footer class="note">
+      <strong>What's real vs. simulated:</strong> the layout math (squarified treemap, stacked-area
+      layering, hover/zoom interaction) is the same class of algorithm the Atlas uses. What's faked is
+      the data itself — real bilateral trade data requires reconciling mismatched exporter/importer
+      reports and harmonizing product codes across classification revisions (HS, SITC) over decades,
+      which is a data-engineering and research problem, not a rendering one.
+    </footer>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SECTIONS = [
+    { id: "machinery",   name: "Machinery & Electronics",  color: "var(--series-1)", weight: 1.35,
+      products: ["Circuit boards", "Industrial pumps", "Turbine parts", "Semiconductors", "Control systems", "Motors & generators"] },
+    { id: "chemicals",    name: "Chemicals & Pharma",       color: "var(--series-2)", weight: 1.05,
+      products: ["Active ingredients", "Polymers", "Fertilizers", "Diagnostic reagents", "Specialty coatings"] },
+    { id: "agriculture",  name: "Agriculture & Food",       color: "var(--series-3)", weight: 0.95,
+      products: ["Roasted coffee", "Frozen produce", "Refined sugar", "Dairy concentrate", "Vegetable oils"] },
+    { id: "metals",       name: "Metals & Minerals",        color: "var(--series-4)", weight: 1.15,
+      products: ["Refined copper", "Steel coil", "Aluminum sheet", "Iron ore pellets", "Zinc alloy"] },
+    { id: "textiles",     name: "Textiles & Apparel",       color: "var(--series-5)", weight: 0.7,
+      products: ["Knit garments", "Woven fabric", "Footwear", "Technical yarns"] },
+    { id: "vehicles",     name: "Vehicles & Transport",     color: "var(--series-6)", weight: 0.85,
+      products: ["Auto components", "Marine engines", "Rail equipment", "Aircraft parts"] },
+    { id: "stone",        name: "Stone, Glass & Ceramics",  color: "var(--series-7)", weight: 0.55,
+      products: ["Cut granite", "Flat glass", "Ceramic tile", "Industrial abrasives"] },
+    { id: "services",     name: "Services & Other",         color: "var(--series-8)", weight: 0.6,
+      products: ["Logistics services", "Software licensing", "Engineering consulting", "Tourism receipts"] }
+  ];
+
+  var COUNTRIES = ["Freedonia", "San Marcos", "Elbonia", "Kaskavia", "Nueva Rioja", "West Farthing"];
+
+  function mulberry32(seed) {
+    return function () {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function hashSeed(str) {
+    var h = 0;
+    for (var i = 0; i < str.length; i++) { h = (Math.imul(31, h) + str.charCodeAt(i)) | 0; }
+    return h;
+  }
+  function fmtUSD(v) {
+    if (v >= 1e9) return "$" + (v / 1e9).toFixed(v >= 1e10 ? 0 : 1) + "B";
+    if (v >= 1e6) return "$" + (v / 1e6).toFixed(v >= 1e7 ? 0 : 1) + "M";
+    if (v >= 1e3) return "$" + (v / 1e3).toFixed(0) + "K";
+    return "$" + Math.round(v);
+  }
+
+  function generateExports(country) {
+    var rng = mulberry32(hashSeed(country + "-exports"));
+    var sections = [];
+    SECTIONS.forEach(function (sec) {
+      var products = sec.products.map(function (name) {
+        var value = Math.exp(rng() * 3.1) * 1.4e6 * sec.weight * (0.5 + rng());
+        return { name: name, value: value, sectionId: sec.id };
+      });
+      var total = products.reduce(function (s, p) { return s + p.value; }, 0);
+      sections.push({
+        id: sec.id, name: sec.name, color: sec.color, value: total, products: products
+      });
+    });
+    return sections;
+  }
+
+  function generateTrend(country) {
+    var rng = mulberry32(hashSeed(country + "-trend"));
+    var years = [];
+    var startYear = 2012;
+    for (var y = 0; y <= 14; y++) years.push(startYear + y);
+    var series = SECTIONS.map(function (sec) {
+      var base = 4e6 * sec.weight * (0.6 + rng() * 0.8);
+      var vals = [];
+      var v = base;
+      var drift = (rng() - 0.35) * 0.05;
+      for (var i = 0; i < years.length; i++) {
+        v = Math.max(base * 0.25, v * (1 + drift + (rng() - 0.5) * 0.12));
+        vals.push(v);
+      }
+      return { id: sec.id, name: sec.name, color: sec.color, values: vals };
+    });
+    return { years: years, series: series };
+  }
+
+  // ---- squarified treemap ----
+  function worstRatio(row, side) {
+    var sum = 0, maxA = -Infinity, minA = Infinity;
+    for (var i = 0; i < row.length; i++) {
+      sum += row[i].area;
+      if (row[i].area > maxA) maxA = row[i].area;
+      if (row[i].area < minA) minA = row[i].area;
+    }
+    return Math.max((side * side * maxA) / (sum * sum), (sum * sum) / (side * side * minA));
+  }
+  function layoutRow(nodes, x, y, w, h, out) {
+    if (!nodes.length) return;
+    if (nodes.length === 1) { out.push(Object.assign({}, nodes[0], { x: x, y: y, w: w, h: h })); return; }
+    var side = Math.min(w, h);
+    var row = [nodes[0]], rowSum = nodes[0].area, best = worstRatio(row, side), i = 1;
+    for (; i < nodes.length; i++) {
+      var testRow = row.concat(nodes[i]);
+      var testWorst = worstRatio(testRow, side);
+      if (testWorst <= best) { row = testRow; rowSum += nodes[i].area; best = testWorst; }
+      else break;
+    }
+    var wide = w >= h;
+    var thickness = rowSum / side;
+    var offset = 0;
+    if (wide) {
+      row.forEach(function (n) {
+        var rh = (n.area / rowSum) * h;
+        out.push(Object.assign({}, n, { x: x, y: y + offset, w: thickness, h: rh }));
+        offset += rh;
+      });
+      layoutRow(nodes.slice(row.length), x + thickness, y, w - thickness, h, out);
+    } else {
+      row.forEach(function (n) {
+        var rw = (n.area / rowSum) * w;
+        out.push(Object.assign({}, n, { x: x + offset, y: y, w: rw, h: thickness }));
+        offset += rw;
+      });
+      layoutRow(nodes.slice(row.length), x, y + thickness, w, h - thickness, out);
+    }
+  }
+  function squarify(items, x, y, w, h) {
+    var total = items.reduce(function (s, n) { return s + n.value; }, 0);
+    if (total <= 0) return [];
+    var area = w * h;
+    var scaled = items.map(function (n) { return Object.assign({}, n, { area: (n.value / total) * area }); })
+      .sort(function (a, b) { return b.area - a.area; });
+    var out = [];
+    layoutRow(scaled, x, y, w, h, out);
+    return out;
+  }
+
+  function relLuminance(hex) {
+    var c = hex.replace("#", "");
+    var r = parseInt(c.substr(0, 2), 16) / 255, g = parseInt(c.substr(2, 2), 16) / 255, b = parseInt(c.substr(4, 2), 16) / 255;
+    [r, g, b] = [r, g, b].map(function (v) { return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+  function labelColorFor(hex) {
+    var L = relLuminance(hex);
+    var contrastWhite = 1.05 / (L + 0.05);
+    var contrastBlack = (L + 0.05) / 0.05;
+    return contrastWhite >= contrastBlack ? "#ffffff" : "#0b0b0b";
+  }
+  function resolvedHex(cssVar) {
+    var probe = document.createElement("div");
+    probe.style.color = cssVar;
+    document.body.appendChild(probe);
+    var rgb = getComputedStyle(probe).color;
+    document.body.removeChild(probe);
+    var m = rgb.match(/\d+/g).map(Number);
+    return "#" + m.slice(0, 3).map(function (n) { return n.toString(16).padStart(2, "0"); }).join("");
+  }
+
+  var svgNS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs) {
+    var e = document.createElementNS(svgNS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  // ---- state ----
+  var state = { country: COUNTRIES[0], view: "treemap", drill: null, isolate: null, table: false };
+  var tooltip = document.getElementById("tooltip");
+  var chartCard = document.getElementById("chartCard");
+  var treemapSvg = document.getElementById("treemapSvg");
+  var trendSvg = document.getElementById("trendSvg");
+  var legendEl = document.getElementById("legend");
+  var breadcrumbEl = document.getElementById("breadcrumb");
+  var tableWrap = document.getElementById("tableWrap");
+
+  function showTooltip(evt, rowsHtml) {
+    tooltip.innerHTML = rowsHtml;
+    tooltip.style.opacity = "1";
+    var rect = chartCard.getBoundingClientRect();
+    var x = evt.clientX - rect.left, y = evt.clientY - rect.top;
+    tooltip.style.left = x + "px";
+    tooltip.style.top = Math.max(70, y) + "px";
+  }
+  function hideTooltip() { tooltip.style.opacity = "0"; }
+
+  function renderLegend() {
+    legendEl.innerHTML = "";
+    SECTIONS.forEach(function (sec) {
+      var li = document.createElement("li");
+      var btn = document.createElement("button");
+      var pressed = state.isolate === sec.id;
+      btn.setAttribute("aria-pressed", String(pressed));
+      var sw = document.createElement("span");
+      sw.className = "swatch";
+      sw.style.background = sec.color;
+      var label = document.createElement("span");
+      label.textContent = sec.name;
+      btn.appendChild(sw); btn.appendChild(label);
+      btn.addEventListener("click", function () {
+        if (state.view === "treemap") {
+          state.drill = sec.id; state.isolate = null;
+          renderAll();
+        } else {
+          state.isolate = state.isolate === sec.id ? null : sec.id;
+          renderAll();
+        }
+      });
+      li.appendChild(btn);
+      legendEl.appendChild(li);
+    });
+  }
+
+  function renderBreadcrumb() {
+    breadcrumbEl.innerHTML = "";
+    if (state.view !== "treemap") { return; }
+    var allBtn = document.createElement("button");
+    allBtn.textContent = "All sections";
+    allBtn.addEventListener("click", function () { state.drill = null; renderAll(); });
+    breadcrumbEl.appendChild(allBtn);
+    if (state.drill) {
+      var sec = SECTIONS.find(function (s) { return s.id === state.drill; });
+      breadcrumbEl.appendChild(document.createTextNode("  ›  " + sec.name));
+    }
+  }
+
+  function renderTreemap() {
+    var data = generateExports(state.country);
+    var total = data.reduce(function (s, d) { return s + d.value; }, 0);
+    treemapSvg.innerHTML = "";
+    var W = 1000, H = 540;
+
+    var items, colorFor, rects;
+    if (state.drill) {
+      var sec = data.find(function (d) { return d.id === state.drill; });
+      items = sec.products.map(function (p) { return { value: p.value, name: p.name, color: sec.color, sectionId: sec.id, share: p.value / sec.value }; });
+      rects = squarify(items, 4, 4, W - 8, H - 8);
+    } else {
+      items = data.map(function (d) { return { value: d.value, name: d.name, color: d.color, sectionId: d.id, share: d.value / total }; });
+      rects = squarify(items, 4, 4, W - 8, H - 8);
+    }
+
+    rects.forEach(function (r) {
+      var g = el("g", { class: "cell" });
+      var hex = resolvedHex(r.color);
+      var rect = el("rect", { x: r.x, y: r.y, width: Math.max(0, r.w - 2), height: Math.max(0, r.h - 2), rx: 3, style: "fill:" + r.color });
+      g.appendChild(rect);
+      var labelColor = labelColorFor(hex);
+      if (r.w > 56 && r.h > 26) {
+        var pad = 8;
+        var name = el("text", { class: "name", x: r.x + pad, y: r.y + 18, fill: labelColor });
+        name.textContent = r.name.length > Math.floor(r.w / 6.2) ? r.name.slice(0, Math.max(3, Math.floor(r.w / 6.2) - 1)) + "…" : r.name;
+        g.appendChild(name);
+        if (r.h > 42) {
+          var val = el("text", { class: "value", x: r.x + pad, y: r.y + 34, fill: labelColor });
+          val.textContent = fmtUSD(r.value);
+          g.appendChild(val);
+        }
+      }
+      g.addEventListener("mousemove", function (evt) {
+        showTooltip(evt,
+          '<div class="t-row"><span class="t-key" style="background:' + r.color + '"></span>' + escapeHtml(r.name) + '</div>' +
+          '<div class="t-value">' + fmtUSD(r.value) + '</div>' +
+          '<div style="opacity:.75">' + (r.share * 100).toFixed(1) + '% of ' + (state.drill ? "section" : "total exports") + '</div>'
+        );
+      });
+      g.addEventListener("mouseleave", hideTooltip);
+      g.addEventListener("click", function () {
+        if (!state.drill) { state.drill = r.sectionId; renderAll(); }
+      });
+      if (state.isolate && r.sectionId !== state.isolate) g.classList.add("dim");
+      treemapSvg.appendChild(g);
+    });
+  }
+
+  function escapeHtml(s) {
+    var d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function renderTrend() {
+    var data = generateTrend(state.country);
+    trendSvg.innerHTML = "";
+    var W = 1000, H = 420;
+    var margin = { top: 16, right: 16, bottom: 30, left: 56 };
+    var plotW = W - margin.left - margin.right, plotH = H - margin.top - margin.bottom;
+
+    var n = data.years.length;
+    var totals = [];
+    for (var i = 0; i < n; i++) {
+      var s = 0;
+      data.series.forEach(function (ser) { s += ser.values[i]; });
+      totals.push(s);
+    }
+    var maxTotal = Math.max.apply(null, totals) * 1.08;
+
+    var xFor = function (i) { return margin.left + (i / (n - 1)) * plotW; };
+    var yFor = function (v) { return margin.top + plotH - (v / maxTotal) * plotH; };
+
+    // gridlines + y ticks
+    var ticks = 4;
+    for (var t = 0; t <= ticks; t++) {
+      var val = (maxTotal / ticks) * t;
+      var y = yFor(val);
+      trendSvg.appendChild(el("line", { class: "grid-line", x1: margin.left, x2: W - margin.right, y1: y, y2: y }));
+      var lbl = el("text", { class: "axis-label", x: margin.left - 8, y: y + 4, "text-anchor": "end" });
+      lbl.textContent = fmtUSD(val);
+      trendSvg.appendChild(lbl);
+    }
+    [0, Math.floor(n / 2), n - 1].forEach(function (i) {
+      var lbl = el("text", { class: "axis-label", x: xFor(i), y: H - 8, "text-anchor": "middle" });
+      lbl.textContent = data.years[i];
+      trendSvg.appendChild(lbl);
+    });
+    trendSvg.appendChild(el("line", { class: "grid-line", x1: margin.left, x2: W - margin.right, y1: margin.top + plotH, y2: margin.top + plotH }));
+
+    // stacked layers
+    var cumulative = new Array(n).fill(0);
+    data.series.forEach(function (ser) {
+      var topPts = [], basePts = [];
+      for (var i = 0; i < n; i++) {
+        var base = cumulative[i];
+        var top = base + ser.values[i];
+        topPts.push([xFor(i), yFor(top)]);
+        basePts.push([xFor(i), yFor(base)]);
+        cumulative[i] = top;
+      }
+      var d = "M" + topPts.map(function (p) { return p.join(","); }).join("L") +
+        "L" + basePts.slice().reverse().map(function (p) { return p.join(","); }).join("L") + "Z";
+      var path = el("path", { d: d, style: "fill:" + ser.color, class: "area-path", opacity: "0.88" });
+      if (state.isolate && ser.id !== state.isolate) path.classList.add("area-dim");
+      trendSvg.appendChild(path);
+    });
+
+    // crosshair + hover
+    var hitRect = el("rect", { x: margin.left, y: margin.top, width: plotW, height: plotH, fill: "transparent" });
+    var crosshair = el("line", { class: "crosshair", x1: 0, x2: 0, y1: margin.top, y2: margin.top + plotH, style: "display:none" });
+    trendSvg.appendChild(crosshair);
+    hitRect.addEventListener("mousemove", function (evt) {
+      var rect = trendSvg.getBoundingClientRect();
+      var scale = W / rect.width;
+      var mx = (evt.clientX - rect.left) * scale;
+      var i = Math.round(((mx - margin.left) / plotW) * (n - 1));
+      i = Math.max(0, Math.min(n - 1, i));
+      var xPix = xFor(i);
+      crosshair.setAttribute("x1", xPix); crosshair.setAttribute("x2", xPix);
+      crosshair.style.display = "block";
+      var rows = data.series.slice().reverse().map(function (ser) {
+        return '<div class="t-row"><span class="t-key" style="background:' + ser.color + '"></span>' + escapeHtml(ser.name) +
+          '<span style="margin-left:auto;font-weight:600">' + fmtUSD(ser.values[i]) + '</span></div>';
+      }).join("");
+      showTooltip(evt, '<div class="t-value">' + data.years[i] + '</div>' + rows);
+    });
+    hitRect.addEventListener("mouseleave", function () { crosshair.style.display = "none"; hideTooltip(); });
+    trendSvg.appendChild(hitRect);
+  }
+
+  function renderTable() {
+    if (!state.table) { tableWrap.style.display = "none"; return; }
+    tableWrap.style.display = "block";
+    var html = "";
+    if (state.view === "treemap") {
+      var data = generateExports(state.country);
+      var total = data.reduce(function (s, d) { return s + d.value; }, 0);
+      var rows = [];
+      data.forEach(function (sec) {
+        sec.products.forEach(function (p) {
+          rows.push({ section: sec.name, color: sec.color, product: p.name, value: p.value, share: p.value / total });
+        });
+      });
+      rows.sort(function (a, b) { return b.value - a.value; });
+      html = '<table class="data-table"><thead><tr><th>Section</th><th>Product</th><th class="num">Export value</th><th class="num">Share</th></tr></thead><tbody>' +
+        rows.map(function (r) {
+          return "<tr><td><span class='key-dot' style='background:" + r.color + "'></span>" + escapeHtml(r.section) + "</td><td>" + escapeHtml(r.product) +
+            "</td><td class='num'>" + fmtUSD(r.value) + "</td><td class='num'>" + (r.share * 100).toFixed(1) + "%</td></tr>";
+        }).join("") + "</tbody></table>";
+    } else {
+      var trend = generateTrend(state.country);
+      html = '<table class="data-table"><thead><tr><th>Section</th>' +
+        trend.years.map(function (y) { return "<th class='num'>" + y + "</th>"; }).join("") + "</tr></thead><tbody>" +
+        trend.series.map(function (ser) {
+          return "<tr><td><span class='key-dot' style='background:" + ser.color + "'></span>" + escapeHtml(ser.name) + "</td>" +
+            ser.values.map(function (v) { return "<td class='num'>" + fmtUSD(v) + "</td>"; }).join("") + "</tr>";
+        }).join("") + "</tbody></table>";
+    }
+    tableWrap.innerHTML = html;
+  }
+
+  function renderAll() {
+    treemapSvg.style.display = state.view === "treemap" ? "block" : "none";
+    trendSvg.style.display = state.view === "trend" ? "block" : "none";
+    chartCard.style.display = state.table ? "none" : "block";
+    renderBreadcrumb();
+    if (state.view === "treemap") renderTreemap(); else renderTrend();
+    renderLegend();
+    renderTable();
+  }
+
+  function refetch() {
+    chartCard.classList.add("is-refetching");
+    setTimeout(function () {
+      renderAll();
+      chartCard.classList.remove("is-refetching");
+    }, 90);
+  }
+
+  // ---- wire up controls ----
+  var countrySel = document.getElementById("country");
+  COUNTRIES.forEach(function (c) {
+    var opt = document.createElement("option");
+    opt.value = c; opt.textContent = c;
+    countrySel.appendChild(opt);
+  });
+  countrySel.addEventListener("change", function () {
+    state.country = countrySel.value;
+    state.drill = null; state.isolate = null;
+    refetch();
+  });
+
+  document.querySelectorAll("#viewToggle button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll("#viewToggle button").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+      btn.setAttribute("aria-pressed", "true");
+      state.view = btn.getAttribute("data-view");
+      state.isolate = null;
+      renderAll();
+    });
+  });
+
+  var tableToggle = document.getElementById("tableToggle");
+  tableToggle.addEventListener("click", function () {
+    state.table = !state.table;
+    tableToggle.setAttribute("aria-pressed", String(state.table));
+    tableToggle.textContent = state.table ? "View as chart" : "View as table";
+    renderAll();
+  });
+
+  renderAll();
+})();
+</script>

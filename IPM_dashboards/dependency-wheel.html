@@ -1,0 +1,816 @@
+<meta name="robots" content="noindex, nofollow">
+<title>Dependency Wheel — Türkiye's Trade Relationships (Synthetic)</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --page: #f9f9f7;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781;
+    --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --accent: #2a78d6;
+    --dep-tr: #e34948;      /* Türkiye depends more */
+    --dep-partner: #2a78d6; /* partner depends more */
+    --dep-even: #b3b2ab;    /* balanced */
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #898781;
+      --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+      --accent: #3987e5;
+      --dep-tr: #e66767; --dep-partner: #3987e5; --dep-even: #55544f;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --accent: #3987e5;
+    --dep-tr: #e66767; --dep-partner: #3987e5; --dep-even: #55544f;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page); color: var(--text-primary);
+    min-height: 100vh; padding: 22px 16px 56px;
+  }
+  .frame { max-width: 1100px; margin: 0 auto; }
+
+  header h1 { font-size: 20px; font-weight: 650; margin: 0 0 4px; }
+  header p { font-size: 13px; color: var(--text-secondary); margin: 0; max-width: 780px; line-height: 1.5; }
+  .disclaimer {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px;
+    color: var(--text-muted); margin-top: 8px;
+    border: 1px solid var(--border); border-radius: 999px; padding: 4px 11px;
+  }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 12px; }
+  @media (max-width: 720px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+  .kpi { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 11px 14px; }
+  .kpi .k-label { font-size: 11.5px; color: var(--text-muted); margin-bottom: 3px; }
+  .kpi .k-value { font-size: 20px; font-weight: 650; }
+  .kpi .k-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+
+  .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .controls label { font-size: 12px; color: var(--text-muted); margin-right: 4px; }
+  select, .tv-toggle {
+    font-family: inherit; font-size: 13px; color: var(--text-primary);
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px;
+    padding: 7px 11px; cursor: pointer;
+  }
+  .segmented { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--surface-1); }
+  .segmented button {
+    font-family: inherit; font-size: 13px; padding: 7px 14px; cursor: pointer;
+    background: transparent; color: var(--text-secondary); border: none; border-right: 1px solid var(--border);
+  }
+  .segmented button:last-child { border-right: none; }
+  .segmented button[aria-pressed="true"] { background: var(--accent); color: #fff; font-weight: 600; }
+  .spacer { flex: 1; }
+  .tv-toggle[aria-pressed="true"] { background: var(--accent); color: #fff; }
+
+  .chart-card {
+    position: relative; background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px;
+  }
+  svg { display: block; width: 100%; height: auto; }
+
+  .arc { cursor: pointer; transition: opacity .12s ease; }
+  .arc:hover { opacity: .85; }
+  .arc.dim { opacity: .2; }
+  .arc-label { font-size: 11.5px; fill: var(--text-secondary); pointer-events: none; }
+  .arc-label.dim { opacity: .25; }
+  .tr-arc { fill: var(--text-primary); }
+  .tr-label { font-size: 13px; font-weight: 700; fill: var(--surface-1); pointer-events: none; }
+
+  .ribbon { opacity: .72; cursor: pointer; transition: opacity .12s ease; stroke: var(--surface-1); stroke-width: .5; }
+  .ribbon:hover { opacity: .95; }
+  .ribbon.dim { opacity: .08; }
+
+  .year-row {
+    display: flex; align-items: center; gap: 12px; margin-top: 10px;
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px;
+  }
+  .year-row button.play {
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--page); color: var(--text-primary); font-size: 13px; cursor: pointer; flex: none;
+  }
+  .year-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+  .year-row .year-label { font-size: 15px; font-weight: 650; min-width: 46px; text-align: right; font-variant-numeric: tabular-nums; }
+  .event-caption { font-size: 12px; color: var(--text-muted); min-height: 18px; margin-top: 6px; padding-left: 4px; font-style: italic; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 12px; padding: 0; list-style: none; font-size: 12px; color: var(--text-secondary); }
+  .legend li { display: flex; align-items: center; gap: 7px; }
+  .swatch { width: 14px; height: 8px; border-radius: 2px; flex: none; }
+
+  .screener { margin-top: 18px; }
+  .screener h2 { font-size: 15px; font-weight: 650; margin: 0 0 4px; }
+  .screener p.s-sub { font-size: 12.5px; color: var(--text-muted); margin: 0 0 10px; }
+  .screener select { font-family: inherit; font-size: 12.5px; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 7px; padding: 5px 9px; }
+  .dep-tr-txt { color: var(--dep-tr); font-weight: 650; }
+  .dep-pt-txt { color: var(--dep-partner); font-weight: 650; }
+
+  .detail {
+    display: none; margin-top: 12px; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px;
+  }
+  .detail.open { display: block; }
+  .detail h3 { margin: 0 0 2px; font-size: 15px; }
+  .detail .d-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .detail .d-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 18px; margin-bottom: 8px; }
+  .detail .d-stat .l { font-size: 11px; color: var(--text-muted); }
+  .detail .d-stat .v { font-size: 16px; font-weight: 650; }
+  .detail button.close {
+    float: right; background: none; border: 1px solid var(--border); border-radius: 7px;
+    color: var(--text-secondary); font: inherit; font-size: 12px; padding: 4px 10px; cursor: pointer;
+  }
+  .spark-caption { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  .tooltip {
+    position: absolute; pointer-events: none; z-index: 5;
+    background: var(--text-primary); color: var(--page);
+    font-size: 12px; line-height: 1.45; padding: 8px 10px; border-radius: 7px;
+    max-width: 250px; opacity: 0; transform: translate(-50%, -100%); transition: opacity .08s ease;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18);
+  }
+  .tooltip .t-value { font-weight: 700; font-size: 13px; }
+
+  table.data-table {
+    width: 100%; border-collapse: collapse; font-size: 12.5px; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  }
+  table.data-table th, table.data-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  table.data-table th { color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .02em; }
+  table.data-table td.num, table.data-table th.num { text-align: right; }
+  table.data-table td.num { font-variant-numeric: tabular-nums; }
+  table.data-table tr:last-child td { border-bottom: none; }
+
+  footer.note { margin-top: 20px; font-size: 12px; color: var(--text-muted); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 12px; }
+  footer.note strong { color: var(--text-secondary); }
+</style>
+
+<div class="viz-root">
+  <div class="frame">
+    <header>
+      <h1>Dependency Wheel</h1>
+      <p>Türkiye's bilateral trade relationships as a chord diagram. Ribbon width is trade value;
+        ribbon color shows <em>who needs whom more</em> — the asymmetry at the heart of a dependence
+        index. Click any partner to isolate the relationship and see its 30-year history.</p>
+      <span class="disclaimer">● Synthetic data — every value is generated; the paradigm is the point (after Abel–Sander &amp; the World Bank trade chord)</span>
+    </header>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="controls">
+      <div class="segmented" id="flowSeg">
+        <button data-v="imports" aria-pressed="true">Imports</button>
+        <button data-v="exports" aria-pressed="false">Exports</button>
+      </div>
+      <div>
+        <label for="sectorSel">Sector</label>
+        <select id="sectorSel"></select>
+      </div>
+      <div class="spacer"></div>
+      <button class="tv-toggle" id="tableToggle" aria-pressed="false">View as table</button>
+    </div>
+
+    <div class="chart-card" id="chartCard">
+      <svg id="wheelSvg" viewBox="0 0 1000 640" role="img" aria-label="Chord diagram of Türkiye's trade relationships"></svg>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <div class="year-row">
+      <button class="play" id="playBtn" aria-label="Play year animation">▶</button>
+      <input type="range" id="yearSlider" min="1995" max="2024" step="1" value="2024" aria-label="Year">
+      <span class="year-label" id="yearLabel">2024</span>
+    </div>
+    <div class="event-caption" id="eventCaption"></div>
+
+    <ul class="legend">
+      <li><span class="swatch" style="background:var(--dep-tr)"></span>Türkiye depends more (partner weighs more in Türkiye's trade than vice versa)</li>
+      <li><span class="swatch" style="background:var(--dep-partner)"></span>Partner depends more on Türkiye</li>
+      <li><span class="swatch" style="background:var(--dep-even)"></span>Roughly mutual</li>
+    </ul>
+
+    <div class="detail" id="detailPanel"></div>
+
+    <div class="screener">
+      <h2>Asymmetry screener</h2>
+      <p class="s-sub">Dyads where the dependence runs one way — one side weighs far more in the other's
+        trade than vice versa. Ratio ≥
+        <select id="asymThresh">
+          <option value="1.5">1.5×</option>
+          <option value="2" selected>2×</option>
+          <option value="3">3×</option>
+        </select>
+      </p>
+      <div id="asymWrap"></div>
+    </div>
+
+    <div id="tableWrap" style="display:none; margin-top:12px;"></div>
+
+    <footer class="note">
+      <strong>Reading the wheel:</strong> Türkiye's arc (bottom) and each partner's arc are joined by a
+      ribbon sized by trade value in the selected direction and sector. Color encodes dependence
+      asymmetry: the same $10B corridor is a different risk depending on whether it is 2% of your trade
+      and 30% of theirs — or the reverse. The squared logic of the HHI lives in the KPI row: the index
+      shown is Σ(share²) over partners, so one thick ribbon moves it far more than five thin ones.
+      Annotations on the timeline are illustrative, mirroring the real chart pack's events.
+    </footer>
+  </div>
+</div>
+
+<script>
+(function () {
+"use strict";
+
+/* ============================ synthetic data ============================ */
+
+var YEAR_MIN = 1995, YEAR_MAX = 2024;
+
+var SECTORS = [
+  { id: "energy",   name: "Energy & fuels",        w: 1.6 },
+  { id: "mach",     name: "Machinery",             w: 1.3 },
+  { id: "elec",     name: "Electronics",           w: 1.25 },
+  { id: "vehi",     name: "Vehicles",              w: 1.1 },
+  { id: "steel",    name: "Iron & steel",          w: 1.0 },
+  { id: "chem",     name: "Chemicals",             w: 1.0 },
+  { id: "pharma",   name: "Pharmaceuticals",       w: 0.7 },
+  { id: "plast",    name: "Plastics & rubber",     w: 0.8 },
+  { id: "text",     name: "Textiles & apparel",    w: 0.9 },
+  { id: "agri",     name: "Agriculture",           w: 0.8 },
+  { id: "food",     name: "Processed food",        w: 0.6 },
+  { id: "metal",    name: "Metals & mining",       w: 0.85 },
+  { id: "prec",     name: "Precision instruments", w: 0.55 },
+  { id: "wood",     name: "Wood & paper",          w: 0.4 },
+  { id: "glass",    name: "Glass & ceramics",      w: 0.4 },
+  { id: "serv",     name: "Services",              w: 0.7 }
+];
+
+var PARTNERS = [
+  { name: "Germany", region: "eu" }, { name: "China", region: "asia" },
+  { name: "Russia", region: "cis" }, { name: "United States", region: "am" },
+  { name: "Italy", region: "eu" }, { name: "France", region: "eu" },
+  { name: "United Kingdom", region: "eu" }, { name: "Spain", region: "eu" },
+  { name: "Netherlands", region: "eu" }, { name: "Iraq", region: "mena" },
+  { name: "United Arab Emirates", region: "mena" }, { name: "Saudi Arabia", region: "mena" },
+  { name: "Egypt", region: "mena" }, { name: "Israel", region: "mena" },
+  { name: "Iran", region: "mena" }, { name: "Azerbaijan", region: "cis" },
+  { name: "Ukraine", region: "cis" }, { name: "Kazakhstan", region: "cis" },
+  { name: "Georgia", region: "cis" }, { name: "Uzbekistan", region: "cis" },
+  { name: "India", region: "asia" }, { name: "South Korea", region: "asia" },
+  { name: "Japan", region: "asia" }, { name: "Vietnam", region: "asia" },
+  { name: "Malaysia", region: "asia" }, { name: "Indonesia", region: "asia" },
+  { name: "Poland", region: "eu" }, { name: "Romania", region: "eu" },
+  { name: "Bulgaria", region: "eu" }, { name: "Greece", region: "eu" },
+  { name: "Belgium", region: "eu" }, { name: "Switzerland", region: "eu" },
+  { name: "Brazil", region: "am" }, { name: "Mexico", region: "am" },
+  { name: "Canada", region: "am" }, { name: "Algeria", region: "mena" },
+  { name: "Morocco", region: "mena" }, { name: "Libya", region: "mena" },
+  { name: "Qatar", region: "mena" }, { name: "Nigeria", region: "afr" },
+  { name: "South Africa", region: "afr" }, { name: "Ethiopia", region: "afr" },
+  { name: "Turkmenistan", region: "cis" }
+];
+
+/* hand-placed affinities so the synthetic world rhymes with the real one */
+var BIAS = {
+  "imports|Russia|energy": 5.0, "imports|Azerbaijan|energy": 9.0, "imports|Iran|energy": 4.0,
+  "imports|Algeria|energy": 6.0, "imports|Qatar|energy": 7.0, "imports|Turkmenistan|energy": 7.0, "imports|Libya|energy": 5.0,
+  "imports|China|elec": 5.5, "imports|China|mach": 2.6, "imports|China|text": 1.6,
+  "imports|Germany|elec": 2.4, "imports|Japan|elec": 2.2,
+  "imports|Germany|mach": 3.4, "imports|Germany|vehi": 3.0, "imports|Germany|chem": 2.0,
+  "imports|South Korea|elec": 1.9, "imports|Japan|vehi": 1.6, "imports|Japan|prec": 1.9,
+  "imports|Russia|steel": 2.6, "imports|Ukraine|steel": 2.0, "imports|Ukraine|agri": 2.2,
+  "imports|Russia|agri": 2.4, "imports|United States|pharma": 1.8, "imports|Switzerland|pharma": 2.3,
+  "imports|India|chem": 1.7, "imports|Italy|mach": 1.9, "imports|France|vehi": 1.5,
+  "exports|Germany|text": 6.0, "exports|Germany|vehi": 2.6, "exports|Germany|food": 1.8,
+  "exports|United Kingdom|text": 1.9, "exports|United States|steel": 1.5,
+  "exports|Iraq|food": 2.8, "exports|Iraq|plast": 2.0, "exports|Iraq|steel": 1.8,
+  "exports|Italy|vehi": 2.0, "exports|France|vehi": 1.8, "exports|Spain|vehi": 1.7,
+  "exports|Israel|steel": 1.5, "exports|Egypt|plast": 1.6, "exports|Russia|food": 1.9,
+  "exports|Russia|text": 1.6, "exports|United States|mach": 1.4, "exports|Netherlands|agri": 1.5,
+  "exports|China|metal": 2.8, "exports|China|glass": 2.2, "exports|Azerbaijan|serv": 1.8,
+  "exports|Georgia|serv": 1.7, "exports|Romania|serv": 1.6
+};
+
+/* the China-rise multiplier: imports from China scale up over the panel */
+function eraMult(flow, partner, year) {
+  var t = (year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN);
+  if (flow === "imports" && partner === "China") return (0.10 + 0.90 * Math.pow(t, 1.6)) * 2.6;
+  if (flow === "exports" && partner === "China") return 0.25 + 0.75 * t;
+  if (partner === "Russia" && year >= 2022) return flow === "imports" ? 1.22 : 1.15;
+  if (partner === "Ukraine" && year >= 2022) return 0.45;
+  if (flow === "exports" && partner === "Iraq") {
+    return year >= 2010 && year <= 2014 ? 1.9 : 1.0;
+  }
+  if (flow === "exports" && partner === "Germany") return 1.9 - 1.1 * t; /* the apparel monoculture unwinding */
+  return 1.0;
+}
+
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hashSeed(str) {
+  var h = 0;
+  for (var i = 0; i < str.length; i++) h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
+  return h;
+}
+
+/* size anchors so the synthetic hierarchy echoes the real one */
+var SIZE = {
+  "China": 11, "Germany": 8.5, "Russia": 8, "United States": 6, "Italy": 4.5,
+  "France": 4, "United Kingdom": 3.5, "Japan": 3.5, "South Korea": 3.2,
+  "Netherlands": 3, "Spain": 3, "India": 3, "Iraq": 2.8, "United Arab Emirates": 2.6,
+  "Switzerland": 2.5, "Poland": 2.5, "Brazil": 2.4, "Azerbaijan": 2.2, "Iran": 2.2
+};
+
+var PETRO = { "Azerbaijan": 1, "Qatar": 1, "Turkmenistan": 1, "Libya": 1, "Algeria": 1 };
+
+var trajCache = {};
+function dyadValue(flow, partner, sectorId, year) {
+  var key = flow + "|" + partner + "|" + sectorId;
+  var t = trajCache[key];
+  if (!t) {
+    var r = mulberry32(hashSeed(key));
+    t = {
+      base: Math.exp(r() * 2.9) * 3.2e7,
+      growth: -0.01 + r() * 0.075,
+      amp: 0.05 + r() * 0.15,
+      phase: r() * 6.283, period: 6 + r() * 9,
+      size: SIZE[partner] || (0.5 + Math.exp(mulberry32(hashSeed(partner + "|size"))() * 1.1))
+    };
+    trajCache[key] = t;
+  }
+  var sec = SECTORS.find(function (s) { return s.id === sectorId; });
+  var bias = BIAS[flow + "|" + partner + "|" + sectorId] || 1;
+  if (flow === "imports" && PETRO[partner] && sectorId !== "energy") bias *= 0.22;
+  var dy = year - YEAR_MIN;
+  return t.base * t.size * sec.w * bias * eraMult(flow, partner, year) *
+    Math.pow(1 + t.growth, dy) * (1 + t.amp * Math.sin(6.283 * dy / t.period + t.phase));
+}
+
+/* partner's own total trade — for the asymmetry coloring */
+function partnerTotal(partner, year) {
+  var r = mulberry32(hashSeed(partner + "|worldtotal"));
+  var base = Math.exp(r() * 3.3) * 5e10;
+  var g = 0.01 + r() * 0.05;
+  return base * Math.pow(1 + g, year - YEAR_MIN);
+}
+
+/* scope = {flow, sectorId|null}; returns [{name, region, value}] all partners */
+function scopeValues(flow, sectorId, year) {
+  return PARTNERS.map(function (p) {
+    var v = 0;
+    if (sectorId) v = dyadValue(flow, p.name, sectorId, year);
+    else SECTORS.forEach(function (s) { v += dyadValue(flow, p.name, s.id, year); });
+    return { name: p.name, region: p.region, value: v };
+  });
+}
+function hhiOf(values) {
+  var tot = values.reduce(function (s, v) { return s + v.value; }, 0);
+  if (tot <= 0) return 0;
+  return values.reduce(function (s, v) { return s + Math.pow(v.value / tot, 2); }, 0);
+}
+
+var EVENTS = {
+  1996: "1996 — EU Customs Union enters into force (illustrative)",
+  2001: "2001 — Turkish financial crisis: import compression",
+  2004: "2004 — China passes the USA in Türkiye's import risk (chart-pack echo)",
+  2008: "2008 — global financial crisis",
+  2013: "2013 — China passes the entire EU-27 in import risk (chart-pack echo)",
+  2018: "2018 — currency crisis reshuffles import shares",
+  2022: "2022 — sanctions era: Russia corridor re-prices and grows",
+  2024: "2024 — concentration at its highest since 2002 (chart-pack echo)"
+};
+
+/* ============================ helpers ============================ */
+
+function fmtUSD(v) {
+  if (v >= 1e9) return "$" + (v / 1e9).toFixed(v >= 1e10 ? 0 : 1) + "B";
+  if (v >= 1e6) return "$" + (v / 1e6).toFixed(0) + "M";
+  return "$" + Math.round(v);
+}
+function escapeHtml(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+var svgNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs) {
+  var e = document.createElementNS(svgNS, tag);
+  for (var k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+
+/* ============================ state & dom ============================ */
+
+var state = { flow: "imports", sector: null, year: YEAR_MAX, selected: null, table: false, playing: false, asymThresh: 2 };
+
+var wheelSvg = document.getElementById("wheelSvg");
+var tooltip = document.getElementById("tooltip");
+var chartCard = document.getElementById("chartCard");
+var kpisEl = document.getElementById("kpis");
+var detailPanel = document.getElementById("detailPanel");
+var tableWrap = document.getElementById("tableWrap");
+var eventCaption = document.getElementById("eventCaption");
+
+function showTooltip(evt, html) {
+  tooltip.innerHTML = html;
+  tooltip.style.opacity = "1";
+  var rect = chartCard.getBoundingClientRect();
+  tooltip.style.left = (evt.clientX - rect.left) + "px";
+  tooltip.style.top = Math.max(56, evt.clientY - rect.top) + "px";
+}
+function hideTooltip() { tooltip.style.opacity = "0"; }
+
+/* dependence asymmetry class for a dyad */
+function asymmetry(p, year) {
+  var trTotal = scopeValues(state.flow, state.sector, year).reduce(function (s, v) { return s + v.value; }, 0);
+  return null; /* replaced below — computed in render for efficiency */
+}
+
+/* ============================ KPIs ============================ */
+
+function renderKpis() {
+  var vals = scopeValues(state.flow, state.sector, state.year);
+  var tot = vals.reduce(function (s, v) { return s + v.value; }, 0);
+  var hhi = hhiOf(vals);
+  var sorted = vals.slice().sort(function (a, b) { return b.value - a.value; });
+  var top = sorted[0];
+  var cn = vals.find(function (v) { return v.name === "China"; });
+  var ru = vals.find(function (v) { return v.name === "Russia"; });
+  var cnruRisk = (Math.pow(cn.value / tot, 2) + Math.pow(ru.value / tot, 2)) / hhi * 100;
+
+  var scopeName = state.sector ? SECTORS.find(function (s) { return s.id === state.sector; }).name : "all sectors";
+  var items = [
+    { label: "Total " + state.flow + " · " + scopeName, value: fmtUSD(tot), sub: String(state.year) },
+    { label: "Concentration (HHI ×1000)", value: (hhi * 1000).toFixed(0), sub: "Σ share² across partners" },
+    { label: "Top partner", value: top.name, small: true, sub: fmtUSD(top.value) + " · " + (top.value / tot * 100).toFixed(1) + "% share" },
+    { label: "China + Russia share of risk", value: cnruRisk.toFixed(0) + "%", sub: "their share² over total HHI" }
+  ];
+  kpisEl.innerHTML = "";
+  items.forEach(function (it) {
+    var d = document.createElement("div");
+    d.className = "kpi";
+    var l = document.createElement("div"); l.className = "k-label"; l.textContent = it.label;
+    var v = document.createElement("div"); v.className = "k-value"; v.textContent = it.value;
+    if (it.small) v.style.fontSize = "15px";
+    var s = document.createElement("div"); s.className = "k-sub"; s.textContent = it.sub;
+    d.appendChild(l); d.appendChild(v); d.appendChild(s);
+    kpisEl.appendChild(d);
+  });
+}
+
+/* ============================ the wheel ============================ */
+
+var TOP_N = 14;
+
+function wheelData() {
+  var vals = scopeValues(state.flow, state.sector, state.year);
+  var tot = vals.reduce(function (s, v) { return s + v.value; }, 0);
+  var sorted = vals.slice().sort(function (a, b) { return b.value - a.value; });
+  var top = sorted.slice(0, TOP_N);
+  var restVal = sorted.slice(TOP_N).reduce(function (s, v) { return s + v.value; }, 0);
+  var rows = top.map(function (v) {
+    var pTot = partnerTotal(v.name, state.year);
+    var trShare = v.value / tot;         /* partner's weight in Türkiye's trade */
+    var pShare = v.value / pTot;         /* Türkiye's weight in partner's trade */
+    var cls = trShare > pShare * 1.5 ? "tr" : pShare > trShare * 1.5 ? "partner" : "even";
+    return { name: v.name, value: v.value, share: trShare, pShare: pShare, dep: cls, isOther: false };
+  });
+  rows.push({ name: "Others (" + (PARTNERS.length - TOP_N) + ")", value: restVal, share: restVal / tot, pShare: 0, dep: "even", isOther: true });
+  return { rows: rows, total: tot };
+}
+
+function pt(cx, cy, R, a) { return [cx + R * Math.sin(a), cy - R * Math.cos(a)]; }
+
+function arcPath(cx, cy, r0, r1, a0, a1) {
+  var p0 = pt(cx, cy, r1, a0), p1 = pt(cx, cy, r1, a1);
+  var p2 = pt(cx, cy, r0, a1), p3 = pt(cx, cy, r0, a0);
+  var large = (a1 - a0) > Math.PI ? 1 : 0;
+  return "M" + p0 + " A" + r1 + " " + r1 + " 0 " + large + " 1 " + p1 +
+         " L" + p2 + " A" + r0 + " " + r0 + " 0 " + large + " 0 " + p3 + " Z";
+}
+
+function ribbonPath(cx, cy, R, sa0, sa1, ta0, ta1) {
+  var c = cx + " " + cy;
+  var s0 = pt(cx, cy, R, sa0), s1 = pt(cx, cy, R, sa1);
+  var t0 = pt(cx, cy, R, ta0), t1 = pt(cx, cy, R, ta1);
+  var largeS = (sa1 - sa0) > Math.PI ? 1 : 0, largeT = (ta1 - ta0) > Math.PI ? 1 : 0;
+  return "M" + s0 +
+    " A" + R + " " + R + " 0 " + largeS + " 1 " + s1 +
+    " Q" + c + " " + t0 +
+    " A" + R + " " + R + " 0 " + largeT + " 1 " + t1 +
+    " Q" + c + " " + s0 + " Z";
+}
+
+function depColor(cls) {
+  return cls === "tr" ? "var(--dep-tr)" : cls === "partner" ? "var(--dep-partner)" : "var(--dep-even)";
+}
+
+function renderWheel() {
+  var data = wheelData();
+  wheelSvg.innerHTML = "";
+  var cx = 500, cy = 318, R = 226;
+  var arcThick = 17, labelR = R + arcThick + 10;
+  var deg = Math.PI / 180;
+
+  /* Türkiye arc: bottom, from 115° to 245° (compass degrees) */
+  var trA0 = 115 * deg, trA1 = 245 * deg;
+  /* partners: from 253° clockwise wrapping to 107° => span 214° */
+  var pStart = 253 * deg, pSpan = 214 * deg;
+  var pad = 1.1 * deg;
+  var n = data.rows.length;
+  var usable = pSpan - pad * (n - 1);
+
+  /* angular width proportional to value */
+  var angles = [];
+  var cursor = pStart;
+  data.rows.forEach(function (row) {
+    var w = (row.value / data.total) * usable;
+    angles.push({ a0: cursor, a1: cursor + w });
+    cursor += w + pad;
+  });
+
+  /* Türkiye-side slots, same order, spread across the TR arc */
+  var trUsable = (trA1 - trA0);
+  var trAngles = [];
+  var trCursor = trA0;
+  data.rows.forEach(function (row) {
+    var w = (row.value / data.total) * trUsable;
+    trAngles.push({ a0: trCursor, a1: trCursor + w });
+    trCursor += w;
+  });
+
+  /* ribbons first (under arcs) */
+  data.rows.forEach(function (row, i) {
+    var a = angles[i], t = trAngles[i];
+    var norm = function (x) { return x >= 2 * Math.PI ? x - 2 * Math.PI : x; };
+    var path = el("path", {
+      class: "ribbon", d: ribbonPath(cx, cy, R, norm(a.a0), norm(a.a1) < norm(a.a0) ? norm(a.a1) + 2 * Math.PI : norm(a.a1), t.a0, t.a1),
+      style: "fill:" + depColor(row.dep)
+    });
+    if (state.selected && state.selected !== row.name) path.classList.add("dim");
+    path.addEventListener("mousemove", function (evt) {
+      showTooltip(evt,
+        '<div class="t-value">' + escapeHtml(row.name) + '</div>' +
+        '<div>' + fmtUSD(row.value) + ' · ' + (row.share * 100).toFixed(1) + '% of Türkiye\'s ' + state.flow + '</div>' +
+        (row.isOther ? '' :
+          '<div style="opacity:.8">' + (row.pShare * 100).toFixed(1) + '% of partner\'s own trade</div>' +
+          '<div style="opacity:.8">risk contribution (share²): ' + (Math.pow(row.share, 2) * 1000).toFixed(1) + ' pts</div>'));
+    });
+    path.addEventListener("mouseleave", hideTooltip);
+    path.addEventListener("click", function () { toggleSelect(row.name, row.isOther); });
+    wheelSvg.appendChild(path);
+  });
+
+  /* partner arcs + labels */
+  data.rows.forEach(function (row, i) {
+    var a = angles[i];
+    var norm = function (x) { return x % (2 * Math.PI); };
+    var a0 = norm(a.a0), a1 = a.a1 % (2 * Math.PI);
+    if (a1 < a0) a1 += 2 * Math.PI;
+    var arc = el("path", {
+      class: "arc", d: arcPath(cx, cy, R, R + arcThick, a0, a1),
+      style: "fill:" + depColor(row.dep)
+    });
+    if (state.selected && state.selected !== row.name) arc.classList.add("dim");
+    arc.addEventListener("click", function () { toggleSelect(row.name, row.isOther); });
+    arc.addEventListener("mousemove", function (evt) {
+      showTooltip(evt, '<div class="t-value">' + escapeHtml(row.name) + '</div><div>' +
+        fmtUSD(row.value) + ' · ' + (row.share * 100).toFixed(1) + '%</div>');
+    });
+    arc.addEventListener("mouseleave", hideTooltip);
+    wheelSvg.appendChild(arc);
+
+    var mid = (a0 + a1) / 2;
+    var lp = pt(cx, cy, labelR, mid);
+    var degMid = mid / deg % 360;
+    var rightSide = degMid < 180;
+    var rot = rightSide ? degMid - 90 : degMid + 90;
+    var lbl = el("text", {
+      class: "arc-label", x: lp[0], y: lp[1],
+      "text-anchor": rightSide ? "start" : "end",
+      transform: "rotate(" + rot + " " + lp[0] + " " + lp[1] + ")"
+    });
+    lbl.textContent = row.name + "  " + (row.share * 100).toFixed(1) + "%";
+    if (state.selected && state.selected !== row.name) lbl.classList.add("dim");
+    wheelSvg.appendChild(lbl);
+  });
+
+  /* Türkiye arc */
+  wheelSvg.appendChild(el("path", { class: "tr-arc", d: arcPath(cx, cy, R, R + arcThick, trA0, trA1) }));
+  var trMid = (trA0 + trA1) / 2;
+  var trLp = pt(cx, cy, R + arcThick / 2, trMid);
+  var trLbl = el("text", { class: "tr-label", x: trLp[0], y: trLp[1] + 4, "text-anchor": "middle" });
+  trLbl.textContent = "TÜRKİYE";
+  wheelSvg.appendChild(trLbl);
+}
+
+/* ============================ detail panel ============================ */
+
+function toggleSelect(name, isOther) {
+  if (isOther) return;
+  state.selected = state.selected === name ? null : name;
+  renderAll();
+}
+
+function renderDetail() {
+  if (!state.selected) { detailPanel.className = "detail"; detailPanel.innerHTML = ""; return; }
+  var name = state.selected;
+  detailPanel.className = "detail open";
+  detailPanel.innerHTML = "";
+
+  var closeBtn = document.createElement("button");
+  closeBtn.className = "close"; closeBtn.textContent = "✕ clear";
+  closeBtn.addEventListener("click", function () { state.selected = null; renderAll(); });
+  detailPanel.appendChild(closeBtn);
+
+  var h = document.createElement("h3"); h.textContent = "Türkiye ↔ " + name;
+  var sub = document.createElement("div"); sub.className = "d-sub";
+  sub.textContent = (state.sector ? SECTORS.find(function (s) { return s.id === state.sector; }).name : "All sectors") +
+    " · " + state.flow + " · " + state.year;
+  detailPanel.appendChild(h); detailPanel.appendChild(sub);
+
+  var vals = scopeValues(state.flow, state.sector, state.year);
+  var tot = vals.reduce(function (s, v) { return s + v.value; }, 0);
+  var v = vals.find(function (q) { return q.name === name; });
+  var share = v.value / tot;
+  var pTot = partnerTotal(name, state.year);
+  var pShare = v.value / pTot;
+
+  var grid = document.createElement("div"); grid.className = "d-grid";
+  [
+    ["Trade value", fmtUSD(v.value)],
+    ["Share of Türkiye's " + state.flow, (share * 100).toFixed(1) + "%"],
+    ["Risk contribution (share², ×1000)", (share * share * 1000).toFixed(1)],
+    ["Share of " + name + "'s own trade", (pShare * 100).toFixed(2) + "%"],
+    ["Asymmetry", share > pShare * 1.5 ? "Türkiye depends more" : pShare > share * 1.5 ? name + " depends more" : "roughly mutual"]
+  ].forEach(function (pair) {
+    var d = document.createElement("div"); d.className = "d-stat";
+    var l = document.createElement("div"); l.className = "l"; l.textContent = pair[0];
+    var val = document.createElement("div"); val.className = "v"; val.textContent = pair[1];
+    d.appendChild(l); d.appendChild(val); grid.appendChild(d);
+  });
+  detailPanel.appendChild(grid);
+
+  /* sparkline: partner's share of Türkiye's trade over the full panel */
+  var W = 560, H = 90, m = { t: 8, r: 8, b: 18, l: 8 };
+  var svg = el("svg", { viewBox: "0 0 " + W + " " + H, style: "max-width:560px" });
+  var shares = [];
+  for (var y = YEAR_MIN; y <= YEAR_MAX; y++) {
+    var vv = scopeValues(state.flow, state.sector, y);
+    var tt = vv.reduce(function (s, q) { return s + q.value; }, 0);
+    shares.push(vv.find(function (q) { return q.name === name; }).value / tt);
+  }
+  var maxS = Math.max.apply(null, shares) * 1.15;
+  var xF = function (i) { return m.l + i / (shares.length - 1) * (W - m.l - m.r); };
+  var yF = function (s) { return m.t + (1 - s / maxS) * (H - m.t - m.b); };
+  var dPath = shares.map(function (s, i) { return (i ? "L" : "M") + xF(i) + "," + yF(s); }).join("");
+  svg.appendChild(el("line", { x1: m.l, x2: W - m.r, y1: H - m.b, y2: H - m.b, stroke: "var(--grid)", "stroke-width": 1 }));
+  svg.appendChild(el("path", { d: dPath, fill: "none", stroke: "var(--accent)", "stroke-width": 2, "stroke-linejoin": "round" }));
+  var yearIdx = state.year - YEAR_MIN;
+  svg.appendChild(el("circle", { cx: xF(yearIdx), cy: yF(shares[yearIdx]), r: 4, fill: "var(--accent)", stroke: "var(--surface-1)", "stroke-width": 2 }));
+  [0, shares.length - 1].forEach(function (i) {
+    var t = el("text", { x: xF(i), y: H - 4, "text-anchor": i === 0 ? "start" : "end", "font-size": "10", fill: "var(--text-muted)" });
+    t.textContent = YEAR_MIN + i;
+    svg.appendChild(t);
+  });
+  detailPanel.appendChild(svg);
+  var cap = document.createElement("div"); cap.className = "spark-caption";
+  cap.textContent = name + "'s share of Türkiye's " + state.flow + ", " + YEAR_MIN + "–" + YEAR_MAX + " (dot = selected year, peak = " + (maxS / 1.15 * 100).toFixed(1) + "%)";
+  detailPanel.appendChild(cap);
+}
+
+/* ============================ table & csv ============================ */
+
+function renderTable() {
+  if (!state.table) { tableWrap.style.display = "none"; return; }
+  tableWrap.style.display = "block";
+  var vals = scopeValues(state.flow, state.sector, state.year).sort(function (a, b) { return b.value - a.value; });
+  var tot = vals.reduce(function (s, v) { return s + v.value; }, 0);
+  var html = '<table class="data-table"><thead><tr><th>Partner</th><th class="num">Value (' + state.year + ')</th>' +
+    '<th class="num">Share</th><th class="num">Share² ×1000</th><th class="num">% of partner\'s trade</th><th>Asymmetry</th></tr></thead><tbody>' +
+    vals.map(function (v) {
+      var share = v.value / tot;
+      var pShare = v.value / partnerTotal(v.name, state.year);
+      var asym = share > pShare * 1.5 ? "Türkiye depends more" : pShare > share * 1.5 ? "Partner depends more" : "Mutual";
+      return "<tr><td>" + escapeHtml(v.name) + "</td><td class='num'>" + fmtUSD(v.value) + "</td><td class='num'>" +
+        (share * 100).toFixed(2) + "%</td><td class='num'>" + (share * share * 1000).toFixed(2) + "</td><td class='num'>" +
+        (pShare * 100).toFixed(2) + "%</td><td>" + asym + "</td></tr>";
+    }).join("") + "</tbody></table>";
+  tableWrap.innerHTML = html;
+}
+
+/* ============================ asymmetry screener ============================ */
+
+function renderAsymScreener() {
+  var asymWrap = document.getElementById("asymWrap");
+  var vals = scopeValues(state.flow, state.sector, state.year);
+  var tot = vals.reduce(function (s, v) { return s + v.value; }, 0);
+  var rows = vals.map(function (v) {
+    var trShare = v.value / tot;
+    var pShare = v.value / partnerTotal(v.name, state.year);
+    var ratio = trShare > pShare ? trShare / pShare : pShare / trShare;
+    return { name: v.name, value: v.value, trShare: trShare, pShare: pShare,
+             ratio: ratio, trDepends: trShare > pShare };
+  }).filter(function (r) { return r.ratio >= state.asymThresh && r.value / tot >= 0.005; })
+    .sort(function (a, b) { return b.ratio * b.value - a.ratio * a.value; })
+    .slice(0, 15);
+  if (!rows.length) {
+    asymWrap.innerHTML = '<p style="font-size:13px;color:var(--text-muted)">No dyad clears this ratio in ' + state.year + '.</p>';
+    return;
+  }
+  asymWrap.innerHTML = '<table class="data-table"><thead><tr><th>Partner</th><th class="num">Value</th>' +
+    '<th class="num">Weight in Türkiye\'s trade</th><th class="num">Weight in partner\'s trade</th>' +
+    '<th class="num">Ratio</th><th>Who depends more</th></tr></thead><tbody>' +
+    rows.map(function (r) {
+      return "<tr><td>" + escapeHtml(r.name) + "</td><td class='num'>" + fmtUSD(r.value) + "</td>" +
+        "<td class='num'>" + (r.trShare * 100).toFixed(1) + "%</td>" +
+        "<td class='num'>" + (r.pShare * 100).toFixed(2) + "%</td>" +
+        "<td class='num'>" + r.ratio.toFixed(1) + "×</td>" +
+        "<td>" + (r.trDepends ? "<span class='dep-tr-txt'>Türkiye</span>" : "<span class='dep-pt-txt'>" + escapeHtml(r.name) + "</span>") + "</td></tr>";
+    }).join("") + "</tbody></table>";
+}
+
+/* ============================ orchestration ============================ */
+
+function renderAll() {
+  renderKpis();
+  chartCard.style.display = state.table ? "none" : "block";
+  if (!state.table) renderWheel();
+  renderDetail();
+  renderAsymScreener();
+  renderTable();
+  eventCaption.textContent = EVENTS[state.year] || "";
+}
+
+document.getElementById("asymThresh").addEventListener("change", function (e) {
+  state.asymThresh = +e.target.value;
+  renderAsymScreener();
+});
+
+/* controls */
+var sectorSel = document.getElementById("sectorSel");
+var optAll = document.createElement("option");
+optAll.value = ""; optAll.textContent = "All sectors (aggregate)";
+sectorSel.appendChild(optAll);
+SECTORS.forEach(function (s) {
+  var o = document.createElement("option");
+  o.value = s.id; o.textContent = s.name;
+  sectorSel.appendChild(o);
+});
+sectorSel.addEventListener("change", function () {
+  state.sector = sectorSel.value || null;
+  renderAll();
+});
+
+document.querySelectorAll("#flowSeg button").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll("#flowSeg button").forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+    btn.setAttribute("aria-pressed", "true");
+    state.flow = btn.getAttribute("data-v");
+    renderAll();
+  });
+});
+
+var yearSlider = document.getElementById("yearSlider");
+var yearLabel = document.getElementById("yearLabel");
+yearSlider.addEventListener("input", function () {
+  state.year = +yearSlider.value;
+  yearLabel.textContent = state.year;
+  renderAll();
+});
+
+var playBtn = document.getElementById("playBtn");
+var playTimer = null;
+function stopPlaying() {
+  state.playing = false; playBtn.textContent = "▶";
+  if (playTimer) { clearInterval(playTimer); playTimer = null; }
+}
+playBtn.addEventListener("click", function () {
+  if (state.playing) { stopPlaying(); return; }
+  state.playing = true; playBtn.textContent = "❚❚";
+  if (state.year >= YEAR_MAX) state.year = YEAR_MIN;
+  playTimer = setInterval(function () {
+    state.year++;
+    if (state.year >= YEAR_MAX) { state.year = YEAR_MAX; stopPlaying(); }
+    yearSlider.value = state.year; yearLabel.textContent = state.year;
+    renderAll();
+  }, 420);
+});
+
+var tableToggle = document.getElementById("tableToggle");
+tableToggle.addEventListener("click", function () {
+  state.table = !state.table;
+  tableToggle.setAttribute("aria-pressed", String(state.table));
+  tableToggle.textContent = state.table ? "View as wheel" : "View as table";
+  renderAll();
+});
+
+renderAll();
+})();
+</script>
