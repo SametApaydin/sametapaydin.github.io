@@ -586,7 +586,7 @@ WORLD.forEach(function (c) {
   var isHome = c.n === HOME_GEO;
   var partner = PARTNER_BY_GEO[c.n];
   var p = el("path", { d: pathFor(c), "class": "country" + (isHome ? " home" : "") + (partner ? " partner" : "") });
-  if (partner) p.addEventListener("click", function (evt) { evt.stopPropagation(); select(partner.name); });
+  if (partner) p.setAttribute("data-p", partner.name);
   gLand.appendChild(p);
 });
 
@@ -601,6 +601,7 @@ function arcPath(x0, y0, x1, y1) {
   return "M" + x0 + " " + y0 + " Q" + cx + " " + cy + " " + x1 + " " + y1;
 }
 
+var curVals = {}, curTot = 0;
 function renderFlows() {
   while (gFlows.firstChild) gFlows.removeChild(gFlows.firstChild);
   while (gNodes.firstChild) gNodes.removeChild(gNodes.firstChild);
@@ -610,6 +611,8 @@ function renderFlows() {
   }).sort(function (a, b) { return b.v - a.v; });
   var max = vals[0].v;
   var tot = vals.reduce(function (s, d) { return s + d.v; }, 0);
+  curVals = {}; curTot = tot;
+  vals.forEach(function (d) { curVals[d.p.name] = d; });
   var trXY = project(TR.lat, TR.lon);
   var labelSet = {};
   vals.slice(0, 12).forEach(function (d) { labelSet[d.p.name] = true; });
@@ -619,28 +622,24 @@ function renderFlows() {
     var wgt = Math.sqrt(d.v / max);
     var cls = state.flow === "imports" ? "flow inbound" : "flow outbound";
     var dimmed = state.selected && state.selected !== d.p.name;
-    var a = state.flow === "imports"
-      ? el("path", { d: arcPath(xy[0], xy[1], trXY[0], trXY[1]), "class": cls + (dimmed ? " dim" : ""), "stroke-width": (0.7 + 6.5 * wgt).toFixed(2), opacity: (0.35 + 0.55 * wgt).toFixed(2) })
-      : el("path", { d: arcPath(trXY[0], trXY[1], xy[0], xy[1]), "class": cls + (dimmed ? " dim" : ""), "stroke-width": (0.7 + 6.5 * wgt).toFixed(2), opacity: (0.35 + 0.55 * wgt).toFixed(2) });
-    a.addEventListener("mousemove", function (evt) { flowTip(evt, d, tot); });
-    a.addEventListener("mouseleave", hideTooltip);
-    a.addEventListener("click", function (evt) { evt.stopPropagation(); select(d.p.name); });
+    var dPath = state.flow === "imports"
+      ? arcPath(xy[0], xy[1], trXY[0], trXY[1])
+      : arcPath(trXY[0], trXY[1], xy[0], xy[1]);
+    var a = el("path", { d: dPath, "class": cls + (dimmed ? " dim" : ""),
+      "stroke-width": (0.7 + 6.5 * wgt).toFixed(2), opacity: (0.35 + 0.55 * wgt).toFixed(2),
+      "data-p": d.p.name });
     a.style.pointerEvents = "stroke";
     gFlows.appendChild(a);
 
-    var g = el("g", { "class": "node" + (dimmed ? " dim" : "") });
+    var g = el("g", { "class": "node" + (dimmed ? " dim" : ""), "data-p": d.p.name });
     var r = 2.2 + 8 * wgt;
-    var circ = el("circle", { cx: xy[0], cy: xy[1], r: r.toFixed(1),
-      fill: state.flow === "imports" ? "var(--imp)" : "var(--exp)" });
-    g.appendChild(circ);
+    g.appendChild(el("circle", { cx: xy[0], cy: xy[1], r: r.toFixed(1),
+      fill: state.flow === "imports" ? "var(--imp)" : "var(--exp)" }));
     if (labelSet[d.p.name]) {
       var t = el("text", { x: xy[0], y: xy[1] - r - 2.5, "text-anchor": "middle", "class": "node-label" + (dimmed ? " dim" : "") });
       t.textContent = d.p.name;
       g.appendChild(t);
     }
-    g.addEventListener("mousemove", function (evt) { flowTip(evt, d, tot); });
-    g.addEventListener("mouseleave", hideTooltip);
-    g.addEventListener("click", function (evt) { evt.stopPropagation(); select(d.p.name); });
     gNodes.appendChild(g);
   });
 
@@ -653,12 +652,17 @@ function renderFlows() {
   gNodes.appendChild(g);
 }
 
-function flowTip(evt, d, tot) {
+function hoverTip(evt, name) {
+  var d = curVals[name];
+  if (!d) return;
+  var otherFlow = state.flow === "imports" ? "exports" : "imports";
+  var other = scopeValue(otherFlow, name, state.sector, state.year);
   var scopeName = state.sector ? SECTORS.find(function (s) { return s.id === state.sector; }).name : "all sectors";
   showTooltip(evt,
-    "<div class='t-name'>" + escapeHtml(d.p.name) + " · " + state.year + "</div>" +
-    "<div class='t-row'><span>" + (state.flow === "imports" ? "Imports into TR" : "Exports from TR") + " (" + escapeHtml(scopeName) + ")</span><b>" + fmtUSD(d.v) + "</b></div>" +
-    "<div class='t-row'><span>Share of corridor total</span><b>" + (d.v / tot * 100).toFixed(1) + "%</b></div>" +
+    "<div class='t-name'>" + escapeHtml(name) + " · " + state.year + " · " + escapeHtml(scopeName) + "</div>" +
+    "<div class='t-row'><span>" + (state.flow === "imports" ? "Imports into TR" : "Exports from TR") + "</span><b>" + fmtUSD(d.v) + "</b></div>" +
+    "<div class='t-row'><span>" + (otherFlow === "imports" ? "Imports into TR" : "Exports from TR") + "</span><b>" + fmtUSD(other) + "</b></div>" +
+    "<div class='t-row'><span>Share of corridor total</span><b>" + (d.v / curTot * 100).toFixed(1) + "%</b></div>" +
     "<div class='t-row'><span>Click to pin the corridor card</span></div>");
 }
 
@@ -668,7 +672,28 @@ function select(name) {
   state.selected = state.selected === name ? null : name;
   renderFlows(); renderDossier();
 }
-svg.addEventListener("click", function () { if (state.selected) { state.selected = null; renderFlows(); renderDossier(); } });
+
+/* one delegated handler covers countries, arcs, and nodes alike */
+function partnerOf(evt) {
+  var t = evt.target;
+  while (t && t !== svg) {
+    if (t.getAttribute && t.getAttribute("data-p")) return t.getAttribute("data-p");
+    t = t.parentNode;
+  }
+  return null;
+}
+svg.addEventListener("click", function (evt) {
+  if (justDragged) { justDragged = false; return; }
+  var name = partnerOf(evt);
+  if (name) select(name);
+  else if (state.selected) { state.selected = null; renderFlows(); renderDossier(); }
+});
+svg.addEventListener("mousemove", function (evt) {
+  if (drag && drag.moved) { hideTooltip(); return; }
+  var name = partnerOf(evt);
+  if (name) hoverTip(evt, name); else hideTooltip();
+});
+svg.addEventListener("mouseleave", hideTooltip);
 
 function renderDossier() {
   if (!state.selected) { dossier.classList.remove("on"); return; }
@@ -742,20 +767,21 @@ svg.addEventListener("wheel", function (evt) {
   zoomAt((evt.clientX - r.left) / r.width, (evt.clientY - r.top) / r.height, evt.deltaY < 0 ? 1.25 : 0.8);
 }, { passive: false });
 
-var drag = null;
+var drag = null, justDragged = false;
 svg.addEventListener("pointerdown", function (evt) {
   drag = { x: evt.clientX, y: evt.clientY, vx: vb.x, vy: vb.y, moved: false };
-  svg.setPointerCapture(evt.pointerId);
 });
-svg.addEventListener("pointermove", function (evt) {
+window.addEventListener("pointermove", function (evt) {
   if (!drag) return;
   var r = svg.getBoundingClientRect();
   var dx = (evt.clientX - drag.x) / r.width * vb.w, dy = (evt.clientY - drag.y) / r.height * vb.h;
   if (Math.abs(evt.clientX - drag.x) + Math.abs(evt.clientY - drag.y) > 4) drag.moved = true;
   vb.x = drag.vx - dx; vb.y = drag.vy - dy; clampVB(); applyVB();
 });
-svg.addEventListener("pointerup", function () { drag = null; });
-svg.addEventListener("click", function (evt) { if (drag && drag.moved) evt.stopImmediatePropagation(); }, true);
+window.addEventListener("pointerup", function () {
+  if (drag && drag.moved) justDragged = true;
+  drag = null;
+});
 document.getElementById("zIn").addEventListener("click", function () { zoomAt(0.5, 0.5, 1.4); });
 document.getElementById("zOut").addEventListener("click", function () { zoomAt(0.5, 0.5, 0.72); });
 document.getElementById("zReset").addEventListener("click", function () { vb = { x: 0, y: 0, w: W, h: H }; applyVB(); });
