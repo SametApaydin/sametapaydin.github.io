@@ -90,7 +90,7 @@
   </div>
   <h1>Dependence Monitor — Tabbed</h1>
   <p class="lede">One shared header, four views behind tabs — the analyst picks the lens.
-    Views in this build: Risk Matrix, Index Anatomy, Risk Migration, Export Treemap.</p>
+    Views in this build: Risk Matrix, Index Anatomy, Risk Migration, Export Treemap, World Map Explorer.</p>
   <span class="note-pill">● All trade values synthetic (seeded, deterministic) — do not cite</span>
 
   <div class="kpis">
@@ -121,6 +121,7 @@
     <button role="tab" aria-selected="false" data-panel="p-anatomy">🫀 Index Anatomy</button>
     <button role="tab" aria-selected="false" data-panel="p-migration">🛰️ Risk Migration</button>
     <button role="tab" aria-selected="false" data-panel="p-treemap">🌳 Export Treemap</button>
+    <button role="tab" aria-selected="false" data-panel="p-worldmap">🗺️ World Map</button>
   </div>
 
   <div class="stage">
@@ -155,6 +156,14 @@
         <a class="full" href="trade-atlas-demo.html" target="_blank" rel="noopener">Open full page ↗</a>
       </div>
       <iframe data-src="trade-atlas-demo.html" title="Export Treemap demo — squarified treemap with drill-down" loading="lazy"></iframe>
+    </div>
+    <div class="panel" id="p-worldmap">
+      <div class="tab-meta">
+        <span class="desc">The country dossier on a real world map: shading is relationship size — pan, zoom,
+          and click a partner for totals, balance, and both-way sector breakdowns.</span>
+        <a class="full" href="world-map-explorer.html" target="_blank" rel="noopener">Open full page ↗</a>
+      </div>
+      <iframe data-src="world-map-explorer.html" title="World Map Explorer — Türkiye's trade by country" loading="lazy"></iframe>
     </div>
   </div>
 
