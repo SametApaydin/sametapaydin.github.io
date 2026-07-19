@@ -53,8 +53,18 @@
     background: url(img/header-bg.png) no-repeat bottom center;
     background-size: 100% auto; opacity: var(--sky-op);
   }
-  .band-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 34px 20px 92px; }
-  .logo-chip { display: inline-block; background: var(--chip-bg); border-radius: 8px; margin-bottom: 20px; }
+  .band-inner {
+    position: relative; z-index: 1; max-width: 1320px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px;
+    padding: 30px 24px 88px;
+  }
+  .band-title { grid-column: 2; text-align: center; }
+  @media (max-width: 760px) {
+    .band-inner { grid-template-columns: 1fr; justify-items: center; row-gap: 18px; padding-bottom: 74px; }
+    .band-title { grid-column: 1; }
+  }
+  .logo-chip { display: inline-block; justify-self: start; background: var(--chip-bg); border-radius: 8px; }
+  @media (max-width: 760px) { .logo-chip { justify-self: center; } }
   :root[data-theme="dark"] .logo-chip { padding: 8px 12px; }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .logo-chip { padding: 8px 12px; } }
   .logo-chip img { display: block; height: 52px; width: auto; }
@@ -102,8 +112,10 @@
 <header class="band">
   <div class="band-inner">
     <span class="logo-chip"><img src="img/logo-en.png" alt="IPC — Istanbul Policy Center · Sabancı University · Stiftung Mercator Initiative"></span>
-    <h1>Dashboards &amp; Visualizations</h1>
-    <div class="meta">Türkiye trade-dependence project<span class="dot">●</span>July 2026<span class="dot">●</span>all trade values synthetic</div>
+    <div class="band-title">
+      <h1>Dashboards &amp; Visualizations</h1>
+      <div class="meta">Türkiye trade-dependence project<span class="dot">●</span>July 2026<span class="dot">●</span>all trade values synthetic</div>
+    </div>
   </div>
 </header>
 
