@@ -96,15 +96,30 @@
     border-color: var(--accent); border-top-color: var(--orange);
     transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0, 40, 90, .10);
   }
-  .card .top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-  .card .emoji { font-size: 24px; flex: none; }
+  .card .top { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .card .motif { width: 42px; height: 42px; flex: none; color: var(--accent); }
   .card h3 { font-size: 16.5px; font-weight: 600; margin: 0; }
   .card .paradigm { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-left: auto; text-align: right; }
   .card p { font-size: 13.5px; color: var(--ink-2); margin: 0 0 8px; }
   .card .open { display: inline-block; margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--orange); letter-spacing: .02em; }
 
+  a.card-dash { padding: 0; overflow: hidden; border-top-color: var(--orange); }
+  .dash-head {
+    display: flex; align-items: center; gap: 12px; padding: 12px 18px;
+    background: linear-gradient(120deg, #00438d, #14458a); color: #fff;
+  }
+  .dash-head .motif { width: 36px; height: 36px; flex: none; color: #fff; }
+  .dash-head h3 { font-size: 16.5px; font-weight: 600; margin: 0; color: #fff; }
+  .dash-body { padding: 12px 18px 15px; }
+
+  .sky-foot {
+    margin-top: 52px; height: 44px;
+    background: url(img/header-bg.png) no-repeat bottom center; background-size: 100% auto;
+    opacity: calc(var(--sky-op) * .6);
+  }
+
   footer {
-    margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border);
+    margin-top: 10px; padding-top: 16px; border-top: 1px solid var(--border);
     font-size: 12.5px; color: var(--muted); line-height: 1.65;
   }
 </style>
@@ -123,15 +138,19 @@
 
   <h2>Dashboards</h2>
   <div class="grid">
-    <a class="card" href="dashboard-a-tabbed.html">
-      <div class="top"><span class="emoji">📊</span><h3>Dashboard A — Dependence Monitor</h3></div>
-      <p>The analytical views in one dashboard: Risk Matrix, Index Anatomy, Risk Migration, Export Treemap, and the World Map Explorer.</p>
-      <span class="open">Open →</span>
+    <a class="card card-dash" href="dashboard-a-tabbed.html">
+      <div class="dash-head"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="8" width="36" height="30" rx="3"/><path d="M6 17h36M18 8v9M30 8v9"/></g><path d="M12 31l8-7 7 4 9-8" fill="none" stroke="var(--orange)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><h3>Dashboard A — Dependence Monitor</h3></div>
+      <div class="dash-body">
+        <p>The analytical views in one dashboard: Risk Matrix, Index Anatomy, Risk Migration, Export Treemap, and the World Map Explorer.</p>
+        <span class="open">Open →</span>
+      </div>
     </a>
-    <a class="card" href="dashboard-2a-tabbed.html">
-      <div class="top"><span class="emoji">🌐</span><h3>Dashboard B — Who · Where · When</h3></div>
-      <p>The geographic and narrative views in one dashboard: Dependency Wheel, Flow Atlas, The Long Rotation, Fourteen Pictures, and the World Corridor Map.</p>
-      <span class="open">Open →</span>
+    <a class="card card-dash" href="dashboard-2a-tabbed.html">
+      <div class="dash-head"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="24" cy="26" r="14"/><ellipse cx="24" cy="26" rx="6.5" ry="14"/><path d="M10 26h28"/></g><path d="M12 14Q24 4 37 12" fill="none" stroke="var(--orange)" stroke-width="2.4" stroke-linecap="round"/><circle cx="37" cy="12" r="2.6" fill="var(--orange)"/></svg><h3>Dashboard B — Who · Where · When</h3></div>
+      <div class="dash-body">
+        <p>The geographic and narrative views in one dashboard: Dependency Wheel, Flow Atlas, The Long Rotation, Fourteen Pictures, and the World Corridor Map.</p>
+        <span class="open">Open →</span>
+      </div>
     </a>
   </div>
 
@@ -139,62 +158,63 @@
   <p class="sec-sub">The individual interactive views, each a single self-contained page.</p>
   <div class="grid">
     <a class="card" href="world-map-explorer.html">
-      <div class="top"><span class="emoji">🗺️</span><h3>World Map Explorer</h3><span class="paradigm">Interactive map</span></div>
+      <div class="top"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="38" height="28" rx="3"/><path d="M9 24c3-4 7-5 9-9 3 2 2 6 6 6"/><path d="M28 33c3-1 4-4 8-4"/></g><circle cx="31" cy="19" r="3.4" fill="var(--orange)"/></svg><h3>World Map Explorer</h3><span class="paradigm">Interactive map</span></div>
       <p>Pan and zoom a real world map shaded by trade volume; click any partner country for its full Türkiye dossier — totals, balance, and sector breakdowns.</p>
       <span class="open">Open →</span>
     </a>
     <a class="card" href="world-map-corridors.html">
-      <div class="top"><span class="emoji">🌐</span><h3>World Corridor Map</h3><span class="paradigm">Flow map</span></div>
+      <div class="top"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 35Q20 13 35 17"/><path d="M9 35Q25 21 41 29"/></g><path d="M9 35Q17 26 27 37" fill="none" stroke="var(--orange)" stroke-width="2.2" stroke-linecap="round"/><circle cx="9" cy="35" r="3" fill="currentColor"/><circle cx="35" cy="17" r="2.6" fill="currentColor"/><circle cx="41" cy="29" r="2.6" fill="currentColor"/><circle cx="27" cy="37" r="2.6" fill="var(--orange)"/></svg><h3>World Corridor Map</h3><span class="paradigm">Flow map</span></div>
       <p>Every trade corridor drawn on real geography — animated arcs whose width is money, filterable by sector, with a pinnable per-country corridor card.</p>
       <span class="open">Open →</span>
     </a>
     <a class="card" href="risk-matrix.html">
-      <div class="top"><span class="emoji">🔬</span><h3>Risk Matrix</h3><span class="paradigm">Matrix</span></div>
+      <div class="top"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="8" width="32" height="32" rx="2"/><path d="M8 18.7h32M8 29.3h32M18.7 8v32M29.3 8v32"/></g><rect x="29.3" y="18.7" width="10.7" height="10.6" fill="var(--orange)"/></svg><h3>Risk Matrix</h3><span class="paradigm">Matrix</span></div>
       <p>The concentration fingerprint: every sector × partner cell, sortable both ways, with per-sector HHI bars and a live "EU-27 as one supplier" methodology toggle.</p>
       <span class="open">Open →</span>
     </a>
     <a class="card" href="index-anatomy.html">
-      <div class="top"><span class="emoji">🫀</span><h3>Index Anatomy</h3><span class="paradigm">Sankey</span></div>
+      <div class="top"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 13C20 13 26 9 40 9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M8 23C20 23 26 25 40 25" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M8 35C20 35 26 40 40 40" fill="none" stroke="var(--orange)" stroke-width="4" stroke-linecap="round"/></svg><h3>Index Anatomy</h3><span class="paradigm">Sankey</span></div>
       <p>The index formula drawn as plumbing: total → sectors → partners, band color = sector HHI. Dark fat bands are where the index lives.</p>
       <span class="open">Open →</span>
     </a>
     <a class="card" href="risk-migration.html">
-      <div class="top"><span class="emoji">🛰️</span><h3>Risk Migration</h3><span class="paradigm">Trails scatter</span></div>
+      <div class="top"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><path d="M9 37c6-8 10-6 16-14 4-5 7-6 13-10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="1 5"/><circle cx="9" cy="37" r="2.6" fill="currentColor"/><circle cx="25" cy="23" r="2.6" fill="currentColor"/><circle cx="38" cy="13" r="3.5" fill="var(--orange)"/></svg><h3>Risk Migration</h3><span class="paradigm">Trails scatter</span></div>
       <p>Gapminder-style trails applied to dependence: every partner in motion across the share × concentration plane, quadrants annotated.</p>
       <span class="open">Open →</span>
     </a>
     <a class="card" href="dependency-wheel.html">
-      <div class="top"><span class="emoji">🎡</span><h3>Dependency Wheel</h3><span class="paradigm">Chord</span></div>
+      <div class="top"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="24" cy="24" r="16"/><path d="M13 13Q24 22 35 13"/><path d="M15 37Q24 28 33 37"/></g><path d="M8.5 27Q24 24 39.5 27" fill="none" stroke="var(--orange)" stroke-width="2.4" stroke-linecap="round"/></svg><h3>Dependency Wheel</h3><span class="paradigm">Chord</span></div>
       <p>Türkiye-centered chord diagram — ribbon width is money, color is who-needs-whom-more. Click any partner for its 30-year dyad profile.</p>
       <span class="open">Open →</span>
     </a>
     <a class="card" href="flow-atlas.html">
-      <div class="top"><span class="emoji">🗺️</span><h3>Flow Atlas</h3><span class="paradigm">Flow map</span></div>
+      <div class="top"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 38h36"/><path d="M11 38Q19 20 29 38"/></g><path d="M15 38Q27 10 41 38" fill="none" stroke="var(--orange)" stroke-width="2.4" stroke-linecap="round"/><circle cx="11" cy="38" r="2.4" fill="currentColor"/><circle cx="41" cy="38" r="2.8" fill="var(--orange)"/></svg><h3>Flow Atlas</h3><span class="paradigm">Flow map</span></div>
       <p>Trade corridors on a real-geography map — node color carries the risk, corridor width the money, dash drift the direction.</p>
       <span class="open">Open →</span>
     </a>
     <a class="card" href="long-rotation.html">
-      <div class="top"><span class="emoji">🎞️</span><h3>The Long Rotation</h3><span class="paradigm">Small multiples</span></div>
+      <div class="top"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="7" y="8" width="15" height="13" rx="1.5"/><rect x="26" y="8" width="15" height="13" rx="1.5"/><rect x="7" y="27" width="15" height="13" rx="1.5"/><rect x="26" y="27" width="15" height="13" rx="1.5"/><path d="M9.5 18l5-5 5 3"/><path d="M28.5 17l5-6 5 3"/><path d="M9.5 37l5-5 5 3"/></g><path d="M28.5 37l5-6 5 3" fill="none" stroke="var(--orange)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><h3>The Long Rotation</h3><span class="paradigm">Small multiples</span></div>
       <p>Sixteen sector panels: risk-contribution lines with dominant-partner ownership strips. Where the strip changes color, the dependence changed hands.</p>
       <span class="open">Open →</span>
     </a>
     <a class="card" href="trade-atlas-demo.html">
-      <div class="top"><span class="emoji">🌳</span><h3>Export Treemap Demo</h3><span class="paradigm">Treemap</span></div>
+      <div class="top"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><rect x="25" y="10" width="15" height="13" fill="var(--orange)"/><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="7" y="9" width="34" height="30" rx="2"/><path d="M24 9v30M24 24h17M33 24v15"/></g></svg><h3>Export Treemap Demo</h3><span class="paradigm">Treemap</span></div>
       <p>Squarified export treemap with drill-down plus a stacked trend view, for fictional countries.</p>
       <span class="open">Open →</span>
     </a>
     <a class="card" href="atlas-dashboard.html">
-      <div class="top"><span class="emoji">🌍</span><h3>Trade Explorer</h3><span class="paradigm">Full explorer</span></div>
+      <div class="top"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 39h34"/><rect x="10" y="25" width="5" height="14"/><rect x="18" y="17" width="5" height="22"/><rect x="34" y="12" width="5" height="27"/></g><rect x="26" y="28" width="5" height="11" fill="var(--orange)"/></svg><h3>Trade Explorer</h3><span class="paradigm">Full explorer</span></div>
       <p>Atlas-style explore page: treemap, time series, market share, geo map, product-space network, complexity scatter and rankings — seven views in one.</p>
       <span class="open">Open →</span>
     </a>
     <a class="card" href="fourteen-pictures.html">
-      <div class="top"><span class="emoji">📜</span><h3>Fourteen Pictures</h3><span class="paradigm">Scrollytelling</span></div>
+      <div class="top"><svg class="motif" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="10" y="6" width="28" height="10" rx="2"/><rect x="10" y="32" width="28" height="10" rx="2"/></g><rect x="10" y="19" width="28" height="10" rx="2" fill="none" stroke="var(--orange)" stroke-width="2.4"/></svg><h3>Fourteen Pictures</h3><span class="paradigm">Scrollytelling</span></div>
       <p>"The risk didn't grow. It migrated." — seven scroll-driven scenes with one persistent morphing chart, ending in an explorable table.</p>
       <span class="open">Open →</span>
     </a>
   </div>
 
+  <div class="sky-foot" aria-hidden="true"></div>
   <footer>
     All pages are single self-contained HTML files with no external dependencies.
   </footer>
