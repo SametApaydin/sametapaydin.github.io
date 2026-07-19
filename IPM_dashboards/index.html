@@ -14,7 +14,7 @@
     --navy: #00438d; --navy-2: #294c94; --navy-3: #14458a;
     --orange: #ea6a16;
     --accent: var(--navy-2);
-    --band-from: #00438d; --band-to: #14458a; --band-ink: #ffffff; --band-sub: #b9cdea;
+    --band-bg: #ffffff; --band-ink: #00438d; --band-sub: #464646; --sky-op: 1; --chip-bg: transparent;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -23,7 +23,7 @@
       --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
       --border: rgba(255,255,255,0.12);
       --accent: #7aa1e0;
-      --band-from: #082b57; --band-to: #0d3a75; --band-ink: #ffffff; --band-sub: #9db8dd;
+      --band-bg: linear-gradient(120deg, #082b57, #0d3a75); --band-ink: #ffffff; --band-sub: #9db8dd; --sky-op: .4; --chip-bg: #ffffff;
     }
   }
   :root[data-theme="dark"] {
@@ -32,7 +32,7 @@
     --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
     --border: rgba(255,255,255,0.12);
     --accent: #7aa1e0;
-    --band-from: #082b57; --band-to: #0d3a75; --band-ink: #ffffff; --band-sub: #9db8dd;
+    --band-bg: linear-gradient(120deg, #082b57, #0d3a75); --band-ink: #ffffff; --band-sub: #9db8dd; --sky-op: .4; --chip-bg: #ffffff;
   }
   * { box-sizing: border-box; }
   body {
@@ -40,18 +40,24 @@
     font-family: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55;
   }
 
-  /* ---- IPC-style header band ---- */
+  /* ---- IPC header: logo + Istanbul skyline (IPC's own header-bg) ---- */
   .band {
-    background: linear-gradient(120deg, var(--band-from), var(--band-to));
+    position: relative;
+    background: var(--band-bg);
     color: var(--band-ink);
     border-bottom: 4px solid var(--orange);
+    overflow: hidden;
   }
-  .band-inner { max-width: 980px; margin: 0 auto; padding: 40px 20px 34px; }
-  .wordmark {
-    font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--band-sub); margin-bottom: 14px;
+  .band::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: url(img/header-bg.png) no-repeat bottom center;
+    background-size: 100% auto; opacity: var(--sky-op);
   }
-  .wordmark b { color: var(--band-ink); font-weight: 600; }
+  .band-inner { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 34px 20px 92px; }
+  .logo-chip { display: inline-block; background: var(--chip-bg); border-radius: 8px; margin-bottom: 20px; }
+  :root[data-theme="dark"] .logo-chip { padding: 8px 12px; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .logo-chip { padding: 8px 12px; } }
+  .logo-chip img { display: block; height: 52px; width: auto; }
   .band h1 { font-size: 32px; font-weight: 600; margin: 0 0 6px; letter-spacing: .01em; }
   .band .meta { font-size: 13.5px; color: var(--band-sub); }
   .band .meta .dot { color: var(--orange); margin: 0 6px; }
@@ -95,7 +101,7 @@
 
 <header class="band">
   <div class="band-inner">
-    <div class="wordmark"><b>Istanbul Policy Center</b> · Sabancı University</div>
+    <span class="logo-chip"><img src="img/logo-en.png" alt="IPC — Istanbul Policy Center · Sabancı University · Stiftung Mercator Initiative"></span>
     <h1>Dashboards &amp; Visualizations</h1>
     <div class="meta">Türkiye trade-dependence project<span class="dot">●</span>July 2026<span class="dot">●</span>all trade values synthetic</div>
   </div>
