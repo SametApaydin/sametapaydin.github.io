@@ -2,76 +2,106 @@
 <button id="ipm-theme-btn" aria-label="Switch theme" style="position:fixed;bottom:14px;left:14px;z-index:99999;width:38px;height:38px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(15,15,15,.82);color:#fff;font-size:16px;line-height:1;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 2px 10px rgba(0,0,0,.25)">☾</button>
 <script id="ipm-theme-js">(function(){var d=document.documentElement,b=document.getElementById("ipm-theme-btn");function sys(){return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}function cur(){return d.getAttribute("data-theme")||sys()}function apply(t){d.setAttribute("data-theme",t);if(b)b.textContent=t==="dark"?"☀":"☾"}try{var s=localStorage.getItem("ipm-theme");if(s)apply(s);else if(b)b.textContent=sys()==="dark"?"☀":"☾"}catch(e){}if(b)b.addEventListener("click",function(){var n=cur()==="dark"?"light":"dark";try{localStorage.setItem("ipm-theme",n)}catch(e){}apply(n)});if(self!==top&&b)b.style.display="none";window.addEventListener("storage",function(e){if(e.key==="ipm-theme"&&e.newValue)apply(e.newValue)})})()</script>
 <title>IPM Dashboards &amp; Visualizations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     color-scheme: light;
-    --page: #f9f9f7; --surface: #fcfcfb;
-    --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
-    --border: rgba(11,11,11,0.10); --accent: #2a78d6;
+    --page: #ffffff; --surface: #ffffff;
+    --ink: #1a1a1a; --ink-2: #464646; --muted: #8a8a8a;
+    --border: #e6e6e6;
+    --navy: #00438d; --navy-2: #294c94; --navy-3: #14458a;
+    --orange: #ea6a16;
+    --accent: var(--navy-2);
+    --band-from: #00438d; --band-to: #14458a; --band-ink: #ffffff; --band-sub: #b9cdea;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
       --page: #0d0d0d; --surface: #1a1a19;
       --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
-      --border: rgba(255,255,255,0.10); --accent: #3987e5;
+      --border: rgba(255,255,255,0.12);
+      --accent: #7aa1e0;
+      --band-from: #082b57; --band-to: #0d3a75; --band-ink: #ffffff; --band-sub: #9db8dd;
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
     --page: #0d0d0d; --surface: #1a1a19;
     --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
-    --border: rgba(255,255,255,0.10); --accent: #3987e5;
+    --border: rgba(255,255,255,0.12);
+    --accent: #7aa1e0;
+    --band-from: #082b57; --band-to: #0d3a75; --band-ink: #ffffff; --band-sub: #9db8dd;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0; background: var(--page); color: var(--ink);
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55;
-  }
-  .wrap { max-width: 980px; margin: 0 auto; padding: 44px 20px 80px; }
-  .kicker { font-size: 12px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-  h1 { font-size: 26px; font-weight: 700; margin: 0 0 8px; }
-  .lede { font-size: 15px; color: var(--ink-2); margin: 0 0 6px; max-width: 720px; }
-  .meta { font-size: 12.5px; color: var(--muted); margin-bottom: 8px; }
-  .note-pill {
-    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px;
-    color: var(--muted); border: 1px solid var(--border); border-radius: 999px;
-    padding: 4px 12px; margin-bottom: 30px;
+    font-family: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55;
   }
 
-  h2 { font-size: 15px; font-weight: 650; margin: 34px 0 4px; }
-  .sec-sub { font-size: 12.5px; color: var(--muted); margin: 0 0 14px; }
+  /* ---- IPC-style header band ---- */
+  .band {
+    background: linear-gradient(120deg, var(--band-from), var(--band-to));
+    color: var(--band-ink);
+    border-bottom: 4px solid var(--orange);
+  }
+  .band-inner { max-width: 980px; margin: 0 auto; padding: 40px 20px 34px; }
+  .wordmark {
+    font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--band-sub); margin-bottom: 14px;
+  }
+  .wordmark b { color: var(--band-ink); font-weight: 600; }
+  .band h1 { font-size: 32px; font-weight: 600; margin: 0 0 6px; letter-spacing: .01em; }
+  .band .meta { font-size: 13.5px; color: var(--band-sub); }
+  .band .meta .dot { color: var(--orange); margin: 0 6px; }
 
-  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  @media (max-width: 700px) { .grid, .grid-3 { grid-template-columns: 1fr; } }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 34px 20px 80px; }
+
+  h2 {
+    font-size: 17px; font-weight: 600; margin: 36px 0 4px;
+    letter-spacing: .02em; text-transform: uppercase; color: var(--ink);
+  }
+  h2::after { content: ""; display: block; width: 44px; height: 3px; background: var(--orange); margin-top: 6px; border-radius: 2px; }
+  h2:first-of-type { margin-top: 0; }
+  .sec-sub { font-size: 13px; color: var(--muted); margin: 10px 0 14px; }
+  h2 + .grid { margin-top: 16px; }
+
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
 
   a.card {
     display: block; background: var(--surface); border: 1px solid var(--border);
-    border-radius: 14px; padding: 16px 18px; text-decoration: none; color: var(--ink);
-    transition: border-color .12s ease, transform .12s ease;
+    border-top: 3px solid var(--navy-2);
+    border-radius: 10px; padding: 16px 18px; text-decoration: none; color: var(--ink);
+    transition: border-color .12s ease, transform .12s ease, box-shadow .12s ease;
   }
-  a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  a.card:hover {
+    border-color: var(--accent); border-top-color: var(--orange);
+    transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0, 40, 90, .10);
+  }
   .card .top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
   .card .emoji { font-size: 24px; flex: none; }
-  .card h3 { font-size: 15.5px; font-weight: 650; margin: 0; }
-  .card .paradigm { font-size: 11px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin-left: auto; text-align: right; }
-  .card p { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
-  .card .screeners { font-size: 11.5px; color: var(--muted); }
-  .card .screeners strong { color: var(--ink-2); font-weight: 600; }
-  .card .open { display: inline-block; margin-top: 10px; font-size: 12.5px; font-weight: 650; color: var(--accent); }
+  .card h3 { font-size: 16.5px; font-weight: 600; margin: 0; }
+  .card .paradigm { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-left: auto; text-align: right; }
+  .card p { font-size: 13.5px; color: var(--ink-2); margin: 0 0 8px; }
+  .card .open { display: inline-block; margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--orange); letter-spacing: .02em; }
 
   footer {
-    margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--border);
-    font-size: 12px; color: var(--muted); line-height: 1.65;
+    margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border);
+    font-size: 12.5px; color: var(--muted); line-height: 1.65;
   }
-  footer strong { color: var(--ink-2); }
 </style>
 
+<header class="band">
+  <div class="band-inner">
+    <div class="wordmark"><b>Istanbul Policy Center</b> · Sabancı University</div>
+    <h1>Dashboards &amp; Visualizations</h1>
+    <div class="meta">Türkiye trade-dependence project<span class="dot">●</span>July 2026<span class="dot">●</span>all trade values synthetic</div>
+  </div>
+</header>
+
 <div class="wrap">
-  <div class="kicker">IPM · Türkiye trade-dependence project</div>
-  <h1>Dashboards &amp; Visualizations</h1>
-  <p class="meta">July 2026 · Sabancı University IPM · all trade values synthetic</p>
 
   <h2>Dashboards</h2>
   <div class="grid">
