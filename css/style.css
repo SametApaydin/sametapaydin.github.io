@@ -57,6 +57,9 @@ html {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background: var(--bg);
   color: var(--text);
   font-family: var(--sans);
@@ -69,12 +72,13 @@ body {
 /* ---------- layout ---------- */
 
 .container {
-  max-width: 760px;
+  max-width: 840px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
 main {
+  flex: 1;
   padding: 3.5rem 0 4rem;
 }
 
@@ -187,7 +191,7 @@ h2:first-of-type {
 }
 
 p {
-  max-width: 65ch;
+  max-width: 76ch;
 }
 
 a {
@@ -209,7 +213,27 @@ em {
 /* ---------- home / intro ---------- */
 
 .intro {
-  margin-bottom: 1rem;
+  margin-bottom: 3.5rem;
+}
+
+.intro-head {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  margin-bottom: 1.7rem;
+}
+
+.portrait {
+  width: 132px;
+  height: 132px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.intro-head .intro-email {
+  margin-bottom: 0;
 }
 
 .intro .role {
@@ -225,20 +249,53 @@ em {
   margin-bottom: 1.7rem;
 }
 
+.intro-links {
+  font-size: 0.9rem;
+  color: var(--faint);
+  margin-top: 0.15rem;
+}
+
+.intro-links a {
+  color: var(--muted);
+}
+
+.intro-links a:hover {
+  color: var(--accent-soft);
+}
+
 .intro p {
   color: var(--text);
   margin-bottom: 1.1rem;
 }
 
 .interests {
-  color: var(--muted);
-  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.9rem;
   margin-top: 1.4rem;
+  font-size: 0.95rem;
 }
 
 .interests strong {
   color: var(--text);
   font-weight: 600;
+}
+
+.interest-tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.interest-tags li {
+  font-size: 0.85rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.15rem 0.75rem;
 }
 
 /* ---------- entry lists (education, positions, teaching…) ---------- */
@@ -287,7 +344,7 @@ em {
 .pub {
   padding: 1rem 0;
   border-bottom: 1px solid var(--border);
-  max-width: 68ch;
+  max-width: 75ch;
 }
 
 .pub:last-child {
@@ -348,7 +405,6 @@ em {
   justify-content: space-between;
   align-items: baseline;
   gap: 1.5rem;
-  flex-wrap: wrap;
 }
 
 .project-title {
@@ -361,10 +417,11 @@ em {
   color: var(--faint);
   font-size: 0.88rem;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .project-meta {
-  color: var(--accent);
+  color: var(--muted);
   font-size: 0.85rem;
   margin: 0.15rem 0 0.7rem;
 }
@@ -411,6 +468,21 @@ em {
     align-items: flex-start;
   }
 
+  .site-nav {
+    flex-wrap: nowrap;
+    gap: 0.25rem 0.85rem;
+  }
+
+  .site-nav a {
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+  }
+
+  .project-head {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
   .entry {
     flex-direction: column;
     gap: 0.1rem;
@@ -419,5 +491,16 @@ em {
   .entry-date {
     text-align: left;
     padding-top: 0;
+  }
+
+  .intro-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .portrait {
+    width: 112px;
+    height: 112px;
   }
 }
