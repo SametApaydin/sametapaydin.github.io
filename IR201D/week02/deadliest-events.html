@@ -1,6 +1,352 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="0; url=../IR201_Week2_DeadliestEvents.html">
-<link rel="canonical" href="https://sametapaydin.github.io/IR201D/IR201_Week2_DeadliestEvents.html">
-<title>Moved</title></head>
-<body><p>This page has moved to <a href="../IR201_Week2_DeadliestEvents.html">IR201_Week2_DeadliestEvents.html</a>.</p></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><style>body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>History's Deadliest Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap">
+<style>
+/* Layout: one timeline, six rows (one per kind of killing), circles scaled to the chosen measure;
+   a ranked list beside it that re-sorts with the measure. Sober, archival, data first. */
+:root{
+  --bg:#f5f6f5; --surface:#ffffff; --ink:#141413; --ink2:#4d4c48; --ink3:#86857f;
+  --rule:rgba(20,20,19,.14); --grid:rgba(20,20,19,.07); --chip:#e9eae8;
+  --eu:#85969d; --eu-s:#6c7c84; --as:#d2ac61; --as-s:#b08a3e; --am:#969375; --am-s:#77745a; --af:#914d37; --af-s:#7a3b2a; --mu:#a09e9b; --mu-s:#858380; --ot:#8a8984; --sel:#141413; --selink:#fcfcfb;
+  --display:'Source Serif 4','Iowan Old Style',Georgia,serif;
+  --body:'Public Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121212; --surface:#1a1a19; --ink:#f3f3f0; --ink2:#bbbab3; --ink3:#83827c;
+  --rule:rgba(255,255,255,.14); --grid:rgba(255,255,255,.07); --chip:#262625;
+  --eu:#9fb4bf; --eu-s:#c3d0d6; --as:#e3bb6e; --as-s:#f0d39a; --am:#b9b590; --am-s:#d6d3b6; --af:#c97a62; --af-s:#e2a592; --mu:#b8b6b2; --mu-s:#d8d6d2; --ot:#8f8e88; --sel:#f3f3f0; --selink:#141413; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121212; --surface:#1a1a19; --ink:#f3f3f0; --ink2:#bbbab3; --ink3:#83827c;
+  --rule:rgba(255,255,255,.14); --grid:rgba(255,255,255,.07); --chip:#262625;
+  --eu:#9fb4bf; --eu-s:#c3d0d6; --as:#e3bb6e; --as-s:#f0d39a; --am:#b9b590; --am-s:#d6d3b6; --af:#c97a62; --af-s:#e2a592; --mu:#b8b6b2; --mu-s:#d8d6d2; --ot:#8f8e88; --sel:#f3f3f0; --selink:#141413; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.page{max-width:1240px;margin:0 auto;padding-inline:clamp(16px,3vw,32px);padding-block:28px 56px}
+.eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);margin:0 0 8px;font-weight:600}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(28px,3.6vw,44px);line-height:1.08;margin:0 0 10px;text-wrap:balance;letter-spacing:-.01em}
+.dek{color:var(--ink2);margin:0 0 20px}
+.dek q{font-style:italic}
+.controls{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;background:var(--chip);border-radius:999px;align-self:flex-start;max-width:100%}
+.seg button{all:unset;cursor:pointer;padding:7px 16px;border-radius:999px;font-weight:600;font-size:14px;color:var(--ink2)}
+.seg button[aria-pressed="true"]{background:var(--sel);color:var(--selink)}
+.seg button:focus-visible,.chip:focus-visible,.learn summary:focus-visible,th button:focus-visible{outline:2px solid var(--eu);outline-offset:2px}
+#explain{margin:0;color:var(--ink2);font-size:14px;min-height:3em}
+.filters{display:flex;flex-wrap:wrap;gap:6px 6px;align-items:center}
+.filters .lab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);font-weight:600;margin-right:2px}
+.filters .sep{flex-basis:100%;height:4px}
+.chip{all:unset;cursor:pointer;font-size:13px;padding:4px 11px;border-radius:999px;border:1px solid var(--rule);color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="false"]{color:var(--ink3);text-decoration:line-through;border-style:dashed}
+.chip i{width:9px;height:9px;border-radius:50%;flex:none}
+.chip.reset{border:none;color:var(--ink3);text-decoration:underline}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:24px;align-items:start}
+.chartwrap{position:relative;min-width:0;background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:6px 0}
+.scroll{overflow-x:auto}
+svg{display:block}
+svg text{font-family:var(--body);fill:var(--ink)}
+.rowlab{font-size:12.5px;font-weight:600;fill:var(--ink2)}
+.tick{font-size:11px;fill:var(--ink3);font-variant-numeric:tabular-nums}
+.lbl{font-size:12px;paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.lbl tspan.v{font-weight:700}
+.axnote{font-size:12px;color:var(--ink3);margin:6px 14px 2px}
+.swipe{display:none;font-size:12px;color:var(--ink3);margin:2px 14px 0}
+#tip{position:absolute;z-index:5;max-width:280px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:10px 12px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.16);pointer-events:none}
+#tip h3{font-family:var(--display);font-size:16px;margin:0 0 4px;line-height:1.2}
+#tip dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:6px 0 0;font-variant-numeric:tabular-nums}
+#tip dt{color:var(--ink3)} #tip dd{margin:0}
+#tip .note{color:var(--ink3);font-size:12px;margin:6px 0 0}
+.side h2{font-family:var(--display);font-size:20px;margin:0 0 8px;font-weight:600}
+.side ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;font-variant-numeric:tabular-nums}
+.side li{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--grid);font-size:14px}
+.side li .n{color:var(--ink3);font-size:12px}
+.side li .nm{display:flex;align-items:center;gap:7px;min-width:0}
+.side li .nm i{width:8px;height:8px;border-radius:50%;flex:none}
+.side li .nm span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side li .val{font-weight:600}
+#era{font-size:14px;color:var(--ink2);margin:12px 0 0}
+#era b{color:var(--ink)}
+.legend{margin-top:16px;display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--ink2)}
+.legend div{display:flex;align-items:center;gap:8px}
+.legend i{width:11px;height:11px;border-radius:50%;flex:none}
+.legend i.sw,.chip i,.side li .nm i{opacity:.75;border:1px solid transparent;box-sizing:border-box}
+.legend i.hollow{border:1.5px dashed var(--ink2)}
+.legend i.line{width:22px;height:0;border-top:1.5px solid var(--ink2);border-radius:0}
+.learn{margin-top:30px}
+.learn summary{display:inline-flex;align-items:center;gap:8px;cursor:pointer;list-style:none;font-size:14px;font-weight:600;color:var(--ink);border:1px solid var(--ink);border-radius:999px;padding:7px 16px}
+.learn summary::-webkit-details-marker{display:none}
+.learn summary::before{content:'+';font-size:16px;line-height:1}
+.learn[open] summary::before{content:'\2212'}
+.learn h3{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);margin:24px 0 8px}
+.learn ul{margin:0;padding-left:20px;color:var(--ink2)} .learn li{margin:0 0 6px}
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:6px 10px;text-align:left;border-bottom:1px solid var(--grid);white-space:nowrap}
+th{position:sticky;top:0;background:var(--surface)}
+th button{all:unset;cursor:pointer;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+th[aria-sort] button{color:var(--ink)}
+td.r,th.r{text-align:right}
+.meta{font-size:13px;color:var(--ink3);margin-top:28px}
+@media (max-width:980px){.grid{grid-template-columns:minmax(0,1fr)}.side{order:-1}.side ol{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));column-gap:20px}}
+@media (max-width:700px){.swipe{display:block}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+a{color:inherit;text-underline-offset:3px;overflow-wrap:anywhere}
+</style>
+
+<div class="page">
+  <p class="eyebrow">IR 201 · Week 2 · What counts?</p>
+  <h1>History's deadliest events: what are we counting?</h1>
+  <p class="dek">One hundred mass-death events from Matthew White's ranking, as charted by Bill Marsh for <a href="https://www.nytimes.com/2011/11/06/opinion/sunday/population-control-marauder-style.html" target="_blank" rel="noopener">the New York Times</a> in November 2011. Marsh wrote that <q>killings as a percentage of all humanity are probably declining.</q> Switch the measure and watch the ranking change.</p>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Measure">
+      <button type="button" id="m-total" data-m="total" aria-pressed="true">Total deaths</button>
+      <button type="button" id="m-share" data-m="share" aria-pressed="false">Share of humanity</button>
+      <button type="button" id="m-peryear" data-m="peryear" aria-pressed="false">Deaths per year</button>
+    </div>
+    <p id="explain"></p>
+    <div class="filters" id="filters"></div>
+  </div>
+
+  <div class="grid">
+    <div class="chartwrap">
+      <p class="swipe">Swipe sideways to see the whole timeline.</p>
+      <div class="scroll" id="scroll"><svg id="chart" role="img" aria-label="Timeline of 100 deadly events, circle area shows the selected measure"></svg></div>
+      <p class="axnote">The time scale widens after 1000 and again after 1500, where most events are. Circle area shows the selected measure, scaled to the largest event in that view. Lines show how long an event lasted.</p>
+      <div id="tip" hidden></div>
+    </div>
+    <aside class="side">
+      <h2 id="toph">Top 10 by total deaths</h2>
+      <ol id="top"></ol>
+      <p id="era"></p>
+      <div class="legend" id="legend"></div>
+    </aside>
+  </div>
+
+  <details class="learn" id="learn">
+    <summary>Learn more: caveats, sources, all 100 events</summary>
+    <h3>Read with care</h3>
+    <ul>
+      <li>Death tolls are Matthew White's estimates. Many are contested, and for older events the range of scholarly estimates is very wide.</li>
+      <li>Years for 86 events were read from the positions on the Times graphic (about plus or minus 5 years). Only the 14 events in the graphic's own tables have exact years. These are not White's own dates.</li>
+      <li>Twenty events lasted less than about 8 years, too short to read from the image. Their deaths per year is an upper bound, so they are drawn hollow in that view and left out of the top 10.</li>
+      <li>World population before 1800 is a rough reconstruction (HYDE, via Our World in Data). Our shares are computed at each event's midpoint and differ from the Times figures, which used White's own population estimates (Genghis Khan: our 9.0% against the Times' 11.1%).</li>
+      <li>A share of humanity spread over a century is not comparable with one taken in a few years. Like the Times, we leave events longer than 40 years out of the share ranking and draw them hollow.</li>
+      <li>Deaths per year uses inclusive years (1939 to 1945 counts as 7 years), which reproduces the Times' own per-year table.</li>
+    </ul>
+    <h3>Sources</h3>
+    <ul>
+      <li>White, Matthew. 2011. <i>The Great Big Book of Horrible Things: The Definitive Chronicle of History's 100 Worst Atrocities</i>. New York: W. W. Norton.</li>
+      <li>Marsh, Bill. 2011. "<a href="https://www.nytimes.com/2011/11/06/opinion/sunday/population-control-marauder-style.html" target="_blank" rel="noopener">Population Control, Marauder Style</a>." Data Points graphic, <i>The New York Times</i>, November 6, 2011. Event names, ranks and death tolls are as printed there. Years were read from the circle and line positions on the graphic on October 9, 2026.</li>
+      <li>Our World in Data, "Population" (<a href="https://ourworldindata.org/grapher/population">ourworldindata.org</a>), CC BY 4.0. Historical estimates from HYDE 3.2 (Klein Goldewijk, Kees, Arthur Beusen, Jonathan Doelman and Elke Stehfest. 2017. "Anthropogenic Land Use Estimates for the Holocene: HYDE 3.2." <i>Earth System Science Data</i> 9: 927 to 953), with UN World Population Prospects for recent decades.</li>
+    </ul>
+    <h3>All 100 events</h3>
+    <div class="tablewrap"><table id="tbl"></table></div>
+  </details>
+  <p class="meta">IR 201 International Relations Theory, discussion section. Built October 9, 2026.</p>
+</div>
+
+<script>
+(()=>{
+const D=[{"rank":96,"name":"Second Persian War","deaths":0.3,"cat":0,"region":"Europe","start":-480,"end":-480,"approx":true,"dur":1,"perYear":0.3,"mid":-480.0,"pop":162.6,"share":0.184,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":70,"name":"Alexander the Great","deaths":0.5,"cat":0,"region":"Asia","start":-335,"end":-325,"approx":true,"dur":11,"perYear":0.0455,"mid":-330.0,"pop":181.8,"share":0.275,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":81,"name":"First Punic War","deaths":0.4,"cat":0,"region":"Europe","start":-265,"end":-240,"approx":true,"dur":26,"perYear":0.0154,"mid":-252.5,"pop":192.6,"share":0.208,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":58,"name":"Second Punic War","deaths":0.77,"cat":0,"region":"Europe","start":-220,"end":-200,"approx":true,"dur":21,"perYear":0.0367,"mid":-210.0,"pop":198.7,"share":0.387,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":81,"name":"Third Mithridatic War","deaths":0.4,"cat":0,"region":"Europe","start":-75,"end":-60,"approx":true,"dur":16,"perYear":0.025,"mid":-67.5,"pop":220.9,"share":0.181,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":59,"name":"Justinian's Western Wars","deaths":0.75,"cat":0,"region":"Europe","start":525,"end":565,"approx":true,"dur":41,"perYear":0.0183,"mid":545.0,"pop":261.4,"share":0.287,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":67,"name":"Goguryeo-Sui Wars","deaths":0.6,"cat":0,"region":"Asia","start":595,"end":615,"approx":true,"dur":21,"perYear":0.0286,"mid":605.0,"pop":272.0,"share":0.221,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":30,"name":"Crusades","deaths":3.0,"cat":0,"region":"Asia","start":1095,"end":1295,"approx":true,"dur":201,"perYear":0.0149,"mid":1195.0,"pop":442.2,"share":0.678,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":2,"name":"Genghis Khan","deaths":40.0,"cat":0,"region":"Asia","start":1206,"end":1227,"approx":false,"dur":22,"perYear":1.8182,"mid":1216.5,"pop":446.5,"share":8.958,"nytShare":11.1,"nytPerYear":1.8,"point":false,"long":false},{"rank":55,"name":"Hulagu's invasion","deaths":0.8,"cat":0,"region":"Asia","start":1255,"end":1260,"approx":true,"dur":6,"perYear":0.1333,"mid":1257.5,"pop":451.3,"share":0.177,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":70,"name":"Bahmani-Vijayanagara War","deaths":0.5,"cat":0,"region":"Asia","start":1365,"end":1365,"approx":true,"dur":1,"perYear":0.5,"mid":1365.0,"pop":447.1,"share":0.112,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":9,"name":"Timur","deaths":17.0,"cat":0,"region":"Asia","start":1370,"end":1405,"approx":false,"dur":36,"perYear":0.4722,"mid":1387.5,"pop":444.0,"share":3.829,"nytShare":4.7,"nytPerYear":null,"point":false,"long":false},{"rank":70,"name":"Russo-Tatar War","deaths":0.5,"cat":0,"region":"Europe","start":1570,"end":1570,"approx":true,"dur":1,"perYear":0.5,"mid":1570.0,"pop":512.2,"share":0.098,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":54,"name":"Burma-Siam Wars","deaths":0.9,"cat":0,"region":"Asia","start":1550,"end":1605,"approx":true,"dur":56,"perYear":0.0161,"mid":1577.5,"pop":513.2,"share":0.175,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":89,"name":"Great Turkish War","deaths":0.38,"cat":0,"region":"Europe","start":1680,"end":1700,"approx":true,"dur":21,"perYear":0.0181,"mid":1690.0,"pop":587.0,"share":0.065,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":61,"name":"War of the Spanish Succession","deaths":0.7,"cat":0,"region":"Europe","start":1700,"end":1715,"approx":true,"dur":16,"perYear":0.0437,"mid":1707.5,"pop":612.3,"share":0.114,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":90,"name":"Great Northern War","deaths":0.37,"cat":0,"region":"Europe","start":1700,"end":1725,"approx":true,"dur":26,"perYear":0.0142,"mid":1712.5,"pop":625.4,"share":0.059,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":70,"name":"War of the Austrian Succession","deaths":0.5,"cat":0,"region":"Europe","start":1740,"end":1750,"approx":true,"dur":11,"perYear":0.0455,"mid":1745.0,"pop":727.3,"share":0.069,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":67,"name":"Sino-Dzungar War","deaths":0.6,"cat":0,"region":"Asia","start":1755,"end":1755,"approx":true,"dur":1,"perYear":0.6,"mid":1755.0,"pop":770.6,"share":0.078,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":40,"name":"Seven Years' War","deaths":1.5,"cat":0,"region":"Europe","start":1755,"end":1765,"approx":true,"dur":11,"perYear":0.1364,"mid":1760.0,"pop":788.3,"share":0.19,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":26,"name":"Napoleonic Wars","deaths":4.0,"cat":0,"region":"Europe","start":1790,"end":1815,"approx":true,"dur":26,"perYear":0.1538,"mid":1802.5,"pop":991.6,"share":0.403,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":96,"name":"Crimean War","deaths":0.3,"cat":0,"region":"Europe","start":1855,"end":1855,"approx":true,"dur":1,"perYear":0.3,"mid":1855.0,"pop":1286.4,"share":0.023,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":79,"name":"War of the Triple Alliance","deaths":0.48,"cat":0,"region":"Americas","start":1865,"end":1870,"approx":true,"dur":6,"perYear":0.08,"mid":1867.5,"pop":1327.6,"share":0.036,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":80,"name":"Franco-Prussian War","deaths":0.44,"cat":0,"region":"Europe","start":1870,"end":1870,"approx":true,"dur":1,"perYear":0.44,"mid":1870.0,"pop":1340.2,"share":0.033,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":70,"name":"Russo-Turkish War","deaths":0.5,"cat":0,"region":"Europe","start":1880,"end":1880,"approx":true,"dur":1,"perYear":0.5,"mid":1880.0,"pop":1414.6,"share":0.035,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":11,"name":"First World War","deaths":15.0,"cat":0,"region":"Europe","start":1914,"end":1918,"approx":false,"dur":5,"perYear":3.0,"mid":1916.0,"pop":1841.4,"share":0.815,"nytShare":null,"nytPerYear":3.0,"point":false,"long":false},{"rank":81,"name":"Greco-Turkish War","deaths":0.4,"cat":0,"region":"Asia","start":1920,"end":1920,"approx":true,"dur":1,"perYear":0.4,"mid":1920.0,"pop":1895.4,"share":0.021,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":1,"name":"Second World War","deaths":66.0,"cat":0,"region":"Multiple","start":1939,"end":1945,"approx":false,"dur":7,"perYear":9.4286,"mid":1942.0,"pop":2331.1,"share":2.831,"nytShare":2.6,"nytPerYear":9.4,"point":false,"long":false},{"rank":30,"name":"Korean War","deaths":3.0,"cat":0,"region":"Asia","start":1950,"end":1950,"approx":true,"dur":1,"perYear":3.0,"mid":1950.0,"pop":2493.1,"share":0.12,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":61,"name":"Iran-Iraq War","deaths":0.7,"cat":0,"region":"Asia","start":1980,"end":1990,"approx":true,"dur":11,"perYear":0.0636,"mid":1985.0,"pop":4868.9,"share":0.014,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":28,"name":"Gladiators","deaths":3.5,"cat":1,"region":"Europe","start":-265,"end":435,"approx":true,"dur":701,"perYear":0.005,"mid":85.0,"pop":236.3,"share":1.481,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":8,"name":"Mideast slave trade","deaths":18.5,"cat":1,"region":"Africa","start":700,"end":1900,"approx":true,"dur":1201,"perYear":0.0154,"mid":1300.0,"pop":456.2,"share":4.055,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":10,"name":"Atlantic slave trade","deaths":16.0,"cat":1,"region":"Africa","start":1450,"end":1810,"approx":true,"dur":361,"perYear":0.0443,"mid":1630.0,"pop":538.8,"share":2.97,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":45,"name":"Aztec human sacrifice","deaths":1.2,"cat":1,"region":"Americas","start":1440,"end":1525,"approx":true,"dur":86,"perYear":0.014,"mid":1482.5,"pop":491.8,"share":0.244,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":11,"name":"Conquest of the Americas","deaths":15.0,"cat":1,"region":"Americas","start":1490,"end":1900,"approx":true,"dur":411,"perYear":0.0365,"mid":1695.0,"pop":591.2,"share":2.537,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":4,"name":"Famines in British India","deaths":27.0,"cat":1,"region":"Asia","start":1770,"end":1900,"approx":true,"dur":131,"perYear":0.2061,"mid":1835.0,"pop":1191.2,"share":2.267,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":14,"name":"Congo Free State","deaths":10.0,"cat":1,"region":"Africa","start":1885,"end":1910,"approx":true,"dur":26,"perYear":0.3846,"mid":1897.5,"pop":1598.6,"share":0.626,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":36,"name":"Postwar expulsion of Germans from Eastern Europe","deaths":2.1,"cat":1,"region":"Europe","start":1945,"end":1945,"approx":true,"dur":1,"perYear":2.1,"mid":1945.0,"pop":2384.7,"share":0.088,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":91,"name":"Postwar Vietnam","deaths":0.37,"cat":1,"region":"Asia","start":1975,"end":1990,"approx":true,"dur":16,"perYear":0.0231,"mid":1982.5,"pop":4654.8,"share":0.008,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":94,"name":"Sanctions against Iraq","deaths":0.35,"cat":1,"region":"Asia","start":1990,"end":2005,"approx":true,"dur":16,"perYear":0.0219,"mid":1997.5,"pop":5965.8,"share":0.006,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":40,"name":"Age of Warring States","deaths":1.5,"cat":2,"region":"Asia","start":-475,"end":-220,"approx":true,"dur":256,"perYear":0.0059,"mid":-347.5,"pop":179.4,"share":0.836,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":14,"name":"Xin Dynasty","deaths":10.0,"cat":2,"region":"Asia","start":9,"end":24,"approx":false,"dur":16,"perYear":0.625,"mid":16.5,"pop":233.1,"share":4.291,"nytShare":5.9,"nytPerYear":null,"point":false,"long":false},{"rank":25,"name":"Three Kingdoms","deaths":4.1,"cat":2,"region":"Asia","start":190,"end":265,"approx":true,"dur":76,"perYear":0.0539,"mid":227.5,"pop":237.1,"share":1.729,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":19,"name":"Fall of Rome","deaths":7.0,"cat":2,"region":"Europe","start":395,"end":455,"approx":true,"dur":61,"perYear":0.1148,"mid":425.0,"pop":244.6,"share":2.862,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":46,"name":"Mayan collapse","deaths":1.0,"cat":2,"region":"Americas","start":790,"end":910,"approx":true,"dur":121,"perYear":0.0083,"mid":850.0,"pop":298.2,"share":0.335,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":17,"name":"Fall of the Yuan Dynasty","deaths":7.5,"cat":2,"region":"Asia","start":1340,"end":1370,"approx":false,"dur":31,"perYear":0.2419,"mid":1355.0,"pop":448.5,"share":1.672,"nytShare":2.1,"nytPerYear":null,"point":false,"long":false},{"rank":28,"name":"Hundred Years' War","deaths":3.5,"cat":2,"region":"Europe","start":1335,"end":1455,"approx":true,"dur":121,"perYear":0.0289,"mid":1395.0,"pop":443.0,"share":0.79,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":22,"name":"Time of Troubles","deaths":5.0,"cat":2,"region":"Europe","start":1595,"end":1615,"approx":true,"dur":21,"perYear":0.2381,"mid":1605.0,"pop":519.8,"share":0.962,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":17,"name":"Thirty Years' War","deaths":7.5,"cat":2,"region":"Europe","start":1618,"end":1648,"approx":false,"dur":31,"perYear":0.2419,"mid":1633.0,"pop":541.1,"share":1.386,"nytShare":1.4,"nytPerYear":null,"point":false,"long":false},{"rank":5,"name":"Fall of the Ming Dynasty","deaths":25.0,"cat":2,"region":"Asia","start":1635,"end":1652,"approx":false,"dur":18,"perYear":1.3889,"mid":1643.5,"pop":549.3,"share":4.552,"nytShare":4.6,"nytPerYear":1.4,"point":false,"long":false},{"rank":46,"name":"Mexican Revolution","deaths":1.0,"cat":2,"region":"Americas","start":1910,"end":1920,"approx":true,"dur":11,"perYear":0.0909,"mid":1915.0,"pop":1829.1,"share":0.055,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":16,"name":"Russian Civil War","deaths":9.0,"cat":2,"region":"Europe","start":1917,"end":1922,"approx":false,"dur":6,"perYear":1.5,"mid":1919.5,"pop":1888.0,"share":0.477,"nytShare":null,"nytPerYear":1.5,"point":false,"long":false},{"rank":19,"name":"Chinese Civil War","deaths":7.0,"cat":2,"region":"Asia","start":1925,"end":1950,"approx":true,"dur":26,"perYear":0.2692,"mid":1937.5,"pop":2236.4,"share":0.313,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":40,"name":"Soviet-Afghan War","deaths":1.5,"cat":2,"region":"Asia","start":1980,"end":1990,"approx":true,"dur":11,"perYear":0.1364,"mid":1985.0,"pop":4868.9,"share":0.031,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":70,"name":"Somalian chaos","deaths":0.5,"cat":2,"region":"Africa","start":1990,"end":2015,"approx":true,"dur":26,"perYear":0.0192,"mid":2002.5,"pop":6378.9,"share":0.008,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":27,"name":"Second Congo War","deaths":3.8,"cat":2,"region":"Africa","start":1995,"end":2005,"approx":true,"dur":11,"perYear":0.3455,"mid":2000.0,"pop":6171.7,"share":0.062,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":46,"name":"Qin Shi Huang Di","deaths":1.0,"cat":3,"region":"Asia","start":-220,"end":-210,"approx":true,"dur":11,"perYear":0.0909,"mid":-215.0,"pop":198.0,"share":0.505,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":23,"name":"Aurangzeb","deaths":4.6,"cat":3,"region":"Asia","start":1655,"end":1710,"approx":true,"dur":56,"perYear":0.0821,"mid":1682.5,"pop":580.7,"share":0.792,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":30,"name":"Peter the Great","deaths":3.0,"cat":3,"region":"Europe","start":1680,"end":1725,"approx":true,"dur":46,"perYear":0.0652,"mid":1702.5,"pop":601.0,"share":0.499,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":40,"name":"Shaka","deaths":1.5,"cat":3,"region":"Africa","start":1815,"end":1830,"approx":true,"dur":16,"perYear":0.0938,"mid":1822.5,"pop":1107.0,"share":0.136,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":6,"name":"Stalin","deaths":20.0,"cat":3,"region":"Europe","start":1920,"end":1955,"approx":true,"dur":36,"perYear":0.5556,"mid":1937.5,"pop":2236.4,"share":0.894,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":2,"name":"Mao Zedong","deaths":40.0,"cat":3,"region":"Asia","start":1949,"end":1976,"approx":false,"dur":28,"perYear":1.4286,"mid":1962.5,"pop":3157.9,"share":1.267,"nytShare":1.3,"nytPerYear":1.4,"point":false,"long":false},{"rank":30,"name":"North Korea","deaths":3.0,"cat":3,"region":"Asia","start":1945,"end":2015,"approx":true,"dur":71,"perYear":0.0423,"mid":1980.0,"pop":4447.6,"share":0.067,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":96,"name":"Idi Amin","deaths":0.3,"cat":3,"region":"Africa","start":1965,"end":1985,"approx":true,"dur":21,"perYear":0.0143,"mid":1975.0,"pop":4070.7,"share":0.007,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":39,"name":"Democratic Kampuchea","deaths":1.67,"cat":3,"region":"Asia","start":1975,"end":1975,"approx":true,"dur":1,"perYear":1.67,"mid":1975.0,"pop":4070.7,"share":0.041,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":96,"name":"Saddam Hussein","deaths":0.3,"cat":3,"region":"Asia","start":1980,"end":2005,"approx":true,"dur":26,"perYear":0.0115,"mid":1992.5,"pop":5548.6,"share":0.005,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":61,"name":"Gallic War","deaths":0.7,"cat":4,"region":"Europe","start":-60,"end":-50,"approx":true,"dur":11,"perYear":0.0636,"mid":-55.0,"pop":223.0,"share":0.314,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":94,"name":"Roman-Jewish Wars","deaths":0.35,"cat":4,"region":"Asia","start":65,"end":140,"approx":true,"dur":76,"perYear":0.0046,"mid":102.5,"pop":237.1,"share":0.148,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":61,"name":"Chinese conquest of Vietnam","deaths":0.7,"cat":4,"region":"Asia","start":1405,"end":1430,"approx":true,"dur":26,"perYear":0.0269,"mid":1417.5,"pop":452.4,"share":0.155,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":81,"name":"Cromwell's invasion of Ireland","deaths":0.4,"cat":4,"region":"Europe","start":1650,"end":1650,"approx":true,"dur":1,"perYear":0.4,"mid":1650.0,"pop":554.4,"share":0.072,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":81,"name":"Haitian slave revolt","deaths":0.4,"cat":4,"region":"Americas","start":1790,"end":1805,"approx":true,"dur":16,"perYear":0.025,"mid":1797.5,"pop":972.7,"share":0.041,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":81,"name":"Mexican War of Independence","deaths":0.4,"cat":4,"region":"Americas","start":1810,"end":1825,"approx":true,"dur":16,"perYear":0.025,"mid":1817.5,"pop":1070.8,"share":0.037,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":57,"name":"French conquest of Algeria","deaths":0.78,"cat":4,"region":"Africa","start":1830,"end":1850,"approx":true,"dur":21,"perYear":0.0371,"mid":1840.0,"pop":1219.6,"share":0.064,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":21,"name":"Mahdi revolt","deaths":5.5,"cat":4,"region":"Africa","start":1880,"end":1900,"approx":true,"dur":21,"perYear":0.2619,"mid":1890.0,"pop":1520.9,"share":0.362,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":93,"name":"Cuban Revolution","deaths":0.36,"cat":4,"region":"Americas","start":1895,"end":1895,"approx":true,"dur":1,"perYear":0.36,"mid":1895.0,"pop":1572.3,"share":0.023,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":59,"name":"Italo-Ethiopian War","deaths":0.75,"cat":4,"region":"Africa","start":1935,"end":1945,"approx":true,"dur":11,"perYear":0.0682,"mid":1940.0,"pop":2292.0,"share":0.033,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":88,"name":"French Indochina War","deaths":0.39,"cat":4,"region":"Asia","start":1945,"end":1955,"approx":true,"dur":11,"perYear":0.0355,"mid":1950.0,"pop":2493.1,"share":0.016,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":69,"name":"Algerian War of Independence","deaths":0.53,"cat":4,"region":"Africa","start":1955,"end":1965,"approx":true,"dur":11,"perYear":0.0482,"mid":1960.0,"pop":3015.5,"share":0.018,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":40,"name":"Bengali genocide","deaths":1.5,"cat":4,"region":"Asia","start":1971,"end":1971,"approx":false,"dur":1,"perYear":1.5,"mid":1971.0,"pop":3769.8,"share":0.04,"nytShare":null,"nytPerYear":1.5,"point":false,"long":false},{"rank":46,"name":"Roman Slave Wars","deaths":1.0,"cat":5,"region":"Europe","start":-135,"end":-70,"approx":true,"dur":66,"perYear":0.0152,"mid":-102.5,"pop":215.2,"share":0.465,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":96,"name":"War of the Allies","deaths":0.3,"cat":5,"region":"Europe","start":-90,"end":-90,"approx":true,"dur":1,"perYear":0.3,"mid":-90.0,"pop":217.3,"share":0.138,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":13,"name":"An Lushan Rebellion","deaths":13.0,"cat":5,"region":"Asia","start":755,"end":763,"approx":false,"dur":9,"perYear":1.4444,"mid":759.0,"pop":282.8,"share":4.598,"nytShare":5.9,"nytPerYear":1.4,"point":false,"long":false},{"rank":37,"name":"Fang La Rebellion","deaths":2.0,"cat":5,"region":"Asia","start":1120,"end":1120,"approx":true,"dur":1,"perYear":2.0,"mid":1120.0,"pop":406.8,"share":0.492,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":46,"name":"Albigensian Crusade","deaths":1.0,"cat":5,"region":"Europe","start":1210,"end":1230,"approx":true,"dur":21,"perYear":0.0476,"mid":1220.0,"pop":446.9,"share":0.224,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":30,"name":"French Wars of Religion","deaths":3.0,"cat":5,"region":"Europe","start":1560,"end":1600,"approx":true,"dur":41,"perYear":0.0732,"mid":1580.0,"pop":513.5,"share":0.584,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":6,"name":"Taiping Rebellion","deaths":20.0,"cat":5,"region":"Asia","start":1850,"end":1864,"approx":false,"dur":15,"perYear":1.3333,"mid":1857.0,"pop":1290.4,"share":1.55,"nytShare":1.7,"nytPerYear":1.3,"point":false,"long":false},{"rank":65,"name":"American Civil War","deaths":0.7,"cat":5,"region":"Americas","start":1865,"end":1865,"approx":true,"dur":1,"perYear":0.7,"mid":1865.0,"pop":1317.0,"share":0.053,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":46,"name":"Panthay Rebellion","deaths":1.0,"cat":5,"region":"Asia","start":1855,"end":1875,"approx":true,"dur":21,"perYear":0.0476,"mid":1865.0,"pop":1317.0,"share":0.076,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":66,"name":"Hui Rebellion","deaths":0.64,"cat":5,"region":"Asia","start":1860,"end":1875,"approx":true,"dur":16,"perYear":0.04,"mid":1867.5,"pop":1327.6,"share":0.048,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":91,"name":"Spanish Civil War","deaths":0.37,"cat":5,"region":"Europe","start":1940,"end":1940,"approx":true,"dur":1,"perYear":0.37,"mid":1940.0,"pop":2292.0,"share":0.016,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":70,"name":"Partition of India","deaths":0.5,"cat":5,"region":"Asia","start":1950,"end":1950,"approx":true,"dur":1,"perYear":0.5,"mid":1950.0,"pop":2493.1,"share":0.02,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":81,"name":"Indonesian purge","deaths":0.4,"cat":5,"region":"Asia","start":1965,"end":1965,"approx":true,"dur":1,"perYear":0.4,"mid":1965.0,"pop":3334.5,"share":0.012,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":24,"name":"Vietnam War","deaths":4.2,"cat":5,"region":"Asia","start":1955,"end":1975,"approx":true,"dur":21,"perYear":0.2,"mid":1965.0,"pop":3334.5,"share":0.126,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":46,"name":"Biafran War","deaths":1.0,"cat":5,"region":"Africa","start":1970,"end":1970,"approx":true,"dur":1,"perYear":1.0,"mid":1970.0,"pop":3694.7,"share":0.027,"nytShare":null,"nytPerYear":null,"point":true,"long":false},{"rank":35,"name":"War in the Sudan","deaths":2.6,"cat":5,"region":"Africa","start":1955,"end":2010,"approx":true,"dur":56,"perYear":0.0464,"mid":1982.5,"pop":4654.8,"share":0.056,"nytShare":null,"nytPerYear":null,"point":false,"long":true},{"rank":70,"name":"Ugandan Bush War","deaths":0.5,"cat":5,"region":"Africa","start":1980,"end":1990,"approx":true,"dur":11,"perYear":0.0455,"mid":1985.0,"pop":4868.9,"share":0.01,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":37,"name":"Mengistu Haile","deaths":2.0,"cat":5,"region":"Africa","start":1970,"end":1990,"approx":true,"dur":21,"perYear":0.0952,"mid":1980.0,"pop":4447.6,"share":0.045,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":55,"name":"Mozambican Civil War","deaths":0.8,"cat":5,"region":"Africa","start":1975,"end":1995,"approx":true,"dur":21,"perYear":0.0381,"mid":1985.0,"pop":4868.9,"share":0.016,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":70,"name":"Angolan Civil War","deaths":0.5,"cat":5,"region":"Africa","start":1970,"end":2000,"approx":true,"dur":31,"perYear":0.0161,"mid":1985.0,"pop":4868.9,"share":0.01,"nytShare":null,"nytPerYear":null,"point":false,"long":false},{"rank":53,"name":"Rwandan genocide","deaths":0.94,"cat":5,"region":"Africa","start":1994,"end":1994,"approx":false,"dur":1,"perYear":0.94,"mid":1994.0,"pop":5675.6,"share":0.017,"nytShare":null,"nytPerYear":0.9,"point":false,"long":false}], META={"topTotal":[["Second World War",66.0],["Genghis Khan",40.0],["Mao Zedong",40.0]],"topShare":[["Genghis Khan",8.958],["An Lushan Rebellion",4.598],["Fall of the Ming Dynasty",4.552]],"topPerYear":[["Second World War",9.4286],["First World War",3.0],["Genghis Khan",1.8182]],"sumDeaths":494.79,"built":"October 9, 2026"}, CATS=["International wars", "Institutional oppression", "Failed states", "Despots", "Colonial wars", "Civil wars"];
+const $=id=>document.getElementById(id);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const REG=[['Europe','--eu'],['Asia','--as'],['Americas','--am'],['Africa','--af'],['Multiple','--mu']];
+const regVar=r=>(REG.find(x=>x[0]===r)||REG[4])[1];
+const by=Object.fromEntries(D.map(e=>[e.name,e]));
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmtY=y=>y<0?`${-y} BC`:(y===0?'AD 1':String(y));
+const yrs=e=>(e.start===e.end?fmtY(e.start):`${fmtY(e.start)} to ${fmtY(e.end)}`)+(e.approx?' (approx.)':'');
+const f1=x=>x>=10?x.toFixed(0):x>=1?x.toFixed(1):x.toFixed(2);
+const fmtPct=x=>(x>=1?x.toFixed(1):x.toFixed(2))+'%';
+const M={
+  total:{label:'total deaths',val:e=>e.deaths,show:e=>`${f1(e.deaths)} million`,hollow:()=>false,elig:()=>true},
+  share:{label:'share of humanity',val:e=>e.share,show:e=>fmtPct(e.share),hollow:e=>e.long,elig:e=>!e.long},
+  peryear:{label:'deaths per year',val:e=>e.perYear,show:e=>`${f1(e.perYear)} million a year`,hollow:e=>e.point,elig:e=>!e.point}
+};
+const gk=by['Genghis Khan'];
+const EXPLAIN={
+  total:`Total deaths rewards long events and the modern era, when there were far more people alive. It hides how large an old killing was for the world of its time.`,
+  share:`Share of humanity rewards older events, when the world was small: Genghis Khan's ${f1(gk.deaths)} million deaths were about ${fmtPct(gk.share)} of everyone alive. Events lasting more than 40 years are drawn hollow and left out of the top 10.`,
+  peryear:`Deaths per year rewards short, intense wars and hides slow killing spread over centuries, such as the slave trades. Events too short to read from the image are drawn hollow: their figure is only an upper bound.`
+};
+let m='total';
+const catOn=new Set(CATS.map((_,i)=>i)), regOn=new Set(REG.map(r=>r[0]));
+const visible=e=>catOn.has(e.cat)&&regOn.has(e.region);
+
+/* filters */
+const fl=$('filters');
+fl.innerHTML=`<span class="lab">Kind</span>${CATS.map((c,i)=>`<button type="button" class="chip" id="fc${i}" data-c="${i}" aria-pressed="true">${c}</button>`).join('')}<span class="sep"></span><span class="lab">Region</span>${REG.map((r,i)=>`<button type="button" class="chip" id="fr${i}" data-r="${r[0]}" aria-pressed="true"><i style="background:var(${r[1]})"></i>${r[0]==='Multiple'?'Several continents':r[0]}</button>`).join('')}<button type="button" class="chip reset" id="freset">Show all</button>`;
+fl.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;
+  if(b.id==='freset'){CATS.forEach((_,i)=>catOn.add(i));REG.forEach(r=>regOn.add(r[0]));}
+  else if(b.dataset.c!=null){const i=+b.dataset.c;catOn.has(i)?catOn.delete(i):catOn.add(i);}
+  else if(b.dataset.r){const r=b.dataset.r;regOn.has(r)?regOn.delete(r):regOn.add(r);}
+  fl.querySelectorAll('[data-c]').forEach(x=>x.setAttribute('aria-pressed',catOn.has(+x.dataset.c)));
+  fl.querySelectorAll('[data-r]').forEach(x=>x.setAttribute('aria-pressed',regOn.has(x.dataset.r)));
+  render(false);});
+
+$('legend').innerHTML=[['--eu','Europe'],['--as','Asia'],['--am','Americas'],['--af','Africa'],['--mu','Several continents']].map(([v,t])=>`<div><i class="sw" style="background:var(${v});border-color:var(${v}-s)"></i>${t}</div>`).join('')+
+  `<div><i class="line"></i>How long it lasted</div><div><i class="hollow"></i>Not ranked in this view (see note above)</div>`;
+
+/* chart geometry */
+const svg=$('chart'), NS='http://www.w3.org/2000/svg';
+const BR=[-500,1000,1500,2015], FR=[0,.25,.43,1];
+let W,X0,X1,TOP=30,H,RMAX=52;
+function xOf(y){for(let i=0;i<3;i++)if(y<=BR[i+1]||i===2){const t=(y-BR[i])/(BR[i+1]-BR[i]);return X0+(FR[i]+t*(FR[i+1]-FR[i]))*(X1-X0);}}
+const el=(t,a,p)=>{const n=document.createElementNS(NS,t);for(const k in a){const v=a[k];if(typeof v==='string'&&v.startsWith('var('))n.style.setProperty(k,v);else n.setAttribute(k,v);}if(p)p.appendChild(n);return n;};
+const sty=(n,k,v)=>{if(typeof v==='string'&&(v.startsWith('var(')||v==='none'))n.style.setProperty(k,v);else{n.style.removeProperty(k);n.setAttribute(k,v);}};
+let G={}, nodes=[], cur=new Map();
+
+/* Packing: every circle moves up or down from its row's centre line until it touches nothing
+   in its own row (no limit). Each row is then as tall as its most crowded measure needs, so the
+   layout stays put when the measure changes. */
+let ROWY=[],ROWH=[],PACK={};
+function pack(mm){
+  const val=M[mm].val, vmax=Math.max(...D.map(val)), out=new Map(), half=[];
+  CATS.forEach((_,ci)=>{
+    const evs=D.filter(e=>e.cat===ci).map(e=>{const x=xOf(e.mid),r=Math.max(2.5,RMAX*Math.sqrt(val(e)/vmax));
+      return {e,x,r,x0:Math.min(xOf(e.start),x-r)-4,x1:Math.max(xOf(e.end),x+r)+4};}).sort((p,q)=>q.r-p.r);
+    const placed=[];let h=0;
+    for(const o of evs){
+      let dy=0;
+      for(let k=0;k<4000;k++){
+        const off=(k%2?1:-1)*Math.ceil(k/2)*3;
+        /* footprint = circle plus its duration line: events sharing any stretch of time need their own level */
+        if(placed.every(p=>o.x1<p.x0||p.x1<o.x0||Math.abs(off-p.dy)>=o.r+p.r+5)){dy=off;break;}
+      }
+      o.dy=dy;placed.push(o);out.set(o.e.name,{x:o.x,dy,r:o.r,ci});h=Math.max(h,Math.abs(dy)+o.r);
+    }
+    half[ci]=h;
+  });
+  return {pos:out,half};
+}
+function geometry(){
+  const w=$('scroll').clientWidth;W=Math.max(w,innerWidth<700?900:720);X0=150;X1=W-24;RMAX=52;
+  const halves=CATS.map(()=>48);PACK={};
+  for(const mm of Object.keys(M)){const p=pack(mm);PACK[mm]=p.pos;p.half.forEach((h,i)=>{halves[i]=Math.max(halves[i],h+14);});}
+  ROWY=[];ROWH=[];let y=TOP;
+  CATS.forEach((_,i)=>{ROWY.push(y);ROWH.push(2*halves[i]);y+=2*halves[i];});
+  H=y+26;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('width',W);svg.setAttribute('height',H);
+}
+function layout(mm){
+  const pos=new Map();
+  PACK[mm].forEach((v,k)=>pos.set(k,{x:v.x,y:ROWY[v.ci]+ROWH[v.ci]/2+v.dy,r:v.r}));
+  return pos;
+}
+function build(){
+  svg.innerHTML='';
+  const gGrid=el('g',{},svg), gRows=el('g',{},svg), gEv=el('g',{},svg), gLbl=el('g',{},svg);
+  [-400,0,400,1000,1200,1500,1600,1700,1800,1900,2000].forEach(y=>{const x=xOf(y);
+    el('line',{x1:x,x2:x,y1:TOP-6,y2:H-22,stroke:'var(--grid)','stroke-width':y===1000||y===1500?1.4:1},gGrid);
+    const t=el('text',{x,y:TOP-12,'text-anchor':'middle',class:'tick'},gGrid);t.textContent=fmtY(y);
+    const b=el('text',{x,y:H-8,'text-anchor':'middle',class:'tick'},gGrid);b.textContent=fmtY(y);});
+  CATS.forEach((c,i)=>{const y0=ROWY[i],RH=ROWH[i];
+    if(i)el('line',{x1:8,x2:W-8,y1:y0,y2:y0,stroke:'var(--rule)'},gRows);
+    const words=c.split(' '),t=el('text',{x:14,y:y0+RH/2-(words.length>1?6:-4),class:'rowlab'},gRows);
+    if(words.length>1){const a=el('tspan',{x:14},t);a.textContent=words.slice(0,-1).join(' ');const b=el('tspan',{x:14,dy:15},t);b.textContent=words.at(-1);}else t.textContent=c;});
+  nodes=D.map(e=>{const g=el('g',{class:'ev',tabindex:0,role:'button','aria-label':e.name},gEv);
+    const line=el('line',{stroke:'var(--ink2)','stroke-width':1.3,'stroke-linecap':'round'},g);
+    const c=el('circle',{},g), hit=el('circle',{fill:'transparent','pointer-events':'all'},g);
+    g.addEventListener('pointerenter',ev=>show(e,ev));g.addEventListener('pointerleave',hide);
+    g.addEventListener('click',ev=>{ev.stopPropagation();pinned===e?hide(true):(show(e,ev),pinned=e);});
+    g.addEventListener('focus',ev=>show(e,ev));g.addEventListener('blur',hide);
+    return {e,g,line,c,hit};});
+  G={gLbl};
+}
+function paint(pos,mm,alpha){
+  for(const n of nodes){const p=pos.get(n.e.name),e=n.e,vis=visible(e),hol=M[mm].hollow(e),col=`var(${regVar(e.region)})`;
+    n.c.setAttribute('cx',p.x);n.c.setAttribute('cy',p.y);n.c.setAttribute('r',Math.max(p.r,.5));
+    n.hit.setAttribute('cx',p.x);n.hit.setAttribute('cy',p.y);n.hit.setAttribute('r',Math.max(p.r,7));
+    const scol=`var(${regVar(e.region)}-s)`;
+    sty(n.c,'fill',hol?'none':col);n.c.setAttribute('fill-opacity',hol?0:.6);
+    sty(n.c,'stroke',scol);n.c.setAttribute('stroke-width',hol?1.6:1);
+    n.c.setAttribute('stroke-dasharray',hol?'3 2.5':'none');
+    const x1=xOf(e.start),x2=xOf(e.end);
+    n.line.setAttribute('x1',x1);n.line.setAttribute('x2',x2);n.line.setAttribute('y1',p.y);n.line.setAttribute('y2',p.y);
+    n.line.style.display=x2-x1>2?'':'none';
+    n.g.style.opacity=vis?1:.08;n.g.style.pointerEvents=vis?'':'none';}
+}
+function labels(pos,mm){
+  const g=G.gLbl;g.innerHTML='';const boxes=[];
+  const cand=D.filter(e=>visible(e)&&M[mm].elig(e)).sort((a,b)=>M[mm].val(b)-M[mm].val(a)).slice(0,9);
+  const circ=D.filter(visible).map(e=>({e,...pos.get(e.name)})).filter(c=>c.r>9);
+  const hitsCircle=(bx,by,w,h,self)=>circ.some(c=>{if(c.e===self)return false;const cx=Math.max(bx,Math.min(c.x,bx+w)),cy=Math.max(by,Math.min(c.y,by+h));return Math.hypot(c.x-cx,c.y-cy)<c.r-1;});
+  for(const e of cand){const p=pos.get(e.name),txt=e.name,val=M[mm].show(e).replace(' million a year','m/yr').replace(' million','m');
+    const w=(txt.length+val.length+1)*6.4+6,h=15,by=p.y-h/2;let x=null,anchor='start';
+    for(const side of ['right','left']){const xx=side==='right'?p.x+p.r+5:p.x-p.r-5,bx=side==='right'?xx:xx-w;
+      if(bx<X0-4||bx+w>W-6)continue;
+      if(boxes.some(b=>bx<b.x+b.w&&bx+w>b.x&&by<b.y+b.h&&by+h>b.y))continue;
+      if(hitsCircle(bx,by,w,h,e))continue;
+      x=xx;anchor=side==='right'?'start':'end';boxes.push({x:bx,y:by,w,h});break;}
+    if(x===null)continue;
+    const t=el('text',{x,y:p.y+4,'text-anchor':anchor,class:'lbl'},g);
+    const a=el('tspan',{},t);a.textContent=txt+' ';const b=el('tspan',{class:'v'},t);b.textContent=val;}
+}
+let anim=0;
+function render(animate){
+  const target=layout(m);
+  const from=new Map(cur.size?cur:target);
+  cancelAnimationFrame(anim);
+  if(!animate||reduce){cur=target;paint(cur,m);labels(cur,m);}
+  else{const t0=performance.now(),dur=650;G.gLbl.innerHTML='';
+    const step=now=>{const t=Math.min(1,(now-t0)/dur),k=t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2,mid=new Map();
+      for(const [n,b] of target){const a=from.get(n)||b;mid.set(n,{x:b.x,y:a.y+(b.y-a.y)*k,r:a.r+(b.r-a.r)*k});}
+      paint(mid,m);if(t<1)anim=requestAnimationFrame(step);else{cur=target;labels(cur,m);}};
+    anim=requestAnimationFrame(step);}
+  side();
+}
+function side(){
+  $('toph').textContent=`Top 10 by ${M[m].label}`;
+  const list=D.filter(e=>visible(e)&&M[m].elig(e)).sort((a,b)=>M[m].val(b)-M[m].val(a)).slice(0,10);
+  $('top').innerHTML=list.map((e,i)=>`<li><span class="n">${i+1}</span><span class="nm"><i style="background:var(${regVar(e.region)})"></i><span title="${e.name}">${e.name}</span></span><span class="val">${M[m].show(e).replace(' million a year','m/yr').replace(' million','m')}</span></li>`).join('')||'<li>No events match the filters.</li>';
+  const after=list.filter(e=>e.mid>=1900).length;
+  $('era').innerHTML=list.length?`<b>${after} of ${list.length}</b> of these happened after 1900. Try the other measures: does Marsh's claim about a declining share hold, and what does it depend on?`:'';
+  $('explain').textContent=EXPLAIN[m];
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m));
+}
+/* tooltip */
+const tip=$('tip');let pinned=null;
+function show(e,ev){
+  const rows=[['Years',yrs(e)],['Deaths',`${f1(e.deaths)} million`],['Per year',`${f1(e.perYear)} million${e.point?' (upper bound)':''}`],
+    ['Share of humanity',`${fmtPct(e.share)} of about ${e.pop>=1000?(e.pop/1000).toFixed(1)+' billion':Math.round(e.pop)+' million'} alive`]];
+  if(e.nytShare!=null)rows.push(['Times / White share',`${fmtPct(e.nytShare)}`]);
+  tip.innerHTML=`<h3>${e.name}</h3><div style="color:var(--ink3);font-size:12px">Rank ${e.rank} of 100 · ${CATS[e.cat]} · ${e.region==='Multiple'?'several continents':e.region}</div><dl>${rows.map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('')}</dl>`+
+    (e.nytShare!=null?`<p class="note">The Times used White's own population estimates, so its share differs from ours.</p>`:'')+
+    (e.long&&m==='share'?`<p class="note">Lasted over 40 years: not ranked by share.</p>`:'')+
+    (e.point&&m==='peryear'?`<p class="note">Too short to read its length from the image: not ranked per year.</p>`:'');
+  tip.hidden=false;
+  const wrap=tip.parentElement.getBoundingClientRect(),c=(nodes.find(n=>n.e===e)||{}).c.getBoundingClientRect();
+  let x=c.right-wrap.left+10,y=c.top-wrap.top;
+  if(x+tip.offsetWidth>wrap.width-8)x=c.left-wrap.left-tip.offsetWidth-10;
+  x=Math.max(8,x);y=Math.min(Math.max(8,y),wrap.height-tip.offsetHeight-8);
+  tip.style.left=x+'px';tip.style.top=y+'px';
+}
+function hide(force){if(pinned&&force!==true)return;pinned=null;tip.hidden=true;}
+document.addEventListener('click',()=>{if(pinned)hide(true);});
+
+/* table */
+const COLS=[['rank','Rank',1],['name','Event',0],['cat','Kind',0],['region','Region',0],['start','Years',0],['deaths','Deaths (m)',1],['perYear','Per year (m)',1],['share','Share (%)',1]];
+let sortK='rank',sortD=1;
+function table(){
+  const rows=[...D].sort((a,b)=>{const x=a[sortK],y=b[sortK];return (typeof x==='string'?x.localeCompare(y):x-y)*sortD;});
+  $('tbl').innerHTML=`<thead><tr>${COLS.map(([k,t,n])=>`<th class="${n?'r':''}"${k===sortK?` aria-sort="${sortD>0?'ascending':'descending'}"`:''}><button type="button" data-k="${k}">${t}</button></th>`).join('')}</tr></thead><tbody>${
+    rows.map(e=>`<tr><td class="r">${e.rank}</td><td>${e.name}</td><td>${CATS[e.cat]}</td><td>${e.region}</td><td>${yrs(e)}</td><td class="r">${e.deaths}</td><td class="r">${e.perYear.toFixed(2)}${e.point?'*':''}</td><td class="r">${e.share.toFixed(2)}</td></tr>`).join('')}</tbody>`;
+}
+$('tbl').addEventListener('click',ev=>{const b=ev.target.closest('button[data-k]');if(!b)return;const k=b.dataset.k;sortD=k===sortK?-sortD:(k==='name'||k==='region'||k==='cat'?1:-1);sortK=k;table();});
+
+document.querySelector('.seg').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b||b.dataset.m===m)return;m=b.dataset.m;hide(true);render(true);});
+/* bare-token hash for linking and testing: #share, #peryear, #share-dark, #total-tip, #learn */
+const toks=location.hash.slice(1).split('-');
+if(toks.includes('share'))m='share';if(toks.includes('peryear'))m='peryear';
+if(toks.includes('dark'))document.documentElement.setAttribute('data-theme','dark');
+if(toks.includes('light'))document.documentElement.setAttribute('data-theme','light');
+if(toks.includes('learn'))$('learn').open=true;
+geometry();build();render(false);table();
+if(toks.includes('tip'))requestAnimationFrame(()=>{const w=by['Second World War'];show(w,null);pinned=w;});
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{const pm=pinned;hide(true);geometry();build();cur=new Map();render(false);if(pm){show(pm,null);pinned=pm;}},150);});
+})();
+</script>
+
+</body></html>
