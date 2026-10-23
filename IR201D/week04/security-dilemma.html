@@ -1,0 +1,480 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><style>body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>Arden and Belmar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one column. Header, the two states side by side with the tension gauge between, the intelligence report,
+   five choices, the year log. The end panel replaces the choices and reveals Belmar's side. */
+:root{
+  color-scheme:light;
+  --bg:#f6f5f1; --surface:#fdfcf9; --ink:#121210; --ink2:#4b4a45; --ink3:#6d6b64; --rule:rgba(18,18,16,.14); --grid:rgba(18,18,16,.07);
+  --accent:#9a7637; --arden:#2f5ea8; --belmar:#8a4b2a; --war:#b8372d; --ok:#3f7a4a; --warn:#b5781a;
+  --display:'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
+  --body:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --bg:#1c2738; --surface:#25334a; --ink:#f1f4f9; --ink2:#cdd5e1; --ink3:#9daabd; --rule:rgba(255,255,255,.16); --grid:rgba(255,255,255,.09);
+  --accent:#e6c98f; --arden:#8fbcff; --belmar:#f5ad7e; --war:#ff8070; --ok:#8cc591; --warn:#e2b252;}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --bg:#1c2738; --surface:#25334a; --ink:#f1f4f9; --ink2:#cdd5e1; --ink3:#9daabd; --rule:rgba(255,255,255,.16); --grid:rgba(255,255,255,.09);
+  --accent:#e6c98f; --arden:#8fbcff; --belmar:#f5ad7e; --war:#ff8070; --ok:#8cc591; --warn:#e2b252;}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:68rem;margin:0 auto;padding-block:28px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+button{font:inherit}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3)}
+.theme-toggle{width:38px;height:38px;border-radius:50%;border:1px solid var(--rule);background:var(--surface);color:var(--ink);cursor:pointer;flex:none}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(38px,6vw,68px);line-height:1.02;margin:0 0 8px;letter-spacing:-.01em}
+.lede{font-size:clamp(16px,1.5vw,19px);color:var(--ink2);margin:0}
+.lede b{color:var(--ink)}
+.how{font-size:14px;color:var(--ink3);margin:6px 0 0}
+
+.board{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:stretch}
+.state{background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:18px 20px;display:grid;gap:12px;min-width:0}
+.state h2{margin:0;font-family:var(--display);font-size:clamp(24px,2.6vw,32px);line-height:1.1;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.state h2 small{font-family:var(--body);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.state.a h2{color:var(--arden)}.state.b h2{color:var(--belmar)}
+.row{display:grid;grid-template-columns:7.5rem 1fr;gap:10px;align-items:center;font-size:14px;color:var(--ink2)}
+.icons{display:flex;flex-wrap:wrap;gap:4px;min-height:22px;align-items:center}
+.icons svg{width:18px;height:22px;flex:none}
+.icons .n{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink);margin-left:6px;font-size:14px}
+.meter{height:10px;border-radius:5px;background:var(--grid);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:5px;transition:width .5s}
+.unknown{font-size:14px;color:var(--ink3);font-style:italic}
+.gauge{display:grid;justify-items:center;align-content:center;gap:8px;width:7.5rem}
+.gauge .lab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);font-weight:600;text-align:center}
+.gauge .tube{width:22px;height:170px;border-radius:11px;background:var(--grid);position:relative;overflow:hidden;border:1px solid var(--rule)}
+.gauge .tube i{position:absolute;left:0;right:0;bottom:0;transition:height .6s,background .6s}
+.gauge .v{font-family:var(--display);font-size:28px;font-weight:600;font-variant-numeric:tabular-nums}
+.gauge .yr{font-size:13px;color:var(--ink2);text-align:center}
+.gauge .risk{font-size:13px;line-height:1.25;color:var(--war);text-align:center;font-weight:600}
+.gauge .risk b{font-size:16px}
+
+.report{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--belmar);border-radius:12px;padding:16px 20px}
+.report .eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--belmar);font-weight:600;margin:0 0 8px}
+.report ul{margin:0;padding-left:20px;display:grid;gap:5px}
+.report li{font-size:16px}
+.report .said{font-family:var(--display);font-size:18px;color:var(--ink);margin:10px 0 0}
+.report .said span{font-family:var(--body);font-size:12px;color:var(--ink3);display:block}
+
+.choices{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.choice{all:unset;box-sizing:border-box;cursor:pointer;position:relative;border:1.5px solid var(--rule);background:var(--surface);border-radius:14px;padding:18px 18px 20px;display:grid;gap:12px;align-content:start;transition:border-color .15s,transform .15s}
+.choice:hover{border-color:var(--ink2);transform:translateY(-2px)}
+.choice:focus-visible{outline:3px solid var(--arden);outline-offset:2px}
+.choice .key{position:absolute;top:12px;right:14px;font-size:12px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.choice .ic{height:40px;display:flex;align-items:center;gap:4px;color:var(--arden)}
+.choice .ic svg{height:40px;width:auto}
+.choice .t{font-family:var(--display);font-size:clamp(20px,1.9vw,26px);font-weight:600;line-height:1.1;color:var(--ink)}
+@media (min-width:861px){.choice .t{min-height:2.2em}}
+.choice .fx{display:grid;gap:6px}
+.choice.strike .fx div{color:var(--ink);font-size:clamp(17px,1.5vw,21px);font-weight:600}
+.choice .fx div{display:flex;align-items:baseline;gap:8px;font-size:clamp(15px,1.3vw,18px);color:var(--ink2);line-height:1.2}
+.choice .fx b{font-size:clamp(22px,2vw,28px);color:var(--ink);font-variant-numeric:tabular-nums;min-width:2.1ch;letter-spacing:-.02em}
+.choice .fx .if{font-size:14px;color:var(--ink3)}
+.choice.strike{border-color:var(--war)}
+.choice.strike .t,.choice.strike .ic,.choice.strike .fx b{color:var(--war)}
+.prompt{font-size:clamp(18px,1.7vw,22px);color:var(--ink2);margin:0 0 12px}
+.prompt b{color:var(--ink)}
+
+.log h3,.end h3,.notes h3{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);margin:0 0 8px}
+.log ol{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.log li{display:grid;grid-template-columns:4.5rem 1fr;gap:10px;font-size:14px;color:var(--ink2);padding:6px 0;border-bottom:1px solid var(--grid)}
+.log li b{color:var(--ink)}
+
+.end{background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:22px 24px;display:grid;gap:18px}
+.end .verdict{font-family:var(--display);font-size:clamp(28px,3.4vw,42px);line-height:1.1;margin:0}
+.end .verdict.war{color:var(--war)}
+.end .verdict.peace{color:var(--ok)}
+.end .verdict.armed{color:var(--warn)}
+.end.war{border:2px solid var(--war)}.end.peace{border:2px solid var(--ok)}.end.armed{border:2px solid var(--warn)}
+/* Result card: fills the screen when the game ends. Red war, green peace, amber armed peace. */
+#overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px));background:rgba(10,12,18,.55);backdrop-filter:blur(3px)}
+#overlay .card{width:min(48rem,100%);border-radius:22px;padding:clamp(24px,6vh,56px) clamp(20px,4vw,48px);text-align:center;color:#fff;box-shadow:0 24px 70px rgba(0,0,0,.4);display:grid;gap:clamp(10px,2vh,18px);justify-items:center;animation:pop .35s ease-out}
+#overlay.war .card{background:#b3322a}#overlay.peace .card{background:#2e7a45}#overlay.armed .card{background:#a8690f}
+#overlay .big{font-family:var(--display);font-size:clamp(56px,13vh,128px);font-weight:700;letter-spacing:.05em;line-height:.95;margin:0}
+#overlay .sub{font-family:var(--display);font-size:clamp(20px,3.2vh,32px);margin:0;line-height:1.2}
+#overlay .warline{justify-content:center;color:#fff}#overlay .warline span,#overlay .warline i{color:rgba(255,255,255,.8)}
+#overlay .who{font-size:clamp(16px,2.2vh,20px);margin:0;color:rgba(255,255,255,.92)}
+#overlay .who b{color:#fff}
+#overlay button{margin-top:8px;border:0;border-radius:999px;padding:12px 26px;background:#fff;color:#111;font-weight:700;font-size:16px;cursor:pointer}
+#overlay button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+@keyframes pop{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){#overlay .card{animation:none}}
+.warline{margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;font-size:clamp(16px,1.6vw,20px);color:var(--ink)}
+.accline{margin:0;font-size:clamp(15px,1.5vw,18px);color:var(--ink2)}
+#overlay .accline{color:rgba(255,255,255,.92)}
+.warline b{font-size:1.5em;font-variant-numeric:tabular-nums}
+.warline span{font-size:.8em;color:var(--ink3)}
+.warline i{font-style:normal;color:var(--ink3);font-size:.85em}
+.end .reveal{font-size:17px;color:var(--ink);margin:0}
+.stats{display:flex;flex-wrap:wrap;gap:28px;font-variant-numeric:tabular-nums}
+.stats .k{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+.stats .note{align-self:end;font-size:15px;color:var(--ink3);padding-bottom:6px}
+.stats .v{font-size:30px;font-weight:600;letter-spacing:-.02em}
+.charts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+@media (max-width:1000px){.charts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.charts{grid-template-columns:1fr}}
+.lc{display:block;width:100%;height:auto}
+.tbl{overflow-x:auto}
+.tbl table{border-collapse:collapse;width:100%;font-size:14px}
+.tbl th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);text-align:left;padding:0 12px 7px 0;border-bottom:1px solid var(--rule);font-weight:600}
+.tbl td{padding:7px 12px 7px 0;border-bottom:1px solid var(--grid);vertical-align:top;color:var(--ink2)}
+.tbl td.f{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+.qs{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--display);font-size:clamp(17px,1.6vw,20px);color:var(--ink)}
+.again{display:flex;flex-wrap:wrap;gap:10px}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:999px;padding:9px 18px;cursor:pointer;font-weight:600;font-size:14px}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.notes{color:var(--ink2);font-size:15px}
+.notes p{margin:0 0 10px}
+details.teacher{font-size:14px;color:var(--ink2)}
+details.teacher summary{cursor:pointer;color:var(--ink3);font-size:13px}
+details.teacher label{display:inline-flex;align-items:center;gap:6px;margin:8px 16px 0 0}
+details.teacher select{font:inherit;padding:4px 8px;border-radius:8px;border:1px solid var(--rule);background:var(--surface);color:var(--ink)}
+.meta{font-size:13px;color:var(--ink3)}
+
+@media (max-width:860px){.choices{grid-template-columns:repeat(2,minmax(0,1fr))}.choice.strike{grid-column:1/-1;min-height:0}}
+@media (max-width:640px){
+  .board{grid-template-columns:1fr 1fr;gap:10px}
+  .gauge{grid-column:1/-1;grid-row:1;width:auto;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px}
+  .gauge .tube{width:100%;height:14px;border-radius:7px}
+  .gauge .tube i{top:0;bottom:0;left:0;right:auto;transition:width .6s,background .6s}
+  .gauge .v{font-size:20px}
+  .state{padding:14px}
+  .row{grid-template-columns:1fr;gap:4px}
+  .choice{min-height:0}
+}
+@media (min-width:1500px){.wrap{max-width:86rem}}
+/* Projector fit: on wide screens the whole game (header to choices) fits one screen, sizes follow screen height */
+@media (min-width:861px){
+  .wrap{padding-block:12px 60px;gap:clamp(8px,1.6vh,16px)}
+  .top{margin-bottom:-4px}
+  header{display:flex;align-items:baseline;gap:8px 24px;flex-wrap:wrap}
+  h1{font-size:clamp(30px,5.4vh,56px);margin:0}
+  .lede{font-size:clamp(15px,2.2vh,20px)}
+  .state{padding:clamp(10px,1.6vh,18px) 20px;gap:clamp(2px,.6vh,10px)}
+  .state h2{font-size:clamp(22px,3.6vh,32px)}
+  .row{min-height:clamp(24px,3.7vh,36px);font-size:clamp(13px,1.9vh,16px)}
+  .gauge .tube{height:clamp(64px,11vh,150px)}
+  .gauge .v{font-size:clamp(22px,3.6vh,32px)}
+  .report{padding:clamp(8px,1.4vh,16px) 20px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 32px}
+  .report .eyebrow{margin:0;flex-basis:100%}
+  .report ul{display:flex;flex-wrap:wrap;gap:2px 28px;padding:0;list-style:none}
+  .report li{font-size:clamp(15px,2.2vh,19px)}
+  .report .said{margin:0;font-size:clamp(15px,2.2vh,19px);color:var(--ink2)}
+  .report .said span{display:inline;margin-left:10px}
+  .prompt{margin:0 0 clamp(6px,1vh,12px)}
+  .choice{padding:clamp(10px,1.8vh,18px) 16px clamp(12px,2vh,20px);gap:clamp(4px,1vh,12px)}
+  .choice .ic,.choice .ic svg{height:clamp(24px,4.2vh,40px)}
+  .choice .t{font-size:clamp(18px,3vh,26px)}
+  .choice .fx b{font-size:clamp(20px,3.2vh,28px)}
+  .choice .fx div{font-size:clamp(14px,2vh,18px)}
+}
+@media (prefers-reduced-motion: reduce){.meter i,.gauge .tube i,.choice{transition:none}}
+</style>
+
+<div class="wrap">
+  <div class="top"><span class="brand">IR 201 · Week 4 · The security dilemma</span>
+    <button class="theme-toggle" id="theme" type="button" aria-label="Switch light or dark theme">◐</button></div>
+
+  <header>
+    <h1>Arden and Belmar</h1>
+    <p class="lede">You govern <b>Arden</b>. You cannot see what <b>Belmar</b> wants. Stay safe for <b>eight years</b>, and keep money for welfare.</p>  </header>
+
+  <section class="board" aria-label="The two states">
+    <div class="state a">
+      <h2>Arden <small>You</small></h2>
+      <div class="row"><span>Missiles</span><div class="icons" id="a-mis"></div></div>
+      <div class="row"><span>Air defences</span><div class="icons" id="a-def"></div></div>
+      <div class="row"><span>Welfare</span><div><div class="meter"><i id="a-w" style="background:var(--arden)"></i></div></div></div>
+      <div class="row"><span>Safety</span><div><div class="meter"><i id="a-s" style="background:var(--arden)"></i></div></div></div>
+    </div>
+    <div class="gauge" aria-live="polite">
+      <span class="lab">Tension</span>
+      <div class="tube"><i id="g-fill"></i></div>
+      <span class="v" id="g-v">0</span>
+      <span class="risk" id="g-risk" hidden></span>
+      <span class="yr" id="g-yr">Year 1 of 8</span>
+    </div>
+    <div class="state b">
+      <h2>Belmar <small>Them</small></h2>
+      <div class="row"><span>Missiles</span><div class="icons" id="b-mis"></div></div>
+      <div class="row"><span>Air defences</span><div class="icons" id="b-def"></div></div>
+      <div class="row"><span>Welfare</span><span class="unknown" id="b-wq">?</span><div id="b-wm" hidden><div class="meter"><i id="b-w" style="background:var(--belmar)"></i></div></div></div>
+      <div class="row"><span>Intentions</span><span class="unknown" id="b-want">?</span></div>
+    </div>
+  </section>
+
+  <section class="report" id="report" aria-live="polite"></section>
+
+  <section id="play">
+    <p class="prompt" id="prompt"></p>
+    <div class="choices" id="choices" role="group" aria-label="Your choice this year"></div>
+  </section>
+
+  <section class="end" id="end" hidden></section>
+  <div id="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="ov-big"></div>
+
+  <section class="log"><h3>What happened</h3><ol id="log"></ol></section>
+
+  <section class="notes">
+    <details class="teacher">
+      <summary>Teacher settings</summary>
+      <label for="set-type">Belmar is <select id="set-type"><option value="random">secret, random (2 in 3 peaceful)</option><option value="peaceful">peaceful</option><option value="greedy">greedy</option></select></label>
+      <p class="meta">The setting applies from the next new game. In "random", nobody sees Belmar’s type until the end.</p>
+    </details>
+    <p class="meta">Arden and Belmar are fictional. The numbers are a teaching model, not data. IR 201 International Relations Theory, discussion section. Built October 23, 2026.</p>
+  </section>
+</div>
+
+<script>
+/* ENGINE START */
+const YEARS = 8;
+const CHOICES = {
+  missiles: {t: "Build missiles", d: "Welfare −2"},
+  defence:  {t: "Build air defences", d: "Welfare −2"},
+  hold:     {t: "Hold steady", d: "Welfare +1"},
+  inspect:  {t: "Offer arms cuts", d: "Both cut 1 missile, if Belmar agrees"},
+  strike:   {t: "Strike first", d: "Attack now"}
+};
+function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+function newGame(type) {
+  return {year: 1, a: 3, d: 2, w: 16, b: 3, bd: 2, bw: 16, F: 40, type, over: false, outcome: null, hist: [], lastB: null};
+}
+function security(s) { return clamp(50 + 7 * (s.a + s.d - s.b), 0, 100); }
+// Chance (in %) that a border clash turns into war this year: none below tension 60, 18% at 100
+function accidentRisk(T) { return T >= 60 ? (T - 55) / 2.5 : 0; }
+function tension(s, armA, armB) { return clamp(Math.round(20 + 5 * (s.a + s.b - 6) + 14 * armA + 14 * armB), 0, 100); }
+// Attacker: its missiles, plus 50% for surprise. Defender: its missiles plus its air defences.
+// In an accident nobody gets surprise, so both sides count missiles plus air defences.
+function warResult(s, attacker) {
+  const A = attacker === "Arden" ? s.a * 1.5 : s.a + s.d, B = attacker === "Belmar" ? s.b * 1.5 : s.b + s.bd;
+  return {result: A > B ? "won" : A < B ? "lost" : "draw", A: Math.round(A * 10) / 10, B: Math.round(B * 10) / 10};
+}
+// One year: Arden chooses, Belmar's intelligence sees it, Belmar reacts, then a chance of an accident.
+function step(s, choice, rng) {
+  const rec = {year: s.year, choice, seen: "", bMove: "", Fbefore: s.F, accident: false, tension: 0};
+  let armA = 0, armB = 0, inspAccepted = false;
+  if (choice === "strike") {
+    rec.seen = "Arden attacks"; rec.bMove = "fights back";
+    s.over = true; s.outcome = {kind: "war", by: "Arden", ...warResult(s, "Arden")};
+    rec.tension = 100; s.hist.push(rec); return rec;
+  }
+  if (choice === "missiles") { s.a += 2; s.w -= 2; armA = 1; rec.seen = "Arden built missiles"; s.F += 16; }
+  if (choice === "defence") {
+    s.d += 2; s.w -= 2; armA = 0.5;
+    if (rng() < 0.6) { rec.seen = "Arden built air defences"; s.F += 4; }
+    else { rec.seen = "Arden built new weapons (type unclear)"; s.F += 10; }
+  }
+  if (choice === "hold") { s.w += 1; rec.seen = "Arden built nothing"; s.F -= 6; }
+  if (choice === "inspect") {
+    rec.seen = "Arden offered arms cuts";
+    if (s.type === "peaceful" && s.F < 65) { inspAccepted = true; s.F -= 15; s.w += 1; }
+    else if (s.type === "peaceful") { s.F -= 3; }
+  }
+  s.F += 3 * Math.max(0, s.a - s.b);           // a stronger Arden is a worry in itself
+  s.F = clamp(s.F, 0, 100);
+  // Belmar's move (Belmar pays for weapons the same way: 1 welfare per unit built, +1 in a year it builds nothing)
+  const b0 = s.b, bd0 = s.bd;
+  if (s.type === "peaceful") {
+    if (choice === "inspect") rec.inspect = inspAccepted ? "yes" : "no";
+    if (inspAccepted) { if (s.b > 2) s.b -= 1; if (s.a > 2) s.a -= 1; rec.bMove = "agreed, and both sides scrapped a missile"; }
+    else if (s.F >= 90 && s.a >= s.b) {
+      rec.bMove = "attacked first"; s.over = true; s.outcome = {kind: "war", by: "Belmar", ...warResult(s, "Belmar")};
+    }
+    else if (s.F >= 60) { s.b += 2; armB = 1; rec.bMove = "built missiles"; }
+    else if (s.F >= 40) { s.bd += 2; armB = 0.5; rec.bMove = "built air defences"; }
+    else rec.bMove = "built nothing";
+    if (choice === "inspect" && !inspAccepted && !s.over) rec.bMove = "said no to the deal and " + rec.bMove;
+  } else {
+    if (choice === "inspect") rec.inspect = "no";
+    if (s.b > s.a + s.d + 2) {
+      rec.bMove = "invaded"; s.over = true; s.outcome = {kind: "war", by: "Belmar", ...warResult(s, "Belmar")};
+    }
+    else if (s.a + s.d >= s.b + 4) rec.bMove = "built nothing";
+    else { s.b += 1; armB = 1; rec.bMove = "built missiles"; }
+    if (choice === "inspect" && !s.over) rec.bMove = "said no to the deal and " + rec.bMove;
+  }
+  if (!s.over) { const built = Math.max(0, s.b - b0) + Math.max(0, s.bd - bd0); s.bw += built ? -built : 1; }
+  rec.tension = tension(s, armA, armB);
+  rec.risk = accidentRisk(rec.tension);
+  if (!s.over && rec.risk > 0 && rng() < rec.risk / 100) {
+    rec.accident = true; s.over = true; s.outcome = {kind: "war", by: "accident", ...warResult(s, null)};
+  }
+  rec.Fafter = s.F; rec.bw = s.bw; rec.a = s.a; rec.d = s.d; rec.b = s.b; rec.bd = s.bd; rec.w = s.w;
+  s.hist.push(rec); s.lastB = rec.bMove;
+  if (!s.over) {
+    s.year += 1;
+    if (s.year > YEARS) {
+      s.over = true;
+      s.outcome = {kind: s.a + s.d + s.b + s.bd <= 12 ? "peace" : "armed"};
+    }
+  }
+  return rec;
+}
+/* ENGINE END */
+
+(() => {
+const $ = id => document.getElementById(id);
+const root = document.documentElement;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+try { const t = localStorage.getItem("ir201-theme"); if (t === "light" || t === "dark") root.setAttribute("data-theme", t); } catch (e) {}
+$("theme").onclick = () => {
+  const dark = root.getAttribute("data-theme") === "dark" || (!root.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+  const t = dark ? "light" : "dark"; root.setAttribute("data-theme", t);
+  try { localStorage.setItem("ir201-theme", t); } catch (e) {}
+  if (G.over) drawChart();
+};
+
+const MIS = '<svg viewBox="0 0 18 22" aria-hidden="true"><path d="M9 1 L13 8 L13 17 L16 21 L2 21 L5 17 L5 8 Z" fill="currentColor"/></svg>';
+const DEF = '<svg viewBox="0 0 18 22" aria-hidden="true"><path d="M9 1 L16 4 L16 11 C16 16 12 19 9 21 C6 19 2 16 2 11 L2 4 Z" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+const HOLD = '<svg viewBox="0 0 22 22" aria-hidden="true"><rect x="5" y="3" width="4" height="16" rx="1.5" fill="currentColor"/><rect x="13" y="3" width="4" height="16" rx="1.5" fill="currentColor"/></svg>';
+const DEAL = '<svg viewBox="0 0 26 22" aria-hidden="true"><path d="M3 7 H19 L15 3 M23 15 H7 L11 19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const BOOM = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1 L14.5 8 L21.5 5.5 L17 11.5 L23 15 L15.5 15.5 L16 23 L11.5 17 L6 22 L7.5 15 L1 13 L7.5 10 L4 3.5 L10.5 7 Z" fill="currentColor"/></svg>';
+const FX = {
+  missiles: {ic: MIS + MIS, fx: [["+2", "missiles"], ["−2", "welfare"]]},
+  defence:  {ic: DEF + DEF, fx: [["+2", "air defences"], ["−2", "welfare"]]},
+  hold:     {ic: HOLD, fx: [["+1", "welfare"]]},
+  inspect:  {ic: DEAL, fx: [["−1", "missile each"]], note: "Only if Belmar agrees"},
+  strike:   {ic: BOOM, fx: [["", "War starts now"]]}
+};
+function icons(el, n, svg, col) {
+  el.style.color = col;
+  el.innerHTML = svg.repeat(Math.min(n, 16)) + `<span class="n">${n}</span>`;
+}
+let G;
+const pickType = () => { const v = $("set-type").value; return v === "random" ? (Math.random() < 2 / 3 ? "peaceful" : "greedy") : v; };
+const SAID = "Our forces are for defence only.";
+
+function render() {
+  const s = G, last = s.hist[s.hist.length - 1];
+  icons($("a-mis"), s.a, MIS, "var(--arden)"); icons($("a-def"), s.d, DEF, "var(--arden)");
+  icons($("b-mis"), s.b, MIS, "var(--belmar)"); icons($("b-def"), s.bd, DEF, "var(--belmar)");
+  $("a-w").style.width = Math.min(100, Math.max(0, s.w) / 24 * 100) + "%";
+  $("b-w").style.width = Math.min(100, Math.max(0, s.bw) / 24 * 100) + "%";
+  $("b-wq").hidden = s.over; $("b-wm").hidden = !s.over;  // Belmar's budget is secret until the end
+  $("a-s").style.width = security(s) + "%";
+  const T = last ? last.tension : tension(s, 0, 0);
+  const fill = $("g-fill"); fill.style.background = "var(--war)"; fill.style.opacity = (0.35 + 0.65 * T / 100).toFixed(2);
+  $("g-v").style.color = T >= 60 ? "var(--war)" : "";
+  if (matchMedia("(max-width:640px)").matches) { fill.style.width = T + "%"; fill.style.height = ""; } else { fill.style.height = T + "%"; fill.style.width = ""; }
+  $("g-v").textContent = T;
+  const R = Math.round(accidentRisk(T)), gr = $("g-risk"); gr.hidden = !R || s.over; gr.innerHTML = `Accident risk <b>${R}%</b>`;
+  $("g-yr").textContent = s.over ? "Game over" : `Year ${s.year} of ${YEARS}`;
+  // intelligence report
+  const items = [];
+  if (!last) items.push("Belmar is as strong as you.");
+  else {
+    items.push(`Belmar <b>${esc(last.bMove)}</b>.`);
+    if (last.choice === "inspect" && last.inspect === "yes") items.push("Inspectors on both sides confirmed the cuts.");
+    if (last.risk > 0) items.push(`The border is on high alert: a <b>${Math.round(last.risk)}%</b> chance each year that a clash turns into war.`);
+  }
+  $("report").innerHTML = `<p class="eyebrow">${s.over ? "Final report" : `Year ${s.year} · intelligence report`}</p><ul>${items.map(x => `<li>${x}</li>`).join("")}</ul>` +
+    `<p class="said">"${SAID}"<span>Belmar, every year</span></p>`;
+  // choices
+  $("prompt").innerHTML = `<b>Year ${s.year}.</b> What does Arden do?`;
+  $("choices").innerHTML = Object.entries(CHOICES).map(([k, c], i) => {
+    const f = FX[k];
+    return `<button type="button" class="choice${k === "strike" ? " strike" : ""}" data-k="${k}" aria-label="${esc(c.t)}"><span class="key">${i + 1}</span><span class="ic">${f.ic}</span><span class="t">${esc(c.t)}</span>` +
+      `<span class="fx">${f.fx.map(([n, l]) => `<div>${n ? `<b>${n}</b>` : ""}<span>${l}</span></div>`).join("")}${f.note ? `<div class="if">${f.note}</div>` : ""}</span></button>`;
+  }).join("");
+  $("choices").querySelectorAll("button").forEach(b => b.onclick = () => play(b.dataset.k));
+  $("play").hidden = s.over;
+  // log
+  $("log").innerHTML = s.hist.map(r => `<li><b>Year ${r.year}</b><span>Arden: ${esc(CHOICES[r.choice].t.toLowerCase())}. Belmar ${esc(r.bMove)}.${r.accident ? " A border clash spiralled into war." : ""}</span></li>`).join("") || "<li><b>Year 1</b><span>Nothing yet.</span></li>";
+  if (s.over) showEnd();
+}
+
+function play(k) { if (G.over) return; step(G, k, Math.random); render(); }
+
+function warLine() {
+  const o = G.outcome, s = G; if (o.kind !== "war") return "";
+  const ar = `${s.a} missiles + ${s.d} air defences`, br = `${s.b} missiles + ${s.bd} air defences`;
+  let l, r;
+  if (o.by === "Arden") { l = `Your attack <b>${o.A}</b> <span>(${s.a} missiles + 50% surprise)</span>`; r = `Belmar’s defence <b>${o.B}</b> <span>(${br})</span>`; }
+  else if (o.by === "Belmar") { l = `Your defence <b>${o.A}</b> <span>(${ar})</span>`; r = `Belmar’s attack <b>${o.B}</b> <span>(${s.b} missiles + 50% surprise)</span>`; }
+  else { l = `Arden <b>${o.A}</b> <span>(${ar})</span>`; r = `Belmar <b>${o.B}</b> <span>(${br})</span>`; }
+  const last = s.hist[s.hist.length - 1];
+  const acc = o.by === "accident" ? `<p class="accline">Tension was ${last.tension}: a ${Math.round(last.risk)}% chance that year that a border clash turns into war. This time it did. No one had the advantage of surprise.</p>` : "";
+  return `<p class="warline">${l}<i>vs</i>${r}</p>${acc}`;
+}
+function verdict(o) {
+  if (o.kind === "peace") return ["Eight years of peace, and money to spare", "peace"];
+  if (o.kind === "armed") return ["Eight years of peace, at a price", "armed"];
+  const res = o.result === "won" ? "Arden won, at a terrible cost." : o.result === "lost" ? "Arden lost." : "No winner: both sides are badly damaged.";
+  if (o.by === "Arden") return [`You started a war. ${res}`, "war"];
+  if (o.by === "accident") return [`Nobody chose war, but it came. ${res}`, "war"];
+  return [`Belmar attacked. ${res}`, "war"];
+}
+function revealText() {
+  const s = G, peace = s.type === "peaceful";
+  const maxF = Math.max(...s.hist.map(r => r.Fafter ?? r.Fbefore));
+  if (peace) return `Belmar was <b>peaceful</b>. It only wanted to be safe, like you.` +
+    (s.outcome.kind === "war" && s.outcome.by === "Belmar" ? " It struck out of fear." : "");
+  return "Belmar was <b>greedy</b>. It was waiting for you to look weak.";
+}
+function showEnd() {
+  const s = G, [v, cls] = verdict(s.outcome), e = $("end"); e.hidden = false; e.className = "end " + cls;
+  const qs = s.type === "peaceful"
+    ? ["Why did a peaceful Belmar look dangerous?", "Could you have known?"]
+    : ["What kept Belmar in check?", "What could have told you its type?"];
+  e.innerHTML = `<p class="verdict ${cls}">${esc(v)}</p>${warLine()}<p class="reveal">${revealText()}</p>
+    <div class="stats"><div><div class="k">Arden’s welfare</div><div class="v" style="color:var(--arden)">${s.w}</div></div><div><div class="k">Belmar’s welfare</div><div class="v" style="color:var(--belmar)">${s.bw}</div></div><div class="note">Both started at 16. Every weapon cost welfare.</div></div>
+    ${s.hist.length < 2 ? "" : `<div class="charts"><div><h3>Belmar’s hidden fear</h3><svg id="chart-f" class="lc" viewBox="0 0 340 230" role="img" aria-label="Belmar’s fear of Arden, 0 to 100, by year"></svg></div>
+    <div><h3>Missiles</h3><svg id="chart-m" class="lc" viewBox="0 0 340 230" role="img" aria-label="Missiles of Arden and Belmar, by year"></svg></div>
+    <div><h3>Welfare</h3><svg id="chart-w" class="lc" viewBox="0 0 340 230" role="img" aria-label="Welfare of Arden and Belmar, by year"></svg></div></div>`}
+    <details class="teacher"><summary>Year by year</summary><div class="tbl"><table><thead><tr><th>Year</th><th>What Arden did</th><th>What Belmar’s intelligence saw</th><th>Belmar’s fear</th><th>What Belmar did</th></tr></thead><tbody>${s.hist.map(r => `<tr><td>${r.year}</td><td>${esc(CHOICES[r.choice].t)}</td><td>${esc(r.seen)}</td><td class="f">${r.Fbefore} → ${r.Fafter ?? "-"}</td><td>${esc(r.bMove)}</td></tr>`).join("")}</tbody></table></div></details>
+    <div><h3>Think about it</h3><ol class="qs">${qs.map(q => `<li>${esc(q)}</li>`).join("")}</ol></div>
+    <div class="again"><button class="btn" id="again" type="button">Play again</button><button class="btn ghost" id="again-same" type="button">Same Belmar again</button></div>`;
+  $("again").onclick = () => start(pickType());
+  $("again-same").onclick = () => start(G.type);
+  drawChart();
+  if (!G.shown) { G.shown = true; showOverlay(v, cls); }
+}
+function showOverlay(v, cls) {
+  const o = $("overlay"), big = {war: "WAR", peace: "PEACE", armed: "ARMED PEACE"}[cls];
+  o.className = cls; o.hidden = false;
+  o.innerHTML = `<div class="card"><p class="big" id="ov-big">${big}</p><p class="sub">${esc(v)}</p>${warLine()}<p class="who">${revealText()}</p><button type="button" id="ov-close">See what happened</button></div>`;
+  const close = () => { o.hidden = true; $("end").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"}); };
+  $("ov-close").onclick = close; o.onclick = e => { if (e.target === o) close(); };
+  $("ov-close").focus();
+}
+function lineChart(id, series, yMax, ticks) {
+  const svg = $(id); if (!svg) return; const cs = getComputedStyle(root), c = k => cs.getPropertyValue("--" + k).trim();
+  const W = 340, H = 230, m = {l: 32, r: 80, t: 12, b: 30}, n = G.hist.length;
+  const X = i => m.l + i / Math.max(1, n) * (W - m.l - m.r), Y = v => H - m.b - v / yMax * (H - m.t - m.b);
+  let o = "";
+  ticks.forEach(v => { o += `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v ? c("grid") : c("rule")}"/><text x="${m.l - 8}" y="${Y(v) + 4}" font-size="14" text-anchor="end" fill="${c("ink3")}">${v}</text>`; });
+  for (let i = 0; i <= n; i++) if (i === 0 || i === n || n <= 5 || i % 2 === 0) o += `<text x="${X(i)}" y="${H - 8}" font-size="14" text-anchor="middle" fill="${c("ink3")}">${i === 0 ? "Start" : "Yr " + i}</text>`;
+  const ends = [];
+  series.forEach(sr => {
+    o += `<path d="${sr.vals.map((v, i) => (i ? "L" : "M") + X(i).toFixed(1) + " " + (Y(v) + (sr.dy ? sr.dy[i] : 0)).toFixed(1)).join("")}" fill="none" stroke="${c(sr.col)}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>`;
+    ends.push({y: Y(sr.vals[sr.vals.length - 1]), t: `${sr.label} ${sr.vals[sr.vals.length - 1]}`, col: c(sr.col)});
+  });
+  ends.sort((p, q) => p.y - q.y); for (let i = 1; i < ends.length; i++) ends[i].y = Math.max(ends[i].y, ends[i - 1].y + 17);
+  ends.forEach(e => { o += `<text x="${X(n) + 8}" y="${e.y + 5}" font-size="15" font-weight="600" fill="${e.col}">${esc(e.t)}</text>`; });
+  svg.innerHTML = o;
+}
+function drawChart() {
+  if (!$("chart-m")) return;
+  const h = G.hist; let a = 3, b = 3;
+  const A = [3].concat(h.map(r => (a = r.a ?? a))), B = [3].concat(h.map(r => (b = r.b ?? b)));
+  const top = Math.max(10, Math.ceil(Math.max(...A, ...B) / 5) * 5), tk = []; for (let v = 0; v <= top; v += 5) tk.push(v);
+  const same = A.map((v, i) => v === B[i]);  // where both sides are equal, draw two parallel lines
+  lineChart("chart-m", [{vals: A, col: "arden", label: "Arden", dy: same.map(q => q ? -2.5 : 0)}, {vals: B, col: "belmar", label: "Belmar", dy: same.map(q => q ? 2.5 : 0)}], top, tk);
+  let wa = 16, wb = 16;
+  const WA = [16].concat(h.map(r => (wa = r.w ?? wa))), WB = [16].concat(h.map(r => (wb = r.bw ?? wb)));
+  const wtop = Math.max(25, Math.ceil(Math.max(...WA, ...WB) / 5) * 5), wtk = []; for (let v = 0; v <= wtop; v += 10) wtk.push(v);
+  const wsame = WA.map((v, i) => v === WB[i]);
+  lineChart("chart-w", [{vals: WA, col: "arden", label: "Arden", dy: wsame.map(q => q ? -2.5 : 0)}, {vals: WB, col: "belmar", label: "Belmar", dy: wsame.map(q => q ? 2.5 : 0)}], wtop, wtk);
+  lineChart("chart-f", [{vals: [h[0].Fbefore].concat(h.map(r => r.Fafter ?? r.Fbefore)), col: "war", label: "Fear"}], 100, [0, 50, 100]);
+}
+function start(type) { G = newGame(type); $("overlay").hidden = true; $("end").hidden = true; $("end").innerHTML = ""; render(); }
+start(pickType());
+addEventListener("keydown", e => { if (e.key === "Escape" && !$("overlay").hidden) { $("ov-close").click(); return; } if (G.over || e.target.closest("select")) return; const k = Object.keys(CHOICES)[Number(e.key) - 1]; if (k) play(k); });
+})();
+</script>
+
+</body></html>
