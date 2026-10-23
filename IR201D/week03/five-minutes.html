@@ -1,0 +1,867 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><style>body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>Five Minutes</title>
+<style>
+/* Layout: caption and live counter on the left, one chart canvas on the right; stacked on phones. */
+:root{
+  color-scheme:light;
+  --bg:#f8f8f6; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#4f4e4a; --ink3:#6c6a65; --rule:rgba(11,11,11,.13); --grid:rgba(11,11,11,.08);
+  --accent:#9a7637; --band:rgba(11,11,11,.045);
+  --us:#2a78d6; --cn:#eb6834; --eu:#1baf7a; --ru:#eda100; --in:#e87ba4; --jp:#008300; --su:#4a3aa7; --tw:#e34948;
+  --display:'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
+  --body:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#111112; --surface:#1a1a19; --ink:#f5f5f2; --ink2:#c3c2b7; --ink3:#9a9890; --rule:rgba(255,255,255,.13); --grid:rgba(255,255,255,.09);
+    --accent:#d2b277; --band:rgba(255,255,255,.05);
+    --us:#3987e5; --cn:#d95926; --eu:#199e70; --ru:#c98500; --in:#d55181; --jp:#008300; --su:#9085e9; --tw:#e66767;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#111112; --surface:#1a1a19; --ink:#f5f5f2; --ink2:#c3c2b7; --ink3:#9a9890; --rule:rgba(255,255,255,.13); --grid:rgba(255,255,255,.09);
+  --accent:#d2b277; --band:rgba(255,255,255,.05);
+  --us:#3987e5; --cn:#d95926; --eu:#199e70; --ru:#c98500; --in:#d55181; --jp:#008300; --su:#9085e9; --tw:#e66767;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--ink);text-decoration-color:var(--accent);text-underline-offset:3px}
+button{font:inherit}
+
+#bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:41}
+.top{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:calc(12px + env(safe-area-inset-top,0px)) 20px 12px;pointer-events:none}
+.top>*{pointer-events:auto}
+.brand{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3)}
+.theme-toggle{width:38px;height:38px;border-radius:50%;border:1px solid var(--rule);background:var(--surface);color:var(--ink);cursor:pointer;display:grid;place-items:center;font-size:15px}
+.theme-toggle:focus-visible,#chapters button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+#track{position:relative}
+#stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+#cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+.cap{position:absolute;left:clamp(16px,6vw,96px);top:17vh;max-width:min(30rem,calc(100vw - 32px));opacity:0;pointer-events:none;will-change:opacity,transform}
+.cap .eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin:0 0 10px;font-weight:600}
+.cap h1,.cap h2{font-family:var(--display);font-weight:600;line-height:1.06;margin:0 0 14px;letter-spacing:-.01em;text-wrap:balance}
+.cap h1{font-size:clamp(44px,7vw,92px)}
+.cap h2{font-size:clamp(28px,3.4vw,44px)}
+.cap p{margin:0 0 10px;color:var(--ink2);font-size:clamp(15px,1.2vw,18px);max-width:29rem}
+.cap p.small{font-size:13px;color:var(--ink3)}
+.cap.center{left:50%;top:30vh;text-align:center;max-width:min(48rem,calc(100vw - 32px))}
+.cap.center p{margin:0 auto 10px}
+.cap .sub{font-family:var(--display);font-size:clamp(20px,2.2vw,28px);color:var(--ink2);margin:0 0 18px}
+
+.counter{position:absolute;left:clamp(16px,6vw,96px);bottom:9vh;max-width:min(30rem,calc(100vw - 32px));opacity:0;pointer-events:none;font-variant-numeric:tabular-nums;display:flex;gap:clamp(16px,2.4vw,36px);flex-wrap:wrap}
+.counter .k{font-size:12px;color:var(--ink3);letter-spacing:.05em;text-transform:uppercase}
+.counter .v{font-size:clamp(28px,3.5vw,50px);font-weight:600;letter-spacing:-.03em;line-height:1.05}
+.counter .v small{font-size:.45em;font-weight:500;color:var(--ink2);letter-spacing:0;margin-left:3px}
+.counter .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:1px}
+
+.hint{position:absolute;left:50%;bottom:5vh;transform:translateX(-50%);font-size:13px;color:var(--ink3);text-align:center;pointer-events:none}
+.hint i{display:block;width:1px;height:30px;margin:8px auto 0;background:linear-gradient(var(--ink3),transparent)}
+
+#board{position:absolute;right:clamp(96px,9vw,140px);top:15vh;width:min(46rem,calc(100vw - 44rem));max-height:78vh;overflow-y:auto;opacity:0;pointer-events:none;font-variant-numeric:tabular-nums;scrollbar-width:thin;padding-right:6px}
+#board thead th{position:sticky;top:0;background:var(--bg);z-index:1}
+#board{-webkit-mask-image:linear-gradient(to bottom,#000 90%,transparent);mask-image:linear-gradient(to bottom,#000 90%,transparent)}
+#board.end{-webkit-mask-image:none;mask-image:none}
+#board table{width:100%;border-collapse:collapse;font-size:15px}
+#board th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);font-weight:600;text-align:left;padding:0 10px 8px 0;border-bottom:1px solid var(--rule)}
+#board td{padding:11px 10px 11px 0;border-bottom:1px solid var(--grid);vertical-align:top}
+#board td.n,#board th.n{text-align:right}
+#board td .src{display:block;font-size:12px;color:var(--ink3)}
+#board .pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;border:1px solid var(--rule);white-space:nowrap}
+#board .pill.uni{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+#board .pill.mid{background:var(--surface);color:var(--ink)}
+#board .pill.bi{background:transparent;color:var(--ink2);border-style:dashed}
+#board tr{transition:none}
+#board .rule{font-size:12px;color:var(--ink3);margin:12px 0 0;max-width:40rem}
+
+#chapters{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:30;display:flex;flex-direction:column;gap:13px;transition:opacity .3s}
+#chapters button{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;justify-content:flex-end;font-size:12px;color:var(--ink3)}
+#chapters button span{opacity:0;transition:opacity .2s;white-space:nowrap}
+#chapters button:hover span,#chapters button:focus-visible span{opacity:1}
+#chapters button i{width:7px;height:7px;border-radius:50%;border:1px solid var(--ink3);transition:background .2s,border-color .2s,transform .2s;flex:none}
+#chapters button.on{color:var(--ink)}
+#chapters button.on i{background:var(--accent);border-color:var(--accent);transform:scale(1.35)}
+#segs{display:none}
+
+.after{max-width:46rem;margin:0 auto;padding:12vh 20px 14vh;color:var(--ink2)}
+.after h2{font-family:var(--display);font-weight:600;color:var(--ink);font-size:clamp(26px,3vw,38px);line-height:1.1;margin:0 0 12px;text-wrap:balance}
+.after h3{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin:34px 0 8px}
+.after p,.after li{font-size:16px}
+.after ul{padding-left:20px;margin:0}
+.after li{margin:0 0 6px}
+.after .q{font-family:var(--display);font-size:clamp(22px,2.4vw,30px);color:var(--ink);line-height:1.25;margin:0 0 8px}
+.after .meta{font-size:13px;color:var(--ink3);margin-top:28px}
+.learn{margin-top:28px}
+.learn summary{display:inline-flex;align-items:center;gap:8px;cursor:pointer;list-style:none;font-size:14px;font-weight:600;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:7px 16px}
+.learn summary::-webkit-details-marker{display:none}
+.learn summary::before{content:'+';font-size:16px;line-height:1}
+.learn[open] summary::before{content:'\2212'}
+.learn summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+@media (max-width:760px){
+  .cap{top:68px}
+  .cap.center{top:22vh}
+  .cap h2{font-size:26px;margin-bottom:10px}
+  .cap p{font-size:15px;margin-bottom:6px}
+  .cap p.small{display:none}
+  .counter{top:auto;bottom:calc(46vh + 6px);gap:18px}
+  .counter .v{font-size:28px}
+  #chapters{display:none}
+  #segs{display:flex;position:fixed;top:calc(4px + env(safe-area-inset-top,0px));left:16px;right:16px;gap:3px;z-index:39}
+  #segs i{flex:1;height:2px;background:var(--rule);border-radius:1px}
+  #segs i.on{background:var(--accent)}
+  #bar{display:none}
+  #board{left:16px;right:16px;width:auto;top:auto;bottom:5vh;max-height:62vh}
+  #board table{font-size:13px}
+  #board .wide{display:none}
+  #board td{padding:7px 8px 7px 0}
+  #board .rule{display:none}
+}
+
+/* Week 3 additions: one ink per author, veto colours, the five-minute clock */
+:root{--walt:#255a8c;--sjo:#9a3366;--m1:#b4462f;--m2:#255a8c;--m3:#4f8a55;--m4:#b97a12;--m5:#7b5aa6}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--walt:#80b2e3;--sjo:#e389b6;--m1:#ec8a73;--m2:#80b2e3;--m3:#8cc591;--m4:#e2b252;--m5:#b9a0e0}}
+:root[data-theme="dark"]{--walt:#80b2e3;--sjo:#e389b6;--m1:#ec8a73;--m2:#80b2e3;--m3:#8cc591;--m4:#e2b252;--m5:#b9a0e0}
+#board.cases{width:min(34rem,calc(100vw - 46rem));top:19vh;-webkit-mask-image:none;mask-image:none}
+#board .case{display:grid;gap:18px}
+#board .case>div{border-left:3px solid var(--rule);padding:2px 0 2px 16px}
+#board .case>div:nth-child(2){border-left-color:var(--walt)}
+#board .when{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin:0 0 6px;font-weight:600}
+#board .qt{margin:0;color:var(--ink);font-family:var(--display);font-size:clamp(16px,1.3vw,19px);line-height:1.4}
+#board .qt2{margin:0;color:var(--ink2);font-size:15px}
+#board .who{margin:6px 0 0;font-size:12px;color:var(--ink3)}
+@media (max-width:760px){#board.cases{width:auto;top:auto;bottom:4vh;max-height:46vh}#board .case{gap:10px}#board .qt{font-size:14px}#board .qt2{font-size:13px}#board .case>div:nth-child(3){display:none}}
+#clock{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:42;display:flex;align-items:center;gap:10px;padding:6px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--rule);font-variant-numeric:tabular-nums;opacity:0;visibility:hidden;transition:opacity .3s}
+#clock .lab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+#clock .t{font-size:18px;font-weight:600;min-width:3.2em;text-align:right;color:var(--walt)}
+#clock .bar{width:80px;height:4px;border-radius:2px;background:var(--rule);overflow:hidden}
+#clock .bar i{display:block;height:100%;width:0;background:var(--walt)}
+#clock.up .t{color:var(--sjo)}#clock.up .bar i{background:var(--sjo)}
+@media (max-width:760px){body.clocking .brand{visibility:hidden}#clock .lab{display:none}#clock{top:calc(14px + env(safe-area-inset-top,0px))}}
+@media (prefers-reduced-motion: reduce){#clock{transition:none}}
+/* Player bar: play a scene, pause, replay, skip to its end, previous and next scene */
+#player{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:45;display:flex;align-items:center;gap:4px;padding:6px 8px;border-radius:999px;background:var(--surface);border:1px solid var(--rule);box-shadow:0 6px 24px rgba(0,0,0,.14);transition:opacity .3s}
+#player button{all:unset;box-sizing:border-box;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--ink)}
+#player button:hover{background:var(--band)}
+#player button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+#player button.main{width:48px;height:48px;background:var(--ink);color:var(--bg)}
+#player button.main:hover{background:var(--ink2)}
+#player svg{width:20px;height:20px;display:block}
+#player .lab{font-size:13px;color:var(--ink2);padding:0 12px 0 8px;white-space:nowrap;font-variant-numeric:tabular-nums;min-width:9.5rem}
+@media (max-width:760px){#player .lab{display:none}#player{bottom:calc(10px + env(safe-area-inset-bottom,0px))}#player button{width:36px;height:36px}#player button.main{width:44px;height:44px}}
+</style>
+
+<div id="bar"></div>
+<div class="top"><span class="brand">IR 201 · Week 3 · Walt and Sjoberg</span>
+  <button class="theme-toggle" id="theme" type="button" aria-label="Switch light or dark theme">◐</button></div>
+<div id="clock" aria-hidden="true"><span class="lab">Five Minute University</span><span class="t">0:00</span><span class="bar"><i></i></span></div>
+<nav id="chapters" aria-label="Scenes"></nav>
+<div id="player" role="toolbar" aria-label="Story controls">
+  <button type="button" id="pl-prev" aria-label="Previous scene" title="Previous scene (←)"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="4" width="2.4" height="12" rx="1" fill="currentColor"/><path d="M16 4 L7 10 L16 16 Z" fill="currentColor"/></svg></button>
+  <button type="button" id="pl-replay" aria-label="Back to the start of this scene" title="Back to the start of this scene (R)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 7.2 A6 6 0 1 1 4 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2.5 4 L5.6 7.6 L9.2 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <button type="button" id="pl-play" class="main" aria-label="Play" title="Play or pause (Space)"></button>
+  <button type="button" id="pl-end" aria-label="Skip to the end of this scene" title="End of this scene (E)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10 H13 M9 5.5 L13.5 10 L9 14.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="15" y="4" width="2.4" height="12" rx="1" fill="currentColor"/></svg></button>
+  <button type="button" id="pl-next" aria-label="Next scene" title="Next scene (→)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4 L13 10 L4 16 Z" fill="currentColor"/><rect x="14.6" y="4" width="2.4" height="12" rx="1" fill="currentColor"/></svg></button>
+  <span class="lab" id="pl-lab" aria-live="polite"></span>
+</div>
+<div id="segs" aria-hidden="true"></div>
+
+<section id="track" aria-label="Scroll story">
+  <div id="stage">
+    <canvas id="cv" role="img" aria-label="Animated scenes for Walt’s five concepts and Sjoberg’s five, joined by a zoom from the international system out to the Earth and down to one person"></canvas>
+    <div id="caps"></div>
+    <div id="counters"></div>
+    <div id="board" class="cases" aria-live="off"><div class="case">
+      <div><p class="when">What US intelligence said · October 2002</p><p class="qt">"Baghdad has chemical and biological weapons as well as missiles with ranges in excess of UN restrictions; if left unchecked, it probably will have a nuclear weapon during this decade."</p><p class="who">US National Intelligence Estimate, Key Judgments</p></div>
+      <div><p class="when">What inspectors found · September 2004</p><p class="qt">"ISG judges that Iraq unilaterally destroyed its undeclared chemical weapons stockpile in 1991. There are no credible indications that Baghdad resumed production of chemical munitions thereafter."</p><p class="who">Iraq Survey Group (Duelfer) report</p></div>
+      <div><p class="when">And on the other side</p><p class="qt2">The same report found that Saddam Hussein believed doubt about his weapons helped deter his enemies. Misperception ran both ways.</p></div>
+    </div></div>
+    <div class="hint" id="hint">Press play, or scroll<i></i></div>
+  </div>
+</section>
+
+<section class="after" id="outro">
+  <h2>Your five</h2>
+  <p class="q">If you could keep only five of these ten concepts, which would they be?</p>
+  <p>Walt’s five explain how states deal with each other. Sjoberg’s five ask who lives with the results, and where. Neither author says five is enough: Walt lists what a real expert would add, and Sjoberg calls her five a priority, not a complete list.</p>
+  <details class="learn">
+  <summary>Learn more: sources and notes</summary>
+  <h3>Readings</h3>
+  <ul>
+    <li>Walt, Stephen M. 2014. "<a href="https://foreignpolicy.com/2014/05/19/how-to-get-a-b-a-in-international-relations-in-5-minutes/" target="_blank" rel="noopener">How to Get a B.A. in International Relations in 5 Minutes</a>." <i>Foreign Policy</i>, May 19, 2014.</li>
+    <li>Sjoberg, Laura. 2014. "<a href="http://relationsinternational.com/mansplaining-international-relations-walt/" target="_blank" rel="noopener">'Mansplaining' International Relations? What Walt Misses</a>." <i>Relations International</i>, May 21, 2014.</li>
+  </ul>
+  <h3>Data</h3>
+  <ul>
+    <li>Vetoes: United Nations, Department of Political and Peacebuilding Affairs, "Security Council Data: Vetoes since 1946" (<a href="https://psdata.un.org/dataset/DPPA-SCVETOES" target="_blank" rel="noopener">psdata.un.org</a>), downloaded October 12, 2026. A draft vetoed by two members counts once for each.</li>
+    <li>GDP shares: World Bank, World Development Indicators, GDP at market exchange rates. Military spending: SIPRI Military Expenditure Database. Both as used on the Week 2 page "One superpower?".</li>
+    <li>Trade, remittances, foreign investment, aid, life expectancy, under-five deaths, population: World Bank, World Development Indicators (<a href="https://databank.worldbank.org/source/world-development-indicators" target="_blank" rel="noopener">databank.worldbank.org</a>), CC BY 4.0. Series NE.TRD.GNFS.ZS, BX.TRF.PWKR.CD.DT, BX.KLT.DINV.CD.WD, DT.ODA.ALLD.CD, SP.DYN.LE00.IN, SH.DTH.MORT, SP.POP.TOTL.</li>
+    <li>Iraq: US National Intelligence Estimate, Key Judgments (declassified excerpt, October 2002); Iraq Survey Group, Comprehensive Report of the Special Advisor to the DCI on Iraq’s WMD (the Duelfer report), September 30, 2004.</li>
+    <li>Same-sex marriage: Equaldex, via Our World in Data (<a href="https://ourworldindata.org/grapher/marriage-same-sex-partners-equaldex" target="_blank" rel="noopener">ourworldindata.org</a>), CC BY 4.0. Places coded "Legal" nationwide, including territories.</li>
+    <li>Poverty: World Bank, Poverty and Inequality Platform (<a href="https://pip.worldbank.org" target="_blank" rel="noopener">pip.worldbank.org</a>), world headcount at $3.00, $4.20, $8.30 and $10 a day in 2021 prices (PPP). 2025 onward are nowcasts and are left out.</li>
+    <li>World Bank votes: IBRD, "Subscriptions and Voting Power of Member Countries", data as of June 30, 2026.</li>
+    <li>CO₂ per person: Global Carbon Budget, via Our World in Data (<a href="https://ourworldindata.org/grapher/co-emissions-per-capita" target="_blank" rel="noopener">ourworldindata.org</a>), CC BY 4.0.</li>
+    <li>COVID-19 vaccination: Our World in Data and WHO (<a href="https://ourworldindata.org/grapher/share-people-vaccinated-covid" target="_blank" rel="noopener">ourworldindata.org</a>), CC BY 4.0. Share with at least one dose.</li>
+  </ul>
+  <h3>Notes</h3>
+  <ul>
+    <li>The zoom follows the idea of Charles and Ray Eames’s film <i>Powers of Ten</i> (1977). Its frames are illustrative, not to scale.</li>
+    <li>Where each concept sits on the ladder is our coding for class discussion. Argue with it.</li>
+    <li>The security-dilemma spiral is a drawing, and the cloth-and-wine example uses made-up numbers.</li>
+    <li>Sjoberg’s poverty numbers are from 2014. Price bases change: the same $10 line counts more people in older prices. Remittances count money sent through formal channels. Aid data for this country group end in 2021.</li>
+  </ul>
+  </details>
+  <p class="meta">IR 201 International Relations Theory, discussion section. Built October 12, 2026.</p>
+</section>
+
+<script>
+(()=>{
+const DATA={"vetoes":{"members":["Russia (USSR)","United States","United Kingdom","France","China"],"rows":[[1946,12,0,0,1,0],[1947,13,0,0,1,0],[1948,7,0,0,0,0],[1949,14,0,0,0,0],[1950,5,0,0,0,0],[1951,0,0,0,0,0],[1952,8,0,0,0,0],[1953,1,0,0,0,0],[1954,4,0,0,0,0],[1955,17,0,0,0,1],[1956,2,0,2,2,0],[1957,3,0,0,0,0],[1958,5,0,0,0,0],[1959,0,0,0,0,0],[1960,5,0,0,0,0],[1961,7,0,0,0,0],[1962,1,0,0,0,0],[1963,1,0,1,0,0],[1964,2,0,0,0,0],[1965,0,0,0,0,0],[1966,1,0,0,0,0],[1967,0,0,0,0,0],[1968,1,0,0,0,0],[1969,0,0,0,0,0],[1970,0,1,2,0,0],[1971,3,0,1,0,0],[1972,1,1,4,0,2],[1973,0,3,1,0,0],[1974,1,1,1,1,0],[1975,0,6,1,1,0],[1976,0,6,1,2,0],[1977,0,3,3,3,0],[1978,0,0,0,0,0],[1979,2,0,0,0,0],[1980,2,1,0,0,0],[1981,0,5,4,4,0],[1982,0,8,1,0,0],[1983,1,2,0,0,0],[1984,1,2,0,0,0],[1985,0,7,2,0,0],[1986,0,8,3,1,0],[1987,0,2,2,0,0],[1988,0,6,1,0,0],[1989,0,5,2,2,0],[1990,0,2,0,0,0],[1991,0,0,0,0,0],[1992,0,0,0,0,0],[1993,1,0,0,0,0],[1994,1,0,0,0,0],[1995,0,1,0,0,0],[1996,0,1,0,0,0],[1997,0,2,0,0,1],[1998,0,0,0,0,0],[1999,0,0,0,0,1],[2000,0,0,0,0,0],[2001,0,2,0,0,0],[2002,0,2,0,0,0],[2003,0,2,0,0,0],[2004,1,2,0,0,0],[2005,0,0,0,0,0],[2006,0,2,0,0,0],[2007,1,0,0,0,1],[2008,1,0,0,0,1],[2009,1,0,0,0,0],[2010,0,0,0,0,0],[2011,1,1,0,0,1],[2012,2,0,0,0,2],[2013,0,0,0,0,0],[2014,2,0,0,0,1],[2015,2,0,0,0,0],[2016,2,0,0,0,1],[2017,5,1,0,0,1],[2018,2,1,0,0,0],[2019,3,0,0,0,3],[2020,2,1,0,0,2],[2021,1,0,0,0,0],[2022,4,0,0,0,1],[2023,3,3,0,0,1],[2024,4,3,0,0,1],[2025,2,2,0,0,0],[2026,2,0,0,0,2]]},"balance":{"gdp":{"US":[[1960,39.63],[1961,38.88],[1962,39.03],[1963,38.1],[1964,37.32],[1965,37.14],[1966,37.54],[1967,37.41],[1968,37.86],[1969,37.08],[1970,35.66],[1971,35.02],[1972,33.29],[1973,30.33],[1974,28.45],[1975,27.86],[1976,28.49],[1977,28.0],[1978,26.71],[1979,25.81],[1980,24.89],[1981,27.01],[1982,28.46],[1983,30.3],[1984,32.41],[1985,33.25],[1986,29.74],[1987,27.69],[1988,26.72],[1989,27.56],[1990,25.94],[1991,25.66],[1992,25.44],[1993,26.31],[1994,25.96],[1995,24.38],[1996,25.18],[1997,26.84],[1998,28.52],[1999,29.34],[2000,30.18],[2001,31.36],[2002,31.18],[2003,29.16],[2004,27.6],[2005,27.2],[2006,26.59],[2007,24.71],[2008,22.94],[2009,23.72],[2010,22.5],[2011,20.97],[2012,21.37],[2013,21.59],[2014,21.94],[2015,24.12],[2016,24.4],[2017,23.89],[2018,23.66],[2019,24.26],[2020,24.74],[2021,24.02],[2022,25.33],[2023,25.91],[2024,26.24],[2025,26.0]],"China":[[1960,4.38],[1961,3.47],[1962,3.06],[1963,3.04],[1964,3.26],[1965,3.53],[1966,3.55],[1967,3.18],[1968,2.86],[1969,2.91],[1970,3.08],[1971,3.01],[1972,2.96],[1973,2.95],[1974,2.66],[1975,2.71],[1976,2.35],[1977,2.36],[1978,1.7],[1979,1.75],[1980,1.67],[1981,1.65],[1982,1.75],[1983,1.93],[1984,2.09],[1985,2.38],[1986,1.96],[1987,1.56],[1988,1.6],[1989,1.7],[1990,1.57],[1991,1.6],[1992,1.67],[1993,1.71],[1994,2.02],[1995,2.36],[1996,2.71],[1997,3.03],[1998,3.26],[1999,3.36],[2000,3.6],[2001,4.02],[2002,4.25],[2003,4.29],[2004,4.48],[2005,4.83],[2006,5.37],[2007,6.15],[2008,7.25],[2009,8.5],[2010,9.26],[2011,10.31],[2012,11.4],[2013,12.46],[2014,13.3],[2015,14.87],[2016,14.86],[2017,15.27],[2018,16.2],[2019,16.4],[2020,17.36],[2021,18.43],[2022,17.81],[2023,17.02],[2024,16.77],[2025,16.47]]},"mil":{"US":[[1988,46.67],[1989,46.84],[1990,46.64],[1992,51.33],[1993,50.73],[1994,49.24],[1995,48.63],[1996,47.29],[1997,46.83],[1998,46.38],[1999,45.71],[2000,45.88],[2001,45.32],[2002,47.71],[2003,50.4],[2004,52.09],[2005,52.2],[2006,51.56],[2007,50.92],[2008,51.67],[2009,52.12],[2010,52.66],[2011,52.04],[2012,49.64],[2013,46.95],[2014,44.33],[2015,42.78],[2016,42.63],[2017,41.74],[2018,41.7],[2019,42.27],[2020,42.69],[2021,41.9],[2022,40.12],[2023,38.44],[2024,37.32]],"China":[[1989,1.14],[1990,1.29],[1992,1.98],[1993,1.9],[1994,1.87],[1995,2.05],[1996,2.24],[1997,2.37],[1998,2.63],[1999,3.15],[2000,3.29],[2001,3.83],[2002,4.12],[2003,4.14],[2004,4.32],[2005,4.55],[2006,5.1],[2007,5.39],[2008,5.58],[2009,6.33],[2010,6.52],[2011,7.0],[2012,7.8],[2013,8.64],[2014,9.39],[2015,10.0],[2016,10.57],[2017,11.1],[2018,11.4],[2019,11.46],[2020,11.58],[2021,11.79],[2022,11.92],[2023,11.91],[2024,11.58]]}},"trade":[[1970,25.8],[1971,25.8],[1972,26.0],[1973,29.0],[1974,33.7],[1975,31.9],[1976,32.7],[1977,33.1],[1978,33.5],[1979,35.7],[1980,38.6],[1981,39.1],[1982,37.1],[1983,36.2],[1984,37.5],[1985,37.1],[1986,34.6],[1987,35.9],[1988,37.7],[1989,38.1],[1990,38.1],[1991,37.8],[1992,40.6],[1993,40.2],[1994,41.0],[1995,42.7],[1996,42.8],[1997,44.6],[1998,45.3],[1999,45.8],[2000,50.1],[2001,49.0],[2002,49.0],[2003,50.7],[2004,54.2],[2005,56.2],[2006,58.4],[2007,58.7],[2008,60.3],[2009,51.9],[2010,56.2],[2011,59.3],[2012,59.3],[2013,58.6],[2014,58.0],[2015,55.6],[2016,53.8],[2017,55.5],[2018,57.0],[2019,55.8],[2020,51.9],[2021,56.5],[2022,62.1],[2023,58.1],[2024,56.7]],"ssm":[[2000,0],[2001,1],[2002,1],[2003,2],[2004,2],[2005,4],[2006,5],[2007,5],[2008,5],[2009,7],[2010,10],[2011,10],[2012,11],[2013,15],[2014,16],[2015,19],[2016,21],[2017,24],[2018,24],[2019,27],[2020,29],[2021,29],[2022,34],[2023,35],[2024,37],[2025,39],[2026,39]],"ssmList":[[2001,"Netherlands"],[2003,"Belgium"],[2005,"Canada"],[2005,"Spain"],[2006,"South Africa"],[2009,"Norway"],[2009,"Sweden"],[2010,"Argentina"],[2010,"Iceland"],[2010,"Portugal"],[2012,"Denmark"],[2013,"Brazil"],[2013,"France"],[2013,"New Zealand"],[2013,"Uruguay"],[2014,"Finland"],[2015,"Ireland"],[2015,"Luxembourg"],[2015,"United States"],[2016,"Colombia"],[2016,"Greenland"],[2017,"Australia"],[2017,"Germany"],[2017,"Malta"],[2019,"Austria"],[2019,"Ecuador"],[2019,"Taiwan"],[2020,"Costa Rica"],[2020,"United Kingdom"],[2022,"Chile"],[2022,"Cuba"],[2022,"Mexico"],[2022,"Slovenia"],[2022,"Switzerland"],[2023,"Andorra"],[2024,"Estonia"],[2024,"Greece"],[2025,"Liechtenstein"],[2025,"Thailand"]],"hierarchy":{"rows":[["United States",15.98,4.18],["Japan",6.88,1.52],["China",5.75,17.31],["Germany",4.09,1.03],["France",3.75,0.84],["United Kingdom",3.75,0.85],["India",2.95,17.82],["Russia",2.74,1.76],["Brazil",2.2,2.6],["Türkiye",1.08,1.05],["Indonesia",1.02,3.48],["Nigeria",0.69,2.86],["Pakistan",0.51,3.09],["Bangladesh",0.3,2.13],["Ethiopia",0.09,1.62]],"asof":"June 30, 2026"},"flows":{"Remittances":[[1990,29.4],[1991,32.3],[1992,37.9],[1993,39.8],[1994,44.3],[1995,49.7],[1996,52.8],[1997,62.5],[1998,61.0],[1999,66.4],[2000,73.4],[2001,80.6],[2002,95.7],[2003,119.4],[2004,136.1],[2005,162.6],[2006,191.5],[2007,229.3],[2008,267.1],[2009,258.6],[2010,286.0],[2011,321.3],[2012,346.6],[2013,361.8],[2014,390.4],[2015,394.2],[2016,384.2],[2017,417.1],[2018,453.3],[2019,466.9],[2020,468.6],[2021,532.5],[2022,591.4],[2023,608.0],[2024,664.6]],"Foreign investment":[[1990,20.6],[1991,29.2],[1992,40.6],[1993,59.5],[1994,79.5],[1995,87.7],[1996,109.8],[1997,143.8],[1998,143.0],[1999,151.1],[2000,140.8],[2001,155.8],[2002,143.9],[2003,147.5],[2004,190.5],[2005,271.4],[2006,331.5],[2007,462.4],[2008,525.0],[2009,381.1],[2010,576.2],[2011,671.9],[2012,623.8],[2013,671.5],[2014,615.2],[2015,599.2],[2016,516.7],[2017,504.5],[2018,580.7],[2019,528.0],[2020,518.6],[2021,724.0],[2022,588.0],[2023,407.5],[2024,462.3]],"Aid":[[1990,54.8],[1991,60.2],[1992,59.8],[1993,56.2],[1994,60.3],[1995,59.9],[1996,54.5],[1997,49.2],[1998,52.0],[1999,54.8],[2000,51.6],[2001,52.9],[2002,63.0],[2003,72.5],[2004,81.3],[2005,106.5],[2006,104.9],[2007,106.3],[2008,123.9],[2009,123.7],[2010,127.6],[2011,138.5],[2012,132.8],[2013,150.4],[2014,161.0],[2015,146.1],[2016,158.0],[2017,164.3],[2018,166.8],[2019,162.4],[2020,192.7],[2021,201.8]]},"poverty":{"$3.00":[[1990,43.4],[1991,43.1],[1992,42.5],[1993,42.1],[1994,40.7],[1995,39.4],[1996,38.1],[1997,37.7],[1998,37.9],[1999,37.3],[2000,36.2],[2001,35.2],[2002,33.7],[2003,32.1],[2004,30.3],[2005,28.3],[2006,27.0],[2007,25.3],[2008,24.1],[2009,23.1],[2010,21.0],[2011,19.1],[2012,17.8],[2013,15.5],[2014,14.5],[2015,13.4],[2016,12.6],[2017,11.8],[2018,11.1],[2019,10.8],[2020,11.4],[2021,11.3],[2022,10.9],[2023,10.5],[2024,10.1]],"$4.20":[[1990,55.6],[1991,55.6],[1992,55.4],[1993,55.2],[1994,54.6],[1995,53.6],[1996,52.8],[1997,52.2],[1998,52.2],[1999,52.1],[2000,50.9],[2001,49.9],[2002,48.6],[2003,47.2],[2004,45.4],[2005,43.7],[2006,42.2],[2007,40.5],[2008,39.3],[2009,38.1],[2010,35.8],[2011,33.7],[2012,32.0],[2013,29.3],[2014,27.9],[2015,26.3],[2016,24.9],[2017,23.6],[2018,22.3],[2019,21.5],[2020,22.1],[2021,21.4],[2022,20.5],[2023,19.3],[2024,18.2]],"$8.30":[[1990,70.4],[1991,70.7],[1992,71.2],[1993,71.7],[1994,71.8],[1995,71.2],[1996,71.3],[1997,70.9],[1998,70.8],[1999,71.3],[2000,70.6],[2001,70.0],[2002,69.3],[2003,68.7],[2004,67.4],[2005,66.2],[2006,65.0],[2007,63.6],[2008,62.5],[2009,61.7],[2010,60.2],[2011,58.8],[2012,57.5],[2013,55.8],[2014,54.6],[2015,53.4],[2016,52.4],[2017,51.5],[2018,50.4],[2019,49.6],[2020,50.4],[2021,48.7],[2022,48.3],[2023,47.1],[2024,46.2]],"$10":[[1990,73.2],[1991,73.6],[1992,74.1],[1993,74.7],[1994,74.8],[1995,74.3],[1996,74.5],[1997,74.1],[1998,74.1],[1999,74.6],[2000,74.0],[2001,73.6],[2002,73.1],[2003,72.6],[2004,71.6],[2005,70.6],[2006,69.5],[2007,68.3],[2008,67.3],[2009,66.7],[2010,65.3],[2011,64.2],[2012,63.0],[2013,61.7],[2014,60.7],[2015,59.6],[2016,58.7],[2017,57.8],[2018,56.8],[2019,56.1],[2020,57.0],[2021,55.1],[2022,54.8],[2023,53.6],[2024,52.9]]},"life":{"High-income countries":[[1960,68.3],[1961,68.7],[1962,68.7],[1963,68.9],[1964,69.4],[1965,69.4],[1966,69.7],[1967,70.0],[1968,69.8],[1969,69.9],[1970,70.2],[1971,70.5],[1972,70.7],[1973,70.9],[1974,71.2],[1975,71.4],[1976,71.6],[1977,71.9],[1978,72.1],[1979,72.3],[1980,72.3],[1981,72.7],[1982,73.0],[1983,73.1],[1984,73.3],[1985,73.5],[1986,73.9],[1987,74.1],[1988,74.2],[1989,74.4],[1990,74.5],[1991,74.6],[1992,74.6],[1993,74.4],[1994,74.6],[1995,74.7],[1996,75.2],[1997,75.6],[1998,75.8],[1999,75.8],[2000,76.0],[2001,76.3],[2002,76.4],[2003,76.5],[2004,77.0],[2005,77.1],[2006,77.5],[2007,77.9],[2008,78.1],[2009,78.4],[2010,78.6],[2011,78.9],[2012,79.1],[2013,79.3],[2014,79.6],[2015,79.5],[2016,79.7],[2017,79.9],[2018,80.0],[2019,80.2],[2020,79.2],[2021,78.8],[2022,79.4],[2023,80.1],[2024,80.4]],"Low-income countries":[[1960,41.3],[1961,41.6],[1962,42.0],[1963,42.2],[1964,42.7],[1965,42.9],[1966,43.0],[1967,43.7],[1968,44.1],[1969,44.4],[1970,44.8],[1971,45.0],[1972,44.8],[1973,45.4],[1974,45.5],[1975,45.8],[1976,46.5],[1977,46.9],[1978,47.0],[1979,47.4],[1980,47.8],[1981,47.9],[1982,47.9],[1983,46.8],[1984,46.7],[1985,47.1],[1986,48.1],[1987,49.4],[1988,49.6],[1989,50.2],[1990,50.2],[1991,50.2],[1992,50.4],[1993,51.2],[1994,51.3],[1995,51.4],[1996,51.5],[1997,52.0],[1998,51.9],[1999,52.6],[2000,53.6],[2001,54.1],[2002,54.6],[2003,55.6],[2004,56.2],[2005,56.7],[2006,57.5],[2007,58.2],[2008,58.8],[2009,59.1],[2010,59.9],[2011,60.0],[2012,60.6],[2013,61.1],[2014,61.2],[2015,61.5],[2016,61.9],[2017,62.2],[2018,62.9],[2019,63.3],[2020,63.4],[2021,62.9],[2022,64.1],[2023,65.0],[2024,65.2]]},"co2":{"High-income countries":[[1990,12.68],[1991,12.87],[1992,12.1],[1993,12.05],[1994,11.96],[1995,11.99],[1996,12.22],[1997,12.09],[1998,12.01],[1999,12.09],[2000,12.38],[2001,12.32],[2002,12.32],[2003,12.48],[2004,12.56],[2005,12.55],[2006,12.53],[2007,12.54],[2008,12.25],[2009,11.45],[2010,11.85],[2011,11.69],[2012,11.56],[2013,11.46],[2014,11.25],[2015,11.12],[2016,10.95],[2017,10.89],[2018,10.94],[2019,10.69],[2020,9.79],[2021,10.26],[2022,10.15],[2023,9.83],[2024,9.79]],"Upper-middle-income countries":[[1990,2.58],[1991,2.59],[1992,2.6],[1993,2.62],[1994,2.65],[1995,2.76],[1996,2.82],[1997,2.84],[1998,2.75],[1999,2.81],[2000,2.85],[2001,2.89],[2002,3.02],[2003,3.36],[2004,3.56],[2005,3.82],[2006,4.06],[2007,4.24],[2008,4.45],[2009,4.53],[2010,4.84],[2011,5.19],[2012,5.29],[2013,5.32],[2014,5.34],[2015,5.26],[2016,5.19],[2017,5.28],[2018,5.39],[2019,5.55],[2020,5.48],[2021,5.66],[2022,5.82],[2023,6.01],[2024,6.07]],"Lower-middle-income countries":[[1990,0.72],[1991,0.73],[1992,0.74],[1993,0.76],[1994,0.79],[1995,0.81],[1996,0.85],[1997,0.87],[1998,0.87],[1999,0.91],[2000,0.92],[2001,0.9],[2002,0.92],[2003,0.94],[2004,0.95],[2005,0.98],[2006,1.02],[2007,1.06],[2008,1.09],[2009,1.12],[2010,1.17],[2011,1.2],[2012,1.25],[2013,1.27],[2014,1.32],[2015,1.33],[2016,1.39],[2017,1.41],[2018,1.44],[2019,1.43],[2020,1.35],[2021,1.47],[2022,1.49],[2023,1.55],[2024,1.59]],"Low-income countries":[[1990,0.65],[1991,0.63],[1992,0.56],[1993,0.52],[1994,0.48],[1995,0.46],[1996,0.43],[1997,0.42],[1998,0.41],[1999,0.42],[2000,0.42],[2001,0.42],[2002,0.38],[2003,0.42],[2004,0.41],[2005,0.41],[2006,0.42],[2007,0.42],[2008,0.43],[2009,0.41],[2010,0.4],[2011,0.36],[2012,0.32],[2013,0.3],[2014,0.3],[2015,0.26],[2016,0.26],[2017,0.32],[2018,0.31],[2019,0.33],[2020,0.3],[2021,0.29],[2022,0.28],[2023,0.28],[2024,0.28]]}};
+const KEY={"vetoDrafts": 273, "vetoCasts": 331, "vetoLastYear": 2026, "vetoSince2011": 49, "vetoUpdated": "October 2026", "cnGdp1990": 1.57, "cnGdp2025": 16.47, "usGdp2025": 26.0, "usGdp1990": 25.94, "milYear": 2024, "usMil": 37.3, "cnMil": 11.6, "trade1970": 25.8, "tradePeak": 62.1, "tradePeakYear": 2022, "trade2024": 56.7, "ssmFirst": "Netherlands", "ssmFirstYear": 2001, "ssmNow": 39, "ssmLastYear": 2026, "ssmTerritories": ["Taiwan", "Greenland"], "usVote": 15.98, "usPop": 4.18, "inVote": 2.95, "inPop": 17.82, "ibrdAsOf": "June 30, 2026", "rem2024": 665, "fdi2024": 462, "oda2021": 202, "odaLast": 2021, "rem2021": 533, "pov10_2014": 61, "pov10_2014_ppp17": 64, "pov10_2024": 53, "pov3_2019": 10.8, "pov3_2020": 11.4, "pov3PrevRise": 1998, "u5day2013": 17600, "u5day2024": 13300, "leYear": 2024, "leHic": 80.4, "leLic": 65.2, "leGap1960": 27.1, "leGapNow": 15.2, "co2Year": 2024, "co2Hic": 9.8, "co2Lic": 0.28, "co2Ratio": 35, "co2Drop2020": 6, "co2Up2021": true, "vaxHic2021": 72, "vaxLic2021": 8};
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const sstep=(a,b,x)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t);};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const f1=v=>(Math.round(v*10)/10).toFixed(1);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============ theme ============ */
+const root=document.documentElement;
+try{const t=localStorage.getItem('ir201-theme');if(t==='light'||t==='dark')root.setAttribute('data-theme',t);}catch(e){}
+let C={};
+function readTokens(){const cs=getComputedStyle(root);
+  ['bg','ink','ink2','ink3','rule','grid','band','accent','walt','sjo','m1','m2','m3','m4','m5','us','cn','in','jp','body'].forEach(k=>C[k]=cs.getPropertyValue('--'+k).trim());}
+$('theme').onclick=()=>{const dark=root.getAttribute('data-theme')==='dark'||(!root.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme: dark)').matches);
+  const t=dark?'light':'dark';root.setAttribute('data-theme',t);try{localStorage.setItem('ir201-theme',t);}catch(e){}readTokens();dirty=true;};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{readTokens();dirty=true;});
+
+/* ============ entities ============ */
+const ENT={US:{n:'US',c:'us'},CN:{n:'China',c:'cn'},EU:{n:'EU',c:'eu'},RU:{n:'Russia',c:'ru'},IN:{n:'India',c:'in'},JP:{n:'Japan',c:'jp'},SU:{n:'USSR',c:'su'}};
+const at=(arr,y)=>{for(const p of arr)if(p[0]===y)return p[1];return null;};
+const lastOf=arr=>arr[arr.length-1];
+
+/* ============ canvas ============ */
+const cv=$('cv'),cx=cv.getContext('2d');let W=0,H=0,narrow=false;
+function resize(){const d=Math.min(2,devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;narrow=innerWidth<=760;
+  cv.width=Math.round(W*d);cv.height=Math.round(H*d);cx.setTransform(d,0,0,d,0,0);}
+function box(){ // plot rectangle; labels sit to its right
+  if(narrow)return {x0:44,x1:W-74,y0:H*.56,y1:H*.9};
+  const left=Math.max(W*.47,Math.min(W*.06,96)+30*16+40);
+  return {x0:left+40,x1:W-170,y0:H*.16,y1:H*.84};}
+const font=(px,w)=>`${w||400} ${px}px ${C.body||'system-ui'}`;
+
+function axes(b,X0,X1,Y1,op,unit){
+  cx.save();cx.globalAlpha=op;cx.font=font(narrow?11:13);cx.textBaseline='middle';
+  const step=Y1>40?10:5;
+  for(let v=0;v<=Y1+.001;v+=step){const y=lerp(b.y1,b.y0,v/Y1);
+    cx.strokeStyle=v===0?C.rule:C.grid;cx.lineWidth=1;cx.beginPath();cx.moveTo(b.x0,y);cx.lineTo(b.x1,y);cx.stroke();
+    cx.fillStyle=C.ink3;cx.textAlign='right';cx.fillText(v+(unit||'%'),b.x0-8,y);}
+  const span=X1-X0,ys=span>40?10:5;cx.textAlign='center';cx.textBaseline='top';
+  for(let yr=Math.ceil(X0/ys)*ys;yr<=X1;yr+=ys){const x=lerp(b.x0,b.x1,(yr-X0)/span);if(x<b.x0-1)continue;cx.fillStyle=C.ink3;cx.fillText(yr,x,b.y1+8);}
+  cx.restore();}
+
+// draw one series up to year `upto` (fractional); pre<year drawn dashed and muted
+function line(b,X0,X1,Y1,arr,col,upto,op,o={}){
+  const px=(yr)=>lerp(b.x0,b.x1,(yr-X0)/(X1-X0)),py=v=>lerp(b.y1,b.y0,v/Y1);
+  const pts=[];for(let i=0;i<arr.length;i++){const [yr,v]=arr[i];if(yr<=upto)pts.push([px(yr),py(v),yr]);
+    else{if(i>0){const [y0,v0]=arr[i-1];const f=clamp(upto-y0);if(f>0)pts.push([px(lerp(y0,yr,f)),py(lerp(v0,v,f)),upto]);}break;}}
+  if(pts.length<2)return null;
+  cx.save();cx.beginPath();cx.rect(b.x0,b.y0-30,b.x1-b.x0+2,b.y1-b.y0+31);cx.clip();
+  cx.lineJoin='round';cx.lineCap='round';cx.strokeStyle=col;cx.lineWidth=o.w||2.4;
+  const split=o.pre||-1e9;
+  const seg=(dash,alpha,test)=>{cx.setLineDash(dash);cx.globalAlpha=op*alpha;cx.beginPath();let on=false;
+    for(let i=0;i<pts.length;i++){const p=pts[i];const inSeg=test(p[2],i);if(inSeg){if(!on){const q=i>0?pts[i-1]:p;cx.moveTo(q[0],q[1]);on=true;}cx.lineTo(p[0],p[1]);}else on=false;}cx.stroke();};
+  if(o.dashAll)seg([5,5],o.alpha??1,()=>true);
+  else{seg([4,5],.5*(o.alpha??1),(yr)=>yr<=split);seg([],o.alpha??1,(yr,i)=>yr>=split);}
+  cx.restore();
+  const e=lastOf(pts);
+  cx.save();cx.globalAlpha=op*(o.alpha??1);cx.fillStyle=col;cx.beginPath();cx.arc(e[0],e[1],3.6,0,7);cx.fill();cx.restore();
+  return {x:e[0],y:e[1]};}
+
+// end labels with collision avoidance (groups centred on their points)
+function labels(list,op){
+  const gap=narrow?14:17;const L=list.filter(Boolean).sort((a,b)=>a.y-b.y);if(!L.length)return;
+  const groups=[];let cur=[L[0]];for(let i=1;i<L.length;i++){if(L[i].y-cur[cur.length-1].y<gap)cur.push(L[i]);else{groups.push(cur);cur=[L[i]];}}groups.push(cur);
+  groups.forEach(g=>{const m=g.reduce((s,e)=>s+e.y,0)/g.length;const base=m-gap*(g.length-1)/2;g.forEach((e,k)=>e.ly=base+k*gap);});
+  for(let i=1;i<L.length;i++)L[i].ly=Math.max(L[i].ly,L[i-1].ly+gap);
+  cx.save();cx.font=font(narrow?12:14,500);cx.textBaseline='middle';cx.textAlign='left';
+  L.forEach(e=>{cx.globalAlpha=op*(e.alpha??1);cx.fillStyle=C.ink;cx.fillText(e.t,e.x+9,e.ly);});cx.restore();}
+
+function sourceNote(b,txt,op){if(narrow){const i=txt.indexOf('. ');if(i>0)txt=txt.slice(0,i+1);}cx.save();cx.globalAlpha=op;cx.font=font(narrow?10:12);cx.fillStyle=C.ink3;cx.textAlign='left';cx.textBaseline='top';
+  cx.fillText(txt,b.x0,b.y1+(narrow?24:30));cx.restore();}
+
+/* ============ counters ============ */
+function cnt(items){return items.map(([k,id,sw])=>`<div><div class="k">${sw?`<span class="sw" style="background:var(--${sw})"></span>`:''}${esc(k)}</div><div class="v" id="${id}">&nbsp;</div></div>`).join('');}
+const lastC={};function setC(id,html){if(lastC[id]!==html){lastC[id]=html;const e=$(id);if(e)e.innerHTML=html;}}
+const pct=v=>v==null?'&nbsp;':`${f1(v)}<small>%</small>`;
+const pctOr=(v,alt)=>v==null?`<small>${alt}</small>`:pct(v);
+const num=v=>v==null?'&nbsp;':String(v);
+// circle and label at a crossing point, same style as the PPP marker
+function crossMark(b,X0,X1,Y1,cy,v,op,label){const x=lerp(b.x0,b.x1,(cy-X0)/(X1-X0)),y=lerp(b.y1,b.y0,v/Y1);
+  cx.save();cx.globalAlpha=op;cx.strokeStyle=C.ink;cx.lineWidth=1.5;cx.beginPath();cx.arc(x,y,9,0,7);cx.stroke();
+  cx.setLineDash([3,4]);cx.strokeStyle=C.ink3;cx.beginPath();cx.moveTo(x,y-12);cx.lineTo(x,b.y0+18);cx.stroke();cx.setLineDash([]);
+  cx.font=font(narrow?12:14,600);cx.fillStyle=C.ink;cx.textAlign='center';cx.textBaseline='bottom';cx.fillText(label,x,b.y0+14);cx.restore();}
+
+const yearAt=(t,a,b,y0,y1)=>lerp(y0,y1,reduce?1:sstep(a,b,t));
+/* ============ the five-minute clock ============ */
+// Walt's five scenes run the clock from 0:00 to 5:00, one minute per concept.
+const WALT=['anarchy','balance','trade','misperception','construction'];
+function updateClock(p){
+  const ws=WALT.map(id=>SC.find(s=>s.id===id)),ts=SC.find(s=>s.id==='timesup');if(ws.some(s=>!s)||!ts)return;
+  let secs=0;ws.forEach((s,i)=>{if(p>=s.a)secs=Math.round((i+clamp((p-s.a)/(s.b-s.a)))*60);});
+  const el=$('clock'),show=p>=ws[0].a-0.004&&p<ts.a+(ts.b-ts.a)*.45;
+  el.style.opacity=show?'1':'0';el.style.visibility=show?'visible':'hidden';document.body.classList.toggle('clocking',show);
+  el.querySelector('.t').textContent=`${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}`;
+  el.querySelector('.bar i').style.width=(secs/3).toFixed(1)+'%';
+  el.classList.toggle('up',secs>=300);
+}
+
+/* ============ veto bars (Walt No. 1) ============ */
+function vetoBars(b,upto,op){
+  const rows=DATA.vetoes.rows,col=[C.m1,C.m2,C.m3,C.m4,C.m5];
+  const top=18,Y0=rows[0][0],Y1=rows[rows.length-1][0],n=rows.length,bw=(b.x1-b.x0)/n;
+  const Y=v=>lerp(b.y1,b.y0,v/top);
+  cx.save();cx.globalAlpha=op;cx.font=font(narrow?11:13);cx.textBaseline='middle';cx.textAlign='right';
+  for(let v=0;v<=top;v+=6){cx.strokeStyle=v?C.grid:C.rule;cx.lineWidth=1;cx.beginPath();cx.moveTo(b.x0,Y(v));cx.lineTo(b.x1,Y(v));cx.stroke();cx.fillStyle=C.ink3;cx.fillText(v,b.x0-8,Y(v));}
+  cx.textAlign='center';cx.textBaseline='top';
+  for(let yr=1950;yr<=Y1;yr+=10){cx.fillStyle=C.ink3;cx.fillText(yr,b.x0+(yr-Y0+.5)*bw,b.y1+8);}
+  let total=0;
+  rows.forEach((r,i)=>{const yr=r[0];if(yr>upto)return;const grow=clamp(upto-yr+1);let acc=0;
+    r.slice(1).forEach((v,j)=>{if(!v)return;const h=(Y(acc)-Y(acc+v))*grow;cx.fillStyle=col[j];cx.fillRect(b.x0+i*bw+.6,Y(acc)-h,Math.max(1,bw-1.2),h);acc+=v;});});
+  // legend
+  cx.textAlign='left';cx.textBaseline='middle';cx.font=font(narrow?11:12);let lx=b.x0,ly=b.y0-14;
+  DATA.vetoes.members.forEach((m,j)=>{cx.fillStyle=col[j];cx.fillRect(lx,ly-5,10,10);cx.fillStyle=C.ink2;cx.fillText(m,lx+14,ly);lx+=cx.measureText(m).width+30;});
+  cx.restore();
+}
+
+/* ============ the zoom ladder (Powers of Ten) ============ */
+// Six nested frames, each F times the one inside it: body, household, society, state, international system, Earth.
+// z is the camera in frame units: at z=i, frame i fills the view. Positions are illustrative, not to scale.
+const F=5;
+const FR=[
+ {name:'Body',walt:[],sjo:['Embodiment']},
+ {name:'Household',walt:[],sjo:['The private sphere','Poverty']},
+ {name:'Society',walt:['Social construction'],sjo:[]},
+ {name:'State',walt:['Comparative advantage','Misperception'],sjo:[]},
+ {name:'International system',walt:['Anarchy','Balance of power'],sjo:['Hierarchy']},
+ {name:'Earth',walt:[],sjo:['Earth']},
+];
+let SEEDED=null;
+function seeded(){if(SEEDED)return SEEDED;let s=7;const r=()=>{s=(s*16807)%2147483647;return s/2147483647;};
+  const fam=[[-.62,.18],[.6,.22],[-.2,.66],[.3,-.62]];          // household members around the body (frame-1 units)
+  const soc=[];for(let i=0;i<140;i++){const a=r()*6.283,d=.22+r()*.72;soc.push([Math.cos(a)*d,Math.sin(a)*d]);} // people in society
+  const sts=[[-.66,-.62],[.64,-.6],[-.7,.62],[.68,.66],[0,-.78]];   // other states in the system
+  SEEDED={fam,soc,sts};return SEEDED;}
+function ladderCenter(z=4){const out=narrow?0:sstep(4.6,5.3,z);return narrow?{x:W/2,y:H*.72,out}:{x:lerp(W*.66,W*.84,out),y:H*.52,out};}
+const CLIP_L=()=>narrow?0:W*.45;
+function drawLadder(z,op,o={}){
+  const {x:cx0,y:cy0,out}=ladderCenter(z),base=Math.min(narrow?W*.92:W*.5,narrow?H*.42:H*.78)*.86;
+  const size=i=>base*Math.pow(F,i-z);
+  const S=seeded();
+  cx.save();cx.beginPath();cx.rect(CLIP_L(),0,W-CLIP_L()-(narrow?0:48),H);cx.clip();cx.globalAlpha=op;
+  // Earth: a circle around the system
+  const e=size(5)*.62;if(e<Math.max(W,H)*.75){cx.beginPath();cx.arc(cx0,cy0,e,0,7);cx.fillStyle=C.band;cx.fill();cx.strokeStyle=C.rule;cx.lineWidth=1.2;cx.stroke();}
+  // other states inside the system frame
+  const s4=size(4);if(s4>40&&s4<W*8){S.sts.forEach(([dx,dy])=>{const w=size(3)*.82;const x=cx0+dx*s4/2,y=cy0+dy*s4/2;cx.strokeStyle=C.ink3;cx.globalAlpha=op*.55;cx.strokeRect(x-w/2,y-w/2,w,w);});cx.globalAlpha=op;}
+  // society: dots
+  const s2=size(2);if(s2>30&&s2<W*8){cx.fillStyle=C.ink3;const r=Math.max(1,Math.min(3,s2/180));S.soc.forEach(([dx,dy])=>{const x=cx0+dx*s2/2,y=cy0+dy*s2/2;if(Math.abs(dx)<.26&&Math.abs(dy)<.26)return;cx.beginPath();cx.arc(x,y,r,0,7);cx.fill();});}
+  // household: four other people
+  const s1=size(1);if(s1>20&&s1<W*8)S.fam.forEach(([dx,dy])=>person(cx0+dx*s1/2,cy0+dy*s1/2,size(0)*.42,C.ink2));
+  // the body at the centre
+  const s0=size(0);if(s0>3)person(cx0,cy0,s0*.5,C.ink);
+  // frames, labels and concept tags
+  FR.forEach((f,i)=>{const s=size(i);if(s<26||s>Math.max(W,H)*3.2)return;
+    const vis=clamp((s-26)/60)*clamp((Math.max(W,H)*3.2-s)/(Math.max(W,H)*1.2));
+    const x=cx0-s/2,y=cy0-s/2;
+    if(i<5){cx.strokeStyle=C.ink2;cx.globalAlpha=op*vis*.8;cx.lineWidth=1.2;cx.strokeRect(x,y,s,s);}
+    cx.globalAlpha=op*vis;
+    const lx=i<5?x+8:cx0-e*.7,ly=i<5?y+8:cy0-e*.78;
+    if(lx<CLIP_L()+4||ly<(narrow?H*.5:56))return;
+    if(out>.5&&i<5)return;
+    cx.font=font(narrow?11:12,600);cx.fillStyle=C.ink3;cx.textAlign='left';cx.textBaseline='top';
+    cx.fillText(f.name.toUpperCase(),lx,ly);
+    if(s<150)return;
+    let tx=lx,ty=ly+18;
+    const tags=[...(o.walt?f.walt.map(t=>[t,C.walt]):[]),...(o.sjo?f.sjo.map(t=>[t,C.sjo]):[])];
+    cx.font=font(narrow?11:12.5,600);
+    tags.forEach(([t,c])=>{const w=cx.measureText(t).width+16;if(tx+w>W-56){tx=lx;ty+=24;}
+      cx.fillStyle=c;roundRect(tx,ty,w,20,10);cx.fill();cx.fillStyle=C.bg;cx.textBaseline='middle';cx.fillText(t,tx+8,ty+10.5);cx.textBaseline='top';tx+=w+6;});
+  });
+  cx.restore();
+  if(out>0)drawRungs(op*out,o);
+}
+function drawRungs(op,o){
+  const rows=[...FR].reverse(),rh=40,x0=W*.47+24,y0=H*.5-rh*rows.length/2;
+  cx.save();cx.globalAlpha=op;cx.textBaseline='middle';
+  rows.forEach((f,i)=>{const y=y0+i*rh+rh/2;
+    cx.strokeStyle=C.grid;cx.lineWidth=1;cx.beginPath();cx.moveTo(x0,y0+i*rh);cx.lineTo(x0+W*.2,y0+i*rh);cx.stroke();
+    cx.font=font(12,600);cx.fillStyle=C.ink3;cx.textAlign='left';cx.fillText(f.name.toUpperCase(),x0+14,y-8);
+    let tx=x0+14;const tags=[...(o.walt?f.walt.map(t=>[t,C.walt]):[]),...(o.sjo?f.sjo.map(t=>[t,C.sjo]):[])];
+    cx.font=font(11.5,600);tags.forEach(([t,c])=>{const w=cx.measureText(t).width+14;cx.fillStyle=c;roundRect(tx,y+1,w,18,9);cx.fill();cx.fillStyle=C.bg;cx.fillText(t,tx+7,y+10.5);tx+=w+5;});});
+  if(o.walt){const ia=rows.findIndex(f=>f.name==='International system'),ib=rows.findIndex(f=>f.name==='Society');
+    const ya=y0+ia*rh+4,yb=y0+(ib+1)*rh-4;cx.strokeStyle=C.walt;cx.lineWidth=2;cx.beginPath();cx.moveTo(x0+5,ya);cx.lineTo(x0,ya);cx.lineTo(x0,yb);cx.lineTo(x0+5,yb);cx.stroke();
+    cx.save();cx.translate(x0-8,(ya+yb)/2);cx.rotate(-Math.PI/2);cx.font=font(11,600);cx.fillStyle=C.walt;cx.textAlign='center';cx.fillText('WALT’S FIVE MINUTES',0,0);cx.restore();}
+  cx.restore();
+}
+function person(x,y,h,col){if(h<2)return;cx.fillStyle=col;cx.beginPath();cx.arc(x,y-h*.32,h*.18,0,7);cx.fill();
+  cx.beginPath();if(cx.roundRect)cx.roundRect(x-h*.2,y-h*.1,h*.4,h*.55,h*.12);else cx.rect(x-h*.2,y-h*.1,h*.4,h*.55);cx.fill();}
+function roundRect(x,y,w,h,r){cx.beginPath();if(cx.roundRect)cx.roundRect(x,y,w,h,r);else cx.rect(x,y,w,h);}
+
+/* ============ helpers for the concept scenes ============ */
+// value of a [[year, v], ...] series at a fractional year (linear between points, clamped at the ends)
+const valAt=(arr,y)=>{if(y<=arr[0][0])return arr[0][1];for(let i=1;i<arr.length;i++)if(arr[i][0]>=y){const [ya,va]=arr[i-1],[yb,vb]=arr[i];return lerp(va,vb,(y-ya)/(yb-ya));}return lastOf(arr)[1];};
+function rng(seed){let s=seed;return()=>{s=(s*16807)%2147483647;return s/2147483647;};}
+// drawing area for the non-axis scenes: the right half on desktop, the lower part on phones
+function area(){if(narrow)return {x0:16,x1:W-16,y0:H*.56,y1:H*.92};const b=box();return {x0:b.x0-30,x1:W-110,y0:H*.18,y1:H*.84};}
+function txt(s,x,y,o={}){cx.font=font(o.px||(narrow?11:13),o.w);cx.fillStyle=o.c||C.ink3;cx.textAlign=o.al||'left';cx.textBaseline=o.bl||'middle';cx.fillText(s,x,y);}
+function note(a,s,op){if(narrow){const i=s.indexOf('. ');if(i>0)s=s.slice(0,i+1);}cx.save();cx.globalAlpha=op;txt(s,a.x0,a.y1+(narrow?14:24),{px:narrow?10:12});cx.restore();}
+const money=v=>v==null?'<small>no data</small>':`$${Math.round(v)}<small> bn</small>`;
+const yrs=v=>v==null?'&nbsp;':`${f1(v)}<small> yrs</small>`;
+// labels that dodge each other: greedy rows, moving away from the bar (dir +1 down, -1 up)
+function placeLabels(list,y0,dir,xmin,xmax,op){
+  cx.save();cx.globalAlpha=op;cx.font=font(narrow?11:12.5,600);cx.textBaseline='middle';cx.textAlign='left';
+  const rows=[];list.sort((p,q)=>p.x-q.x).forEach(l=>{const w=cx.measureText(l.t).width;let x=clamp(l.x-w/2,xmin,xmax-w);
+    let r=0;while(rows[r]!=null&&rows[r]>x-8)r++;rows[r]=x+w;cx.fillStyle=l.c;cx.fillText(l.t,x,y0+dir*r*(narrow?14:17));});
+  cx.restore();}
+// the six rungs as a strip above the drawing, with the current one lit
+function levelStrip(level,col,op){if(narrow)return;const a=area(),names=FR.map(f=>f.name);
+  cx.font=font(11,600);if(names.reduce((w,n)=>w+cx.measureText(n.toUpperCase()).width+18,0)>a.x1-a.x0+60)return;
+  cx.save();cx.globalAlpha=op;cx.font=font(11,600);cx.textBaseline='middle';cx.textAlign='left';let x=a.x0;const y=H*.115;
+  names.forEach((n,i)=>{const s=n.toUpperCase(),on=n===level;cx.fillStyle=on?col:C.ink3;cx.globalAlpha=op*(on?1:.55);cx.fillText(s,x,y);
+    const w=cx.measureText(s).width;if(on){cx.fillRect(x,y+9,w,2);}x+=w+(i<names.length-1?18:0);
+    if(i<names.length-1){cx.globalAlpha=op*.4;cx.fillStyle=C.ink3;cx.fillText('·',x-12,y);}});
+  cx.restore();}
+
+/* ---- Walt No. 2: the gap between the US and China ---- */
+function balanceChart(b,upto,op){
+  const X0=1990,X1=2025,Y1=40,us=DATA.balance.gdp.US.filter(p=>p[0]>=X0),cn=DATA.balance.gdp.China.filter(p=>p[0]>=X0);
+  axes(b,X0,X1,Y1,op);
+  const px=yr=>lerp(b.x0,b.x1,(yr-X0)/(X1-X0)),py=v=>lerp(b.y1,b.y0,v/Y1),u=Math.min(upto,X1);
+  if(u>X0+.05){const ys=[];for(let y=X0;y<u;y+=.25)ys.push(y);ys.push(u);
+    cx.save();cx.globalAlpha=op*.13;cx.fillStyle=C.walt;cx.beginPath();
+    ys.forEach((y,i)=>{const x=px(y),v=py(valAt(us,y));i?cx.lineTo(x,v):cx.moveTo(x,v);});
+    for(let i=ys.length-1;i>=0;i--)cx.lineTo(px(ys[i]),py(valAt(cn,ys[i])));cx.closePath();cx.fill();
+    const x=px(u),vu=py(valAt(us,u)),vc=py(valAt(cn,u));
+    cx.globalAlpha=op;cx.strokeStyle=C.walt;cx.lineWidth=1.5;cx.setLineDash([3,3]);cx.beginPath();cx.moveTo(x,vu+7);cx.lineTo(x,vc-7);cx.stroke();cx.setLineDash([]);
+    if(vc-vu>34){cx.save();cx.translate(x-8,(vu+vc)/2);cx.rotate(-Math.PI/2);txt(`gap ${f1(valAt(us,Math.floor(u))-valAt(cn,Math.floor(u)))} pts`,0,0,{al:'center',c:C.walt,w:600,px:narrow?10:12});cx.restore();}
+    cx.restore();}
+  const eu=line(b,X0,X1,Y1,us,C.us,u,op),ec=line(b,X0,X1,Y1,cn,C.cn,u,op);
+  labels([eu&&{...eu,t:narrow?'US':'United States'},ec&&{...ec,t:'China'}],op);
+}
+
+/* ---- Walt No. 3: comparative advantage, a made-up two-country example ---- */
+// A can make 20 cloth or 10 wine, B 6 cloth or 6 wine. A is better at both; B gives up less to make wine.
+// Stages: on their own (half and half), each specializes, they trade 4 cloth for 3 wine.
+const TX=[{n:'Country A',can:'can make 20 cloth or 10 wine',v:[[10,5],[16,2],[12,5]],c:C=>C.m3},
+          {n:'Country B',can:'can make 6 cloth or 6 wine',v:[[3,3],[0,6],[4,3]],c:C=>C.m4}];
+const TXST=['On their own','Each specializes','They trade'];
+const TXRANGE=[[.08,.30],[.30,.56],[.56,.84]]; // part of the scene each step occupies (clicking a step moves to its start, play stops at its end)
+let TXP=[];  // clickable step pills, filled while drawing
+function txStage(t){return reduce?2:sstep(.32,.42,t)+sstep(.6,.7,t);}  // 0 to 2, smooth between stages
+function txVal(row,g){const k=Math.min(1,Math.floor(g)),f=g-k;return [lerp(row.v[k][0],row.v[k+1][0],f),lerp(row.v[k][1],row.v[k+1][1],f)];}
+function tradeExample(a,t,op){
+  const g=txStage(t),cur=Math.round(g),w=a.x1-a.x0,lab=narrow?70:96,cell=Math.max(4,Math.min(narrow?15:22,(w-lab-50)/16)),sz=cell*.78;
+  cx.save();cx.globalAlpha=op;
+  // stage pills
+  let px=a.x0;cx.font=font(narrow?11:13,600);
+  TXST.forEach((nm,i)=>{const s_=`${i+1} · ${nm}`,pw=cx.measureText(s_).width+20,on=i===cur;
+    cx.fillStyle=on?C.walt:C.band;roundRect(px,a.y0,pw,26,13);cx.fill();if(op>.5)TXP.push({x:px,y:a.y0,w:pw,h:26,r:TXRANGE[i]});txt(s_,px+10,a.y0+13,{c:on?C.bg:C.ink3,w:600,px:narrow?11:13});px+=pw+8;});
+  const blockH=(a.y1-a.y0-46)/2;
+  TX.forEach((row,i)=>{const y0=a.y0+46+i*blockH,[cl,wi]=txVal(row,g),col=row.c(C);
+    txt(row.n,a.x0,y0+10,{c:col,w:700,px:narrow?14:18});txt(row.can,a.x0+(narrow?84:118),y0+11,{c:C.ink3,px:narrow?10:13});
+    const rows=[['Cloth',cl,C.walt,'sq'],['Wine',wi,C.m1,'ci']];
+    rows.forEach(([nm,v,c2,shape],j)=>{const ry=y0+(narrow?34:44)+j*(cell+(narrow?10:14));
+      txt(nm,a.x0,ry+cell/2,{c:C.ink2,px:narrow?11:14});
+      for(let k=0;k<Math.ceil(v-1e-6);k++){const f=clamp(v-k),x=a.x0+lab+k*cell;cx.globalAlpha=op*(.25+.75*f);cx.fillStyle=c2;
+        if(shape==='sq')cx.fillRect(x,ry+(cell-sz)/2,sz,sz);else{cx.beginPath();cx.arc(x+sz/2,ry+cell/2,sz/2,0,7);cx.fill();}}
+      cx.globalAlpha=op;txt(String(Math.round(v)),a.x0+lab+Math.max(1,Math.ceil(v-1e-6))*cell+6,ry+cell/2,{c:C.ink,w:600,px:narrow?12:15});});
+    // gain over stage 1, shown once they trade
+    const gain=clamp(g-1.6)/.4;if(gain>0){const d=row.v[2][0]-row.v[0][0];cx.globalAlpha=op*gain;
+      const bx=a.x1-(narrow?64:96),by=y0+(narrow?30:40);cx.fillStyle=col;roundRect(bx,by,narrow?60:88,narrow?24:30,15);cx.fill();
+      txt(`+${d} cloth`,bx+(narrow?30:44),by+(narrow?12:15),{al:'center',c:C.bg,w:700,px:narrow?11:14});cx.globalAlpha=op;}});
+  // the trade itself
+  const tr=clamp(g-1.1)/.5;if(tr>0&&tr<=1.01||g>1.6){const ax=a.x1-(narrow?100:150),y1=a.y0+46+blockH*.85,y2=a.y0+46+blockH*1.1,o=op*Math.min(1,clamp(g-1.1)*2);
+    cx.globalAlpha=o;txt('4 cloth ↓',ax,y1,{al:'right',c:C.walt,w:700,px:narrow?11:14});txt('↑ 3 wine',ax+12,y1,{c:C.m1,w:700,px:narrow?11:14});cx.globalAlpha=op;}
+  cx.restore();
+}
+
+/* ---- Walt No. 4: the security dilemma spiral (an illustration, not data) ---- */
+function shield(x,y,s,col){cx.fillStyle=col;cx.beginPath();cx.moveTo(x-s*.5,y-s*.55);cx.lineTo(x+s*.5,y-s*.55);cx.lineTo(x+s*.5,y);cx.quadraticCurveTo(x+s*.45,y+s*.45,x,y+s*.62);cx.quadraticCurveTo(x-s*.45,y+s*.45,x-s*.5,y);cx.closePath();cx.fill();}
+function arrow(x,y,len,dir,col){cx.strokeStyle=col;cx.fillStyle=col;cx.lineWidth=2.2;cx.beginPath();cx.moveTo(x-dir*len/2,y);cx.lineTo(x+dir*(len/2-5),y);cx.stroke();
+  cx.beginPath();cx.moveTo(x+dir*len/2,y);cx.lineTo(x+dir*(len/2-8),y-5);cx.lineTo(x+dir*(len/2-8),y+5);cx.closePath();cx.fill();}
+function spiral(a,t,op){
+  const rounds=4,s=(reduce?1:sstep(.04,.52,t))*rounds*2; // eight moves, A then B
+  const arms=k=>{let n=0;for(let m=k;m<rounds*2;m+=2)n+=clamp(s-m);return n;};
+  const seen=k=>{let n=0;for(let m=k;m<rounds*2;m+=2)n+=clamp(s-m-.5);return n;};
+  const w=a.x1-a.x0,h=a.y1-a.y0,my=a.y0+h*.5,dy=h*(narrow?.3:.27),sz=narrow?14:20,st=narrow?22:30;
+  const st8=[{x:a.x0+(narrow?22:36),c:C.m3,n:'State A',dir:1},{x:a.x1-(narrow?22:36),c:C.m4,n:'State B',dir:-1}];
+  cx.save();cx.globalAlpha=op;
+  st8.forEach((S,k)=>{const q=narrow?30:44;cx.fillStyle=S.c;roundRect(S.x-q/2,my-q/2,q,q,8);cx.fill();
+    txt(S.n,S.x,my+q/2+14,{al:'center',c:C.ink2,w:600,px:narrow?11:13});
+    const n=arms(k),ns=seen(k);
+    for(let i=0;i<Math.ceil(n);i++){const f=clamp(n-i);cx.globalAlpha=op*f;shield(S.x+S.dir*(q/2+16+i*st),my,sz,S.c);}
+    // how the other side reads the same moves: weapons pointed at it
+    const ry=k===0?my-dy:my+dy;
+    for(let i=0;i<Math.ceil(ns);i++){const f=clamp(ns-i);cx.globalAlpha=op*f;arrow(S.x+S.dir*(q/2+16+i*st),ry,st-6,S.dir,C.m1);}
+    cx.globalAlpha=op;});
+  txt('What each side builds: defence',(a.x0+a.x1)/2,my-(narrow?24:30),{al:'center',c:C.ink3,px:narrow?10:12});
+  txt('What B sees: weapons aimed at B',a.x0,my-dy-(narrow?16:22),{al:'left',c:C.m1,w:600,px:narrow?10:12});
+  txt('What A sees: weapons aimed at A',a.x1,my+dy+(narrow?16:22),{al:'right',c:C.m1,w:600,px:narrow?10:12});
+  cx.restore();
+}
+
+/* ---- Walt No. 5: same-sex marriage, place by place ---- */
+function cascade(a,upto,op){
+  const L=DATA.ssmList,n=L.length,X0=2000,X1=KEY.ssmLastYear,lw=narrow?4:24;
+  const px=y=>lerp(a.x0+20,a.x1-lw,(y-X0)/(X1-X0)),rh=(a.y1-a.y0-26)/n,py=i=>a.y0+i*rh+rh/2,named=rh>=10;
+  cx.save();cx.globalAlpha=op;cx.lineWidth=1;
+  for(let yr=X0;yr<=X1;yr+=5){const x=px(yr);cx.strokeStyle=C.grid;cx.beginPath();cx.moveTo(x,a.y0);cx.lineTo(x,a.y1-20);cx.stroke();txt(yr,x,a.y1-8,{al:'center',px:narrow?10:12});}
+  const u=Math.min(upto,X1+.5),xn=px(Math.min(u,X1));
+  cx.strokeStyle=C.accent;cx.lineWidth=1.5;cx.beginPath();cx.moveTo(xn,a.y0-6);cx.lineTo(xn,a.y1-20);cx.stroke();
+  L.forEach(([yr,name],i)=>{const f=clamp((u-yr+.6)*2.5);if(f<=0)return;const x=px(yr),y=py(i);
+    cx.globalAlpha=op*f*.35;cx.strokeStyle=C.walt;cx.beginPath();cx.moveTo(x,y);cx.lineTo(xn,y);cx.stroke();
+    cx.globalAlpha=op*f;cx.fillStyle=C.walt;cx.beginPath();cx.arc(x,y,narrow?2.4:Math.min(4,rh*.3),0,7);cx.fill();
+    if(named||i===0||i===n-1){const fp=Math.min(12,Math.max(9,rh*.78));cx.font=font(fp);const left=x-7-cx.measureText(name).width>=a.x0-4;
+      txt(name,left?x-7:x+7,y,{al:left?'right':'left',c:C.ink2,px:fp});}});
+  cx.restore();
+}
+
+/* ---- Sjoberg No. 4: life expectancy at birth ---- */
+function lifeBars(a,Y,op){
+  const L=DATA.life,A=90,h=a.y1-a.y0,lx=a.x0+(narrow?30:48),px=v=>lerp(lx,a.x1-(narrow?52:80),v/A),bh=narrow?18:28;
+  const rows=[{lab:'Born in a high-income country',s:L['High-income countries'],c:C.ink2,y:a.y0+h*.26},{lab:'Born in a low-income country',s:L['Low-income countries'],c:C.sjo,y:a.y0+h*.62}];
+  cx.save();cx.globalAlpha=op;cx.lineWidth=1;
+  for(let v=0;v<=A;v+=10){const x=px(v);cx.strokeStyle=v?C.grid:C.rule;cx.beginPath();cx.moveTo(x,a.y0+h*.08);cx.lineTo(x,a.y1-22);cx.stroke();txt(v,x,a.y1-10,{al:'center',px:narrow?10:12});}
+  txt('years',px(A)+12,a.y1-10,{px:narrow?10:12});
+  const Yi=Math.floor(Y+1e-6),ends=rows.map(r=>{const v=valAt(r.s,Y),vi=valAt(r.s,Yi),v0=r.s[0][1],x=px(v);
+    txt(r.lab,lx,r.y-bh/2-17,{c:C.ink2,w:600,px:narrow?11:13});
+    person(a.x0+(narrow?12:20),r.y+bh*.12,bh*1.25,r.c);
+    cx.fillStyle=r.c;cx.globalAlpha=op*.9;cx.fillRect(lx,r.y-bh/2,x-lx,bh);cx.globalAlpha=op;
+    if(Y>1961){cx.setLineDash([3,3]);cx.strokeStyle=C.ink3;cx.strokeRect(lx,r.y-bh/2-3,px(v0)-lx,bh+6);cx.setLineDash([]);}
+    txt(`${f1(vi)}`,x+8,r.y,{c:C.ink,w:600,px:narrow?12:15});return {v:vi,x};});
+  // the gap between the two bar ends
+  const yb=(rows[0].y+rows[1].y)/2+bh*.1,[hi,lo]=ends;
+  if(hi.x-lo.x>6){cx.strokeStyle=C.ink;cx.lineWidth=1.5;cx.beginPath();cx.moveTo(lo.x,yb-5);cx.lineTo(lo.x,yb+5);cx.moveTo(lo.x,yb);cx.lineTo(hi.x,yb);cx.moveTo(hi.x,yb-5);cx.lineTo(hi.x,yb+5);cx.stroke();
+    txt(`gap ${f1(hi.v-lo.v)} years`,(lo.x+hi.x)/2,yb-12,{al:'center',c:C.ink,w:600,px:narrow?11:13});}
+  if(Y>1961)txt('dashed: 1960',a.x1-(narrow?52:80),a.y0+h*.08-12,{al:'right',px:narrow?10:12});
+  cx.restore();
+}
+
+/* ---- Sjoberg No. 2: money that flows into low- and middle-income countries ---- */
+function icon(k,x,y,s,col){cx.save();cx.fillStyle=col;
+  if(k==='house'){cx.beginPath();cx.moveTo(x-s*.55,y-s*.05);cx.lineTo(x,y-s*.5);cx.lineTo(x+s*.55,y-s*.05);cx.closePath();cx.fill();cx.fillRect(x-s*.38,y-s*.06,s*.76,s*.52);}
+  else if(k==='factory'){cx.beginPath();cx.moveTo(x-s*.5,y+s*.46);cx.lineTo(x-s*.5,y-s*.12);cx.lineTo(x-s*.17,y-s*.34);cx.lineTo(x-s*.17,y-s*.12);cx.lineTo(x+s*.16,y-s*.34);cx.lineTo(x+s*.16,y-s*.12);cx.lineTo(x+s*.5,y-s*.34);cx.lineTo(x+s*.5,y+s*.46);cx.closePath();cx.fill();}
+  else{cx.beginPath();cx.moveTo(x-s*.56,y-s*.18);cx.lineTo(x,y-s*.5);cx.lineTo(x+s*.56,y-s*.18);cx.closePath();cx.fill();for(let c=-2;c<=2;c++)cx.fillRect(x+c*s*.22-s*.05,y-s*.1,s*.1,s*.44);cx.fillRect(x-s*.56,y+s*.36,s*1.12,s*.1);}
+  cx.restore();}
+function flowLanes(a,Y,t,op){
+  const F=DATA.flows,vmax=800,h=a.y1-a.y0,L0=a.x0,L1=a.x1-(narrow?44:70),maxT=Math.min(h/3*.4,narrow?24:42);
+  const lanes=[['Remittances','to families','Remittances',C.sjo,'house'],['Foreign investment','to firms','Foreign investment',C.ink2,'factory'],['Aid','to governments','Aid',C.ink3,'gov']];
+  lanes.forEach(([name,to,key,col,ic],i)=>{const s=F[key],y=a.y0+h*(i+.6)/3,v=Y<=lastOf(s)[0]+.001?valAt(s,Y):null,th=v==null?0:Math.max(2,maxT*v/vmax);
+    cx.save();cx.globalAlpha=op*.16;cx.fillStyle=col;cx.fillRect(L0,y-th/2,L1-L0,th);
+    const r=rng(31+i),k=Math.round(70*(v||0)/vmax);cx.globalAlpha=op*.9;
+    for(let j=0;j<70;j++){const off=r(),jy=(r()-.5)*.8,sp=.75+r()*.5;if(j>=k)continue;
+      const x=L0+((off+t*3.5*sp)%1)*(L1-L0);cx.beginPath();cx.arc(x,y+jy*th,narrow?1.6:2.3,0,7);cx.fill();}
+    cx.globalAlpha=op;txt(`${name} ${to}`,L0,y-maxT/2-12,{c:C.ink2,w:600,px:narrow?11:13});
+    txt(v==null?`no data after ${lastOf(s)[0]}`:`$${Math.round(valAt(s,Math.floor(Y+1e-6)))} bn`,L1,y-maxT/2-12,{al:'right',c:v==null?C.ink3:C.ink,w:600,px:narrow?11:13});
+    icon(ic,L1+(a.x1-L1)/2+4,y,narrow?24:34,col);cx.restore();});
+}
+
+/* ---- Sjoberg No. 3: the world as 100 people, poorest first ---- */
+const POVB=[['under $3',1],['$3 to 4.20',.7],['$4.20 to 8.30',.46],['$8.30 to 10',.28],['$10 or more',0]];
+function povGrid(a,Y,op,mark){
+  const P=DATA.poverty,Yi=Math.floor(Y+1e-6),cuts=['$3.00','$4.20','$8.30','$10'].map(k=>Math.round(valAt(P[k],Yi)));
+  const legH=narrow?38:34,side=narrow?44:150,gs=Math.min(a.x1-a.x0-side,a.y1-a.y0-legH),cell=gs/10,gx=narrow?a.x0+(a.x1-a.x0-gs)/2:a.x0,gy=a.y0+legH;
+  cx.save();
+  // legend
+  let lx=a.x0,ly=a.y0+6;cx.font=font(narrow?10:12);
+  POVB.forEach(([l,al])=>{const w=cx.measureText(l).width+28;if(lx+w>a.x1){lx=a.x0;ly+=16;}
+    cx.globalAlpha=op*(al||.25);person(lx+5,ly+2,13,al?C.sjo:C.ink3);cx.globalAlpha=op;txt(l,lx+14,ly,{px:narrow?10:12,c:C.ink2});lx+=w;});
+  for(let k=0;k<100;k++){const band=cuts.findIndex(c=>k<c),x=gx+(k%10+.5)*cell,y=gy+(Math.floor(k/10)+.5)*cell;
+    cx.globalAlpha=op*(band<0?.22:POVB[band][1]);person(x,y+cell*.06,cell*.8,band<0?C.ink3:C.sjo);}
+  if(mark>0){cx.globalAlpha=op*mark;cx.strokeStyle=C.ink;cx.lineWidth=2;cx.setLineDash([5,4]);cx.strokeRect(gx-3,gy-3,gs+6,cell*8+6);cx.setLineDash([]);
+    const tx=gx+gs+(narrow?6:16),ty=gy+cell*4;
+    txt(narrow?'Sjoberg':'Sjoberg, 2014:',tx,ty-10,{c:C.ink,w:600,px:narrow?10:13});txt(narrow?'80':'80 of 100',tx,ty+8,{c:C.ink,w:600,px:narrow?12:15});}
+  cx.restore();
+}
+
+/* ---- Sjoberg No. 1: World Bank votes against people ---- */
+function voteRibbons(a,t,op){
+  const rows=Object.fromEntries(DATA.hierarchy.rows.map(r=>[r[0],r])),order=['United States','Japan','Germany','France','United Kingdom','China','Russia','Brazil','Türkiye','India','Indonesia','Nigeria','Pakistan','Bangladesh','Ethiopia'];
+  const seg=order.map(n=>({n,v:rows[n][1],p:rows[n][2]}));
+  seg.push({n:'rest',v:100-seg.reduce((s,x)=>s+x.v,0),p:100-seg.reduce((s,x)=>s+x.p,0)});
+  const hl={'United States':[C.us,'US'],'Japan':[C.jp,'Japan'],'China':[C.cn,'China'],'India':[C.in,'India']};
+  const gap=1.5,w=a.x1-a.x0,ww=w-gap*(seg.length-1),bh=narrow?16:24,ty=a.y0+(narrow?18:26),by=a.y1-(narrow?30:44);
+  let xp=a.x0,xv=a.x0;seg.forEach(s=>{s.px=xp;s.pw=ww*s.p/100;xp+=s.pw+gap;s.vx=xv;s.vw=ww*s.v/100;xv+=s.vw+gap;});
+  const top=reduce?1:sstep(.03,.14,t),r=reduce?1:sstep(.2,.58,t),bot=reduce?1:sstep(.5,.62,t);
+  cx.save();
+  cx.save();cx.beginPath();cx.rect(a.x0-2,ty+bh,w+4,(by-ty-bh)*r);cx.clip();
+  seg.forEach(s=>{const h_=hl[s.n];cx.globalAlpha=op*(h_?.32:.1);cx.fillStyle=h_?h_[0]:C.ink3;const y1=ty+bh,y2=by,m=(y1+y2)/2;
+    cx.beginPath();cx.moveTo(s.px,y1);cx.bezierCurveTo(s.px,m,s.vx,m,s.vx,y2);cx.lineTo(s.vx+s.vw,y2);cx.bezierCurveTo(s.vx+s.vw,m,s.px+s.pw,m,s.px+s.pw,y1);cx.closePath();cx.fill();});
+  cx.restore();
+  const bar=(k,y,o)=>seg.forEach(s=>{const h_=hl[s.n];cx.globalAlpha=o*(h_?1:s.n==='rest'?.28:.5);cx.fillStyle=h_?h_[0]:C.ink3;cx.fillRect(k==='p'?s.px:s.vx,y,k==='p'?s.pw:s.vw,bh);});
+  bar('p',ty,op*top);bar('v',by,op*bot);
+  cx.globalAlpha=op*top;txt('Share of the world’s people, 2024',a.x0,ty-12,{c:C.ink2,w:600,px:narrow?11:13});
+  cx.globalAlpha=op*bot;txt(`Share of votes at the World Bank (IBRD), ${KEY.ibrdAsOf}`,a.x0,by+bh+14,{c:C.ink2,w:600,px:narrow?11:13});
+  const lab=(k,y,dir,o)=>placeLabels(seg.filter(s=>hl[s.n]&&(k==='v'||s.n!=='Japan')).map(s=>({x:k==='p'?s.px+s.pw/2:s.vx+s.vw/2,t:`${hl[s.n][1]} ${f1(k==='p'?s.p:s.v)}%`,c:C.ink})).concat([{x:k==='p'?seg[seg.length-1].px+seg[seg.length-1].pw/2:seg[seg.length-1].vx+seg[seg.length-1].vw/2,t:`Rest of the world ${f1(k==='p'?seg[seg.length-1].p:seg[seg.length-1].v)}%`,c:C.ink3}]),y,dir,a.x0,a.x1,o);
+  lab('p',ty+bh+13,1,op*top);lab('v',by-13,-1,op*bot);
+  cx.restore();
+}
+
+/* ---- Sjoberg No. 5: CO2 per person, one square per 100 kg ---- */
+function co2Squares(a,Y,op){
+  const G=['High-income countries','Upper-middle-income countries','Lower-middle-income countries','Low-income countries'],lab=['High income','Upper-middle','Lower-middle','Low income'];
+  const gap=narrow?10:26,gw=(a.x1-a.x0-gap*3)/4,labH=narrow?30:40,cell=Math.min(gw/5,(a.y1-a.y0-labH-26)/26),sq=cell-(cell>7?1.5:.8),base=a.y1-labH;
+  cx.save();
+  G.forEach((g,i)=>{const v=valAt(DATA.co2[g],Y),n=v*10,gx=a.x0+i*(gw+gap)+(gw-cell*5)/2;
+    cx.globalAlpha=op*.9;cx.fillStyle=C.sjo;
+    for(let k=0;k<Math.ceil(n);k++){const f=clamp(n-k);cx.fillRect(gx+(k%5)*cell,base-(Math.floor(k/5)+1)*cell,sq*f,sq);}
+    cx.globalAlpha=op;const rowsN=Math.ceil(n/5);
+    const vi=valAt(DATA.co2[g],Math.floor(Y+1e-6));txt(`${vi<1?vi.toFixed(2):f1(vi)} t`,gx,base-rowsN*cell-12,{c:C.ink,w:600,px:narrow?11:14});
+    txt(lab[i],gx,base+14,{c:C.ink2,w:600,px:narrow?10:13});});
+  cx.strokeStyle=C.rule;cx.lineWidth=1;cx.beginPath();cx.moveTo(a.x0,base+2);cx.lineTo(a.x1,base+2);cx.stroke();
+  cx.restore();
+}
+
+/* ============ scenes ============ */
+const SC=[
+ {id:'start',chapter:'Start',len:80,center:true,
+  cap:{eyebrow:'IR 201 · Week 3 · Walt and Sjoberg (2014)',h1:'Five minutes',sub:'What an IR degree leaves out',
+       p:['In 2014 Stephen Walt offered to teach international relations in five minutes. Press play to start the clock.']},
+  draw(t,op){}},
+
+ {id:'anarchy',chapter:'Anarchy',len:170,level:'International system',
+  cap:{eyebrow:'Walt No. 1 · minute one',h:'Anarchy',
+       p:['"There’s no cop on the beat, no authoritative judge or courts to which states can appeal, and no 9-1-1 to call if you get into trouble." (Walt)',
+          `The UN Security Council is the closest thing to a world police, and any one of its five permanent members can stop it with a veto. Since 1946 they have vetoed ${KEY.vetoDrafts} draft decisions.`],
+       small:'Each bar is one year of vetoes, coloured by the member that cast them. A draft vetoed by two members counts in both colours.'},
+  counter:[['Year','c-an-y'],['Vetoes cast so far','c-an-n']],
+  draw(t,op){const b=box(),Y=yearAt(t,.06,.82,1946,KEY.vetoLastYear);
+    vetoBars(b,Y,op);sourceNote(b,`Source: UN DPPA, Security Council vetoes since 1946 (${KEY.vetoLastYear} to date).`,op);
+    const yy=Math.min(KEY.vetoLastYear,Math.floor(Y));setC('c-an-y',yy);
+    let n=0;DATA.vetoes.rows.forEach(r=>{if(r[0]<=yy)n+=r.slice(1).reduce((a,c)=>a+c,0);});setC('c-an-n',n);}},
+
+ {id:'balance',chapter:'Balance of power',len:170,level:'International system',
+  cap:{eyebrow:'Walt No. 2 · minute two',h:'Balance of power',
+       p:['Walt: "trying to understand IR without any reference to balance of power is like trying to play baseball without a bat."',
+          `States watch who is catching up. The US share of world GDP was about the same in 1990 and 2025 (${f1(KEY.usGdp1990)}% and ${f1(KEY.usGdp2025)}%). China’s grew from ${f1(KEY.cnGdp1990)}% to ${f1(KEY.cnGdp2025)}%. Walt: big shifts like this are "usually dangerous".`],
+       small:`Military spending in ${KEY.milYear}: the US ${f1(KEY.usMil)}% of the world total, China ${f1(KEY.cnMil)}%. The Week 2 page "One superpower?" has eleven measures.`},
+  counter:[['Year','c-bp-y'],['United States','c-bp-us','us'],['China','c-bp-cn','cn']],
+  draw(t,op){const b=box(),Y=yearAt(t,.06,.82,1990,2025);balanceChart(b,Y,op);
+    sourceNote(b,'Source: World Bank WDI. Share of world GDP at market exchange rates.',op);
+    setC('c-bp-y',Math.floor(Y));setC('c-bp-us',pct(valAt(DATA.balance.gdp.US,Math.floor(Y))));setC('c-bp-cn',pct(valAt(DATA.balance.gdp.China,Math.floor(Y))));}},
+
+ {id:'trade',chapter:'Comparative advantage',len:200,level:'State',
+  cap:{eyebrow:'Walt No. 3 · minute three',h:'Comparative advantage',
+       p:['Walt: "states will be better off if they all specialize in producing items in which they have some relative advantage."',
+          'Country A is better at making both cloth and wine. Country B is worse at both, but it gives up less to make wine. If each makes what it is relatively best at and they trade, the world has more, and both end up better off.'],
+       small:`A made-up example. In the real world, trade grew from ${f1(KEY.trade1970)}% of world GDP in 1970 to ${f1(KEY.trade2024)}% in 2024 (World Bank).`},
+  counter:[['World cloth','c-tr-c'],['World wine','c-tr-w']],
+  draw(t,op){const a=area();tradeExample(a,t,op);
+    note(a,'Made-up numbers. One square is one unit of cloth, one circle one unit of wine.',op);
+    const g=txStage(t),v=TX.map(r=>txVal(r,g));setC('c-tr-c',String(Math.round(v[0][0]+v[1][0])));setC('c-tr-w',String(Math.round(v[0][1]+v[1][1])));}},
+
+ {id:'misperception',chapter:'Misperception',len:230,level:'State',
+  cap:{eyebrow:'Walt No. 4 · minute four',h:'Misperception and miscalculation',
+       p:['"One country feels threatened and reacts defensively, leading other countries to falsely conclude that it has vast and dangerous ambitions that must be countered." (Walt)',
+          'His summary: "the people in charge usually don’t know what they are doing." The 2003 Iraq War began with a judgment that turned out to be wrong.'],
+       small:'The spiral is an illustration, not data.'},
+  draw(t,op){const a=area(),fadeS=reduce?0:sstep(.56,.64,t);
+    if(fadeS<1)spiral(a,t,op*(1-fadeS));boardOp=Math.max(boardOp,op*(reduce?1:sstep(.6,.68,t)));}},
+
+ {id:'construction',chapter:'Social construction',len:170,level:'Society',
+  cap:{eyebrow:'Walt No. 5 · minute five',h:'Social construction',
+       p:['Walt: "social reality is not like the physical world; it is made and remade by what humans do and say and think."',
+          `His own example is changing attitudes toward gay marriage. In 2000 no country allowed same-sex couples to marry. The ${KEY.ssmFirst} was first, in ${KEY.ssmFirstYear}. By ${KEY.ssmLastYear} the list had ${KEY.ssmNow} countries and territories.`],
+       small:`The list includes ${KEY.ssmTerritories.join(' and ')}. Walt writes "I’m not a constructivist", yet he puts this on his list.`},
+  counter:[['Year','c-sc-y'],['Countries and territories','c-sc-n']],
+  draw(t,op){const a=area(),Y=yearAt(t,.06,.82,2000,KEY.ssmLastYear);cascade(a,Y,op);
+    note(a,'Source: Equaldex via Our World in Data. Places where same-sex marriage is legal nationwide.',op);
+    const yy=Math.floor(Y);setC('c-sc-y',yy);setC('c-sc-n',DATA.ssmList.filter(r=>r[0]<=yy).length);}},
+
+ {id:'recap',chapter:'Five minutes',len:130,contOut:true,
+  cap:{eyebrow:'5:00 · Walt’s five',h:'Five concepts, five minutes',
+       p:['"If you understand these five concepts well, you now know what most IR undergraduates will remember five years after receiving their diploma." (Walt)'],
+       small:'He adds that a real expert would also need deterrence, institutions, democratic peace theory, international finance and more.'},
+  draw(t,op){
+    // five tiles, then they gather where the system frame will be
+    const names=['Anarchy','Balance of power','Comparative advantage','Misperception and miscalculation','Social construction'];
+    const {x:cx0,y:cy0}=ladderCenter(),gw=narrow?W*.86:W*.42,th=narrow?36:50,gap=10;
+    const gather=reduce?0:sstep(.62,.78,t),land=reduce?0:sstep(.72,1,t);
+    cx.save();
+    names.forEach((nm,i)=>{const on=reduce?1:sstep(.04+i*.08,.12+i*.08,t),y=cy0-(2.5*th+2*gap)+i*(th+gap);
+      cx.globalAlpha=op*(1-gather)*on;cx.fillStyle=C.band;roundRect(cx0-gw/2,y,gw,th,8);cx.fill();
+      cx.fillStyle=C.walt;roundRect(cx0-gw/2,y,6,th,3);cx.fill();
+      cx.fillStyle=C.ink;cx.font=font(narrow?14:17,600);cx.textAlign='left';cx.textBaseline='middle';cx.fillText(`No. ${i+1}  ${nm}`,cx0-gw/2+20,y+th/2);});
+    cx.restore();
+    if(land>0)drawLadder(4,op*land,{walt:true});}},
+
+ {id:'timesup',chapter:'Time is up',len:150,contIn:true,contOut:true,
+  cap:{eyebrow:'5:00',h:'Time is up',
+       p:['Walt’s five all sit in the middle of the ladder: the international system, the state, society.',
+          'Pull the camera back and the lecture is one band of a much taller picture.']},
+  draw(t,op){const z=lerp(4,5.35,reduce?1:sstep(.05,.85,t));drawLadder(z,op,{walt:true});}},
+
+ {id:'down',chapter:'Zoom in',len:200,contIn:true,
+  cap:{eyebrow:'Sjoberg (2014)',h:'Below the state',
+       p:['Two days later Laura Sjoberg answered. Her five concepts look where Walt’s do not: at households, at bodies, at the planet, and at the ranks between people and states.',
+          'Her title calls Walt’s list "mansplaining": an explanation that, in her words, "makes invisible, or leaves out gender."']},
+  draw(t,op){const z=lerp(5.35,0.05,reduce?1:sstep(.04,.82,t));drawLadder(z,op,{walt:true,sjo:t>.35});}},
+
+ {id:'body',chapter:'Embodiment',len:170,level:'Body',
+  cap:{eyebrow:'Sjoberg No. 4 · the body',h:'Embodiment',
+       p:['"People in global politics live in bodies." (Sjoberg)',
+          `Where a body is born shapes how long it lives. A child born in ${KEY.leYear} in a high-income country can expect ${f1(KEY.leHic)} years, in a low-income country ${f1(KEY.leLic)}.`],
+       small:`The gap has narrowed, from ${f1(KEY.leGap1960)} years in 1960 to ${f1(KEY.leGapNow)}. Country groups are the World Bank’s income groups.`},
+  counter:[['Year','c-bo-y'],['High income','c-bo-h'],['Low income','c-bo-l','sjo']],
+  draw(t,op){const a=area(),Y=yearAt(t,.06,.82,1960,KEY.leYear);lifeBars(a,Y,op);
+    note(a,'Source: World Bank WDI, SP.DYN.LE00.IN (life expectancy at birth).',op);
+    const yy=Math.floor(Y);setC('c-bo-y',yy);setC('c-bo-h',yrs(valAt(DATA.life['High-income countries'],yy)));setC('c-bo-l',yrs(valAt(DATA.life['Low-income countries'],yy)));}},
+
+ {id:'household',chapter:'Private sphere',len:170,level:'Household',
+  cap:{eyebrow:'Sjoberg No. 2 · the household',h:'The private sphere',
+       p:['Sjoberg: "global politics happens as much in the bedroom as in the boardroom."',
+          `Migrants sending money home to their families add up to a global force. In 2024 remittances to low- and middle-income countries reached $${KEY.rem2024} billion, more than foreign investment ($${KEY.fdi2024} billion).`],
+       small:`In ${KEY.odaLast}, the last year with aid data, remittances were more than twice the aid these countries received ($${KEY.rem2021} against $${KEY.oda2021} billion). Only money sent through formal channels is counted.`},
+  counter:[['Year','c-ho-y'],['Remittances','c-ho-r','sjo'],['Foreign investment','c-ho-f']],
+  draw(t,op){const a=area(),Y=yearAt(t,.06,.82,1990,2024);flowLanes(a,Y,t,op);
+    note(a,'Source: World Bank WDI, low- and middle-income countries, current US$ billions.',op);
+    const yy=Math.floor(Y);setC('c-ho-y',yy);setC('c-ho-r',money(valAt(DATA.flows['Remittances'],yy)));setC('c-ho-f',money(valAt(DATA.flows['Foreign investment'],yy)));}},
+
+ {id:'poverty',chapter:'Poverty',len:220,level:'Household',
+  cap:{eyebrow:'Sjoberg No. 3 · the household',h:'Poverty',
+       p:['"Most people most places spend most of their time trying not to starve." (Sjoberg)',
+          `Picture the world as 100 people, poorest first. Sjoberg wrote that at least 80 of them live on less than $10 a day. The World Bank’s current estimate for 2014 is ${KEY.pov10_2014}: fewer than she said, but still most. In 2024 it was ${KEY.pov10_2024}.`],
+       small:`In 2017 prices the 2014 figure is ${KEY.pov10_2014_ppp17}. She also cites about 21,000 child deaths from poverty a day. The UN estimate for 2013 is about ${KEY.u5day2013.toLocaleString('en-US')} deaths a day of children under five, from all causes.`},
+  counter:[['Year','c-po-y'],['Under $10 a day','c-po-10','sjo'],['Under $3 a day','c-po-3','sjo']],
+  draw(t,op){const a=area(),Y=reduce?2014:(t<.5?yearAt(t,.06,.4,1990,2014):yearAt(t,.62,.84,2014,2024)),mark=reduce?1:sstep(.42,.5,t)*(1-.6*sstep(.66,.74,t));
+    povGrid(a,Y,op,mark);note(a,'Source: World Bank, Poverty and Inequality Platform (2021 prices, PPP).',op);
+    const yy=Math.floor(Y+1e-6);setC('c-po-y',yy);setC('c-po-10',pct(valAt(DATA.poverty['$10'],yy)));setC('c-po-3',pct(valAt(DATA.poverty['$3.00'],yy)));}},
+
+ {id:'hierarchy',chapter:'Hierarchy',len:180,level:'International system',
+  cap:{eyebrow:'Sjoberg No. 1 · the international system',h:'Hierarchy',
+       p:['Sjoberg sees "hierarchy everywhere we look in IR: among people, among states, among cultures."',
+          `Votes at the World Bank follow the money each country paid in, not its people. The US holds ${f1(KEY.usVote)}% of the votes with ${f1(KEY.usPop)}% of the world’s people. India holds ${f1(KEY.inVote)}% with ${f1(KEY.inPop)}%.`],
+       small:`At the end of 2021, ${KEY.vaxHic2021}% of people in high-income countries had at least one COVID-19 vaccine dose. In low-income countries, ${KEY.vaxLic2021}% did.`},
+  counter:[['United States','c-hi-us','us'],['India','c-hi-in','in']],
+  draw(t,op){const a=area();voteRibbons(a,t,op);
+    note(a,'Sources: World Bank IBRD voting power; World Bank population, 2024. Grey: other countries.',op);
+    const v=reduce||t>.6;setC('c-hi-us',v?`${f1(KEY.usVote)}<small>% of votes</small>`:`${f1(KEY.usPop)}<small>% of people</small>`);
+    setC('c-hi-in',v?`${f1(KEY.inVote)}<small>% of votes</small>`:`${f1(KEY.inPop)}<small>% of people</small>`);}},
+
+ {id:'earth',chapter:'Earth',len:170,level:'Earth',
+  cap:{eyebrow:'Sjoberg No. 5 · the Earth',h:'Earth',
+       p:['"Bodies in global politics live in the environment around us, built and ‘natural.’" (Sjoberg)',
+          `In ${KEY.co2Year} the average person in a high-income country emitted ${f1(KEY.co2Hic)} tonnes of CO₂. In a low-income country, ${KEY.co2Lic} tonnes, about ${KEY.co2Ratio} times less.`],
+       small:`One square is 100 kg of CO₂ per person per year. Lockdowns cut emissions per person by about ${KEY.co2Drop2020}% in 2020, and in 2021 they rose again.`},
+  counter:[['Year','c-ea-y'],['High income','c-ea-h'],['Low income','c-ea-l','sjo']],
+  draw(t,op){const a=area(),Y=yearAt(t,.06,.82,1990,KEY.co2Year);co2Squares(a,Y,op);
+    note(a,'Source: Global Carbon Budget via Our World in Data. Fossil CO₂ per person, tonnes.',op);
+    const yy=Math.floor(Y),tt=v=>`${v<1?v.toFixed(2):f1(v)}<small> t</small>`;setC('c-ea-y',yy);
+    setC('c-ea-h',tt(valAt(DATA.co2['High-income countries'],yy)));setC('c-ea-l',tt(valAt(DATA.co2['Low-income countries'],yy)));}},
+
+ {id:'ladder',chapter:'Your five',len:170,last:true,
+  cap:{eyebrow:'Show of hands',h:'Which five would you keep?',
+       p:['Walt’s five in blue, Sjoberg’s five in plum, each at the level where it looks.',
+          'Walt’s list explains how states deal with each other. Sjoberg asks who lives with the results, and where. Keep five, then say what your five leave out.'],
+       small:'The frames are illustrative: each is drawn five times wider than the one inside it, not to scale. Where each concept sits is our coding, open to debate.'},
+  draw(t,op){const z=lerp(0.05,5.3,reduce?1:sstep(.04,.62,t));drawLadder(z,op,{walt:true,sjo:true});}},
+];
+
+/* ============ build captions, counters, chapters ============ */
+let tot=0;SC.forEach(s=>tot+=s.len);let acc=0;
+SC.forEach(s=>{s.a=acc/tot;acc+=s.len;s.b=acc/tot;});
+$('track').style.height=(tot+100)+'vh';
+SC.forEach((s,i)=>{const d=document.createElement('div');d.className='cap'+(s.center?' center':'');const c=s.cap;
+  d.innerHTML=`<div class="eyebrow">${esc(c.eyebrow)}</div>`+(c.h1?`<h1>${esc(c.h1)}</h1><p class="sub">${esc(c.sub)}</p>`:`<h2>${esc(c.h)}</h2>`)+c.p.map(x=>`<p>${esc(x)}</p>`).join('')+(c.small?`<p class="small">${esc(c.small)}</p>`:'');
+  $('caps').appendChild(d);s.capEl=d;
+  if(s.counter){const e=document.createElement('div');e.className='counter';e.innerHTML=cnt(s.counter);$('counters').appendChild(e);s.cntEl=e;}});
+function fade(el,op,dy,center){el.style.opacity=op.toFixed(3);el.style.visibility=op<=0.001?'hidden':'visible';el.style.transform=(center?'translateX(-50%) ':'')+`translateY(${((1-op)*dy).toFixed(1)}px)`;}
+
+const track=$('track');
+const go=p=>scrollTo({top:track.offsetTop+p*(track.offsetHeight-innerHeight),behavior:reduce?'auto':'smooth'});
+SC.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<span>${esc(s.chapter)}</span><i></i>`;b.setAttribute('aria-label',s.chapter);
+  b.onclick=()=>{pause();go(i===0?0:s.a+(s.b-s.a)*.62);};$('chapters').appendChild(b);$('segs').appendChild(document.createElement('i'));});
+
+/* ============ player: play a scene, pause, replay, skip to its end, previous / next ============ */
+const T0=.08,T1=.86; // where a scene starts (fading in) and where its animation has finished (before it fades out)
+const PLAY='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4 L16 10 L6 16 Z" fill="currentColor"/></svg>',PAUSE='<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="4" width="3.4" height="12" rx="1" fill="currentColor"/><rect x="11.6" y="4" width="3.4" height="12" rx="1" fill="currentColor"/></svg>';
+let playing=false,plFrom=0,plTo=0,plStart=0,plDur=0;
+const tspan=()=>track.offsetHeight-innerHeight;
+const atS=(i,t)=>SC[i].a+(SC[i].b-SC[i].a)*t;
+const endOf=i=>SC[i].last?SC[i].b:atS(i,T1);
+const sceneAt=p=>{let k=0;SC.forEach((s,i)=>{if(p>=s.a-1e-6)k=i;});return k;};
+function setP(p,snap){scrollTo(0,track.offsetTop+clamp(p)*tspan());readScroll();if(snap){sp=target;dirty=true;}}
+// Only the play button starts playback. Every other control moves to a frame and waits.
+let stopAt=null;   // set by a step label: play then stops at the end of that step
+function jump(i,t){pause();i=Math.max(0,Math.min(SC.length-1,i));stopAt=null;setP(t==null?endOf(i):atS(i,t),true);}
+function play(){const i=curScene(),s0=atS(i,T0);
+  let to=(stopAt!=null&&stopAt>target+1e-4&&sceneAt(stopAt)===i)?stopAt:endOf(i),from=Math.max(target,s0);
+  if(from>=to-1e-4){from=s0;to=endOf(i);}          // already at the end: play the scene again
+  stopAt=null;setP(from,true);
+  plFrom=from;plTo=to;plDur=Math.max(1200,SC[i].len*55*(to-from)/(endOf(i)-s0));plStart=performance.now();playing=true;plUI();}
+function pause(){if(playing){playing=false;plUI();}}
+function stepPlay(now){if(!playing)return;const f=clamp((now-plStart)/plDur);setP(lerp(plFrom,plTo,f),false);if(f>=1){playing=false;plUI();}}
+function plUI(){const b=$('pl-play');b.innerHTML=playing?PAUSE:PLAY;b.setAttribute('aria-label',playing?'Pause':'Play');}
+let plLast=-1;function plLab(k){if(k!==plLast){plLast=k;$('pl-lab').textContent=`${k+1} / ${SC.length} · ${SC[k].chapter}`;}}
+const curScene=()=>sceneAt(target);
+$('pl-play').onclick=()=>playing?pause():play();
+$('pl-replay').onclick=()=>jump(curScene(),T0);
+$('pl-prev').onclick=()=>jump(curScene()-1,T0);
+$('pl-next').onclick=()=>jump(curScene()+1,T0);
+$('pl-end').onclick=()=>jump(curScene(),null);
+const txHit=e=>{const r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;return TXP.find(q=>x>=q.x&&x<=q.x+q.w&&y>=q.y&&y<=q.y+q.h);};
+cv.addEventListener('click',e=>{const h=txHit(e);if(!h)return;const i=SC.findIndex(s=>s.id==='trade');jump(i,h.r[0]);stopAt=atS(i,h.r[1]);});
+cv.addEventListener('mousemove',e=>{cv.style.cursor=txHit(e)?'pointer':'';});
+addEventListener('wheel',pause,{passive:true});addEventListener('touchstart',pause,{passive:true});
+addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey||e.altKey||$('player').style.opacity==='0')return;const k=e.key;
+  if(k===' '&&!e.target.closest('button,summary,a')){e.preventDefault();$('pl-play').click();}
+  else if(k==='ArrowRight'){e.preventDefault();$('pl-next').click();}
+  else if(k==='ArrowLeft'){e.preventDefault();$('pl-prev').click();}
+  else if(k==='r'||k==='R')$('pl-replay').click();
+  else if(k==='e'||k==='E'||k==='End'){e.preventDefault();$('pl-end').click();}
+  else if(k==='ArrowDown'||k==='ArrowUp'||k==='PageDown'||k==='PageUp')pause();});
+plUI();
+
+/* ============ loop ============ */
+let target=0,sp=0,dirty=true,pinned=null;
+function readScroll(){const span=track.offsetHeight-innerHeight;target=pinned!=null?pinned:clamp((scrollY-track.offsetTop)/span);
+  $('bar').style.width=(clamp(scrollY/(document.documentElement.scrollHeight-innerHeight))*100)+'%';}
+let boardOp=0;
+function render(p){
+  cx.clearRect(0,0,W,H);let on=0;boardOp=0;TXP=[];
+  SC.forEach((s,i)=>{const t=clamp((p-s.a)/(s.b-s.a));if(p>=s.a)on=i;
+    const inR=p>=s.a&&p<=s.b+(s.last?1:0);
+    let op=0;
+    if(inR){op=1;if(!s.contIn&&i>0)op*=reduce?1:sstep(0,.06,t);if(!s.contOut&&!s.last)op*=reduce?1:1-sstep(.9,1,t);}
+    if(op>0){try{s.draw(t,op);}catch(err){console.error(err);}if(s.level)levelStrip(s.level,WALT.includes(s.id)?C.walt:C.sjo,op);}
+    const capOp=reduce?(inR?1:0):(i===0?(1-sstep(.62,.9,t))*(p<=s.b?1:0):(!inR?0:sstep(.02,.08,t)*(s.last?1:1-sstep(.84,.97,t))));
+    fade(s.capEl,capOp,24,!!s.center);
+    if(s.cntEl)fade(s.cntEl,reduce?(inR?1:0):(!inR?0:sstep(.03,.09,t)*(1-sstep(.84,.97,t))),14,false);});
+  fade($('board'),boardOp,14,false);
+  fade($('hint'),1-sstep(.002,.02,p),0,true);
+  updateClock(p);
+  const onI=on;[...$('chapters').children].forEach((b,i)=>b.classList.toggle('on',i===onI));plLab(onI);
+  [...$('segs').children].forEach((b,i)=>b.classList.toggle('on',i<=onI));
+  const past=scrollY>track.offsetTop+track.offsetHeight-innerHeight*.5;$('chapters').style.opacity=past?'0':'1';$('chapters').style.pointerEvents=past?'none':'';$('player').style.opacity=past?'0':'1';$('player').style.pointerEvents=past?'none':'';
+}
+function frame(){stepPlay(performance.now());const d=target-sp;if(reduce||Math.abs(d)<.0003)sp=target;else sp+=d*.14;
+  if(Math.abs(d)>.00001||dirty){render(sp);dirty=false;}requestAnimationFrame(frame);}
+
+addEventListener('scroll',readScroll,{passive:true});
+addEventListener('resize',()=>{resize();readScroll();dirty=true;});
+readTokens();resize();
+// #p=0.55 for local testing, or a plain scene anchor such as #ppp or #scoreboard
+const hp=/^#p=([\d.]+)/.exec(location.hash),hs=location.hash.slice(1);
+const sIdx=SC.findIndex(s=>s.id===hs);
+if(hp){pinned=clamp(parseFloat(hp[1]));$('stage').style.position='fixed';$('stage').style.inset='0';} // test mode: pin the stage, set progress directly (screenshots)
+else if(sIdx>0){const s=SC[sIdx];scrollTo(0,track.offsetTop+(s.a+(s.b-s.a)*.62)*(track.offsetHeight-innerHeight));}
+$('board').addEventListener('scroll',e=>{const b=e.currentTarget;b.classList.toggle('end',b.scrollTop+b.clientHeight>=b.scrollHeight-4);},{passive:true});
+readScroll();sp=target;dirty=true;requestAnimationFrame(frame);
+})();
+</script>
+
+</body></html>
