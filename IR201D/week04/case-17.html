@@ -137,7 +137,7 @@ details.more summary:focus-visible{outline:2px solid var(--accent);outline-offse
   #board .qt,#board ol{font-size:14px}
   #board .lens{gap:10px}
 }
-/* Player bar: play a scene, pause, replay, skip to its end, previous and next scene */
+/* Player bar, used like a slide clicker: previous scene, next, play the scene again */
 #player{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:45;display:flex;align-items:center;gap:4px;padding:6px 8px;border-radius:999px;background:var(--surface);border:1px solid var(--rule);box-shadow:0 6px 24px rgba(0,0,0,.14);transition:opacity .3s}
 #player button{all:unset;box-sizing:border-box;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--ink)}
 #player button:hover{background:var(--band)}
@@ -145,7 +145,7 @@ details.more summary:focus-visible{outline:2px solid var(--accent);outline-offse
 #player button.main{width:48px;height:48px;background:var(--ink);color:var(--bg)}
 #player button.main:hover{background:var(--ink2)}
 #player svg{width:20px;height:20px;display:block}
-#player .lab{font-size:13px;color:var(--ink2);padding:0 12px 0 8px;white-space:nowrap;font-variant-numeric:tabular-nums;min-width:9.5rem}
+#player .lab{font-size:13px;color:var(--ink2);padding:0 6px 0 10px;white-space:nowrap;font-variant-numeric:tabular-nums}
 @media (max-width:760px){#player .lab{display:none}#player{bottom:calc(10px + env(safe-area-inset-bottom,0px))}#player button{width:36px;height:36px}#player button.main{width:44px;height:44px}}
 </style>
 
@@ -155,11 +155,9 @@ details.more summary:focus-visible{outline:2px solid var(--accent);outline-offse
 <nav id="chapters" aria-label="Scenes"></nav>
 <div id="player" role="toolbar" aria-label="Story controls">
   <button type="button" id="pl-prev" aria-label="Previous scene" title="Previous scene (←)"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="4" width="2.4" height="12" rx="1" fill="currentColor"/><path d="M16 4 L7 10 L16 16 Z" fill="currentColor"/></svg></button>
-  <button type="button" id="pl-replay" aria-label="Back to the start of this scene" title="Back to the start of this scene (R)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 7.2 A6 6 0 1 1 4 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2.5 4 L5.6 7.6 L9.2 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  <button type="button" id="pl-play" class="main" aria-label="Play" title="Play or pause (Space)"></button>
-  <button type="button" id="pl-end" aria-label="Skip to the end of this scene" title="End of this scene (E)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10 H13 M9 5.5 L13.5 10 L9 14.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="15" y="4" width="2.4" height="12" rx="1" fill="currentColor"/></svg></button>
-  <button type="button" id="pl-next" aria-label="Next scene" title="Next scene (→)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4 L13 10 L4 16 Z" fill="currentColor"/><rect x="14.6" y="4" width="2.4" height="12" rx="1" fill="currentColor"/></svg></button>
+  <button type="button" id="pl-next" class="main" aria-label="Next" title="Next (→, Space or Page Down)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4 L16 10 L6 16 Z" fill="currentColor"/></svg></button>
   <span class="lab" id="pl-lab" aria-live="polite"></span>
+  <button type="button" id="pl-replay" aria-label="Play this scene again" title="Play this scene again (R)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 7.2 A6 6 0 1 1 4 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2.5 4 L5.6 7.6 L9.2 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 </div>
 <div id="segs" aria-hidden="true"></div>
 
@@ -186,7 +184,7 @@ details.more summary:focus-visible{outline:2px solid var(--accent);outline-offse
         </ol>
       </div>
     </div>
-    <div class="hint" id="hint">Press play, or scroll<i></i></div>
+    <div class="hint" id="hint">Press → or scroll<i></i></div>
   </div>
 </section>
 
@@ -209,6 +207,7 @@ details.more summary:focus-visible{outline:2px solid var(--accent);outline-offse
   <h3>Reading</h3>
   <ul>
     <li>Allison, Graham. 2017. "<a href="https://foreignpolicy.com/2017/06/09/the-thucydides-trap/" target="_blank" rel="noopener">The Thucydides Trap</a>." <i>Foreign Policy</i>, June 9, 2017 (May/June 2017 issue).</li>
+    <li>Allison, Graham. 2015. "<a href="https://www.belfercenter.org/publication/thucydides-trap-are-us-and-china-headed-war" target="_blank" rel="noopener">The Thucydides Trap: Are the U.S. and China Headed for War?</a>" <i>The Atlantic</i>, September 24, 2015. Quoted in the scene "The trap" from the Belfer Center copy, read October 30, 2026.</li>
     <li>Allison, Graham. 2017. <i>Destined for War: Can America and China Escape Thucydides’s Trap?</i> Boston: Houghton Mifflin Harcourt.</li>
   </ul>
   <h3>Cases</h3>
@@ -376,14 +375,49 @@ function seesaws(t,op){const a=narrow?{x0:12,x1:W-12,y0:H*.6,y1:H*.95}:(()=>{con
     cx.save();cx.globalAlpha=o;txt(yr,px,py+(narrow?38:50),{al:'center',c:C.ink,w:600,px:narrow?16:26});
     txt(`China ${f0(KEY.seesaw[yr])}% of the US`,px,py+(narrow?56:78),{al:'center',c:C.ink2,px:narrow?10:13});cx.restore();});}
 
+/* ============ the trap: a rising bar, a spring of stress, a spark ============ */
+function trap(t,op){const a=narrow?{x0:24,x1:W-24,y0:H*.56,y1:H*.9}:(()=>{const b=box();return {x0:b.x0,x1:b.x1,y0:H*.18,y1:H*.8};})();
+  const g=reduce?1:sstep(.1,.45,t),st=reduce?1:sstep(.38,.6,t),sk=reduce?1:sstep(.6,.84,t);
+  const base=a.y1-(narrow?34:72),full=(base-a.y0)*.8,bw=Math.min(84,(a.x1-a.x0)*.16);
+  const xR=a.x0+(a.x1-a.x0)*.2,xS=a.x0+(a.x1-a.x0)*.8,hS=lerp(full*.25,full*.92,g),mid=(xR+xS)/2;
+  cx.save();cx.globalAlpha=op;
+  cx.strokeStyle=C.rule;cx.lineWidth=1;cx.beginPath();cx.moveTo(a.x0,base);cx.lineTo(a.x1,base);cx.stroke();
+  cx.fillStyle=C.ink2;cx.fillRect(xR-bw/2,base-full,bw,full);
+  cx.fillStyle=C.accent;cx.fillRect(xS-bw/2,base-hS,bw,hS);
+  const lp=narrow?12:15,sp=narrow?10:13;
+  txt('Ruling power',xR,base+18,{al:'center',c:C.ink,w:600,px:lp});txt('Rising power',xS,base+18,{al:'center',c:C.ink,w:600,px:lp});
+  txt('fear, insecurity',xR,base+(narrow?33:38),{al:'center',px:sp});txt('growing entitlement',xS,base+(narrow?33:38),{al:'center',px:sp});
+  if(!narrow){txt('defends the status quo',xR,base+56,{al:'center',px:sp});txt('wants more say and sway',xS,base+56,{al:'center',px:sp});}
+  // structural stress: a spring between the two bars that tightens as the gap closes
+  const ys=base-full*.62,x1=xR+bw/2+6,x2=xS-bw/2-6,n=16,amp=lerp(3,narrow?7:11,st);
+  if(st>0){cx.globalAlpha=op*st;cx.strokeStyle=C.war;cx.lineWidth=2;cx.lineJoin='round';cx.beginPath();cx.moveTo(x1,ys);
+    for(let i=1;i<n;i++)cx.lineTo(lerp(x1,x2,i/n),ys+(i%2?-amp:amp));cx.lineTo(x2,ys);cx.stroke();
+    txt('structural stress',mid,ys-amp-14,{al:'center',c:C.war,w:600,px:sp});}
+  // an ordinary crisis sets off a cascade
+  if(sk>0){const yk=ys+(narrow?44:70);cx.globalAlpha=op*Math.min(1,sk*3);
+    txt('an ordinary crisis',mid,yk-(narrow?16:22),{al:'center',c:C.ink2,px:sp});
+    cx.fillStyle=C.war;cx.beginPath();cx.arc(mid,yk,narrow?4:5,0,7);cx.fill();
+    const rM=narrow?26:44;cx.strokeStyle=C.war;cx.lineWidth=1.5;
+    for(let i=0;i<3;i++){const f=clamp(sk*1.6-i*.3);if(f<=0)continue;cx.globalAlpha=op*(1-f)*.9;cx.beginPath();cx.arc(mid,yk,4+f*rM,0,7);cx.stroke();}
+    if(sk>.75){cx.globalAlpha=op*sstep(.75,1,sk);txt('a war nobody chose',mid,yk+(narrow?20:30),{al:'center',c:C.war,w:600,px:lp});}}
+  cx.restore();}
+
 /* ============ scenes ============ */
 const SC=[
- {id:'start',chapter:'Start',len:80,center:true,
+ {id:'start',chapter:'Start',len:80,dur:0,center:true,
   cap:{eyebrow:'IR 201 · Week 4 · Graham Allison (2017)',h1:'Case 17',sub:'Are the United States and China headed for war?',
-       p:[`Thucydides blamed the Peloponnesian War on "the rise of Athens and the fear that this instilled in Sparta." Allison calls this pattern Thucydides’s Trap. Press play to see his evidence.`]},
+       p:[`Thucydides blamed the Peloponnesian War on "the rise of Athens and the fear that this instilled in Sparta." Allison calls this pattern Thucydides’s Trap. Press → to see how it works.`]},
   draw(t,op){}},
 
- {id:'sixteen',chapter:'Sixteen cases',len:190,
+ {id:'idea',chapter:'The trap',len:170,dur:3400,
+  cap:{eyebrow:'The theory in brief',h:'Rise, fear and a spark',
+       p:[`Allison’s claim: when a rising power threatens to displace a ruling one, the shift in power itself creates "structural stress".`,
+          `He takes two drivers from Thucydides. On one side, the rising power’s "growing entitlement, sense of its importance, and demand for greater say and sway". On the other, the "fear, insecurity, and determination to defend the status quo" this creates in the ruling power.`,
+          `Then an ordinary crisis, like the killing of an archduke in 1914, can set off "a cascade of reactions" toward a war nobody chose.`],
+       small:'Allison, The Atlantic, September 24, 2015. He adds: "War, however, is not inevitable."'},
+  draw(t,op){trap(t,op);}},
+
+ {id:'sixteen',chapter:'Sixteen cases',len:190,dur:3600,
   cap:{eyebrow:'Allison’s evidence',h:`${KEY.nCases} cases, ${KEY.nWars} wars`,
        p:[`Allison’s team at Harvard looked back 500 years for cases where a rising power threatened to displace a ruling one. They found ${KEY.nCases}.`,
           `${KEY.nWars} of them ended in war: ${KEY.pct16}%.`],
@@ -392,14 +426,14 @@ const SC=[
   draw(t,op){const Y=yearAt(t,.05,.8,TL0,2026);timeline(Y,op);
     const seen=DATA.cases.filter(c=>c.s<=Y);setC('c-s-y',f0(Math.min(2026,Y)));setC('c-s-n',seen.length);setC('c-s-w',seen.filter(c=>c.war&&c.e<=Y).length);}},
 
- {id:'four',chapter:'The four',len:150,
+ {id:'four',chapter:'The four',len:150,dur:900,
   cap:{eyebrow:'The exceptions',h:'Four rivalries without war',
        p:['Spain and Portugal settled their claims to new lands in the 1494 Treaty of Tordesillas, after the pope stepped in. Britain made room for the United States. The United States and the Soviet Union competed for forty years without fighting each other directly. Germany grew strong again inside the European Union.',
           'Allison says the Cold War is the case most worth studying today.'],
        small:'Allison does not claim war is inevitable. Four of his own cases show it is not.'},
   draw(t,op){timeline(2026,op,{only:0});}},
 
- {id:'counts',chapter:'What counts?',len:170,
+ {id:'counts',chapter:'What counts?',len:170,dur:2200,
   cap:{eyebrow:'What counts as a case?',h:'Add cases, change the answer',
        p:[`Critics say the list is too short and hand-picked. Allison’s project now lists ${KEY.nExtra} more possible cases, from Denmark and Sweden in the 1500s to Japan and China today.`,
           `${KEY.nExtraWars} of those ${KEY.nExtra} ended in war. Count all ${KEY.nAll} and the war rate drops from ${KEY.pct16}% to ${KEY.pctAll}%.`],
@@ -407,7 +441,7 @@ const SC=[
   counter:[['Cases','c-c-n'],['Ended in war','c-c-p','war']],
   draw(t,op){dots(t,op);const s=reduce?1:sstep(.3,.75,t);setC('c-c-n',s>.5?KEY.nAll:KEY.nCases);setC('c-c-p',pct(s>.5?KEY.pctAll:KEY.pct16));}},
 
- {id:'overtake',chapter:'Overtaking Britain',len:190,
+ {id:'overtake',chapter:'Overtaking Britain',len:190,dur:3600,
   cap:{eyebrow:'Cases 11 and 12',h:'Two powers overtake Britain',
        p:[`By GDP, the United States passed Britain in ${KEY.usUkCross}. Germany passed it in ${KEY.deUkCross}.`,
           'Britain went to war with Germany in 1914. With the United States it made friends.'],
@@ -422,14 +456,14 @@ const SC=[
     sourceNote(b,'GDP as % of Britain’s. Source: Maddison Project Database 2023. Germany within the database’s borders.',op);
     const yy=Math.floor(Y);setC('c-o-y',yy);setC('c-o-us',pct(valAt(R[11].gdp,yy)));setC('c-o-de',pct(valAt(R[12].gdp,yy)));}},
 
- {id:'why',chapter:'Why not the US?',len:150,
+ {id:'why',chapter:'Why not the US?',len:150,dur:700,
   cap:{eyebrow:'Show of hands',h:'Same rise, different ending',
        p:['Both powers grew past Britain within a few decades. Only one became an enemy. Thucydides points to the fear, not just the rise. So why did Britain fear Germany and not America?',
           'Realism (this week), liberalism and constructivism (next week) each give an answer.'],
        small:'The case file says Britain faced "more proximate threats" and chose to accommodate the United States.'},
   draw(t,op){board('pane-lens',op);}},
 
- {id:'ussr',chapter:'US vs USSR',len:180,
+ {id:'ussr',chapter:'US vs USSR',len:180,dur:3200,
   cap:{eyebrow:'Case 15',h:'Did the Soviet Union ever catch up?',
        p:[`By GDP, never. The Soviet economy peaked at ${f0(KEY.suGdpPeak)}% of the American one, in ${KEY.suGdpPeakYear}.`,
           `By the capability index, it passed the United States in ${KEY.suCincCross} and stayed ahead for ${KEY.suCincAbove} years. The index counts soldiers, steel and energy, which the Soviet Union had in large amounts.`],
@@ -443,7 +477,7 @@ const SC=[
     sourceNote(b,'Soviet Union as % of the US. Sources: Maddison Project 2023 (GDP), Correlates of War NMC v7.0 (CINC).',op);
     const yy=Math.floor(Y);setC('c-u-y',yy);setC('c-u-g',pct(valAt(R[15].gdp,yy)));setC('c-u-c',pct(valAt(R[15].cinc,yy)));}},
 
- {id:'seesaw',chapter:'Who’s rebalancing whom?',len:190,
+ {id:'seesaw',chapter:'Who’s rebalancing whom?',len:190,dur:3200,
   cap:{eyebrow:'Allison’s picture',h:'Who’s rebalancing whom?',
        p:['In the 2010s Washington spoke of "rebalancing" toward Asia. Allison turned the word around with a seesaw of the two economies, measured at purchasing power parity.',
           `In 2004 China’s economy was ${KEY.seesaw[2004]}% the size of America’s. By 2014 the two were level. In 2024 China’s was ${KEY.seesaw[2024]}%.`],
@@ -452,7 +486,7 @@ const SC=[
   draw(t,op){seesaws(t,op);const k=reduce?2:(t<.42?0:t<.64?1:2),r=DATA.seesaw[k];
     setC('c-w-y',r[0]);setC('c-w-u',`${f1(r[1])}<small>tn $</small>`);setC('c-w-c',`${f1(r[2])}<small>tn $</small>`);}},
 
- {id:'china',chapter:'Case 17',len:220,
+ {id:'china',chapter:'Case 17',len:220,dur:3600,
   cap:{eyebrow:'Case 17 · the United States and China',h:'Has China overtaken the US?',
        p:[`It depends on the measure. At purchasing power parity China’s economy passed the American one in ${KEY.cnPppCross}. At market exchange rates it is ${f0(KEY.cn_usd)}% of the US (${KEY.cn_usd_year}).`,
           `China spends ${f0(KEY.cn_mil)}% of what the US spends on its military, and has ${f0(KEY.cn_nuk)}% as many nuclear warheads. On the capability index it has been ahead since ${KEY.cnCincCross}.`],
@@ -465,14 +499,14 @@ const SC=[
     sourceNote(b,'China as % of the US. Sources: World Bank, SIPRI, FAS via OWID, Correlates of War NMC v7.0.',op);
     const yy=Math.floor(Y);setC('c-c17-y',Math.min(yy,2025));setC('c-c17-p',pct(valAt(S.ppp,yy)));setC('c-c17-u',pct(valAt(S.usd,yy)));setC('c-c17-m',pct(valAt(S.mil,yy)));}},
 
- {id:'nuclear',chapter:'Nuclear weapons',len:170,
+ {id:'nuclear',chapter:'Nuclear weapons',len:170,dur:1600,
   cap:{eyebrow:'Allison’s first lesson',h:'Every war came before 1945',
        p:[`All ${KEY.nWars} wars in Allison’s list ended by ${KEY.lastWarEnd}. Both rivalries after that year involve nuclear weapons: the United States and a Soviet Union armed from ${KEY.nukSUfirst}, and a reunited Germany under NATO’s nuclear umbrella.`,
           `China has had nuclear weapons since ${KEY.nukCNfirst}. In ${KEY.nukYear} it has about ${KEY.nukCN}, the United States about ${KEY.nukUS.toLocaleString('en-US')}.`],
        small:'Allison: a nuclear war cannot be won, so the Cold War, not the twelve wars, may be the better guide.'},
   draw(t,op){const s=reduce?1:sstep(.1,.5,t);timeline(2026,op,{nuke:s});}},
 
- {id:'vote',chapter:'Your call',len:170,last:true,
+ {id:'vote',chapter:'Your call',len:170,dur:700,last:true,
   cap:{eyebrow:'Show of hands',h:'Like the twelve, or like the four?',
        p:['Is the rivalry between the United States and China more like the twelve that ended in war, or the four that did not?',
           'Then pick one of Allison’s five lessons. Which matters most today, and which would a realist reject?'],
@@ -491,46 +525,50 @@ SC.forEach((s,i)=>{const d=document.createElement('div');d.className='cap'+(s.ce
 function fade(el,op,dy,center){el.style.opacity=op.toFixed(3);el.style.visibility=op<=0.001?'hidden':'visible';el.style.transform=(center?'translateX(-50%) ':'')+`translateY(${((1-op)*dy).toFixed(1)}px)`;}
 
 const track=$('track');
-const go=p=>scrollTo({top:track.offsetTop+p*(track.offsetHeight-innerHeight),behavior:reduce?'auto':'smooth'});
 SC.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<span>${esc(s.chapter)}</span><i></i>`;b.setAttribute('aria-label',s.chapter);
-  b.onclick=()=>{pause();go(i===0?0:s.a+(s.b-s.a)*.62);};$('chapters').appendChild(b);$('segs').appendChild(document.createElement('i'));});
+  b.onclick=()=>toScene(i);$('chapters').appendChild(b);$('segs').appendChild(document.createElement('i'));});
 
-/* ============ player: play a scene, pause, replay, skip to its end, previous / next ============ */
+/* ============ player: works like a slide clicker ============ */
+// → plays the next scene straight away (a short cross-fade, then its animation, a few seconds at most).
+// Pressing → while a scene is still animating finishes it at once. ← shows the previous scene finished.
 const T0=.08,T1=.86; // where a scene starts (fading in) and where its animation has finished (before it fades out)
-const PLAY='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4 L16 10 L6 16 Z" fill="currentColor"/></svg>',PAUSE='<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="4" width="3.4" height="12" rx="1" fill="currentColor"/><rect x="11.6" y="4" width="3.4" height="12" rx="1" fill="currentColor"/></svg>';
-let playing=false,plFrom=0,plTo=0,plStart=0,plDur=0;
 const tspan=()=>track.offsetHeight-innerHeight;
 const atS=(i,t)=>SC[i].a+(SC[i].b-SC[i].a)*t;
 const endOf=i=>SC[i].last?SC[i].b:atS(i,T1);
+const rest=i=>i===0?0:endOf(i);   // the finished frame of a scene (the title scene rests at the very top)
 const sceneAt=p=>{let k=0;SC.forEach((s,i)=>{if(p>=s.a-1e-6)k=i;});return k;};
-function setP(p,snap){scrollTo(0,track.offsetTop+clamp(p)*tspan());readScroll();if(snap){sp=target;dirty=true;}}
-// Only the play button starts playback. Every other control moves to a frame and waits.
-let stopAt=null;   // set by a step label: play then stops at the end of that step
-function jump(i,t){pause();i=Math.max(0,Math.min(SC.length-1,i));stopAt=null;setP(t==null?endOf(i):atS(i,t),true);}
-function play(){const i=curScene(),s0=atS(i,T0);
-  let to=(stopAt!=null&&stopAt>target+1e-4&&sceneAt(stopAt)===i)?stopAt:endOf(i),from=Math.max(target,s0);
-  if(from>=to-1e-4){from=s0;to=endOf(i);}          // already at the end: play the scene again
-  stopAt=null;setP(from,true);
-  plFrom=from;plTo=to;plDur=Math.max(1200,SC[i].len*55*(to-from)/(endOf(i)-s0));plStart=performance.now();playing=true;plUI();}
-function pause(){if(playing){playing=false;plUI();}}
-function stepPlay(now){if(!playing)return;const f=clamp((now-plStart)/plDur);setP(lerp(plFrom,plTo,f),false);if(f>=1){playing=false;plUI();}}
-function plUI(){const b=$('pl-play');b.innerHTML=playing?PAUSE:PLAY;b.setAttribute('aria-label',playing?'Pause':'Play');}
+function setP(p){scrollTo(0,track.offsetTop+clamp(p)*tspan());readScroll();sp=target;dirty=true;}
+let segs=[];   // queued moves {from,to,dur} played one after another
+const playing=()=>segs.length>0;
+function run(list){segs=list.filter(s=>s.to-s.from>1e-5).map(s=>({...s,dur:reduce?0:s.dur,t0:null}));}
+function finish(){if(playing()){const end=segs[segs.length-1].to;segs=[];setP(end);}}
+function stop(){segs=[];}
+function stepPlay(now){if(!playing())return;const s=segs[0];if(s.t0==null)s.t0=now;
+  const f=s.dur>0?clamp((now-s.t0)/s.dur):1;setP(lerp(s.from,s.to,sstep(0,1,f)));if(f>=1)segs.shift();}
+function toScene(i){i=Math.max(0,Math.min(SC.length-1,i));stop();
+  if(i===0){setP(0);return;}
+  const s0=atS(i,T0),fadeIn=Math.abs(target-s0)<.02?[]:[{from:atS(i,.02),to:s0,dur:350}];
+  if(fadeIn.length)setP(atS(i,.02));
+  run(fadeIn.concat([{from:s0,to:rest(i),dur:SC[i].dur}]));}
+function next(){const i=curScene();
+  if(playing()){finish();return;}
+  if(target<rest(i)-1e-4&&i>0){const s0=atS(i,T0),from=Math.max(target,s0);setP(from);run([{from,to:rest(i),dur:SC[i].dur*(rest(i)-from)/(rest(i)-s0)}]);return;}
+  if(i===SC.length-1){$('explore').scrollIntoView({behavior:reduce?'auto':'smooth'});return;}
+  const s0=atS(i+1,T0);run([{from:target,to:s0,dur:450},{from:s0,to:rest(i+1),dur:SC[i+1].dur}]);}
+function prev(){const i=curScene();stop();
+  if(target>rest(i)+1e-4&&i>0){setP(rest(i));return;}   // scrolled past the finished frame: back to it first
+  setP(rest(Math.max(0,i-1)));}
+function replay(){const i=curScene();if(i===0)return;stop();setP(atS(i,T0));run([{from:atS(i,T0),to:rest(i),dur:SC[i].dur}]);}
 let plLast=-1;function plLab(k){if(k!==plLast){plLast=k;$('pl-lab').textContent=`${k+1} / ${SC.length} · ${SC[k].chapter}`;}}
 const curScene=()=>sceneAt(target);
-$('pl-play').onclick=()=>playing?pause():play();
-$('pl-replay').onclick=()=>jump(curScene(),T0);
-$('pl-prev').onclick=()=>jump(curScene()-1,T0);
-$('pl-next').onclick=()=>jump(curScene()+1,T0);
-$('pl-end').onclick=()=>jump(curScene(),null);
-addEventListener('wheel',pause,{passive:true});addEventListener('touchstart',pause,{passive:true});
+$('pl-next').onclick=next;$('pl-prev').onclick=prev;$('pl-replay').onclick=replay;
+addEventListener('wheel',stop,{passive:true});addEventListener('touchstart',stop,{passive:true});
 addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey||e.altKey||$('player').style.opacity==='0')return;const k=e.key;
-  if(k===' '&&!e.target.closest('button,summary,a')){e.preventDefault();$('pl-play').click();}
-  else if(k==='ArrowRight'){e.preventDefault();$('pl-next').click();}
-  else if(k==='ArrowLeft'){e.preventDefault();$('pl-prev').click();}
-  else if(k==='r'||k==='R')$('pl-replay').click();
-  else if(k==='e'||k==='E'||k==='End'){e.preventDefault();$('pl-end').click();}
-  else if(k==='ArrowDown'||k==='ArrowUp'||k==='PageDown'||k==='PageUp')pause();});
-plUI();
+  if(k===' '&&e.target.closest&&e.target.closest('button,summary,a'))return;
+  if(k==='ArrowRight'||k==='PageDown'||k===' '){e.preventDefault();next();}
+  else if(k==='ArrowLeft'||k==='PageUp'){e.preventDefault();prev();}
+  else if(k==='r'||k==='R')replay();
+  else if(k==='ArrowDown'||k==='ArrowUp')stop();});
 
 /* ============ loop ============ */
 let target=0,sp=0,dirty=true,pinned=null;
