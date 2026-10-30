@@ -110,6 +110,21 @@ h2.sec{font-family:var(--disp);font-variation-settings:'wdth' 85;font-weight:800
 .debates li{font-size:15.5px;color:var(--ink2);margin:0 0 6px;padding-left:2px}
 .debates li::marker{color:var(--mute)}
 .debates .src{font-family:var(--mono);font-size:11.5px;color:var(--mute);margin:14px 0 0}
+.debates h3,.debates p.q{cursor:pointer}
+.debates details{margin:8px 0 0;border-top:1px solid var(--hair)}
+.debates summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;padding:8px 0;font-family:var(--disp);font-size:14px;font-weight:600;color:var(--ink)}
+.debates summary::-webkit-details-marker{display:none}
+.debates summary::before{content:"";width:0;height:0;border:5px solid transparent;border-left:7px solid var(--ink);border-right:0;transition:transform .2s ease}
+.debates details[open] summary::before{transform:rotate(90deg)}
+.debates summary:hover{text-decoration:underline;text-underline-offset:3px}
+.debates summary:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.debates .side{margin:0 0 8px;padding:8px 10px;border-left:3px solid var(--c,var(--mute));background:var(--faint);font-size:14.5px;line-height:1.45;color:var(--ink2)}
+.debates .side b{display:block;font-family:var(--disp);font-size:13px;font-weight:700;color:var(--c,var(--ink));margin-bottom:3px}
+.debates details ul{margin:10px 0 0}
+.debates details li{font-size:14.5px;line-height:1.45}
+.debates details li b{color:var(--ink)}
+.debates blockquote{margin:10px 0 0;padding:0 0 0 10px;border-left:2px solid var(--hair);font-size:14px;line-height:1.45;font-style:italic;color:var(--ink2)}
+.debates blockquote i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--mute)}
 
 /* schools */
 .school{margin-top:84px;padding-top:18px;border-top:3px solid var(--c)}
@@ -365,7 +380,7 @@ footer p{margin:0 0 6px;max-width:60rem}
 
 <section id="debates">
   <h2 class="sec">How the field argued with itself</h2>
-  <p class="sub">Four “great debates”, a simplification of a messier history. The schools below took shape inside them.</p>
+  <p class="sub">Four “great debates”, a simplification of a messier history. The schools below took shape inside them. Click a debate for more.</p>
   <svg id="tl" viewBox="0 0 1120 210" role="img" aria-label="Timeline from 1919 to today with the four great debates and when each school appeared"></svg>
   <div class="debates">
     <div><h3><small>First · 1920s to 1950s</small>Realism vs idealism</h3>
@@ -374,27 +389,65 @@ footer p{margin:0 0 6px;max-width:60rem}
         <li>Idealists had Wilson’s Fourteen Points (1918), the League of Nations and the Kellogg–Briand Pact (1928).</li>
         <li>Realists answered with Carr, <i>The Twenty Years’ Crisis</i> (1939), and Morgenthau, <i>Politics Among Nations</i> (1948).</li>
         <li>The 1930s seemed to prove them right. Realism won, but liberalism did not disappear.</li>
-      </ul><p class="src">Lecture 3, slides 8 and 11</p></div>
+      </ul>
+      <details><summary>More on this debate</summary>
+        <div class="side" style="--c:var(--lib)"><b>Idealists (utopian liberals), 1920s</b>Human nature can be improved, so war can be replaced by settlement through reason and law. Wilson’s programme: open diplomacy, free trade, minimal arms, self-determination, the League. The Kellogg–Briand Pact renounces war.</div>
+        <div class="side" style="--c:var(--real)"><b>Realists, 1930s to 1950s</b>Carr: conflicts of interest between the haves and the have-nots, and power matters. Morgenthau: a self-interested, power-seeking human nature.</div>
+        <ul>
+          <li><b>Underneath:</b> a question about human nature. Can it be improved?</li>
+          <li><b>Why “utopian”?</b> Fascism, protectionism after 1929, the US Senate’s rejection of the League, Germany and Japan leaving it (1933).</li>
+        </ul>
+        <blockquote>On one side “the idealist, people who are disgusted at the injustice and violence which seem continuously to dominate the world and who vigorously demand that the nations should immediately abolish war”. On the other “the practical people” who “see clearly the hard facts of the world in which we live, and dislike lifting their heads above the clouds lest they should also take their feet off the ground of national security”. <i>Philip Kerr, Lloyd George’s private secretary</i></blockquote>
+      </details><p class="src">Lecture 3, slides 8 and 11, and notes</p></div>
     <div><h3><small>Second · 1950s and 1960s</small>Traditionalism vs behaviouralism</h3>
       <p class="q">Can IR be a science?</p>
       <ul>
         <li>A debate about method. Traditionalists (historians, lawyers, former diplomats) used history, analogy and philosophy.</li>
         <li>Behaviouralists used hypotheses, data and statistics, as in the Correlates of War project (Singer and Small, from 1963).</li>
         <li>Today both count. What matters is rigor.</li>
-      </ul><p class="src">Lecture 3, slides 12, 16 and 17</p></div>
+      </ul>
+      <details><summary>More on this debate</summary>
+        <div class="side"><b>Traditionalists, until the 1950s</b>Historians, lawyers, ex-diplomats, journalists. Descriptive and prescriptive, with normative “ought” questions. Explanations from anecdotes, historical analogies and philosophy.</div>
+        <div class="side"><b>Behaviouralists, 1950s onward</b>Spread from psychology: observed behaviour is enough. US government and foundation money after 1945. Hypotheses, data, statistics, and scholars trained in economics, political science and mathematics.</div>
+        <ul>
+          <li><b>Underneath:</b> positivism. The social world has regularities, facts are separate from values, and the methods of natural science apply. Theory, hypothesis, data, findings, confirm or reject, revise.</li>
+          <li><b>In practice:</b> Correlates of War counted 93 international wars between 1816 and 1965, each with at least 1,000 battle deaths, to test questions such as whether more alliance commitments or more great powers mean more wars.</li>
+          <li><b>Today:</b> qualitative work (archives, content analysis, elite interviews) and quantitative work (statistics, experiments, game theory) both count as science. Empirical does not mean numerical.</li>
+        </ul>
+      </details><p class="src">Lecture 3, slides 12, 13, 16 and 17, and notes</p></div>
     <div><h3><small>Third · 1980s</small>Neorealism vs neoliberalism</h3>
       <p class="q">Can institutions help states overcome cheating and the fear of relative gains?</p>
       <ul>
         <li>The “neo-neo” debate, between two rationalist, state-centric camps that share the same picture of anarchy.</li>
         <li>Waltz (1979) and Grieco on one side, Keohane (1984) on the other.</li>
-      </ul><p class="src">Lecture 3, slide 18. Lecture 5, slides 2 and 16</p></div>
+      </ul>
+      <details><summary>More on this debate</summary>
+        <div class="side" style="--c:var(--real)"><b>Neorealists</b>Anarchy is a constant. States seek <b style="display:inline;color:inherit">relative gains</b>, a zero-sum view: how much do I gain compared with you? Two barriers to cooperation: relative gains and cheating. Institutions are a “false promise” (Mearsheimer), vehicles for dominant states that matter in low politics, not in security.</div>
+        <div class="side" style="--c:var(--lib)"><b>Neoliberals</b>Anarchy is a vacuum that institutions can fill. States seek <b style="display:inline;color:inherit">absolute gains</b>: am I better off than before? The barriers (missing information, cheating, free-riding, transaction costs) are real but can be overcome, because interaction is repeated and institutions supply information and monitoring.</div>
+        <ul>
+          <li><b>Shared:</b> states are central, unitary and rational, politics is a cost-benefit calculation, the system is anarchic. That is why both sides are “rationalist”.</li>
+          <li><b>The example:</b> two states deciding whether to cut military spending. Both would gain, but fear of cheating keeps spending high.</li>
+          <li><b>Keohane’s reply:</b> if institutions did not matter, why would states bother to build them?</li>
+        </ul>
+      </details><p class="src">Lecture 3, slide 18. Lecture 5, slides 2, 10, 11 and 16, and notes</p></div>
     <div><h3><small>Fourth · 1990s onward</small>Rationalism vs reflectivism</h3>
       <p class="q">Explaining or understanding?</p>
       <ul>
         <li>A debate about knowledge. Keohane named the two sides in his 1988 address to the International Studies Association.</li>
         <li>Reflectivists (constructivists, feminists, critical theorists) reject the split between facts and values and study meanings, norms and history.</li>
         <li>Some constructivists claim a middle ground.</li>
-      </ul><p class="src">Lecture 3, slides 18 and 19. Lecture 5, slides 2 and 19</p></div>
+      </ul>
+      <details><summary>More on this debate</summary>
+        <div class="side"><b>Rationalists: explaining</b>Positivist, scientific. Rational actors, general causes, what we can observe and measure.</div>
+        <div class="side" style="--c:var(--con)"><b>Reflectivists: understanding</b>Postpositivist, interpretive. Intersubjective meanings, norms, history. Beliefs and language, not only behaviour.</div>
+        <ul>
+          <li><b>The postpositivist claim:</b> researcher and researched are not independent, and facts are products of political, social and historical processes. So theory is understanding, not explanation.</li>
+          <li><b>Who is on that side:</b> critical theory, feminist IR, and some strands of constructivism.</li>
+          <li><b>A warning on words:</b> “rationalism” here means rational choice, not reason as the source of knowledge.</li>
+          <li><b>The middle ground:</b> constructivists such as Finnemore and Wendt keep causal questions but add meaning to them.</li>
+        </ul>
+        <blockquote>“Not that material conditions no longer matter. It is that how they matter depends on what they mean.” <i>Finnemore and Wendt</i></blockquote>
+      </details><p class="src">Lecture 3, slides 18 and 19, and notes. Lecture 5, slides 2 and 19</p></div>
   </div>
   <p class="src" style="margin-top:22px">The founding story says IR began in 1919, at Aberystwyth, to find the causes of war. The role of race in early IR complicates that story: see Critical approaches below. Lecture 3, slides 8 to 10.</p>
 </section>
@@ -683,6 +736,9 @@ h += `<line x1="${x(Y0)}" x2="${x(Y1)}" y1="${AX}" y2="${AX}" stroke="var(--ink)
 spans.forEach(s => { h += `<line class="span" x1="${x(s.a)}" x2="${x(s.b)}" y1="${s.y}" y2="${s.y}" stroke="${s.c}" opacity=".85"/><text class="big" x="${x(s.a)}" y="${s.y-9}">${s.t}</text>`; });
 marks.forEach(m => { const yy = AX + 36 + (m.r - 1) * 22; h += `<line class="tick" x1="${x(m.y)}" x2="${x(m.y)}" y1="${AX}" y2="${yy-12}"/><circle cx="${x(m.y)}" cy="${AX}" r="3.2" fill="var(--ink)"/><text x="${x(m.y)}" y="${yy}" text-anchor="${m.an||"middle"}">${m.t}</text>`; });
 $("tl").innerHTML = h;
+// a debate card opens its "more" box from its title or its question as well as from the summary line
+document.querySelectorAll(".debates > div").forEach(d => { const det = d.querySelector("details"); if(!det) return;
+  d.querySelectorAll("h3, p.q").forEach(el => el.addEventListener("click", () => { det.open = !det.open; })); });
 
 /* ---------- side by side ---------- */
 const COLS = ["real","lib","con","fem","crit"], NAMES = {real:"Realism",lib:"Liberalism",con:"Constructivism",fem:"Feminism",crit:"Critical approaches"};
