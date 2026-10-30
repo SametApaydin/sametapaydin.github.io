@@ -143,6 +143,39 @@ td{padding:11px 14px 11px 0;border-bottom:1px solid var(--hair);vertical-align:t
 td.r{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);white-space:nowrap;padding-top:14px}
 tr.q td{color:var(--ink);font-weight:600}
 
+/* middle-range theories */
+.kit{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;margin:0 0 26px;font-family:var(--disp);font-size:15px;color:var(--ink2)}
+.kit span{padding:3px 9px;border:1px solid var(--hair);border-radius:999px;font-weight:600;color:var(--ink)}
+.mid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);gap:28px 48px;align-items:start}
+.ladder{position:sticky;top:18px;border-left:2px solid var(--c,var(--ink));padding:2px 0 2px 22px;transition:border-color .4s}
+.rung{position:relative;padding:0 0 22px}
+.rung:last-child{padding-bottom:0}
+.rung::before{content:"";position:absolute;left:-29px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--c,var(--ink));transition:border-color .4s}
+.rung .lab{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-bottom:4px}
+.rung h3{font-family:var(--disp);font-weight:700;font-size:clamp(20px,2vw,26px);line-height:1.1;margin:0 0 6px;color:var(--c,var(--ink))}
+.rung p{margin:0;font-size:15.5px;line-height:1.45;color:var(--ink2);transition:opacity .3s}
+.ladder.swap .rung p,.ladder.swap .rung h3{opacity:0}
+.mrf{display:flex;flex-wrap:wrap;gap:4px 18px;align-items:baseline;margin:0 0 14px;border-top:1px solid var(--ink);padding-top:10px}
+.mrf button{font-family:var(--disp);font-weight:600;font-size:15px;padding:3px 0 5px;border-bottom:2.5px solid transparent;color:var(--mute)}
+.mrf button:hover{color:var(--ink)}
+.mrf button[aria-pressed="true"]{color:var(--c,var(--ink));border-color:var(--c,var(--ink))}
+.mrf button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.mrf .legend{margin-left:auto;display:flex;gap:12px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.mrf .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mr{display:block;text-align:left;padding:12px 14px 12px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);transition:border-color .2s,background .2s}
+.mr:hover{border-color:var(--ink)}
+.mr[aria-pressed="true"]{background:var(--faint);border-color:var(--c,var(--ink));box-shadow:inset 3px 0 0 var(--c,var(--ink))}
+.mr:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.mr[hidden]{display:none}
+.mr .dots{display:flex;gap:4px;margin-bottom:6px}
+.mr .dots i{width:9px;height:9px;border-radius:50%;display:block}
+.mr b{display:block;font-family:var(--disp);font-weight:700;font-size:17px;line-height:1.15;color:var(--ink);margin-bottom:4px}
+.mr .q{display:block;font-size:14.5px;line-height:1.4;color:var(--ink2)}
+.mr .wk{display:block;margin-top:8px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+@media (max-width:900px){.mid{grid-template-columns:1fr}.ladder{position:static}.mrf .legend{margin-left:0;width:100%}}
+@media (max-width:600px){.cards{grid-template-columns:1fr}}
+
 footer{margin-top:80px;padding-top:16px;border-top:1px solid var(--hair);font-size:14px;color:var(--mute)}
 footer p{margin:0 0 6px;max-width:60rem}
 
@@ -166,11 +199,11 @@ footer p{margin:0 0 6px;max-width:60rem}
 <div class="page">
 <header>
   <span class="mono">IR 201 · International Relations Theory · Week 5</span>
-  <nav aria-label="Sections"><a href="#open">A world</a><a href="#why">Why theory</a><a href="#theory">What a theory is</a><a href="#four">Four theories</a><a href="#debates">The debates</a><a href="#real">Realism</a><a href="#lib">Liberalism</a><a href="#con">Constructivism</a><a href="#fem">Feminism</a><a href="#crit">Critical</a><a href="#compare">Compare</a></nav>
+  <nav aria-label="Sections"><a href="#open">A world</a><a href="#why">Why theory</a><a href="#theory">What a theory is</a><a href="#four">Four theories</a><a href="#debates">The debates</a><a href="#real">Realism</a><a href="#lib">Liberalism</a><a href="#con">Constructivism</a><a href="#fem">Feminism</a><a href="#crit">Critical</a><a href="#compare">Compare</a><a href="#middle">Middle range</a></nav>
 </header>
 
 <h1>One world,<br>rival theories</h1>
-<p class="lede">A world, a war, and the question it left behind. Then four theories, each looking at the same world and keeping what it needs to explain. Jack Snyder gave the title (2004).</p>
+<p class="lede">A world, a war, and the question it left behind. Then four theories, each looking at the same world and keeping what it needs to explain. At the end, the middle-range theories the course works with from Week 6. Jack Snyder gave the title (2004).</p>
 
 <section class="scene" id="open">
 <h2 class="sec">A world</h2>
@@ -577,6 +610,31 @@ footer p{margin:0 0 6px;max-width:60rem}
   <div class="tbl"><table id="cmp"></table></div>
 </section>
 
+<section id="middle">
+  <h2 class="sec">Below the grand theories</h2>
+  <p class="sub">A grand theory is a picture of the whole world. A middle-range theory takes one question and gives one mechanism, and it borrows its assumptions from whichever picture fits. Most of the course from Week 6 works at this level (Lake 2013). Pick a theory and the ladder fills.</p>
+  <div class="kit">From Week 6 the textbook’s kit: <span>actors</span> pursuing <span>interests</span> through <span>interactions</span> inside <span>institutions</span></div>
+  <div class="mid">
+    <div class="ladder" id="ladder" aria-live="polite">
+      <div class="rung"><span class="lab">Grand theory it borrows from</span><p data-k="grand"></p></div>
+      <div class="rung"><span class="lab">Middle-range theory</span><h3 data-k="name"></h3><p data-k="mech"></p></div>
+      <div class="rung"><span class="lab">A testable claim</span><p data-k="claim"></p></div>
+      <div class="rung"><span class="lab">Where we meet it</span><p data-k="where"></p></div>
+    </div>
+    <div>
+      <div class="mrf" role="group" aria-label="Filter by the paradigm a theory borrows from">
+        <button data-f="all" aria-pressed="true">All</button>
+        <button data-f="real" style="--c:var(--real)" aria-pressed="false">Realism</button>
+        <button data-f="lib" style="--c:var(--lib)" aria-pressed="false">Liberalism</button>
+        <button data-f="con" style="--c:var(--con)" aria-pressed="false">Constructivism</button>
+        <span class="legend"><span><i style="background:var(--real)"></i>realism</span><span><i style="background:var(--lib)"></i>liberalism</span><span><i style="background:var(--con)"></i>constructivism</span></span>
+      </div>
+      <div class="cards" id="cards"></div>
+    </div>
+  </div>
+  <p class="src" style="margin-top:22px">Lecture 4, slide 5 (Lake 2011 and 2013), and the lecture slides named on each rung. The testable claims are the discussion section’s phrasing of each theory, not quotations.</p>
+</section>
+
 <footer>
   <p>Content from Lectures 3, 4 and 5 of IR 201 (Oya Yeğen, Fall 2026) and the discussion readings. Quotations are as given on the lecture slides. Title after Jack Snyder, “One World, Rival Theories”, <i>Foreign Policy</i> 145 (2004). Discussion section page, October 30, 2026.</p>
 </footer>
@@ -754,5 +812,94 @@ const ROWS = [
 ];
 $("cmp").innerHTML = `<thead><tr><th></th>${COLS.map(c => `<th class="c-${c}">${NAMES[c]}</th>`).join("")}</tr></thead><tbody>` +
   ROWS.map(([k, v, q]) => `<tr${q ? ' class="q"' : ''}><td class="r">${k}</td>${v.map(t => `<td>${t}</td>`).join("")}</tr>`).join("") + "</tbody>";
+
+/* ---------- middle-range theories: one question, one mechanism, borrowed assumptions ---------- */
+const MR = [
+  {id:"sd", name:"Security dilemma", p:["real"], wk:"Weeks 2 and 4",
+   q:"Why do states that want peace end up in arms races?",
+   grand:"Realism: anarchy, self-help, and intentions that can never be known for certain.",
+   mech:"Steps one state takes for its own security make others less secure, even among peace-seeking states. Misperceived intentions drive the spiral (Jervis 1976).",
+   claim:"When a state cannot tell whether its neighbour’s arms are for defence or attack, it arms in reply, and the neighbour reads that the same way.",
+   where:"Lecture 2 (the first modern security dilemma) and Lecture 4, slide 10. Week 4: Poast on the security dilemma, and the Arden and Belmar game."},
+  {id:"bot", name:"Balance of threat", p:["real"], wk:"Week 4",
+   q:"Whom do states balance against?",
+   grand:"Realism: states balance to survive. Walt refines what they balance against.",
+   mech:"States balance against threats, not simply against power: aggregate power, proximity, offensive capability and perceived intentions (Walt 1987).",
+   claim:"A state allies against the neighbour that looks most threatening, which need not be the most powerful state in the system.",
+   where:"Lecture 4, slide 18 and notes. A case to test it on: why did Western Europe ally with the stronger United States against the Soviet Union, rather than balance against the US?"},
+  {id:"pt", name:"Power transition", p:["real"], wk:"Week 4",
+   q:"Does a rising power mean war?",
+   grand:"Realism: power is relative, and the ruling state fears losing its place.",
+   mech:"The growth of a rising power and the fear it causes in the ruling one push both toward war. Allison’s Thucydides Trap is the current version.",
+   claim:"When a rising power is about to overtake a ruling one, war between them becomes more likely than between other pairs of states.",
+   where:"Lecture 4, slide 22. Week 4: Allison 2017, sixteen cases and twelve wars, on the Case 17 page."},
+  {id:"hst", name:"Hegemonic stability", p:["real","lib"], wk:"Weeks 2 and 11",
+   q:"Why is the order open when one state dominates, and shaky when it declines?",
+   grand:"Two versions. Realist: the hegemon builds an open order because it benefits most, with carrots and sticks. Liberal: the hegemon supplies public goods that others free-ride on.",
+   mech:"One dominant state pays for the rules of an open economy. When it declines, nobody pays, and the order weakens.",
+   claim:"Periods with a clear hegemon see more open trade and fewer breakdowns than periods of transition between hegemons.",
+   where:"Lecture 4, slide 21: Dutch (1620 to 1672), British (1815 to 1873), US (1945 to 1971), and the 1930s as a vacuum between Britain and the US. Week 2 (Brooks and Wohlforth), Week 11 (the dollar)."},
+  {id:"barg", name:"Bargaining model of war", p:["real"], wk:"Week 7",
+   q:"Why can’t states reach a deal that avoids the costs of war?",
+   grand:"Rationalist, which Fearon says “could just as well be called neorealist”: unitary states, anarchy, war as a costly choice.",
+   mech:"War is a failure of bargaining (Fearon 1995). Deals fail when states hold private information and have reasons to bluff, or when neither can commit to keeping the deal.",
+   claim:"The more one side can hide about its strength or resolve, the more often bargaining breaks down into war.",
+   where:"Lecture 4, slide 24. Week 7: Lake 2010, the puzzle of war."},
+  {id:"dp", name:"Democratic peace", p:["lib"], wk:"Week 8",
+   q:"Why do democracies not fight each other?",
+   grand:"Liberalism, Kant’s first branch: republican government.",
+   mech:"Liberal democracies tend to be more pacific, at least toward one another: leaders answer to voters who pay for war, and democracies treat each other as legitimate.",
+   claim:"Pairs of democracies go to war with each other less often than other pairs of states.",
+   where:"Lecture 5, slide 5. Week 8: domestic politics and war."},
+  {id:"cp", name:"Commercial peace", p:["lib"], wk:"Week 10",
+   q:"Does trade make war less likely?",
+   grand:"Liberalism, Kant’s second branch: international commerce.",
+   mech:"Economic interdependence creates incentives for peace: war destroys the gains from trade, and those who would lose them push back.",
+   claim:"The more two states trade with each other, the less likely they are to fight.",
+   where:"Lecture 5, slide 5. Week 10: international trade (Mulder 2022, Rodrik 2019). Mulder shows interdependence turned into a weapon."},
+  {id:"inst", name:"Institutions and cooperation", p:["lib"], wk:"Weeks 5 and 9",
+   q:"How do states cooperate when each has a reason to cheat?",
+   grand:"Liberalism, Kant’s third branch: law and organization. Neoliberal institutionalism keeps realism’s rational states.",
+   mech:"Repeated play changes the Prisoner’s Dilemma. Institutions supply obligation, information, monitoring and predictability, so cheating today costs tomorrow.",
+   claim:"Where states meet repeatedly and can monitor each other, cooperation lasts even without an enforcer.",
+   where:"Lecture 5, slides 13 to 15. Week 5: Nordhaus’s club and the Climate Club game. Week 9: international institutions (Patrick et al. 2023)."},
+  {id:"pg", name:"Public goods and the club", p:["lib"], wk:"Week 5",
+   q:"Why do voluntary climate deals fail?",
+   grand:"Liberalism: rational states, absolute gains, cooperation as a problem to solve.",
+   mech:"A cut in emissions benefits everyone whether or not they paid for it, so each state waits for the others. A club that penalizes outsiders changes that calculation (Nordhaus 2020).",
+   claim:"Agreements with no penalty for staying out attract free riders. Agreements with a penalty attract members once the club is large enough.",
+   where:"Lecture 5, slide 11 (free riding). Week 5: Nordhaus 2020 and the Climate Club game."},
+  {id:"ac", name:"Audience costs", p:["lib"], wk:"Week 8",
+   q:"Why can a leader not back down from a public threat?",
+   grand:"Opens realism’s black box: domestic politics shapes what a state can credibly say.",
+   mech:"Backing down after a public threat costs a leader at home, so public threats are more credible than private ones (Fearon 1994).",
+   claim:"Leaders who answer to a domestic audience make threats that are believed more often, and back down less often.",
+   where:"Lecture 3, slide 17: experiments on audience costs (Fearon 1994; Tomz 2007). Week 8: domestic politics and war."},
+  {id:"norm", name:"Norms and appropriateness", p:["con"], wk:"Week 12",
+   q:"Why do states follow rules that nobody enforces?",
+   grand:"Constructivism: shared understandings, identities that shape interests, the logic of appropriateness.",
+   mech:"A norm tells an actor what someone like it should do here. Following it is part of being that kind of actor, so compliance does not depend on a punishment.",
+   claim:"When a norm is widely shared, states comply even when breaking it would pay.",
+   where:"Lecture 4 notes (sovereignty as a norm that is often violated: why is there no punishment?) and Lecture 5, slide 19. Week 12: international law and norms (Hathaway 2022)."}
+];
+const PC = {real:"var(--real)", lib:"var(--lib)", con:"var(--con)"};
+const cards = $("cards"), ladder = $("ladder");
+cards.innerHTML = MR.map(t => `<button type="button" class="mr" data-id="${t.id}" data-p="${t.p.join(" ")}" style="--c:${PC[t.p[0]]}" aria-pressed="false">` +
+  `<span class="dots">${t.p.map(k => `<i style="background:${PC[k]}"></i>`).join("")}</span><b>${t.name}</b><span class="q">${t.q}</span><span class="wk">${t.wk}</span></button>`).join("");   // trusted text, written above
+let mrSwap = null;
+function pickMR(id){
+  const t = MR.find(x => x.id === id);
+  cards.querySelectorAll(".mr").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.id === id)));
+  const fill = () => { ladder.style.setProperty("--c", PC[t.p[0]]); ladder.querySelectorAll("[data-k]").forEach(e => e.textContent = t[e.dataset.k]); ladder.classList.remove("swap"); };
+  clearTimeout(mrSwap);
+  if(reduce){ fill(); return; }
+  ladder.classList.add("swap"); mrSwap = setTimeout(fill, 220);
+}
+cards.addEventListener("click", e => { const b = e.target.closest(".mr"); if(b) pickMR(b.dataset.id); });
+document.querySelectorAll(".mrf button").forEach(f => f.addEventListener("click", () => {
+  document.querySelectorAll(".mrf button").forEach(b => b.setAttribute("aria-pressed", String(b === f)));
+  cards.querySelectorAll(".mr").forEach(b => { b.hidden = f.dataset.f !== "all" && !b.dataset.p.split(" ").includes(f.dataset.f); });
+}));
+pickMR("sd");
 })();
 </script>
