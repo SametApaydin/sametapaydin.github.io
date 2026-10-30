@@ -1,0 +1,664 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><style>body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>The Climate Club</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* One visual world: cool paper, deep navy ink, and the warming-stripes scale (blue = most countries cut, red = few).
+   Each round leaves a stripe in the band under the header. No cards: columns, rules and type carry the layout.
+   Single light look, chosen for a lit classroom projector. */
+:root{
+  color-scheme:light;
+  --paper:#f2f4f5; --ink:#0e1a29; --ink2:#3d4a5a; --mute:#6c7886; --hair:#cdd4da; --faint:#e2e7eb;
+  --cool:#2171b5; --warm:#cb181d;
+  --display:'Archivo','Arial Narrow',system-ui,sans-serif;
+  --body:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--cool);outline-offset:3px}
+.wrap{max-width:80rem;margin:0 auto;padding-block:14px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Header: title, steps as plain words, the stripe record */
+.bar{display:flex;align-items:baseline;gap:10px 28px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:8px}
+.title{font-family:var(--display);font-stretch:118%;font-weight:850;font-size:clamp(22px,3.4vh,30px);letter-spacing:-.01em;margin:0;line-height:1}
+.course{font-family:var(--mono);font-size:12px;color:var(--mute);letter-spacing:.04em}
+.steps{display:flex;gap:2px 18px;flex-wrap:wrap;margin-left:auto}
+.steps button{border:0;background:none;padding:2px 0;cursor:pointer;font-size:15px;color:var(--mute);border-bottom:3px solid transparent}
+.steps button[aria-current="step"]{color:var(--ink);font-weight:700;border-bottom-color:var(--ink)}
+.steps button:disabled{cursor:default;opacity:.4}
+.newgame{border:0;background:none;cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--mute);text-decoration:underline;text-underline-offset:3px}
+.newgame.armed{color:var(--warm)}
+.record{display:flex;align-items:flex-end;gap:3px;height:40px;margin-top:10px}
+.record .s{flex:1;max-width:84px;display:grid;gap:3px;justify-items:start}
+.record .s i{display:block;width:100%;height:26px;background:var(--faint)}
+.record .s span{font-family:var(--mono);font-size:11px;color:var(--mute);line-height:1}
+.record .s.new i{animation:drop .6s cubic-bezier(.2,.8,.2,1)}
+@keyframes drop{from{transform:scaleY(0);transform-origin:top}to{transform:scaleY(1);transform-origin:top}}
+.record .key{margin-left:14px;font-family:var(--mono);font-size:11px;color:var(--mute);align-self:center;white-space:nowrap}
+
+main{padding-top:clamp(14px,3vh,30px)}
+.kicker{font-family:var(--mono);font-size:13px;color:var(--mute);margin:0 0 6px;letter-spacing:.03em}
+h1,h2{font-family:var(--display);font-stretch:110%;font-weight:800;line-height:1.02;letter-spacing:-.015em;margin:0;text-wrap:balance}
+h1{font-size:clamp(34px,7vh,68px)}
+h2{font-size:clamp(28px,5.2vh,50px)}
+p{margin:0}
+.btn{border:0;background:var(--ink);color:var(--paper);padding:12px 22px;font-weight:700;font-size:17px;cursor:pointer;border-radius:2px}
+.btn:hover{background:#22344a}
+.btn.quiet{background:none;color:var(--ink);text-decoration:underline;text-underline-offset:4px;padding:12px 6px}
+.go{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:clamp(14px,3vh,28px)}
+.enter{animation:rise .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* Puzzle */
+.puzzle{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);margin-top:clamp(14px,3vh,28px);align-items:start}
+.cops svg,.emis svg{display:block;width:100%;height:auto;overflow:visible}
+.cops text,.emis text{font-family:var(--mono);font-size:12px;fill:var(--mute)}
+.cops .lab,.emis .lab{font-family:var(--body);font-size:14px;fill:var(--ink)}
+.figcap{font-size:clamp(15px,2.2vh,18px);color:var(--ink2);margin-top:8px;max-width:36rem}
+.quote{font-family:var(--display);font-stretch:90%;font-weight:600;font-size:clamp(22px,3.6vh,32px);line-height:1.15;margin-top:clamp(16px,3vh,30px);max-width:44rem}
+.quote cite{display:block;font-family:var(--mono);font-size:12px;font-weight:500;color:var(--mute);font-style:normal;margin-top:6px}
+.draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw 1.4s .3s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.tick{transform-box:fill-box;transform-origin:bottom;animation:grow .4s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+/* Three ideas: one column each, revealed one at a time */
+.ideas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,3vw,48px);margin-top:clamp(14px,3vh,28px)}
+.idea{opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease}
+.idea.on{opacity:1;transform:none}
+.idea .n{font-family:var(--mono);font-size:13px;color:var(--mute);letter-spacing:.03em}
+.idea h3{font-family:var(--display);font-stretch:105%;font-weight:800;font-size:clamp(22px,3.4vh,30px);margin:4px 0 12px;line-height:1.05;letter-spacing:-.01em}
+.idea svg{display:block;width:100%;height:auto;overflow:visible}
+.idea svg text{font-family:var(--mono);font-size:12px;fill:var(--mute)}
+.idea svg .lab{font-family:var(--body);font-size:13px;fill:var(--ink)}
+.idea svg .big{font-family:var(--display);font-weight:800;font-size:20px;fill:var(--ink)}
+.idea p{font-size:clamp(15px,2.3vh,19px);color:var(--ink2);margin-top:10px}
+.idea p.q{font-family:var(--display);font-stretch:92%;font-weight:600;color:var(--ink);font-size:clamp(16px,2.5vh,21px);line-height:1.2}
+.idea p.q cite{display:block;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--mute);font-style:normal;margin-top:4px}
+.idea p.cap{font-family:var(--mono);font-size:12px;color:var(--mute);margin-top:6px}
+@media (max-width:760px){.ideas{grid-template-columns:1fr}.idea{opacity:1;transform:none}}
+
+/* Rules and rounds: words left, the room right */
+.stage{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(20px,4vw,60px);align-items:start}
+.lines{display:grid;gap:clamp(10px,2vh,18px);margin-top:clamp(14px,2.6vh,24px);max-width:32rem}
+.lines p{font-size:clamp(18px,2.8vh,24px);line-height:1.3;padding-left:16px;border-left:4px solid var(--hair)}
+.lines p.c{border-color:var(--warm)}.lines p.g{border-color:var(--cool)}
+.lines b{font-weight:700}
+.ends{font-family:var(--mono);font-size:14px;color:var(--ink2);margin-top:clamp(12px,2.4vh,22px);display:grid;gap:4px}
+.room svg{display:block;width:100%;height:auto;overflow:visible;max-height:52vh}
+.room .body{fill:var(--paper);stroke:#98a4b0;stroke-width:2;transition:fill .35s,stroke .35s}
+.room .cut .body{fill:var(--cool);stroke:var(--cool)}
+.room .num{font-family:var(--display);font-stretch:100%;font-weight:700;font-size:14px;fill:var(--ink);text-anchor:middle;dominant-baseline:central}
+.room .cut .num{fill:#fff}
+.room .halo{fill:none;stroke:var(--cool);stroke-width:2;opacity:0;transform-box:fill-box;transform-origin:center}
+.room .float{font-family:var(--display);font-weight:800;font-size:15px;text-anchor:middle;fill:var(--warm)}
+.room .hull{fill:none;stroke:var(--ink);stroke-width:2}
+.room .hlab{font-family:var(--mono);font-size:12px;fill:var(--ink)}
+.room .olab{font-family:var(--mono);font-size:12px;fill:var(--mute)}
+.roomcap{font-family:var(--mono);font-size:13px;color:var(--ink2);margin-top:8px;min-height:1.5em}
+.prompt{font-family:var(--display);font-stretch:105%;font-weight:800;font-size:clamp(30px,5.6vh,54px);line-height:1.02;margin:0;letter-spacing:-.01em}
+.sub{font-size:clamp(16px,2.4vh,20px);color:var(--ink2);margin-top:8px}
+.counter{display:flex;align-items:center;gap:6px;margin-top:clamp(14px,2.6vh,26px)}
+.counter button{width:52px;height:52px;border:2px solid var(--ink);background:none;font-size:28px;font-weight:700;cursor:pointer;line-height:1;border-radius:50%}
+.counter button:disabled{opacity:.25;cursor:default}
+.counter input{width:2.6ch;font-family:var(--display);font-stretch:100%;font-weight:850;font-size:clamp(56px,11vh,104px);line-height:1;text-align:center;border:0;background:none;font-variant-numeric:tabular-nums;padding:0;-moz-appearance:textfield}
+.counter input::-webkit-outer-spin-button,.counter input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.counter .of{font-family:var(--mono);font-size:14px;color:var(--mute);margin-left:6px}
+.result{margin-top:clamp(14px,2.6vh,24px);display:grid;gap:10px}
+.pay{display:flex;gap:clamp(18px,3vw,44px);flex-wrap:wrap;align-items:baseline}
+.pay div{display:grid}
+.pay span{font-family:var(--mono);font-size:13px;color:var(--mute)}
+.pay span.how{font-size:12px;margin-top:4px}
+.pay b{font-family:var(--display);font-stretch:100%;font-weight:850;font-size:clamp(46px,9vh,86px);line-height:.95;font-variant-numeric:tabular-nums}
+.pay .c b{color:var(--cool)}.pay .r b{color:var(--warm)}
+.verdict{font-size:clamp(17px,2.6vh,22px);line-height:1.3;max-width:34rem}
+.verdict b{font-weight:700}
+.tally{font-family:var(--mono);font-size:13px;color:var(--ink2)}
+.result.pending{opacity:0}
+.why ul{margin:0;padding-left:1.1em;font-size:clamp(17px,2.6vh,22px);line-height:1.35;max-width:34rem;display:grid;gap:6px}
+.why li::marker{color:var(--mute)}
+.why b{font-weight:700}
+.result.show{animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+
+/* Settings: a quiet line, not a panel */
+.settings{margin-top:clamp(14px,2.6vh,24px);font-size:14px;color:var(--ink2)}
+.settings summary{cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--mute)}
+.settings .row{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:8px;align-items:center}
+.settings input[type=number],.settings select{border:0;border-bottom:1.5px solid var(--ink);background:none;padding:2px 4px;width:4.5em}
+.settings .hint{font-size:13px;color:var(--mute);flex-basis:100%}
+
+/* Club intro */
+.club2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,60px);margin-top:clamp(14px,2.6vh,24px)}
+.club2 h3{font-family:var(--display);font-stretch:105%;font-weight:800;font-size:clamp(20px,3vh,26px);margin:0 0 6px}
+.club2 p{font-size:clamp(16px,2.4vh,20px);color:var(--ink2);max-width:34rem}
+.club2 .game p{color:var(--ink)}
+
+/* Debrief */
+.scen{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 40px;margin-top:clamp(14px,2.6vh,24px)}
+.scen .verdict{max-width:none}
+.scen .both{grid-column:1 / -1;border-top:1px solid var(--hair);padding-top:12px}
+.big-stripes{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;margin-top:clamp(14px,2.6vh,24px)}
+.big-stripes .s{display:grid;gap:6px}
+.big-stripes i{display:block;height:clamp(110px,22vh,200px)}
+.big-stripes .s span{font-family:var(--mono);font-size:13px;color:var(--ink2);text-align:center;font-variant-numeric:tabular-nums}
+.big-stripes .s .fr{font-family:var(--display);font-weight:800;font-size:clamp(18px,3vh,26px);text-align:center}
+.rowlab{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--mute);margin-top:4px}
+.lenses{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:clamp(18px,3.4vh,32px);border-top:2px solid var(--ink)}
+.lens{padding:12px 20px 4px 0}
+.lens + .lens{padding-left:20px;border-left:1px solid var(--hair)}
+.lens h3{font-family:var(--display);font-stretch:110%;font-weight:800;font-size:clamp(20px,3vh,26px);margin:0 0 8px}
+.lens p{font-size:clamp(16px,2.3vh,19px);line-height:1.35;margin-bottom:8px}
+.after{display:grid;grid-template-columns:1fr;gap:20px 40px;margin-top:clamp(14px,2.6vh,24px);font-size:clamp(15px,2.2vh,18px);color:var(--ink2)}
+.after b{color:var(--ink)}
+.exit{margin-top:clamp(18px,3.4vh,32px);background:var(--ink);color:var(--paper);padding:clamp(16px,3vh,28px) clamp(16px,3vw,32px)}
+.exit .kicker{color:#9fb0c3}
+.exit p.q{font-family:var(--display);font-stretch:105%;font-weight:700;font-size:clamp(22px,3.8vh,34px);line-height:1.15}
+.exit p.q + p.q{margin-top:8px}
+
+footer{margin-top:clamp(20px,4vh,40px);font-family:var(--mono);font-size:11px;color:var(--mute);border-top:1px solid var(--hair);padding-top:10px}
+
+@media (max-width:900px){
+  .scen{grid-template-columns:1fr}
+  .puzzle,.stage,.club2,.after{grid-template-columns:1fr}
+  .lenses{grid-template-columns:1fr}
+  .lens + .lens{padding-left:0;border-left:0;border-top:1px solid var(--hair)}
+  .steps{margin-left:0}
+  .record .key{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  .enter,.result.show,.record .s.new i,.tick{animation:none}
+  .draw{animation:none;stroke-dashoffset:0}
+}
+</style>
+
+<div class="wrap">
+  <div class="bar">
+    <p class="title">The Climate Club</p>
+    <span class="course">IR 201 · Week 5 · Nordhaus 2020</span>
+    <nav class="steps" id="steps" aria-label="Steps"></nav>
+    <button class="newgame" id="resetBtn" type="button">new game</button>
+  </div>
+  <div class="record" id="record" aria-label="One stripe per round"></div>
+  <main id="screen" aria-live="polite"></main>
+  <footer>Source: William Nordhaus, “The Climate Club: How to Fix a Failing Global Effort,” Foreign Affairs 99(3), May/June 2020, 10–17. Facts and quotations are from the article. The points are a classroom model of his argument. Stripe colours follow Ed Hawkins’s warming stripes. Built October 29, 2026.</footer>
+</div>
+
+<script>
+// ---------- RULES START ----------
+const COST = 5; // what a country pays to cut
+// Paris round, c cutters out of n: every country gets c, cutters also pay COST.
+function parisRound(n, c){
+  return {cut: c - COST, ride: c, room: n * c - COST * c, best: n * (n - COST), switchGain: COST - 1};
+}
+// Club round, m members out of n: members cut. Outsiders pay the tariff on their trade with each member, so the
+// penalty is the rate times the number of members: an empty club bites nobody, a full one bites hardest.
+function clubRound(n, m, rate){
+  const t = rate * m, tip = Math.min(n, Math.floor((COST - 1) / rate) + 1); // tip: smallest club that makes joining pay
+  return {cut: m - COST, ride: m - t, room: n * m - COST * m - (n - m) * t, best: n * (n - COST), t, tip,
+          switchGain: (COST - 1) - t}; // what staying out pays compared with joining (negative: joining pays)
+}
+// ---------- RULES END ----------
+
+// Warming-stripes scale (Hawkins), coolest first. The share of countries cutting picks the colour: all cut = deepest blue.
+const STRIPES = ["#08306b","#08519c","#2171b5","#4292c6","#6baed6","#9ecae1","#c6dbef","#deebf7","#fee0d2","#fcbba1","#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"];
+const stripe = share => STRIPES[Math.min(15, Math.floor((1 - share) * 16))];
+
+const STEPS = [["puzzle","The puzzle"],["ideas","Three ideas"],["rules","The rules"],["paris","Paris"],["club","The club"],["debrief","Debrief"]];
+const idx = id => STEPS.findIndex(s => s[0] === id);
+const KEY = "ir201-climate-club-v5";
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function fresh(){ return {step:0, reached:0, n:10, pr:2, cr:2, tariff:2, eyes:false, paris:[], club:[], count:0, shown:false, clubIntro:true, ideas:0}; }
+let S = fresh();
+try{ const s = JSON.parse(localStorage.getItem(KEY) || "null"); if(s && typeof s.step === "number") S = Object.assign(fresh(), s); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+const $ = id => document.getElementById(id);
+const screen = $("screen");
+const num = v => Number.isInteger(v) ? String(v) : (Math.round(v * 10) / 10).toFixed(1);
+const sign = v => (Math.abs(v) < .05 ? "" : v > 0 ? "+" : "−") + num(Math.abs(v));
+const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+let justRevealed = false, newStripe = -1, demoRun = 0;
+
+function go(i){
+  S.step = i; S.reached = Math.max(S.reached, i);
+  if(i === idx("ideas") && !S.ideas) S.ideas = 1;
+  if(i === idx("paris")) S.shown = S.paris.length >= S.pr;
+  if(i === idx("club")) S.shown = !S.clubIntro && S.club.length >= S.cr;
+  save(); render(); scrollTo({top:0});
+}
+
+// ---------- The room: one dot per country ----------
+// Column-major grid. Group A (cutters or club members) fills the first columns. With split, a gap and a hull mark the club.
+function roomLayout(n, k, split){
+  const rows = Math.max(3, Math.min(6, Math.round(Math.sqrt(n / 1.7)))), D = 46, R = 17, gap = split ? 40 : 0, top = 34;
+  const colsA = Math.ceil(k / rows), pos = [];
+  for(let i = 0; i < n; i++){
+    const inA = i < k, j = inA ? i : i - k;
+    const col = Math.floor(j / rows) + (inA ? 0 : colsA), row = j % rows;
+    pos.push({x: 30 + col * D + (inA ? 0 : gap), y: top + R + row * D, col});
+  }
+  const cols = colsA + Math.ceil((n - k) / rows);
+  return {pos, R, D, rows, colsA, gap, top, W: 60 + Math.max(cols - 1, 0) * D + gap, H: top + rows * D + 10};
+}
+function roomSVG(n, k, split, nums){
+  const L = roomLayout(n, k, split);
+  let g = "";
+  if(split){
+    const x0 = 30 - L.R - 10, x1 = 30 + Math.max(L.colsA - 1, 0) * L.D + L.R + 10;
+    const y0 = L.top - 10, y1 = L.top + (L.rows - 1) * L.D + 2 * L.R + 10;
+    if(k > 0) g += `<rect class="hull" x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" rx="26"/><text class="hlab" x="${x0 + 4}" y="${y0 - 8}">THE CLUB · ${k}</text>`;
+    if(n > k) g += `<text class="olab" x="${30 + (L.colsA + Math.ceil((n - k) / L.rows) - 1) * L.D + L.gap + L.R}" y="${y0 - 8}" text-anchor="end">OUTSIDE · ${n - k}</text>`;
+  }
+  L.pos.forEach((p, i) => {
+    g += `<g class="dot${i < k ? " cut" : ""}"><circle class="halo" cx="${p.x}" cy="${p.y}" r="${L.R}"/><circle class="body" cx="${p.x}" cy="${p.y}" r="${L.R}"/><text class="num" x="${p.x}" y="${p.y}">${nums ? nums(i) : ""}</text></g>`;
+  });
+  const W = split && n > k ? Math.max(L.W, 30 + L.colsA * L.D + L.gap - L.R + 120) : L.W;
+  return `<svg viewBox="0 0 ${W} ${L.H}" preserveAspectRatio="xMinYMin meet" style="max-width:${Math.round(W * 1.45)}px" role="img" aria-label="${n} countries, ${k} ${split ? "in the club" : "cutting"}">${g}</svg>`;
+}
+
+// Count every dot's number from one value to another
+function countTo(svg, from, to, ms){
+  const nums = [...svg.querySelectorAll(".num")];
+  return new Promise(res => {
+    if(reduce || !ms){ nums.forEach((t, i) => t.textContent = sign(to(i))); return res(); }
+    const t0 = performance.now();
+    const step = now => {
+      const e = Math.min(1, (now - t0) / ms), ease = 1 - Math.pow(1 - e, 3);
+      nums.forEach((t, i) => t.textContent = sign(Math.round(from(i) + (to(i) - from(i)) * ease)));
+      e < 1 ? requestAnimationFrame(step) : res();
+    };
+    requestAnimationFrame(step);
+  });
+}
+const wait = ms => new Promise(r => setTimeout(r, reduce ? 0 : ms));
+function halo(svg, filter, delayBy){
+  if(reduce) return;
+  svg.querySelectorAll(".dot").forEach((d, i) => {
+    if(filter(i)) d.querySelector(".halo").animate([{opacity:.75, transform:"scale(1)"}, {opacity:0, transform:"scale(1.9)"}], {duration:750, delay:delayBy(i), easing:"cubic-bezier(.2,.8,.2,1)"});
+  });
+}
+function float(svg, filter, label){
+  if(reduce) return;
+  svg.querySelectorAll(".dot").forEach((d, i) => {
+    if(!filter(i)) return;
+    const c = d.querySelector(".body"), t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("class", "float"); t.setAttribute("x", c.getAttribute("cx")); t.setAttribute("y", +c.getAttribute("cy") - 24);
+    t.textContent = label; svg.appendChild(t);
+    t.animate([{opacity:0, transform:"translateY(6px)"}, {opacity:1, transform:"translateY(0)", offset:.25}, {opacity:0, transform:"translateY(-14px)"}], {duration:1200, easing:"ease-out"}).onfinish = () => t.remove();
+  });
+}
+
+// ---------- Header ----------
+function renderSteps(){
+  $("steps").innerHTML = STEPS.map((s, i) => `<button type="button" data-i="${i}"${i === S.step ? ' aria-current="step"' : ""}${i > S.reached ? " disabled" : ""}>${s[1]}</button>`).join("");
+  $("steps").querySelectorAll("button").forEach(b => b.onclick = () => go(+b.dataset.i));
+}
+function renderRecord(){
+  const el = $("record");
+  if(S.step < idx("paris") && !S.paris.length){ el.hidden = true; return; }
+  el.hidden = false;
+  const rounds = S.paris.map((c, i) => ["P" + (i + 1), c]).concat(S.club.map((m, i) => ["C" + (i + 1), m]));
+  let h = rounds.map((r, i) => `<div class="s${i === newStripe ? " new" : ""}"><i style="background:${stripe(r[1] / S.n)}"></i><span>${r[0]}</span></div>`).join("");
+  for(let i = rounds.length; i < S.pr + S.cr; i++) h += `<div class="s"><i></i><span>${i < S.pr ? "P" + (i + 1) : "C" + (i - S.pr + 1)}</span></div>`;
+  el.innerHTML = h + `<span class="key">one stripe per round · blue: most cut · red: few cut</span>`;
+  newStripe = -1;
+}
+
+// ---------- Screens ----------
+function puzzle(){
+  // 25 COPs, 1995 to 2019. The Kyoto Protocol came out of COP3 (1997), the Paris accord out of COP21 (2015).
+  const W = 560, base = 150, tw = 14, step = (W - 20) / 25;
+  let g = "";
+  for(let i = 0; i < 25; i++){
+    const x = 10 + i * step, tall = i === 2 || i === 20, h = tall ? 64 : 34;
+    g += `<rect class="tick" style="animation-delay:${40 * i}ms" x="${x.toFixed(1)}" y="${base - h}" width="${tw}" height="${h}" fill="${tall ? "#0e1a29" : "#aab4be"}"/>`;
+    if(i === 0 || i === 10 || i === 24) g += `<text x="${(x + tw / 2).toFixed(1)}" y="${base + 18}" text-anchor="middle">${1995 + i}</text>`;
+  }
+  const kx = 10 + 2 * step, px = 10 + 20 * step + tw;
+  g += `<text class="lab" x="${kx}" y="${base - 118}"><tspan font-weight="700">Kyoto, 1997</tspan><tspan x="${kx}" dy="17">Leaving cost nothing.</tspan><tspan x="${kx}" dy="17">The US and Canada left.</tspan></text>`;
+  g += `<text class="lab" x="${px}" y="${base - 118}" text-anchor="end"><tspan font-weight="700">Paris, 2015</tspan><tspan x="${px}" dy="17">Each country sets its own target.</tspan><tspan x="${px}" dy="17">Missing it costs nothing.</tspan></text>`;
+  const cops = `<svg viewBox="0 0 ${W} ${base + 26}" role="img" aria-label="25 UN climate conferences, 1995 to 2019">${g}</svg>`;
+
+  // Emissions index, 2000 = 100: +2% a year to 2020 (the article's rate), then two paths to 2040: the trend, and −3% a year.
+  const X = y => 40 + (y - 2000) * 12.5, Y = v => 196 - (v - 60) * 0.8;
+  const line = f => Array.from({length:21}, (_, k) => f(k)).map((p, k) => (k ? "L" : "M") + X(p[0]).toFixed(1) + " " + Y(p[1]).toFixed(1)).join(" ");
+  const v20 = 100 * Math.pow(1.02, 20), hi = v20 * Math.pow(1.02, 20), lo = v20 * Math.pow(0.97, 20);
+  const emis = `<svg viewBox="0 0 560 236" role="img" aria-label="Emissions growing 2% a year to 2020, against the 3% yearly cut needed after 2020">
+    <line x1="40" x2="540" y1="${Y(100)}" y2="${Y(100)}" stroke="#cdd4da"/>
+    <text x="34" y="${Y(100) + 4}" text-anchor="end">100</text>
+    ${[2000, 2020, 2040].map(y => `<text x="${X(y)}" y="232" text-anchor="middle">${y}</text>`).join("")}
+    <line x1="${X(2020)}" x2="${X(2020)}" y1="8" y2="204" stroke="#cdd4da" stroke-dasharray="3 4"/>
+    <path d="${line(k => [2000 + k, 100 * Math.pow(1.02, k)])}" fill="none" stroke="#0e1a29" stroke-width="3.5" class="draw" style="--len:300"/>
+    <path d="${line(k => [2020 + k, v20 * Math.pow(1.02, k)])}" fill="none" stroke="#cb181d" stroke-width="3" stroke-dasharray="7 6"/>
+    <path d="${line(k => [2020 + k, v20 * Math.pow(0.97, k)])}" fill="none" stroke="#2171b5" stroke-width="3.5" class="draw" style="--len:300;animation-delay:1.3s"/>
+    <text class="lab" x="${X(2010)}" y="${Y(100 * Math.pow(1.02, 10)) - 14}" text-anchor="middle" font-weight="700">+2% a year</text>
+    <text class="lab" x="${X(2038)}" y="${Y(hi) + 2}" text-anchor="end" fill="#cb181d">if nothing changes</text>
+    <text class="lab" x="${X(2040)}" y="${Y(lo) + 22}" text-anchor="end"><tspan fill="#2171b5" font-weight="700">−3% a year</tspan> needed for 2°C</text>
+  </svg>`;
+
+  return `<section class="enter">
+    <p class="kicker">Nordhaus, “The Climate Club,” Foreign Affairs, 2020</p>
+    <h1>Twenty-five climate summits.<br>No binding deal.</h1>
+    <div class="puzzle">
+      <figure class="cops" style="margin:0">${cops}<figcaption class="figcap">UN climate conferences, 1995 to 2019. By 2020 the world was “no further along than it was after COP1.”</figcaption></figure>
+      <figure class="emis" style="margin:0">${emis}<figcaption class="figcap">Global emissions, 2000 = 100. Drawn from the two rates Nordhaus gives.</figcaption></figure>
+    </div>
+    <p class="quote">“Nations speak loudly but carry no stick at all.”<cite>Nordhaus 2020</cite></p>
+    <div class="go"><button class="btn" id="next">Three ideas →</button></div>
+  </section>`;
+}
+
+const IDEA_NEXT = ["Free riding →", "Beggar thy neighbour →", "The rules →"];
+function ideas(){
+  const on = i => i < S.ideas ? " on" : "";
+  // the Prisoner's Dilemma as the lecture gives it: two states, cut arms or keep arming
+  const cell = (x, y, a, b, cls) => `<rect x="${x}" y="${y}" width="104" height="58" fill="${cls === "best" ? "#deebf7" : cls === "trap" ? "#fee0d2" : "none"}" stroke="#cdd4da"/><text class="big" x="${x + 52}" y="${y + 36}" text-anchor="middle">${a} · ${b}</text>`;
+  const pd = `<svg viewBox="0 0 330 150" role="img" aria-label="A two by two payoff table: both cut 3 and 3, one arms 5 and 0, both arm 1 and 1">
+    <text class="lab" x="118" y="14">they cut</text><text class="lab" x="226" y="14">they arm</text>
+    <text class="lab" x="100" y="58" text-anchor="end">you cut</text><text class="lab" x="100" y="118" text-anchor="end">you arm</text>
+    ${cell(106, 24, 3, 3, "best")}${cell(214, 24, 0, 5)}${cell(106, 86, 5, 0)}${cell(214, 86, 1, 1, "trap")}</svg>
+    <p class="cap">Your points · their points. Whatever they do, arming pays you more.</p>`;
+  // ten countries, nine pay to cut, one does not, all ten get the air
+  let dots = "";
+  for(let i = 0; i < 10; i++){ const x = 24 + i * 31, rider = i === 9;
+    dots += `<circle cx="${x}" cy="60" r="12" fill="${rider ? "none" : "#2171b5"}" stroke="${rider ? "#cb181d" : "#2171b5"}" stroke-width="2.5"/>`; }
+  const fr = `<svg viewBox="0 0 330 132" role="img" aria-label="Ten countries. Nine pay to cut, one does not, and all ten get the same clean air">
+    <text class="lab" x="165" y="24" text-anchor="middle">the same air for all ten</text>${dots}
+    <text class="lab" x="24" y="96">nine paid to cut</text>
+    <text class="lab" x="306" y="96" text-anchor="end" fill="#cb181d">one paid nothing</text>
+    <text class="lab" x="306" y="114" text-anchor="end" fill="#cb181d">and breathes the same air</text></svg>`;
+  // the cost pushed from one state onto its neighbour
+  const bn = `<svg viewBox="0 0 330 130" role="img" aria-label="One state pushes a block labelled the cost onto its neighbour">
+    <defs><marker id="bn-tri" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0e1a29"/></marker></defs>
+    <circle cx="60" cy="60" r="36" fill="none" stroke="#0e1a29" stroke-width="2"/><circle cx="270" cy="60" r="36" fill="none" stroke="#0e1a29" stroke-width="2"/>
+    <rect x="118" y="46" width="76" height="28" fill="#e2e7eb" stroke="#6c7886"/><text class="lab" x="156" y="64" text-anchor="middle">the cost</text>
+    <line x1="198" y1="60" x2="226" y2="60" stroke="#0e1a29" stroke-width="2" marker-end="url(#bn-tri)"/>
+    <text class="lab" x="60" y="116" text-anchor="middle" fill="#2171b5">better off</text><text class="lab" x="270" y="116" text-anchor="middle" fill="#cb181d">worse off</text></svg>`;
+  return `<section class="enter">
+    <p class="kicker">Three ideas you need for the game</p>
+    <h1>Why would anyone pay to cut?</h1>
+    <div class="ideas">
+      <div class="idea${on(0)}"><p class="n">1</p><h3>The Prisoner’s Dilemma</h3>${pd}
+        <p>Two states can each cut their arms or keep arming. Whatever the other does, arming pays you more. So both arm, and both end on 1 when both could have had 3.</p>
+        <p class="q">“The actors have incentives to make themselves better off at the expense of other parties. The result is that all parties are worse off.”<cite>Nordhaus 2020</cite></p>
+</div>
+      <div class="idea${on(1)}"><p class="n">2</p><h3>Free riding</h3>${fr}
+        <p>Clean air is a public good: once it exists, nobody can be kept from it. So the best deal for you is to let the others pay for it.</p>
+        <p class="q">“To fail to contribute to a public good while benefiting from the contributions of others.”<cite>FLS, in Lecture 5</cite></p>
+</div>
+      <div class="idea${on(2)}"><p class="n">3</p><h3>Beggar thy neighbour</h3>${bn}
+        <p>A policy that makes you better off by making your neighbours worse off. The phrase comes from the 1930s, when countries raised tariffs to save jobs at home at the cost of jobs abroad.</p>
+        <p class="q">“Individual countries have an incentive to defect, producing noncooperative, beggar-thy-neighbor outcomes.”<cite>Nordhaus 2020</cite></p>
+</div>
+    </div>
+    <div class="go"><button class="btn" id="next">${IDEA_NEXT[Math.min(S.ideas, 3) - 1] || IDEA_NEXT[0]}</button></div>
+  </section>`;
+}
+
+function rules(){
+  const n = S.n;
+  return `<section class="enter stage">
+    <div>
+      <p class="kicker">The rules</p>
+      <h2>Each of you is a country.</h2>
+      <div class="lines">
+        <p class="c">Cutting emissions <b>costs you 5</b> points.</p>
+        <p class="g">Each cut gives <b>1 point to every country</b>, the one that cut included.</p>
+        <p>Keep your own score on paper.</p>
+      </div>
+      <div class="ends"><span>All ${n} cut → each country gets ${sign(n - COST)}</span><span>Nobody cuts → each country gets 0</span></div>
+      <details class="settings"><summary>teacher settings</summary>
+        <div class="row">
+          <label>countries <input type="number" id="setN" min="6" max="60" value="${n}"></label>
+          <label>Paris rounds <select id="setPR">${[2,3,4].map(v => `<option${v === S.pr ? " selected" : ""}>${v}</option>`).join("")}</select></label>
+          <label>club rounds <select id="setCR">${[2,3,4].map(v => `<option${v === S.cr ? " selected" : ""}>${v}</option>`).join("")}</select></label>
+          <label>tariff per member <select id="setT">${[1,2,3,4].map(v => `<option${v === S.tariff ? " selected" : ""}>${v}</option>`).join("")}</select></label>
+          <label><input type="checkbox" id="setEyes"${S.eyes ? " checked" : ""}> Paris votes with eyes closed</label>
+          <span class="hint">Outsiders lose ${S.tariff} for every club member. Joining pays once the club has ${clubRound(n, 0, S.tariff).tip} members.</span>
+        </div>
+      </details>
+      <div class="go"><button class="btn" id="next">${S.paris.length ? "Back to Paris →" : "Paris, round 1 →"}</button></div>
+    </div>
+    <div class="room" id="demoRoom">${roomSVG(n, 0, false)}<p class="roomcap" id="demoCap">Watch one country cut.</p></div>
+  </section>`;
+}
+
+function roundScreen(kind){
+  const isP = kind === "paris", arr = isP ? S.paris : S.club, max = isP ? S.pr : S.cr;
+  const done = arr.length, r = S.shown ? done : done + 1, last = S.shown && done === max;
+  const k = S.shown ? arr[done - 1] : S.count;
+  const p = isP ? parisRound(S.n, k) : clubRound(S.n, k, S.tariff);
+  const kick = isP ? `Paris · round ${r} of ${max} · voluntary` : `The club · round ${r} of ${max} · outsiders lose ${S.tariff} per member · joining pays from ${p.tip} members`;
+  const prompt = isP ? (S.eyes ? "Eyes closed. Who cuts this round?" : "Who cuts this round?") : "Who is in the club this round?";
+  const sub = isP ? "Decide, then raise your hand." : "Members cut. Outsiders pay the penalty.";
+  let res = "";
+  if(S.shown){
+    let why;
+    const mem = `${k} member${k === 1 ? "" : "s"}`;
+    if(isP) why = k ? [`Every country that cut ended <b>4 points lower</b> than if it had not.`, `Free riding paid <b>4</b>.`]
+                   : [`Nobody cut.`, `A lone cutter would have ended <b>4 points lower</b>.`];
+    else if(k === S.n) why = [`Everyone joined.`, `<b>Nobody pays the penalty.</b>`, `Each country gets <b>${sign(p.cut)}</b>, the most the room can get.`];
+    else if(k === 0) why = [`Nobody founded the club, so <b>there is nobody to charge the tariff</b>.`, `Staying out paid <b>4</b> more, as in Paris.`, `Someone has to go first.`];
+    else if(p.switchGain < -.05) why = [`With ${mem}, the tariff costs each outsider <b>${num(p.t)}</b>.`, `Every outsider would have gained <b>${num(-p.switchGain)}</b> by joining.`];
+    else if(p.switchGain < .05) why = [`With ${mem}, the tariff costs each outsider <b>${num(p.t)}</b>.`, `Joining and staying out paid the same.`, `One more member and joining pays.`];
+    else why = [`With ${mem}, the tariff costs each outsider only <b>${num(p.t)}</b>.`, `Staying out still paid <b>${num(p.switchGain)}</b> more.`, `Below the tipping point: joining pays once the club has <b>${p.tip}</b> members.`];
+    res = `<div class="result ${justRevealed && !reduce ? "pending" : ""}" id="result">
+      <div class="pay"><div class="c"><span>${isP ? "if you cut" : "in the club"}</span><b>${sign(p.cut)}</b><span class="how">${k} from the cuts − 5 to cut</span></div>${!isP && k === S.n ? `<div><span>outside</span><b style="color:var(--mute)">nobody</b></div>` : `<div class="r"><span>${isP ? "if you didn't" : "outside"}</span><b>${sign(p.ride)}</b><span class="how">${isP ? `${k} from the cuts, paid nothing` : `${k} from the cuts − ${num(p.t)} tariff`}</span></div>`}</div>
+      </div>`;
+    why = `<div class="result why ${justRevealed && !reduce ? "pending" : ""}"><ul>${why.map(w => `<li>${w}</li>`).join("")}</ul>
+      <p class="tally">room total ${num(p.room)} · with everyone cutting ${p.best}</p></div>`;
+    res += why;
+  }
+  const [pay, why2] = res ? res.split('<div class="result why') : ["", ""];
+  const whyBlock = why2 ? '<div class="result why' + why2 : "";
+  const nums = S.shown && !justRevealed ? (i => sign(i < k ? p.cut : p.ride)) : null;
+  return `<section class="${justRevealed ? "" : "enter "}stage">
+    <div>
+      <p class="kicker">${kick}</p>
+      <p class="prompt">${prompt}</p><p class="sub">${sub}</p>
+      <div class="counter"><button type="button" id="minus" aria-label="One fewer"${S.shown ? " disabled" : ""}>−</button>
+        <input type="number" id="count" min="0" max="${S.n}" value="${k}" aria-label="Count"${S.shown ? " disabled" : ""}>
+        <button type="button" id="plus" aria-label="One more"${S.shown ? " disabled" : ""}>+</button><span class="of">of ${S.n}</span></div>
+      ${pay}
+      <div class="go">${S.shown
+        ? `<button class="btn" id="next">${last ? (isP ? "Nordhaus’s answer →" : "Debrief →") : "Next round →"}</button><button class="btn quiet" id="edit">fix the count</button>`
+        : `<button class="btn" id="show">Show the points</button>`}</div>
+    </div>
+    <div><div class="room" id="room">${roomSVG(S.n, k, !isP, nums)}</div>${whyBlock}</div>
+  </section>`;
+}
+
+function clubIntro(){
+  return `<section class="enter">
+    <p class="kicker">Nordhaus’s answer</p>
+    <h1>A club, with a price for staying out.</h1>
+    <div class="club2">
+      <div>
+        <h3>Members cut together</h3>
+        <p>They agree on one minimum carbon price, for example $50 a ton of CO₂, rising each year. One number is easier to bargain over than every country’s limit.</p>
+        <h3 style="margin-top:18px">Outsiders pay</h3>
+        <p>Members put a tariff on everything they import from outside the club. He suggests a flat rate, such as 5%.</p>
+      </div>
+      <div class="game">
+        <h3>In our game</h3>
+        <div class="lines" style="margin-top:4px">
+          <p class="g">Members <b>must cut</b>. It still costs 5.</p>
+          <p class="c">Outsiders lose <b>${S.tariff} points for every club member</b>: the tariff on their trade with that member.</p>
+          <p class="c" style="font-size:.85em">${[1, 2, clubRound(S.n, 0, S.tariff).tip, Math.ceil(S.n / 2), S.n - 1].filter((v, i, a) => v > 0 && v < S.n && a.indexOf(v) === i).sort((a, b) => a - b).map(m => `<b>${m}</b> member${m > 1 ? "s" : ""}: outsiders lose <b>${num(S.tariff * m)}</b>`).join("<br>")}<br>Joining pays once the club has <b>${clubRound(S.n, 0, S.tariff).tip}</b> members.</p>
+          <p>You can join or leave before each round.</p>
+        </div>
+      </div>
+    </div>
+    <div class="go"><button class="btn" id="start">Who joins? →</button></div>
+  </section>`;
+}
+
+// Short verdicts for what actually happened, one for each half and one comparing them
+function scenario(){
+  const n = S.n, P = S.paris, C = S.club, share = a => a.length ? Math.round(a.reduce((x, y) => x + y, 0) / a.length / n * 100) : null;
+  const pP = share(P), pC = share(C);
+  let paris = "", club = "", both = "", bit = false;
+  if(P.length){
+    const first = pct(P[0], n), last = pct(P[P.length - 1], n);
+    const trend = P.length > 1 ? (last < first ? ` It fell from ${first}% to ${last}%: the room learned to free ride.` : last > first ? ` It rose from ${first}% to ${last}%, against the incentive. Why?` : "") : "";
+    if(P.every(c => c === 0)) paris = `<b>Nobody cut.</b> That is the prediction. With no penalty, free riding is every country’s best move, and the room got 0 when it could have had ${n * (n - COST)}.`;
+    else if(P.every(c => c === n)) paris = `<b>Everyone cut, every round.</b> In a room of ${n} people who can see each other, that happens. Still, each of you would have had 4 more by sitting out, and 195 countries cannot see each other. That is Nordhaus’s point.`;
+    else paris = `<b>Some cut and paid for it.</b> Each cutter ended 4 below a free rider.${trend} If you cut: why? Fairness, reputation, being watched? That is where constructivists start.`;
+  }
+  if(C.length){
+    const tip = clubRound(n, 0, S.tariff).tip; bit = C.some(m => clubRound(n, m, S.tariff).switchGain < 0);
+    if(C.every(m => m === 0)) club = `<b>Nobody founded the club.</b> An empty club has no market to close, so there was no penalty and free riding paid 4, as in Paris. Nordhaus shows that once a club exists, every region prefers to be in it, “because the losses from the tariff (for nonparticipants) are larger than the costs of abatement (for participants).” He does not say who goes first. The EU’s border price below is one answer: one big market starts alone.`;
+    else if(C.every(m => m === n)) club = `<b>Everyone joined.</b> Nobody’s wants changed, only the price of staying out: ${S.tariff} against the 4 that free riding pays. That is neoliberal institutionalism in one move: the same actors and interests, a different incentive, a different result.`;
+    else if(!bit) club = `<b>The club never reached its tipping point.</b> Outsiders lose the tariff only on their trade with members, so joining pays once ${tip} are in, and the club never got there. The first joiners paid and gained nothing: that is why founders with big markets matter.`;
+    else club = `<b>The club reached its tipping point.</b> Once it had ${tip} members the tariff cost outsiders more than cutting cost members, and every outsider would have gained by joining. If you stayed out: why? Distrust, pride, waiting to see?`;
+  }
+  if(pP != null && pC != null){
+    both = !bit ? `The tariff never bit, so the club half was Paris with a small fee for outsiders: <b>${pP}%</b> then <b>${pC}%</b>.`
+         : pC > pP ? `From Paris to the club, the share cutting went from <b>${pP}%</b> to <b>${pC}%</b>. Same people, same costs, one new rule.`
+         : pC === pP ? `The club did no better than Paris: <b>${pP}%</b> both times. Check the penalty (${S.tariff}, it must be above 4) and whether the club ever had members to impose it.`
+         : `The club did worse than Paris, <b>${pC}%</b> against <b>${pP}%</b>. What happened: a penalty with nobody to collect it, or a room that decided to defy the rule?`;
+  }
+  return `<div class="scen">${paris ? `<div><p class="kicker">Paris</p><p class="verdict">${paris}</p></div>` : ""}${club ? `<div><p class="kicker">The club</p><p class="verdict">${club}</p></div>` : ""}${both ? `<p class="verdict both">${both}</p>` : ""}</div>`;
+}
+
+function debrief(){
+  if(!S.paris.length && !S.club.length) return `<section class="enter"><h2>Play a round first.</h2></section>`;
+  const rounds = S.paris.map((c, i) => ["P" + (i + 1), c, parisRound(S.n, c).switchGain]).concat(S.club.map((m, i) => ["C" + (i + 1), m, clubRound(S.n, m, S.tariff).switchGain]));
+  const avg = a => a.length ? Math.round(a.reduce((x, y) => x + pct(y, S.n), 0) / a.length) : 0;
+  return `<section class="enter">
+    <p class="kicker">Debrief</p>
+    <h1>Paris: ${avg(S.paris)}% cut. The club: ${avg(S.club)}%.</h1>
+    <div class="big-stripes">${rounds.map(r => `<div class="s"><i style="background:${stripe(r[1] / S.n)}"></i><span>${r[0]} · ${pct(r[1], S.n)}%</span><span class="fr" style="color:${r[2] > 0 ? "var(--warm)" : "var(--cool)"}">${sign(r[2])}</span></div>`).join("")}</div>
+    <div class="rowlab"><span>share of countries cutting, each round</span><span>bottom row: what free riding paid you that round</span></div>
+    ${scenario()}
+    <div class="lenses">
+      <div class="lens"><h3 style="color:#2c5ea6">Liberalism</h3><p>The same people played both halves. What changed?</p><p>Is the club an institution in the neoliberal sense?</p></div>
+      <div class="lens"><h3 style="color:#a3392b">Realism</h3><p>Whose market is big enough to make the tariff hurt?</p><p>Would China join, or hit back?</p></div>
+      <div class="lens"><h3 style="color:#2a7a5f">Constructivism</h3><p>Who cut in a Paris round even though it cost them? Why?</p><p>Could a norm do the club’s job?</p></div>
+    </div>
+    <div class="after">
+      <p><b>Today: the EU’s border carbon price.</b> Nordhaus’s club has two parts: members cut together, and outsiders pay at the border. The second part now exists. Since January 1, 2026, after a reporting-only run from 2023 to 2025, anyone importing cement, iron and steel, aluminium, fertilisers, electricity or hydrogen into the EU must buy certificates for the carbon in those goods, priced at the EU’s own carbon price (the CBAM). A carbon price already paid where the goods were made is deducted. So an exporter faces the choice from our club rounds: price your carbon at home, or pay the EU’s price at its border. It is narrower than his club, six sectors rather than a flat tariff on everything, and one member rather than many, but the incentive is his.</p>
+    </div>
+    <div class="exit"><p class="kicker">Exit question, two sentences</p><p class="q">Why does Paris fail, in Nordhaus’s view?</p><p class="q">What would make a country join his club?</p></div>
+  </section>`;
+}
+
+// ---------- Animations ----------
+async function revealRound(kind){
+  const room = $("room"), svg = room && room.querySelector("svg"); if(!svg) return;
+  const isP = kind === "paris", k = isP ? S.paris[S.paris.length - 1] : S.club[S.club.length - 1];
+  const p = isP ? parisRound(S.n, k) : clubRound(S.n, k, S.tariff), L = roomLayout(S.n, k, !isP);
+  await countTo(svg, () => 0, () => 0, 0);
+  halo(svg, () => true, i => L.pos[i].col * 70);      // every cut reaches every country
+  await countTo(svg, () => 0, () => k, 900);
+  await wait(300);
+  float(svg, i => i < k, "−5");                        // cutters pay
+  if(p.t) float(svg, i => i >= k, "−" + num(p.t));          // outsiders pay the penalty
+  await countTo(svg, () => k, i => i < k ? p.cut : p.ride, 650);
+  await wait(200);
+  document.querySelectorAll(".result").forEach(r => { r.classList.remove("pending"); r.classList.add("show"); });
+}
+
+async function demo(){
+  const host = $("demoRoom"); if(!host) return;
+  const svg = host.querySelector("svg"), cap = $("demoCap"), n = S.n, pick = Math.floor(n / 2);
+  const dot = svg.querySelectorAll(".dot")[pick], my = ++demoRun, alive = () => my === demoRun && document.body.contains(svg);
+  const L = roomLayout(n, 0, false), dist = i => Math.hypot(L.pos[i].x - L.pos[pick].x, L.pos[i].y - L.pos[pick].y);
+  while(alive()){
+    dot.classList.remove("cut"); await countTo(svg, () => 0, () => 0, 0);
+    cap.textContent = "Watch one country cut."; await wait(1000); if(!alive()) return;
+    dot.classList.add("cut"); float(svg, i => i === pick, "−5"); cap.textContent = "It pays 5.";
+    await countTo(svg, () => 0, i => i === pick ? -5 : 0, 500); await wait(800); if(!alive()) return;
+    cap.textContent = "Its cut adds 1 to every country, itself included.";
+    halo(svg, () => true, i => dist(i) * 2.2);
+    await countTo(svg, i => i === pick ? -5 : 0, i => i === pick ? -4 : 1, 800); await wait(500); if(!alive()) return;
+    cap.textContent = "It ends on −4. Everyone else gains 1 for nothing.";
+    if(reduce) return;
+    await wait(4200);
+  }
+}
+
+// ---------- Render and wire ----------
+function render(){
+  demoRun++;
+  renderSteps(); renderRecord();
+  const id = STEPS[S.step][0];
+  screen.innerHTML = id === "puzzle" ? puzzle() : id === "ideas" ? ideas() : id === "rules" ? rules() : id === "paris" ? roundScreen("paris") : id === "club" ? (S.clubIntro ? clubIntro() : roundScreen("club")) : debrief();
+  wire(id);
+  if(justRevealed){ justRevealed = false; revealRound(id); }
+}
+
+function setCount(v){
+  S.count = Math.max(0, Math.min(S.n, Math.round(+v || 0)));
+  const el = $("count"); if(el && +el.value !== S.count) el.value = S.count;
+  const room = $("room"); if(room) room.innerHTML = roomSVG(S.n, S.count, STEPS[S.step][0] === "club"); // raised hands fill in
+  save();
+}
+
+function wire(id){
+  const next = $("next");
+  if(id === "puzzle") next.onclick = () => go(idx("ideas"));
+  if(id === "ideas") next.onclick = () => {
+    if(S.ideas >= 3){ go(idx("rules")); return; }
+    document.querySelectorAll(".idea")[S.ideas].classList.add("on"); S.ideas++; next.textContent = IDEA_NEXT[S.ideas - 1]; save();
+  };
+  if(id === "rules"){
+    $("setN").onchange = e => { S.n = Math.max(6, Math.min(60, Math.round(+e.target.value) || 25)); S.count = Math.min(S.count, S.n); save(); render(); };
+    $("setPR").onchange = e => { S.pr = +e.target.value; save(); };
+    $("setCR").onchange = e => { S.cr = +e.target.value; save(); };
+    $("setT").onchange = e => { S.tariff = +e.target.value; save(); render(); };
+    $("setEyes").onchange = e => { S.eyes = e.target.checked; save(); };
+    next.onclick = () => go(idx("paris"));
+    demo();
+  }
+  if(id === "club" && S.clubIntro){ $("start").onclick = () => { S.clubIntro = false; S.shown = false; S.count = 0; save(); render(); }; return; }
+  if(id === "paris" || id === "club"){
+    const arr = id === "paris" ? S.paris : S.club, max = id === "paris" ? S.pr : S.cr;
+    if(!S.shown){
+      $("minus").onclick = () => setCount(S.count - 1);
+      $("plus").onclick = () => setCount(S.count + 1);
+      $("count").oninput = e => setCount(e.target.value);
+      $("show").onclick = () => { arr.push(S.count); S.shown = true; justRevealed = true; newStripe = S.paris.length + S.club.length - 1; save(); render(); };
+    } else {
+      $("edit").onclick = () => { S.count = arr.pop(); S.shown = false; save(); render(); };
+      next.onclick = () => {
+        S.shown = false;
+        if(arr.length >= max){ S.count = 0; if(id === "paris"){ S.clubIntro = true; go(idx("club")); } else go(idx("debrief")); }
+        else { save(); render(); }
+      };
+    }
+  }
+}
+
+document.addEventListener("keydown", e => {
+  const id = STEPS[S.step][0];
+  if(e.target.tagName === "SELECT" || (e.target.tagName === "INPUT" && e.target.type !== "number")) return;
+  const voting = (id === "paris" || (id === "club" && !S.clubIntro)) && !S.shown;
+  if(voting && (e.key === "ArrowUp" || e.key === "+")){ e.preventDefault(); setCount(S.count + 1); }
+  if(voting && (e.key === "ArrowDown" || e.key === "-")){ e.preventDefault(); setCount(S.count - 1); }
+  if(e.key === "Enter" && e.target.tagName !== "BUTTON"){
+    const b = $("show") || $("next") || $("start");
+    if(b){ e.preventDefault(); b.click(); }
+  }
+});
+
+// New game: two clicks (the page cannot show a confirm dialog)
+let armed = null;
+$("resetBtn").onclick = () => {
+  const b = $("resetBtn");
+  if(!armed){ b.textContent = "click again to clear"; b.classList.add("armed"); armed = setTimeout(() => { armed = null; b.textContent = "new game"; b.classList.remove("armed"); }, 3000); return; }
+  clearTimeout(armed); armed = null; b.textContent = "new game"; b.classList.remove("armed");
+  const keep = {n:S.n, pr:S.pr, cr:S.cr, tariff:S.tariff, eyes:S.eyes, ideas:S.ideas};
+  S = Object.assign(fresh(), keep); save(); render();
+};
+
+render();
+</script>
+
+</body></html>
