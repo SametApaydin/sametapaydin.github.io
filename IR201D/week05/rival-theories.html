@@ -1,0 +1,676 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><style>body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>Rival Theories</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --paper:#f6f4ee; --ink:#171614; --ink2:#403d37; --mute:#767169; --hair:#d8d3c8; --faint:#ebe7de;
+  --real:#b03a2a; --lib:#1f5fa8; --con:#237a5f; --fem:#7b3f9e; --crit:#8a5a12; --meta:#4b4944;
+  --disp:'Archivo',system-ui,sans-serif; --serif:'Source Serif 4',Georgia,serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit;text-decoration-color:var(--hair);text-underline-offset:3px}
+b{font-weight:600}
+.page{max-width:1120px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 80px max(16px,env(safe-area-inset-left,0px))}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+
+header{padding:28px 0 0;display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+header nav{display:flex;gap:18px;flex-wrap:wrap}
+header nav a{font-family:var(--disp);font-size:14px;text-decoration:none;color:var(--ink2)}
+header nav a:hover{color:var(--ink);text-decoration:underline}
+h1{font-family:var(--disp);font-variation-settings:'wdth' 80;font-weight:800;font-size:clamp(44px,7vw,88px);line-height:.95;letter-spacing:-.02em;margin:40px 0 14px}
+.lede{font-size:clamp(18px,1.6vw,22px);color:var(--ink2);max-width:46rem;margin:0 0 40px}
+
+/* the lens scene */
+.lenses{display:flex;gap:4px 26px;flex-wrap:wrap;align-items:baseline;border-top:1px solid var(--ink);padding-top:12px}
+.lenses button{font-family:var(--disp);font-weight:600;font-size:17px;padding:4px 0 6px;border-bottom:2.5px solid transparent;color:var(--mute)}
+.lenses button:hover{color:var(--ink)}
+.lenses button[aria-pressed="true"]{color:var(--c,var(--ink));border-color:var(--c,var(--ink))}
+.lenses button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.lenses .key{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--mute)}
+.scene-svg{display:block;width:100%;height:auto;margin:10px 0 0}
+.scene-svg g.l{transition:opacity .55s ease}
+.scene-svg text{font-family:var(--disp);font-size:14px;fill:var(--ink2)}
+.scene-svg text.small{font-size:12px;fill:var(--mute)}
+.scene-svg text.tag{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;fill:var(--mute)}
+.scene-svg .st{fill:var(--paper);stroke:var(--ink);stroke-width:1.6;transition:transform 1.6s cubic-bezier(.3,.6,.2,1);transform-box:fill-box;transform-origin:center}
+.scene-svg .st.small{transform:scale(.5)}
+.scene-svg .st.snap{transition:none}
+.scene-svg [data-step]{opacity:0;transition:opacity .6s ease}
+.scene-svg [data-move]{transition:opacity 1.1s ease,transform 1.2s cubic-bezier(.4,0,.2,1)}
+.scene-svg .st.box{stroke-width:4.5}
+.scene-svg .arms{stroke:var(--real);stroke-width:9;fill:none;stroke-linecap:round}
+.scene-svg .arms.grey{stroke:var(--hair)}
+.scene-svg .trade{stroke:var(--lib);stroke-width:2.2;stroke-dasharray:5 6;fill:none}
+.scene-svg .inst{stroke:var(--lib);stroke-width:1.6;stroke-dasharray:2 5;fill:none}
+.scene-svg .say{font-family:var(--disp);font-weight:700;font-size:16px}
+.scene-svg .word{font-family:var(--disp);font-weight:800;font-size:30px}
+.scene-svg .core{fill:var(--crit);fill-opacity:.85}
+.scene-svg .peri{fill:url(#hatch)}
+.scene-svg .flow{stroke:var(--crit);stroke-width:1.5;fill:none;marker-end:url(#tri)}
+.caption{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:8px 40px;align-items:start;margin:6px 0 0;min-height:4.5rem}
+.caption h2{font-family:var(--disp);font-weight:700;font-size:clamp(22px,2.4vw,30px);line-height:1.1;margin:0 0 10px;color:var(--c,var(--ink))}
+.caption p{margin:0;font-size:clamp(17px,1.5vw,20px);color:var(--ink2)}
+.ctl{display:flex;align-items:center;gap:6px;margin:0 0 10px;height:30px}
+.ctl[hidden]{display:none}
+.ctl button{width:30px;height:30px;border-radius:50%;border:1px solid var(--hair);display:grid;place-items:center;color:var(--ink)}
+.ctl button:hover{border-color:var(--ink)}
+.ctl button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.ctl button svg{width:16px;height:16px;display:block}
+.ctl .st-play{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.ctl span{font-family:var(--mono);font-size:12px;color:var(--mute);margin-left:4px;font-variant-numeric:tabular-nums}
+.assume{margin:0;padding:0;list-style:none;border-top:1px solid var(--hair)}
+.assume:empty{border:0}
+.assume::before{content:attr(data-label);display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding:8px 0 4px}
+.assume:empty::before{content:none}
+.assume li{font-size:15.5px;color:var(--ink2);padding:5px 0;border-top:1px solid var(--faint);opacity:0;transform:translateY(4px);transition:opacity .45s ease,transform .45s ease}
+.assume li.on{opacity:1;transform:none}
+.assume li b{color:var(--ink)}
+
+section{margin-top:84px}
+.scene{margin-top:84px}
+#open .caption h2{color:var(--ink)}
+.big{font-size:clamp(20px,2.2vw,28px);line-height:1.35;color:var(--ink);max-width:40rem;margin:0}
+.why{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 48px;align-items:center}
+#facts{display:block;width:100%;height:auto}
+#facts text{font-family:var(--disp);font-size:10.5px;fill:var(--ink2)}
+#facts text.dim{fill:var(--mute);opacity:.55}
+#facts text.row{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;fill:var(--mute)}
+#facts text.war{font-family:var(--disp);font-weight:800;font-size:18px;fill:var(--real)}
+#facts .arrow{fill:none;stroke:var(--ink);stroke-width:1.5}
+@media (max-width:900px){.why{grid-template-columns:1fr}}
+h2.sec{font-family:var(--disp);font-variation-settings:'wdth' 85;font-weight:800;font-size:clamp(30px,3.6vw,44px);line-height:1;letter-spacing:-.015em;margin:0 0 6px}
+.sub{font-size:19px;color:var(--ink2);margin:0 0 28px;max-width:46rem}
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 40px}
+.cols h4{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--mute);margin:0 0 8px;padding-top:10px;border-top:1px solid var(--hair)}
+.cols ul{margin:0;padding:0;list-style:none}
+.cols li{margin:0 0 9px;padding-left:0}
+.cols li i{font-style:normal;color:var(--mute);font-size:14px}
+.src{font-family:var(--mono);font-size:11.5px;color:var(--mute);margin:14px 0 0}
+
+/* the debates timeline */
+#tl{display:block;width:100%;height:auto;margin:6px 0 10px}
+#tl text{font-family:var(--disp);font-size:13px;fill:var(--ink2)}
+#tl text.yr{font-family:var(--mono);font-size:11px;fill:var(--mute)}
+#tl text.big{font-weight:700;font-size:15px;fill:var(--ink)}
+#tl .span{stroke-width:6;stroke-linecap:butt}
+#tl .tick{stroke:var(--ink);stroke-width:1.2}
+.debates{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px 32px}
+.debates h3{font-family:var(--disp);font-size:17px;font-weight:700;margin:0 0 6px}
+.debates h3 small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--mute);margin-bottom:4px}
+.debates p{margin:0 0 6px;font-size:15.5px;color:var(--ink2)}
+
+/* schools */
+.school{margin-top:84px;padding-top:18px;border-top:3px solid var(--c)}
+.school .head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:10px 40px;align-items:end;margin-bottom:30px}
+.school h2{font-family:var(--disp);font-variation-settings:'wdth' 80;font-weight:800;font-size:clamp(40px,5.5vw,68px);line-height:.95;letter-spacing:-.02em;margin:0;color:var(--c)}
+.school h2 small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--mute);margin-bottom:10px;letter-spacing:.08em}
+.school .sees{font-size:clamp(18px,1.7vw,22px);color:var(--ink2);margin:0}
+.school .sees b{color:var(--ink)}
+
+/* compare table */
+.tbl{overflow-x:auto;margin-top:6px}
+table{border-collapse:collapse;width:100%;min-width:900px;font-size:15px}
+th{font-family:var(--disp);font-weight:700;text-align:left;padding:0 14px 10px 0;border-bottom:2px solid var(--ink);vertical-align:bottom;font-size:16px}
+th.c-real{color:var(--real)}th.c-lib{color:var(--lib)}th.c-con{color:var(--con)}th.c-fem{color:var(--fem)}th.c-crit{color:var(--crit)}
+td{padding:11px 14px 11px 0;border-bottom:1px solid var(--hair);vertical-align:top;color:var(--ink2)}
+td.r{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);white-space:nowrap;padding-top:14px}
+tr.q td{color:var(--ink);font-weight:600}
+
+footer{margin-top:80px;padding-top:16px;border-top:1px solid var(--hair);font-size:14px;color:var(--mute)}
+footer p{margin:0 0 6px;max-width:60rem}
+
+@media (max-width:900px){
+  .cols{gap:24px 26px}.cols li,.debates p{font-size:15.5px}
+  .debates{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .caption,.school .head{grid-template-columns:1fr}.caption p{order:-1}
+  table{min-width:0;font-size:13.5px}td.r{white-space:normal;min-width:5.5rem}th,td{padding-right:10px}
+}
+@media (max-width:700px){
+  .cols,.debates{grid-template-columns:1fr}
+  table{min-width:820px;font-size:14px}
+}
+@media (max-width:600px){
+  .lenses{gap:2px 16px}.lenses button{font-size:15px}.lenses .key{display:none}
+  .scene-svg text{font-size:18px}.scene-svg text.small{font-size:15px}.scene-svg .say{font-size:20px}.scene-svg .word{font-size:34px}
+}
+@media (prefers-reduced-motion: reduce){.scene-svg g.l,.scene-svg .st,.scene-svg [data-step],.scene-svg [data-move],.assume li{transition:none}}
+</style>
+
+<div class="page">
+<header>
+  <span class="mono">IR 201 · International Relations Theory · Week 5</span>
+  <nav aria-label="Sections"><a href="#open">A world</a><a href="#why">Why theory</a><a href="#theory">What a theory is</a><a href="#four">Four theories</a><a href="#debates">The debates</a><a href="#real">Realism</a><a href="#lib">Liberalism</a><a href="#con">Constructivism</a><a href="#fem">Feminism</a><a href="#crit">Critical</a><a href="#compare">Compare</a></nav>
+</header>
+
+<h1>One world,<br>rival theories</h1>
+<p class="lede">A world, a war, and the question it left behind. Then four theories, each looking at the same world and keeping what it needs to explain. Jack Snyder gave the title (2004).</p>
+
+<section class="scene" id="open">
+<h2 class="sec">A world</h2>
+<p class="sub">Four states, and what happened to them.</p>
+<svg class="scene-svg" viewBox="0 0 960 430" role="img" aria-label="Four states. They arm, the small ones take sides, war takes all four, and in 1919 a chair of international politics is founded to find the causes of war.">
+  <g class="l" id="o-states">
+    <circle class="st stA" cx="300" cy="235" r="100"/>
+    <circle class="st stB" cx="640" cy="235" r="88"/>
+    <circle class="st" cx="860" cy="110" r="42"/>
+    <circle class="st" cx="870" cy="345" r="38"/>
+  </g>
+  <g class="l" id="o-war">
+    <path class="arms" data-arc="B" data-step="1" data-off="4"/><path class="arms" data-arc="A" data-step="1" data-off="4"/>
+    <text class="say" data-step="1" data-off="3" x="476" y="130" text-anchor="middle" fill="#b03a2a">arms</text>
+    <path data-step="2" data-off="4" d="M340 150 C 450 60, 700 40, 828 90" fill="none" stroke="#b03a2a" stroke-width="2"/>
+    <path data-step="2" data-off="4" d="M716 275 L 834 330" fill="none" stroke="#b03a2a" stroke-width="2"/>
+    <text class="tag" data-step="2" data-off="4" x="560" y="44" text-anchor="middle" fill="#b03a2a">allies</text>
+    <text class="tag" data-step="2" data-off="4" x="822" y="358" text-anchor="end" fill="#b03a2a">allies</text>
+    <path data-step="3" data-off="4" d="M436 160 L 482 214 L 452 226 L 506 292 L 470 302 L 522 366" fill="none" stroke="#b03a2a" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle data-step="3" data-off="4" cx="300" cy="235" r="100" fill="#b03a2a" fill-opacity=".14"/><circle data-step="3" data-off="4" cx="640" cy="235" r="88" fill="#b03a2a" fill-opacity=".14"/>
+    <circle data-step="3" data-off="4" cx="860" cy="110" r="42" fill="#b03a2a" fill-opacity=".14"/><circle data-step="3" data-off="4" cx="870" cy="345" r="38" fill="#b03a2a" fill-opacity=".14"/>
+    <text class="word" data-step="3" data-off="4" x="476" y="408" text-anchor="middle" fill="#b03a2a">war</text>
+    <g data-step="4">
+      <rect class="fit" x="290" y="12" width="380" height="40" rx="6" fill="none" stroke="#171614" stroke-width="1.4" stroke-dasharray="4 4"/>
+      <text class="tag" x="480" y="37" text-anchor="middle" fill="#171614">1919 · Aberystwyth · a chair of international politics</text>
+    </g>
+  </g>
+</svg>
+<div class="caption" ><div>
+  <div class="ctl"  role="group" aria-label="Step through the picture">
+    <button type="button" class="st-prev" aria-label="Back one step" title="Back one step (,)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M13 4 L6 10 L13 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button type="button" class="st-play" aria-label="Pause" title="Pause or play (space)"></button>
+    <button type="button" class="st-next" aria-label="Forward one step" title="Forward one step (.)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4 L14 10 L7 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <span class="st-lab"></span>
+  </div>
+  <h2></h2><ul class="assume" data-label="The question"></ul></div><p></p></div>
+</section>
+
+<section id="why">
+  <h2 class="sec">Why theory</h2>
+  <div class="why">
+    <p class="big">To prevent the next war, you need to know what caused the last one. History gives the facts: the arms, the alliances, the dates. It does not say which of them mattered. A theory does that. It picks the few that matter and draws the arrows between them, so that we can act on them. Different theories pick different facts. That is this course.</p>
+    <svg id="facts" viewBox="0 0 560 516" role="img" aria-label="Three rows. History: a cloud of facts about 1914 with no arrows. One theory: three of the facts picked out and joined by arrows to war. Another theory: three different facts, different arrows, the same war."></svg>
+  </div>
+</section>
+
+<section id="theory">
+  <h2 class="sec">What a theory is</h2>
+  <p class="sub">History gives us facts. To understand them we need explanation, and explanation needs theory.</p>
+  <div class="cols">
+    <div><h4>A definition</h4><ul>
+      <li>A theory is <b>a logically consistent set of statements that explains a phenomenon of interest</b>.</li>
+      <li>It has three parts: <b>assumptions</b>, the <b>logical connections</b> between them, and the <b>implications</b> that follow (Bueno de Mesquita 2013).</li>
+      <li>Its claims are <b>probabilistic</b>: factors that make an outcome more or less likely, not certain.</li>
+    </ul><p class="src">Lecture 3, slides 4 and 5</p></div>
+    <div><h4>What it does</h4><ul>
+      <li><b>Explain:</b> find causes and link them. The main job.</li>
+      <li><b>Describe:</b> pick out which events matter. A theory of trade tells you what to look at before a trade war.</li>
+      <li><b>Predict:</b> if the causes change, how do outcomes change?</li>
+      <li><b>Prescribe:</b> suggest policy, for example ways to help states cooperate.</li>
+      <li>No single theory answers every puzzle. “One of the principal contributions that international relations theory can make is not predicting the future but providing the vocabulary and conceptual framework to ask hard questions” (Snyder 2004).</li>
+    </ul><p class="src">Lecture 3, slide 5. Lecture 4, slide 3</p></div>
+    <div><h4>Is it science?</h4><ul>
+      <li>“Every time I wash my car, it rains.” A pattern is not an explanation.</li>
+      <li><b>Falsifiability</b> (Popper): a scientific theory says what evidence would prove it wrong, and stands until it is falsified.</li>
+      <li><b>Dependent variable:</b> what we want to explain. <b>Independent variable:</b> what we think explains it.</li>
+      <li><b>Explanatory</b> theories ask why something happened. <b>Normative</b> ones ask how the world ought to be. <b>Critical</b> and <b>constitutive</b> theories ask who the order serves and how it is made possible at all, and reject causal theorizing.</li>
+      <li>Words you will meet: <b>paradigm</b> (a school’s basic assumptions and concepts), <b>ontology</b> (what exists), <b>epistemology</b> (how we know), <b>methodology</b> (how we study it).</li>
+    </ul><p class="src">Lecture 3, slides 3, 7, 14, 15, 19 and 20</p></div>
+  </div>
+</section>
+
+<section class="scene" id="four">
+<h2 class="sec">Four theories, one world</h2>
+<p class="sub">The same four states, seen through four theories. Each starts from its own assumptions and keeps the facts that fit them.</p>
+<div class="lenses" role="group" aria-label="Choose a theory">
+  <button data-l="all" aria-pressed="true">The world</button>
+  <button data-l="real" style="--c:var(--real)" aria-pressed="false">Realism</button>
+  <button data-l="lib" style="--c:var(--lib)" aria-pressed="false">Liberalism</button>
+  <button data-l="con" style="--c:var(--con)" aria-pressed="false">Constructivism</button>
+  <button data-l="crit" style="--c:var(--crit)" aria-pressed="false">Critical approaches</button>
+  <span class="key">1 to 5 or ← → lens · space pause · , . step</span>
+</div>
+<svg class="scene-svg" viewBox="0 0 960 430" role="img" aria-label="A schematic world of four states. Realism: one state grows, the other arms, the first arms too. Liberalism: trade lines join the states and an institution encloses them. Constructivism: the same armed states, called rival and then friend. Critical approaches: centre and periphery.">
+  <defs>
+    <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#8a5a12" stroke-width="1.4"/></pattern>
+    <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a5a12"/></marker>
+    <marker id="blue-tri" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1f5fa8"/></marker>
+  </defs>
+
+  <!-- the states: A grows in the realism lens -->
+  <g class="l" id="g-states">
+    <circle class="st stA" cx="300" cy="235" r="100"/>
+    <circle class="st stB" cx="640" cy="235" r="88"/>
+    <circle class="st" cx="860" cy="110" r="42"/>
+    <circle class="st" cx="870" cy="345" r="38"/>
+  </g>
+
+  <!-- critical approaches: an empire, then "independence", then the hierarchy that stays -->
+  <g class="l" id="g-hier">
+    <ellipse data-step="1" data-off="3" cx="730" cy="228" rx="194" ry="174" fill="none" stroke="#8a5a12" stroke-width="1.6" stroke-dasharray="6 5"/>
+    <text class="tag" data-step="1" data-off="3" x="730" y="42" text-anchor="middle" fill="#8a5a12">an empire</text>
+    <text class="tag" data-step="2" data-off="3" x="865" y="412" text-anchor="middle">now independent</text>
+    <circle class="core" data-step="3" cx="300" cy="235" r="98"/><circle class="core" data-step="3" cx="640" cy="235" r="86"/>
+    <circle class="peri" data-step="3" data-off="6" cx="860" cy="110" r="40"/><circle class="peri" data-step="3" data-off="6" cx="870" cy="345" r="36"/>
+    <path class="flow" data-step="3" data-off="6" d="M826 130 L732 205"/><path class="flow" data-step="3" data-off="6" d="M838 330 L725 272"/>
+    <text class="tag" data-step="3" x="300" y="118" text-anchor="middle">centre</text>
+    <text class="tag" data-step="3" data-off="6" x="865" y="412" text-anchor="middle">periphery</text>
+    <text class="small" data-step="4" data-off="6" x="812" y="178">wealth</text>
+    <text class="small" data-step="4" data-off="6" x="792" y="338">labour</text>
+    <text class="tag" data-step="4" x="300" y="370" text-anchor="middle">race, empire, class</text>
+    <g data-step="5">
+      <rect class="fit" x="470" y="14" width="200" height="40" rx="6" fill="none" stroke="#171614" stroke-width="1.4" stroke-dasharray="4 4"/>
+      <text class="tag" x="570" y="39" text-anchor="middle" fill="#171614">the theory is written here</text>
+      <line x1="520" y1="54" x2="380" y2="150" stroke="#171614" stroke-width="1" stroke-dasharray="3 4"/>
+      <line x1="610" y1="54" x2="630" y2="146" stroke="#171614" stroke-width="1" stroke-dasharray="3 4"/>
+    </g>
+    <text class="tag" data-step="6" x="865" y="412" text-anchor="middle" fill="#8a5a12">the aim: to change it</text>
+  </g>
+
+  <!-- realism: five assumptions as events, then a rise, fear, and the spiral -->
+  <g class="l" id="g-real">
+    <g data-step="1" data-off="3">
+      <rect class="fit" x="392" y="14" width="176" height="40" rx="6" fill="none" stroke="#171614" stroke-width="1.4" stroke-dasharray="4 4"/>
+      <text class="tag" x="480" y="39" text-anchor="middle" fill="#171614">authority above</text>
+      <line x1="440" y1="54" x2="330" y2="140" stroke="#171614" stroke-width="1" stroke-dasharray="3 4"/>
+      <line x1="520" y1="54" x2="615" y2="152" stroke="#171614" stroke-width="1" stroke-dasharray="3 4"/>
+      <line x1="548" y1="40" x2="828" y2="98" stroke="#171614" stroke-width="1" stroke-dasharray="3 4"/>
+    </g>
+    <line data-step="2" data-off="3" x1="386" y1="8" x2="574" y2="60" stroke="#b03a2a" stroke-width="3.5" stroke-linecap="round"/>
+    <g data-step="4" data-off="5" data-move="150,85" data-movestep="5"><rect x="142" y="142" width="16" height="16" fill="none" stroke="#171614" stroke-width="1.6"/><text class="small" x="150" y="134" text-anchor="middle">a firm</text></g>
+    <g data-step="4" data-off="5" data-move="170,-105" data-movestep="5"><circle cx="470" cy="340" r="9" fill="none" stroke="#171614" stroke-width="1.6"/><text class="small" x="470" y="368" text-anchor="middle">an organization</text></g>
+    <g data-step="4" data-off="5" data-move="-130,-95" data-movestep="5"><path d="M770 322 L780 340 L760 340 Z" fill="none" stroke="#171614" stroke-width="1.6"/><text class="small" x="770" y="360" text-anchor="middle">an NGO</text></g>
+    <g data-step="7" data-off="8">
+      <g data-move="-50,0" data-movestep="8"><circle cx="690" cy="235" r="5" fill="#171614"/></g>
+      <g data-move="50,0" data-movestep="8"><circle cx="590" cy="235" r="5" fill="#171614"/></g>
+      <g data-move="-25,43" data-movestep="8"><circle cx="665" cy="192" r="5" fill="#171614"/></g>
+      <g data-move="25,43" data-movestep="8"><circle cx="615" cy="192" r="5" fill="#171614"/></g>
+      <g data-move="-25,-43" data-movestep="8"><circle cx="665" cy="278" r="5" fill="#171614"/></g>
+      <g data-move="25,-43" data-movestep="8"><circle cx="615" cy="278" r="5" fill="#171614"/></g>
+    </g>
+    <text class="small" data-step="7" data-off="9" x="640" y="352" text-anchor="middle">parties, lobbies, leaders</text>
+    <text class="say" data-step="9" data-off="12" x="640" y="241" text-anchor="middle" fill="#171614">one voice</text>
+    <text class="say" data-step="10" x="300" y="112" text-anchor="middle" fill="#b03a2a">grows</text>
+    <text class="word" data-step="11" data-off="13" x="476" y="170" text-anchor="middle" fill="#b03a2a">?</text>
+    <path class="arms" data-arc="B" data-step="12"/>
+    <text class="say" data-step="12" x="640" y="120" text-anchor="middle" fill="#b03a2a">arms</text>
+    <path class="arms" data-arc="A" data-step="13"/>
+    <text class="say" data-step="13" x="300" y="370" text-anchor="middle" fill="#b03a2a">arms too</text>
+  </g>
+
+  <!-- liberalism: the realist start, trade, absolute gains, next year, a cheat, an institution -->
+  <g class="l" id="g-lib">
+    <path class="arms" data-arc="B" data-step="1" data-off="9"/><path class="arms" data-arc="A" data-step="1" data-off="9"/>
+    <path class="arms grey" data-arc="B" data-step="9"/><path class="arms grey" data-arc="A" data-step="9"/>
+    <text class="tag" data-step="1" data-off="2" x="476" y="130" text-anchor="middle">the realist start</text>
+    <path class="trade" data-step="2" d="M416 235 L 538 235"/>
+    <text class="tag" data-step="2" x="476" y="222" text-anchor="middle">trade</text>
+    <path class="trade" data-step="3" d="M710 180 L 822 130"/>
+    <path class="trade" data-step="4" data-off="8" d="M716 275 L 834 330"/>
+    <text class="say" data-step="5" data-off="9" x="300" y="112" text-anchor="middle" fill="#1f5fa8">+3</text>
+    <text class="say" data-step="5" data-off="9" x="640" y="120" text-anchor="middle" fill="#1f5fa8">+5</text>
+    <text class="tag" data-step="5" data-off="9" x="476" y="96" text-anchor="middle">both better off</text>
+    <g data-step="6" data-off="9">
+      <path d="M481.3 291.9 A12 12 0 1 1 465.9 284.7" fill="none" stroke="#1f5fa8" stroke-width="2" stroke-linecap="round" marker-end="url(#blue-tri)"/>
+      <text class="tag" x="476" y="330" text-anchor="middle">again next year</text>
+    </g>
+    <path data-step="7" data-off="8" d="M716 275 L 834 330" stroke="#b03a2a" stroke-width="3" stroke-dasharray="4 7" fill="none"/>
+    <text class="say" data-step="7" data-off="8" x="870" y="406" text-anchor="middle" fill="#b03a2a">cheats</text>
+    <text class="small" data-step="8" data-off="9" x="870" y="406" text-anchor="middle">no trade next year</text>
+    <rect class="inst" data-step="9" x="140" y="32" width="812" height="386" rx="118"/>
+    <text class="tag" data-step="9" x="546" y="22" text-anchor="middle">an institution: rules, information, monitoring</text>
+    <path class="trade" data-step="9" d="M716 275 L 834 330"/>
+    <path class="trade" data-step="10" d="M340 150 C 450 60, 700 40, 828 90"/>
+    <text class="tag" data-step="10" x="560" y="116" text-anchor="middle">more trade each year</text>
+  </g>
+
+  <!-- constructivism: the same arms and two words, then identity, structure, appropriateness -->
+  <g class="l" id="g-con">
+    <path class="arms" data-arc="B" data-step="0" data-off="3"/><path class="arms" data-arc="A" data-step="0" data-off="3"/>
+    <path class="arms grey" data-arc="B" data-step="3" data-off="8"/><path class="arms grey" data-arc="A" data-step="3" data-off="8"/>
+    <text class="word" data-step="1" data-off="3" x="470" y="243" text-anchor="middle" fill="#b03a2a">“rival”</text>
+    <text class="small" data-step="2" data-off="3" x="470" y="300" text-anchor="middle">the same arms</text>
+    <text class="word" data-step="3" x="470" y="243" text-anchor="middle" fill="#237a5f">“friend”</text>
+    <text class="small" data-step="3" data-off="4" x="470" y="300" text-anchor="middle">the same arms</text>
+    <text class="tag" data-step="4" data-off="5" x="300" y="112" text-anchor="middle">identity: the rival</text>
+    <text class="small" data-step="4" data-off="5" x="300" y="370" text-anchor="middle">so it wants to be stronger than its neighbour</text>
+    <text class="tag" data-step="5" x="300" y="112" text-anchor="middle" fill="#237a5f">identity: the partner</text>
+    <text class="small" data-step="5" x="300" y="370" text-anchor="middle">so it wants trade and a good name</text>
+    <rect class="inst" data-step="6" x="130" y="56" width="646" height="358" rx="179" style="stroke:#237a5f"/>
+    <text class="tag" data-step="6" x="465" y="46" text-anchor="middle" fill="#237a5f">shared understanding</text>
+    <text class="small" data-step="6" x="470" y="150" text-anchor="middle">they make it, it makes them</text>
+    <text class="small" data-step="7" x="470" y="326" text-anchor="middle">“what should a friend do here?”</text>
+    <text class="tag" data-step="8" x="470" y="400" text-anchor="middle" fill="#237a5f">the same anarchy, a different world</text>
+  </g>
+</svg>
+<div class="caption" ><div>
+  <div class="ctl"  role="group" aria-label="Step through the picture">
+    <button type="button" class="st-prev" aria-label="Back one step" title="Back one step (,)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M13 4 L6 10 L13 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button type="button" class="st-play" aria-label="Pause" title="Pause or play (space)"></button>
+    <button type="button" class="st-next" aria-label="Forward one step" title="Forward one step (.)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4 L14 10 L7 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <span class="st-lab"></span>
+  </div>
+  <h2></h2><ul class="assume" data-label="Starts from"></ul></div><p></p></div>
+</section>
+
+
+<section id="debates">
+  <h2 class="sec">How the field argued with itself</h2>
+  <p class="sub">Four “great debates”, a simplification of a messier history. The schools below took shape inside them.</p>
+  <svg id="tl" viewBox="0 0 1120 210" role="img" aria-label="Timeline from 1919 to today with the four great debates and when each school appeared"></svg>
+  <div class="debates">
+    <div><h3><small>First · 1920s to 1950s</small>Realism vs idealism</h3><p>Can law and institutions tame power politics? Idealists had Wilson’s Fourteen Points (1918), the League of Nations and the Kellogg–Briand Pact (1928). Realists answered with Carr, <i>The Twenty Years’ Crisis</i> (1939), and Morgenthau, <i>Politics Among Nations</i> (1948). The 1930s seemed to prove them right. Realism won, but liberalism did not disappear.</p><p class="src">Lecture 3, slides 8 and 11</p></div>
+    <div><h3><small>Second · 1950s and 1960s</small>Traditionalism vs behaviouralism</h3><p>A debate about method: can IR be a science? Traditionalists (historians, lawyers, former diplomats) used history, analogy and philosophy. Behaviouralists used hypotheses, data and statistics, as in the Correlates of War project (Singer and Small, from 1963). Today both count. What matters is rigor.</p><p class="src">Lecture 3, slides 12, 16 and 17</p></div>
+    <div><h3><small>Third · 1980s</small>Neorealism vs neoliberalism</h3><p>The “neo-neo” debate, between two rationalist, state-centric camps that share the same picture of anarchy. The question: can institutions help states overcome cheating and the fear of relative gains? Waltz (1979) and Grieco on one side, Keohane (1984) on the other.</p><p class="src">Lecture 3, slide 18. Lecture 5, slides 2 and 16</p></div>
+    <div><h3><small>Fourth · 1990s onward</small>Rationalism vs reflectivism</h3><p>A debate about knowledge: explaining or understanding? Keohane named the two sides in his 1988 address to the International Studies Association. Reflectivists (constructivists, feminists, critical theorists) reject the split between facts and values and study meanings, norms and history. Some constructivists claim a middle ground.</p><p class="src">Lecture 3, slides 18 and 19. Lecture 5, slides 2 and 19</p></div>
+  </div>
+  <p class="src" style="margin-top:22px">The founding story says IR began in 1919, at Aberystwyth, to find the causes of war. The role of race in early IR complicates that story: see Critical approaches below. Lecture 3, slides 8 to 10.</p>
+</section>
+
+<section class="school" id="real" style="--c:var(--real)">
+  <div class="head"><h2><small>Realism</small>Power and survival under anarchy</h2>
+    <p class="sees"><b>What it sees:</b> states, unequal in power, with no authority above them. The stronger grows and the other fears. Trade and treaties are in the background.</p></div>
+  <div class="cols">
+    <div><h4>Assumptions</h4><ul>
+      <li><b>States</b> are the main actors, and great powers matter most.</li>
+      <li><b>Anarchy:</b> no legitimate authority above states.</li>
+      <li>The state is a <b>unitary actor</b>, a “black box” that speaks with one voice whatever its regime or leaders.</li>
+      <li><b>Survival</b> comes first, pursued through <b>self-help</b>.</li>
+      <li>Mearsheimer adds: every state has some offensive capability, intentions can never be known for certain, and states are rational. The result is fear and power maximization, “the tragedy of great power politics”.</li>
+    </ul><p class="src">Lecture 4, slides 7 and 8 (Mearsheimer 2013, 78 to 80)</p></div>
+    <div><h4>Concepts</h4><ul>
+      <li><b>Power:</b> hard (military), latent (wealth and population), soft (attraction).</li>
+      <li><b>Security dilemma:</b> steps one state takes for its own security make others less secure, even when both want peace (Jervis 1976).</li>
+      <li><b>Polarity:</b> unipolar, bipolar, multipolar.</li>
+      <li><b>Balancing, bandwagoning, buck-passing.</b></li>
+      <li><b>Relative gains:</b> what matters is how much I gain compared with you. So cooperation is hard, and institutions mostly reflect the distribution of power (Mearsheimer, “The False Promise of International Institutions”).</li>
+    </ul><p class="src">Lecture 4, slides 9, 10, 15, 18, 20 and 21. Lecture 5, slide 16</p></div>
+    <div><h4>Varieties and roots</h4><ul>
+      <li><b>Classical:</b> human nature drives conflict (Morgenthau 1948). <b>Structural:</b> the anarchic system does (Waltz 1979).</li>
+      <li><b>Defensive:</b> states maximize security. <b>Offensive:</b> states maximize power (Mearsheimer). <b>Neoclassical:</b> domestic factors intervene.</li>
+      <li>Roots: Thucydides (“the strong do what they can and the weak suffer what they must”), Hobbes (no sovereign above sovereigns), Machiavelli (the ruler’s first duty is the survival of the state).</li>
+      <li><i>In our readings:</i> Brooks and Wohlforth on polarity (Week 2). Allison’s Thucydides Trap and Poast on the security dilemma (Week 4). Wakanda hiding its wealth as defensive realism (Beauchamp 2018, Week 5).</li>
+    </ul><p class="src">Lecture 4, slides 6, 11, 14 and 19</p></div>
+  </div>
+</section>
+
+<section class="school" id="lib" style="--c:var(--lib)">
+  <div class="head"><h2><small>Liberalism</small>Cooperation is hard, not impossible</h2>
+    <p class="sees"><b>What it sees:</b> the same states, joined by trade and a shared institution. Cheating is tempting, but they will meet again next year.</p></div>
+  <div class="cols">
+    <div><h4>Assumptions</h4><ul>
+      <li>Humans can reason and make progress. All liberals assume “the possibility of cumulative progress in human affairs” (Sterling-Folker 2013: 115).</li>
+      <li>Kant’s <i>Perpetual Peace</i> gives the three branches: <b>republican government</b> (democratic peace), <b>commerce</b> (interdependence), and <b>law and organization</b> (neoliberal institutionalism).</li>
+      <li>Neoliberals share realism’s picture: central, unitary, rational states under anarchy. They “sought to challenge realist pessimism on its own terms” (Sterling-Folker 2013: 115–116).</li>
+      <li>The difference: for realists anarchy is a constant, for neoliberals a vacuum that institutions can fill. States care about <b>absolute gains</b>: am I better off than before?</li>
+    </ul><p class="src">Lecture 5, slides 3 to 5 and 9 to 11</p></div>
+    <div><h4>Concepts</h4><ul>
+      <li><b>Free-riding:</b> “to fail to contribute to a public good while benefiting from the contributions of others.”</li>
+      <li><b>Transaction costs:</b> the time, effort and resources needed to negotiate, monitor and enforce deals.</li>
+      <li><b>Prisoner’s Dilemma:</b> each side’s incentive to defect leaves both worse off. Neoliberals ask: why assume only one round? Repeated interaction makes cheating today costly.</li>
+      <li>Institutions supply <b>obligation, information, monitoring</b> and <b>predictability</b>, so anarchy matters less.</li>
+      <li><b>Regimes:</b> “principles, norms, rules and decision-making procedures around which actor expectations converge in a given issue-area” (Krasner 1982: 185).</li>
+    </ul><p class="src">Lecture 5, slides 11 to 15</p></div>
+    <div><h4>Key works and readings</h4><ul>
+      <li>Keohane and Nye, <i>Power and Interdependence</i> (1977). Krasner (ed.), <i>International Regimes</i> (1983). Keohane, <i>After Hegemony</i> (1984): cooperation can outlast the hegemon that built the institutions.</li>
+      <li>The setting: European integration, the GATT, the 1973 oil crisis.</li>
+      <li><i>In our readings:</i> the liberal international order (Ikenberry 2020, Danforth 2026, Week 1). Nordhaus, “The Climate Club” (2020, Week 5): voluntary climate deals invite free-riding, and a club that penalizes outsiders changes the incentives.</li>
+    </ul><p class="src">Lecture 5, slides 7 and 9</p></div>
+  </div>
+</section>
+
+<section class="school" id="con" style="--c:var(--con)">
+  <div class="head"><h2><small>Constructivism</small>Ideas give power its meaning</h2>
+    <p class="sees"><b>What it sees:</b> the same armies, but one neighbour is called a friend and the other a rival. That word, not the army, decides who is afraid.</p></div>
+  <div class="cols">
+    <div><h4>Claims</h4><ul>
+      <li><b>Ideas constitute:</b> shared ideas give material facts their meaning. “The state is a state of mind, not a material object.”</li>
+      <li><b>Agents and structures</b> make each other. Neither comes first.</li>
+      <li><b>Identities shape interests.</b> Interests are not given in advance, they are formed.</li>
+      <li>“Not that material conditions no longer matter. It is that how they matter depends on what they mean” (Finnemore and Wendt).</li>
+      <li>Two logics: of <b>consequences</b> (which choice gives the best result?) and of <b>appropriateness</b> (what is the right thing for an actor like me to do here?).</li>
+    </ul><p class="src">Lecture 5, slides 19 and 23</p></div>
+    <div><h4>Three pictures</h4><ul>
+      <li><b>500 against 5:</b> “500 British nuclear weapons are less threatening to the United States than 5 North Korean nuclear weapons” (Wendt 1995: 73). A security dilemma and a security community are both social structures. One rests on distrust, the other on trust.</li>
+      <li><b>Anarchy is what states make of it</b> (Wendt 1992): a state that identifies only with itself lives in realist anarchy. One that identifies with others does not. Hopf: “a continuum of anarchies is possible.” Why is there no security dilemma between the US and Canada?</li>
+      <li><b>Fire in a theatre</b> (Hopf 1998: 173): one exit, everyone runs. Who goes first? Material power cannot answer. You need the “culture, norms, institutions, procedures, rules, and social practices” of the people inside.</li>
+    </ul><p class="src">Lecture 5, slides 20, 21 and 24</p></div>
+    <div><h4>Why it rose, and readings</h4><ul>
+      <li>Nicholas Onuf introduced the term (1989). The approach took off from 1989 to 1999.</li>
+      <li>The Cold War ended when the USSR dissolved itself, which the mainstream theories had not seen as possible. Global civil society, NGOs and human rights campaigns needed explaining too.</li>
+      <li><i>In our readings:</i> social construction, one of Walt’s five concepts (Week 3). Nakia and T’Challa open Wakanda to change how the world sees it (Beauchamp 2018, Week 5).</li>
+    </ul><p class="src">Lecture 5, slide 22</p></div>
+  </div>
+</section>
+
+<section class="school" id="fem" style="--c:var(--fem)">
+  <div class="head"><h2><small>Feminism</small>Where are the women?</h2>
+    <p class="sees"><b>What it sees:</b> who sits at the table and who is out of frame. The work that keeps states going, at home, on bases and in factories, is done where the other theories do not look.</p></div>
+  <div class="cols">
+    <div><h4>Claims</h4><ul>
+      <li>Feminism is “the study of and movement for women not as objects but as subjects of knowledge.” In IR since the late 1980s, starting from the question “where are the women?”</li>
+      <li>Sex is biological. <b>Gender</b> is social: “socially learned behavior and expectations that distinguish between masculinity and femininity.”</li>
+      <li>Gender is relational, “a primary way of signifying relationships of power” (Scott 1986). For most feminists it is an analytical tool, not only a description.</li>
+      <li>It challenges state-centrism.</li>
+    </ul><p class="src">Lecture 5, slides 26 and 27</p></div>
+    <div><h4>Concepts</h4><ul>
+      <li><b>Gendered pairs.</b> Masculine: power, autonomy, rationality, strength, public. Feminine: nature, emotion, passivity, private. The pairs produce a hierarchy.</li>
+      <li>In foreign policy, compromise reads as weakness: “standing tall rather than wimping out.”</li>
+      <li><b>Liberal feminism</b> removes legal obstacles and “adds women”. <b>Post-liberal feminisms</b> (Marxist, socialist, radical, standpoint, postcolonial, postmodern) study the deep structures of patriarchy.</li>
+    </ul><p class="src">Lecture 5, slides 26 and 27, and notes</p></div>
+    <div><h4>What feminists study, and readings</h4><ul>
+      <li>The gendered nature of war and peace, of development, and of the global division of labour. Potentially “discipline- and world-transforming” (Sjoberg and Tickner).</li>
+      <li>Cynthia Enloe, <i>Bananas, Beaches and Bases</i> (1989). J. Ann Tickner, <i>Gender in International Relations</i> (1992).</li>
+      <li><i>In our readings:</i> Sjoberg (2014), “‘Mansplaining’ International Relations? What Walt Misses” (Week 3). Beauchamp’s reading of <i>Black Panther</i> barely mentions gender. What would a feminist reading add? (Week 5)</li>
+    </ul><p class="src">Lecture 5, slides 28 and 29</p></div>
+  </div>
+</section>
+
+<section class="school" id="crit" style="--c:var(--crit)">
+  <div class="head"><h2><small>Critical approaches</small>Who does the order serve?</h2>
+    <p class="sees"><b>What it sees:</b> not anarchy among equals but a hierarchy. Some states were made by ruling others, and wealth still flows one way.</p></div>
+  <div class="cols">
+    <div><h4>Claims</h4><ul>
+      <li>Critical theory exposes domination and structural inequalities of power, and seeks emancipation. Postcolonialism is one example.</li>
+      <li>Postpositivist: the observer and the observed cannot be separated, because theories are shaped by their time and culture.</li>
+      <li>The world is a <b>hierarchy</b> as much as an anarchy. Sjoberg (Week 3): some states and people count more than others.</li>
+    </ul><p class="src">Lecture 3, slide 3 and notes</p></div>
+    <div><h4>Race and the origins of IR</h4><ul>
+      <li>The <i>Journal of Race Development</i> (1910 to 1919) became the <i>Journal of International Relations</i> (1919 to 1922), then <i>Foreign Affairs</i> (1922 onward). That complicates the founding myth that IR began only to prevent another world war.</li>
+      <li><b>The Howard School:</b> Black IR thinkers around Howard University in the 1930s and 1940s, Alain Locke, Ralph Bunche and Merze Tate, with race and racism as central forces in world politics. Beauchamp calls Tate the first Black woman to receive a PhD in international relations.</li>
+    </ul><p class="src">Lecture 3, slide 10. Beauchamp 2018</p></div>
+    <div><h4>Tate’s warning, and readings</h4><ul>
+      <li>Tate (1943): an unjust world order is unstable, because the oppressed see the injustice and will not accept it forever. Western thinkers “think and write entirely too much in terms of saving European civilization, ignoring the fact that that civilization is a partial and secondary culture serving a minority of the peoples of the world.”</li>
+      <li><i>In our readings:</i> a “long peace” among Europe’s great powers, 1815 to 1914, alongside many colonial wars. Peace for whom? (Week 2). Beauchamp reads Killmonger as “Tate’s warning brought to life” (Week 5).</li>
+    </ul><p class="src">Tate 1943, quoted in Beauchamp 2018</p></div>
+  </div>
+</section>
+
+<section id="compare">
+  <h2 class="sec">Side by side</h2>
+  <p class="sub">The same eight questions put to each school.</p>
+  <div class="tbl"><table id="cmp"></table></div>
+</section>
+
+<footer>
+  <p>Content from Lectures 3, 4 and 5 of IR 201 (Oya Yeğen, Fall 2026) and the discussion readings. Quotations are as given on the lecture slides. Title after Jack Snyder, “One World, Rival Theories”, <i>Foreign Policy</i> 145 (2004). Discussion section page, October 30, 2026.</p>
+</footer>
+</div>
+
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+
+/* ---------- scenes ---------- */
+// A scene is a picture with lenses. Each lens shows some layers (group ids) and plays steps [n, ms, {h, p}]: elements with
+// data-step appear at step n and, with data-off, disappear again; data-move="dx,dy" data-movestep slides them; a step's
+// h or p replaces the caption from then on. Assumptions a: [text, step] lights at that step, a plain string on a timer.
+const OPEN = {
+  war: {show:["o-states","o-war"], c:"var(--ink)", h:"Four states",
+        p:"Side by side. They trade and they argue, as states do.",
+        steps:[[1,900,{p:"They arm. Each says it is for defence."}],[2,2600,{p:"The small ones take sides."}],
+               [3,4300,{h:"War",p:"Then war, and it takes all four. The war of 1914 to 1918 killed millions and ended four empires."}],
+               [4,6600,{h:"1919",p:"After the war, the first university chair of international politics is founded at Aberystwyth, with one task: find the causes of war, and prevent the next one."}]],
+        a:[["What caused it?",3],["How do we prevent the next one?",4]]}
+};
+const LENS = {
+  all:  {show:["g-states"], c:"var(--ink)", steps:[],
+         h:"Four states", p:"Here is a world. Which facts about it matter? Each theory starts from a few assumptions, picks the facts that fit them, and leaves the rest out. Choose one.", a:[]},
+  real: {show:["g-states","g-real"], c:"var(--real)", growStep:10, boxStep:9,
+         steps:[[1,300],[2,1600],[3,2400],[4,3300],[5,4700],[6,5900],[7,6700],[8,8000],[9,9200],[10,10400],[11,12000],[12,13000],[13,14400]],
+         h:"Realism", p:"No one above the states, so each must look after itself. One grows, and its neighbour cannot know what it intends, so it arms. The first arms in reply. Nobody wanted a spiral, and here it is.",
+         a:[["<b>Anarchy:</b> no authority above the states.",3],["<b>States</b> are the main actors, great powers most of all. Firms and organizations are theirs.",6],["Each state is a <b>unitary, rational</b> actor, a black box.",9],["Intentions can <b>never be known</b> for certain.",11],["<b>Survival</b> comes first, through <b>self-help</b>.",12]]},
+  lib:  {show:["g-states","g-lib"], c:"var(--lib)", steps:[[1,300],[2,1600],[3,2300],[4,3000],[5,4200],[6,5900],[7,7500],[8,8700],[9,10100],[10,11900]],
+         h:"Liberalism", p:"The same states, armed and alone. Then trade, and both come out ahead. A cheat loses next year's trade, so cheating has a price. An institution adds rules, information and monitoring, and the arms matter less.",
+         a:[["Same start as realism: <b>unitary, rational states</b> under anarchy.",1],["States want <b>absolute gains</b>: am I better off than before?",5],["Interaction is <b>repeated</b>, so cheating today costs tomorrow.",8],["Anarchy is a <b>vacuum</b> that institutions can fill.",9],["People can reason, so <b>progress</b> is possible.",10]]},
+  con:  {show:["g-states","g-con"], c:"var(--con)", steps:[[0,0],[1,900],[2,1700],[3,3300],[4,4900],[5,6600],[6,8300],[7,10000],[8,11600]],
+         h:"Constructivism", p:"The same two armed states. Call the neighbour a rival and the arms mean a threat. Call it a friend and the same arms mean nothing. Who a state thinks it is decides what it wants. The understanding they share is theirs, and it shapes them back. Anarchy is what states make of it.",
+         a:[["<b>Ideas</b> give material facts their meaning.",3],["<b>Identities</b> shape interests. Interests are made, not given.",5],["<b>Agents and structures</b> make each other.",6],["Actors ask what is <b>appropriate</b>, not only what pays.",7],["Anarchy is <b>what states make of it</b>.",8]]},
+  crit: {show:["g-hier","g-states"], c:"var(--crit)", steps:[[1,300],[2,1900],[3,3100],[4,4800],[5,6500],[6,8400]],
+         h:"Critical approaches", p:"First an empire. Then independence on paper, but wealth and labour still flow one way, from a periphery to a centre. The theory itself is written at the centre. The point is not only to explain this order but to change it.",
+         a:[["The world is a <b>hierarchy</b>, not only an anarchy.",3],["<b>Race, empire and class</b> are central forces, not background.",4],["Theory is shaped by its <b>time and place</b>. Observer and observed cannot be separated.",5],["The aim is <b>emancipation</b>, not only explanation.",6]]}
+};
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const PLAY = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4 L16 10 L6 16 Z" fill="currentColor"/></svg>', PAUSE = '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="4" width="3.4" height="12" rx="1" fill="currentColor"/><rect x="11.6" y="4" width="3.4" height="12" rx="1" fill="currentColor"/></svg>';
+// an arc of a circle, for the arms: cx, cy, r, from and to angles in degrees (0 = right, clockwise)
+function arc(cx, cy, r, a0, a1){ const P = a => [cx + r * Math.cos(a * Math.PI / 180), cy + r * Math.sin(a * Math.PI / 180)];
+  const [x0, y0] = P(a0), [x1, y1] = P(a1); return `M${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`; }
+const armsB = arc(640, 235, 100, 135, 225), armsA = arc(300, 235, 112, -45, 45);
+document.querySelectorAll(".scene-svg .arms").forEach(e => e.setAttribute("d", e.dataset.arc === "A" ? armsA : armsB));
+// dashed boxes take the width of the label that follows them, once the fonts are in
+function fitBoxes(){ document.querySelectorAll(".scene-svg rect.fit").forEach(r => { const bb = r.nextElementSibling.getBBox(); if(bb.width){ r.setAttribute("x", (bb.x - 16).toFixed(1)); r.setAttribute("width", (bb.width + 32).toFixed(1)); } }); }
+fitBoxes(); if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitBoxes);
+let active = null;
+function makeScene(root, LENS, first){
+  const q = sel => root.querySelector(sel), qa = sel => [...root.querySelectorAll(sel)];
+  const groups = qa(".scene-svg g.l"), steps = qa(".scene-svg [data-step]"), movers = qa(".scene-svg [data-move]");
+  const A = q(".stA"), B = q(".stB"), ul = q(".assume"), cap = q(".caption"), ctl = q(".ctl"), bPlay = q(".st-play"), lab = q(".st-lab");
+  const ORDER = Object.keys(LENS);
+  let cur = first, timers = [], stepIdx = -1, playing = false;
+  function showStep(n){
+    const L = LENS[cur];
+    steps.forEach(e => { const on = +e.dataset.step <= n && !(e.dataset.off && +e.dataset.off <= n); e.style.opacity = on ? 1 : 0; });
+    movers.forEach(e => { const [dx, dy] = e.dataset.move.split(","); e.style.transform = +e.dataset.movestep <= n ? `translate(${dx}px,${dy}px)` : ""; });
+    A.classList.toggle("small", L.growStep != null && n < L.growStep);
+    B.classList.toggle("box", L.boxStep != null && n >= L.boxStep);
+    [...ul.children].forEach(li => { if(li.dataset.step !== "") li.classList.toggle("on", +li.dataset.step <= n); });
+    let h = L.h, p = L.p; L.steps.forEach(([k, t, o]) => { if(k <= n && o){ if(o.h) h = o.h; if(o.p) p = o.p; } });
+    cap.querySelector("h2").textContent = h; cap.querySelector("p").textContent = p;
+  }
+  function snapTo(i){ A.classList.add("snap"); stepIdx = i; showStep(i < 0 ? -1 : LENS[cur].steps[i][0]); A.getBoundingClientRect(); A.classList.remove("snap"); ctlUI(); }
+  function applyStep(i){ const L = LENS[cur]; stepIdx = i; showStep(i < 0 ? -1 : L.steps[i][0]); if(i >= L.steps.length - 1) playing = false; ctlUI(); }
+  function playFrom(i){ const L = LENS[cur]; timers.forEach(clearTimeout); timers = []; if(i >= L.steps.length - 1) return;
+    const base = i < 0 ? 0 : L.steps[i][1]; playing = true; ctlUI();
+    L.steps.forEach(([n, t], j) => { if(j > i) timers.push(setTimeout(() => applyStep(j), t - base)); }); }
+  function pause(){ timers.forEach(clearTimeout); timers = []; playing = false; ctlUI(); }
+  function ctlUI(){ const L = LENS[cur]; bPlay.innerHTML = playing ? PAUSE : PLAY; bPlay.setAttribute("aria-label", playing ? "Pause" : "Play");
+    lab.textContent = L.steps.length ? `${stepIdx + 1} / ${L.steps.length}` : ""; }
+  function setLens(id){
+    cur = id; const L = LENS[id];
+    timers.forEach(clearTimeout); timers = [];
+    groups.forEach(g => g.style.opacity = L.show.includes(g.id) ? 1 : 0);
+    cap.style.setProperty("--c", L.c);
+    ul.innerHTML = L.a.map(t => Array.isArray(t) ? `<li data-step="${t[1]}">${t[0]}</li>` : `<li data-step="">${t}</li>`).join("");   // trusted text, written above
+    [...ul.children].forEach((li, i) => { if(li.dataset.step !== "") return; if(reduce) li.classList.add("on"); else timers.push(setTimeout(() => li.classList.add("on"), 250 + i * 180)); });
+    qa(".lenses button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.l === id)));
+    ctl.hidden = L.steps.length === 0;
+    snapTo(-1);
+    if(reduce) applyStep(L.steps.length - 1); else playFrom(-1);
+  }
+  const S = {root, setLens, ORDER, cur: () => cur,
+    play: () => { const L = LENS[cur]; if(playing) pause(); else if(stepIdx >= L.steps.length - 1){ snapTo(-1); playFrom(-1); } else playFrom(stepIdx); },
+    next: () => { pause(); if(stepIdx < LENS[cur].steps.length - 1) applyStep(stepIdx + 1); },
+    prev: () => { pause(); if(stepIdx >= 0) snapTo(stepIdx - 1); }};
+  bPlay.onclick = S.play; q(".st-next").onclick = S.next; q(".st-prev").onclick = S.prev;
+  qa(".lenses button").forEach(b => b.addEventListener("click", () => setLens(b.dataset.l)));
+  root.addEventListener("pointerdown", () => { active = S; });
+  setLens(first);
+  return S;
+}
+const scenes = [makeScene($("open"), OPEN, "war"), makeScene($("four"), LENS, "all")];
+active = scenes[0];
+// keys go to the scene on screen
+new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) active = scenes.find(S => S.root === e.target); }), {threshold:.5}).observe($("open"));
+new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) active = scenes.find(S => S.root === e.target); }), {threshold:.5}).observe($("four"));
+addEventListener("keydown", e => {
+  if(e.metaKey || e.ctrlKey || e.altKey || /input|textarea/i.test(e.target.tagName)) return;
+  const S = active, i = S.ORDER.indexOf(S.cur());
+  if(e.key >= "1" && e.key <= "9" && S.ORDER[+e.key - 1]) S.setLens(S.ORDER[+e.key - 1]);
+  else if(e.key === "ArrowRight" && S.ORDER.length > 1) S.setLens(S.ORDER[(i + 1) % S.ORDER.length]);
+  else if(e.key === "ArrowLeft" && S.ORDER.length > 1) S.setLens(S.ORDER[(i + S.ORDER.length - 1) % S.ORDER.length]);
+  else if(e.key === " " && !e.target.closest("button,a,summary")) S.play();
+  else if(e.key === ".") S.next();
+  else if(e.key === ",") S.prev();
+  else return;
+  e.preventDefault();
+});
+
+/* ---------- history and theory: the same facts, different arrows ---------- */
+{
+  // each fact that a theory picks is the last on its row, so its line runs right without crossing anything
+  const F = [["an assassination at Sarajevo",22,10],["a rising Germany",200,10],["railway timetables",40,30],["two alliance blocs",170,30],
+    ["the naval race",22,50],["the arms race",130,50],["nationalism",30,70],["secret treaties",120,70],
+    ["monarchs who were cousins",22,90],["no referee above states",190,90],["colonial rivalry",40,110],["the Balkan wars",150,110],
+    ["public opinion",250,110],["a declining empire",60,130]];
+  const PICK = {one:[1,5,9], two:[3,7,12]}, rowH = 172, busX = 404, warX = 436;
+  const row = (y, title, picks) => { let h = `<text class="row" x="0" y="${y + 14}">${title}</text>`;
+    F.forEach(([t, x, dy], i) => { const yy = y + dy + 32, pick = picks && picks.includes(i), lit = !picks || pick;
+      h += `<circle cx="${x}" cy="${yy}" r="${pick ? 4 : 3}" fill="${lit ? "var(--ink)" : "none"}" stroke="var(--ink)" stroke-opacity="${lit ? 1 : .35}"/>`;
+      h += `<text class="${lit ? "" : "dim"}" x="${x + 7}" y="${yy + 4}"${pick ? ' font-weight="600"' : ""}>${t}</text>`; });
+    if(picks){ // a line from each chosen fact to a shared bar, then one arrow into war
+      const ys = picks.map(i => y + F[i][2] + 32), wy = (Math.min(...ys) + Math.max(...ys)) / 2;
+      picks.forEach(i => { const [t, x, dy] = F[i], yy = y + dy + 32, x1 = x + 7 + t.length * 5.9 + 6;
+        h += `<line class="arrow" x1="${x1}" y1="${yy}" x2="${busX}" y2="${yy}"/>`; });
+      h += `<line class="arrow" x1="${busX}" y1="${Math.min(...ys)}" x2="${busX}" y2="${Math.max(...ys)}"/>`;
+      h += `<line class="arrow" x1="${busX}" y1="${wy}" x2="${warX - 10}" y2="${wy}" marker-end="url(#ink-tri)"/>`;
+      h += `<text class="war" x="${warX}" y="${wy + 6}">war</text>`; }
+    return h; };
+  $("facts").innerHTML = `<defs><marker id="ink-tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--ink)"/></marker></defs>` +
+    row(0, "History: every fact", null) + `<line x1="0" x2="560" y1="${rowH - 2}" y2="${rowH - 2}" stroke="var(--hair)"/>` +
+    row(rowH, "One theory: three facts, and the arrows", PICK.one) + `<line x1="0" x2="560" y1="${2 * rowH - 2}" y2="${2 * rowH - 2}" stroke="var(--hair)"/>` +
+    row(2 * rowH, "Another theory: other facts, other arrows", PICK.two);
+}
+
+/* ---------- the debates timeline ---------- */
+const Y0 = 1915, Y1 = 2030, PL = 10, PR = 10, W = 1120, AX = 124;
+const x = y => PL + (y - Y0) / (Y1 - Y0) * (W - PL - PR);
+const spans = [
+  {a:1920, b:1955, y:AX-46, c:"var(--meta)", t:"1st · realism vs idealism"},
+  {a:1950, b:1969, y:AX-20, c:"var(--meta)", t:"2nd · method"},
+  {a:1980, b:1990, y:AX-46, c:"var(--meta)", t:"3rd · neo-neo"},
+  {a:1990, b:2030, y:AX-20, c:"var(--meta)", t:"4th · rationalism vs reflectivism"}
+];
+const marks = [
+  {y:1919, t:"IR founded (Aberystwyth)", r:1, an:"start"}, {y:1939, t:"Carr", r:2}, {y:1948, t:"Morgenthau", r:1},
+  {y:1963, t:"Correlates of War", r:2}, {y:1977, t:"Keohane and Nye", r:1}, {y:1979, t:"Waltz", r:2},
+  {y:1989, t:"Onuf: constructivism", r:3}, {y:1992, t:"Tickner", r:1}, {y:2004, t:"Snyder", r:2}
+];
+let h = "";
+for(let yr = 1920; yr <= 2020; yr += 20) h += `<line x1="${x(yr)}" x2="${x(yr)}" y1="${AX-62}" y2="${AX+8}" stroke="var(--faint)"/><text class="yr" x="${x(yr)}" y="${AX+24}" text-anchor="middle">${yr}</text>`;
+h += `<line x1="${x(Y0)}" x2="${x(Y1)}" y1="${AX}" y2="${AX}" stroke="var(--ink)" stroke-width="1.2"/>`;
+spans.forEach(s => { h += `<line class="span" x1="${x(s.a)}" x2="${x(s.b)}" y1="${s.y}" y2="${s.y}" stroke="${s.c}" opacity=".85"/><text class="big" x="${x(s.a)}" y="${s.y-9}">${s.t}</text>`; });
+marks.forEach(m => { const yy = AX + 36 + (m.r - 1) * 22; h += `<line class="tick" x1="${x(m.y)}" x2="${x(m.y)}" y1="${AX}" y2="${yy-12}"/><circle cx="${x(m.y)}" cy="${AX}" r="3.2" fill="var(--ink)"/><text x="${x(m.y)}" y="${yy}" text-anchor="${m.an||"middle"}">${m.t}</text>`; });
+$("tl").innerHTML = h;
+
+/* ---------- side by side ---------- */
+const COLS = ["real","lib","con","fem","crit"], NAMES = {real:"Realism",lib:"Liberalism",con:"Constructivism",fem:"Feminism",crit:"Critical approaches"};
+const ROWS = [
+  ["Big question", ["Who has power, and how do states survive?","How can states cooperate?","What do actors believe they are, and what do they see as normal?","Where are the women, and how does gender shape power?","Who does the order serve, and who pays for it?"], true],
+  ["Main actors", ["States, above all great powers","States, plus institutions, firms and NGOs","States and non-state actors, shaped by identity","People and states, seen through gender","Empires, colonized peoples, races and classes"]],
+  ["What drives behaviour", ["Power and fear under anarchy","Interests, interdependence and institutions","Identities, norms and shared ideas","Gendered ideas and hierarchies","Structures of domination"]],
+  ["Anarchy", ["A constant. Self-help","A vacuum that institutions can fill","“What states make of it”","Self-help and autonomy are masculine-coded ideals, not neutral facts","A hierarchy as much as an anarchy"]],
+  ["Cooperation", ["Hard: relative gains, fear of cheating","Possible: absolute gains, repeated play","Depends on identity: friends trust, rivals fear","Ask whose security it protects","Ask who is left out of the deal"]],
+  ["Great debate", ["1st and 3rd, rationalist","1st and 3rd, rationalist","4th, reflectivist or a middle ground","4th, reflectivist","4th, reflectivist"]],
+  ["Key names", ["Thucydides, Hobbes, Carr, Morgenthau, Waltz, Mearsheimer","Kant, Keohane, Nye, Krasner","Onuf, Wendt, Hopf, Finnemore","Enloe, Tickner, Sjoberg","Locke, Bunche, Tate (the Howard School)"]],
+  ["Our readings", ["Allison 2017, Poast 2022 and 2026","Nordhaus 2020","Beauchamp 2018: Nakia and T’Challa","Sjoberg 2014","Beauchamp 2018: Tate and Killmonger"]]
+];
+$("cmp").innerHTML = `<thead><tr><th></th>${COLS.map(c => `<th class="c-${c}">${NAMES[c]}</th>`).join("")}</tr></thead><tbody>` +
+  ROWS.map(([k, v, q]) => `<tr${q ? ' class="q"' : ''}><td class="r">${k}</td>${v.map(t => `<td>${t}</td>`).join("")}</tr>`).join("") + "</tbody>";
+})();
+</script>
+
+</body></html>
