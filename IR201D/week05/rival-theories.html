@@ -105,6 +105,11 @@ h2.sec{font-family:var(--disp);font-variation-settings:'wdth' 85;font-weight:800
 .debates h3{font-family:var(--disp);font-size:17px;font-weight:700;margin:0 0 6px}
 .debates h3 small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--mute);margin-bottom:4px}
 .debates p{margin:0 0 6px;font-size:15.5px;color:var(--ink2)}
+.debates p.q{font-family:var(--disp);font-weight:600;font-size:16.5px;line-height:1.3;color:var(--ink);margin:0 0 10px}
+.debates ul{margin:0;padding:0 0 0 16px}
+.debates li{font-size:15.5px;color:var(--ink2);margin:0 0 6px;padding-left:2px}
+.debates li::marker{color:var(--mute)}
+.debates .src{font-family:var(--mono);font-size:11.5px;color:var(--mute);margin:14px 0 0}
 
 /* schools */
 .school{margin-top:84px;padding-top:18px;border-top:3px solid var(--c)}
@@ -363,10 +368,33 @@ footer p{margin:0 0 6px;max-width:60rem}
   <p class="sub">Four “great debates”, a simplification of a messier history. The schools below took shape inside them.</p>
   <svg id="tl" viewBox="0 0 1120 210" role="img" aria-label="Timeline from 1919 to today with the four great debates and when each school appeared"></svg>
   <div class="debates">
-    <div><h3><small>First · 1920s to 1950s</small>Realism vs idealism</h3><p>Can law and institutions tame power politics? Idealists had Wilson’s Fourteen Points (1918), the League of Nations and the Kellogg–Briand Pact (1928). Realists answered with Carr, <i>The Twenty Years’ Crisis</i> (1939), and Morgenthau, <i>Politics Among Nations</i> (1948). The 1930s seemed to prove them right. Realism won, but liberalism did not disappear.</p><p class="src">Lecture 3, slides 8 and 11</p></div>
-    <div><h3><small>Second · 1950s and 1960s</small>Traditionalism vs behaviouralism</h3><p>A debate about method: can IR be a science? Traditionalists (historians, lawyers, former diplomats) used history, analogy and philosophy. Behaviouralists used hypotheses, data and statistics, as in the Correlates of War project (Singer and Small, from 1963). Today both count. What matters is rigor.</p><p class="src">Lecture 3, slides 12, 16 and 17</p></div>
-    <div><h3><small>Third · 1980s</small>Neorealism vs neoliberalism</h3><p>The “neo-neo” debate, between two rationalist, state-centric camps that share the same picture of anarchy. The question: can institutions help states overcome cheating and the fear of relative gains? Waltz (1979) and Grieco on one side, Keohane (1984) on the other.</p><p class="src">Lecture 3, slide 18. Lecture 5, slides 2 and 16</p></div>
-    <div><h3><small>Fourth · 1990s onward</small>Rationalism vs reflectivism</h3><p>A debate about knowledge: explaining or understanding? Keohane named the two sides in his 1988 address to the International Studies Association. Reflectivists (constructivists, feminists, critical theorists) reject the split between facts and values and study meanings, norms and history. Some constructivists claim a middle ground.</p><p class="src">Lecture 3, slides 18 and 19. Lecture 5, slides 2 and 19</p></div>
+    <div><h3><small>First · 1920s to 1950s</small>Realism vs idealism</h3>
+      <p class="q">Can law and institutions tame power politics?</p>
+      <ul>
+        <li>Idealists had Wilson’s Fourteen Points (1918), the League of Nations and the Kellogg–Briand Pact (1928).</li>
+        <li>Realists answered with Carr, <i>The Twenty Years’ Crisis</i> (1939), and Morgenthau, <i>Politics Among Nations</i> (1948).</li>
+        <li>The 1930s seemed to prove them right. Realism won, but liberalism did not disappear.</li>
+      </ul><p class="src">Lecture 3, slides 8 and 11</p></div>
+    <div><h3><small>Second · 1950s and 1960s</small>Traditionalism vs behaviouralism</h3>
+      <p class="q">Can IR be a science?</p>
+      <ul>
+        <li>A debate about method. Traditionalists (historians, lawyers, former diplomats) used history, analogy and philosophy.</li>
+        <li>Behaviouralists used hypotheses, data and statistics, as in the Correlates of War project (Singer and Small, from 1963).</li>
+        <li>Today both count. What matters is rigor.</li>
+      </ul><p class="src">Lecture 3, slides 12, 16 and 17</p></div>
+    <div><h3><small>Third · 1980s</small>Neorealism vs neoliberalism</h3>
+      <p class="q">Can institutions help states overcome cheating and the fear of relative gains?</p>
+      <ul>
+        <li>The “neo-neo” debate, between two rationalist, state-centric camps that share the same picture of anarchy.</li>
+        <li>Waltz (1979) and Grieco on one side, Keohane (1984) on the other.</li>
+      </ul><p class="src">Lecture 3, slide 18. Lecture 5, slides 2 and 16</p></div>
+    <div><h3><small>Fourth · 1990s onward</small>Rationalism vs reflectivism</h3>
+      <p class="q">Explaining or understanding?</p>
+      <ul>
+        <li>A debate about knowledge. Keohane named the two sides in his 1988 address to the International Studies Association.</li>
+        <li>Reflectivists (constructivists, feminists, critical theorists) reject the split between facts and values and study meanings, norms and history.</li>
+        <li>Some constructivists claim a middle ground.</li>
+      </ul><p class="src">Lecture 3, slides 18 and 19. Lecture 5, slides 2 and 19</p></div>
   </div>
   <p class="src" style="margin-top:22px">The founding story says IR began in 1919, at Aberystwyth, to find the causes of war. The role of race in early IR complicates that story: see Critical approaches below. Lecture 3, slides 8 to 10.</p>
 </section>
@@ -672,5 +700,3 @@ $("cmp").innerHTML = `<thead><tr><th></th>${COLS.map(c => `<th class="c-${c}">${
   ROWS.map(([k, v, q]) => `<tr${q ? ' class="q"' : ''}><td class="r">${k}</td>${v.map(t => `<td>${t}</td>`).join("")}</tr>`).join("") + "</tbody>";
 })();
 </script>
-
-</body></html>
