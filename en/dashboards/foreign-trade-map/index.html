@@ -1398,7 +1398,7 @@ a{color:inherit}
     
     const ll = `Partnerin ${dir === 'exp' ? 'ithalatındaki' : 'ihracatındaki'} payı`, sl = `<span class="lg">${ll}</span><span class="sh">Türkiye'nin payı</span>`;
     $('meas').innerHTML = `<button type="button" data-m="v" aria-pressed="${meas === 'v'}">Değer</button>` +
-      (data.src === 'baci' ? `<button type="button" data-m="s" aria-pressed="${meas === 's'}" aria-label="${ll}">${sl}</button>`
+      (data.src === 'baci' ? `<button type="button" data-m="s" aria-pressed="${meas === 's'}" aria-label="Türkiye'nin payı: ${ll.toLocaleLowerCase('tr')}">${sl}</button>`
         : `<a href="${srcHref('baci', { m: 's' })}" aria-label="${ll}, BACI sürümünde">${sl}&nbsp;(BACI)</a>`);
   }
   
