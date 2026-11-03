@@ -1,0 +1,42 @@
+/* Makro Risk Akademi: design tokens. Light default, dark alternative (plan section 5.2). */
+/* Instrument Sans (SIL OFL, self-hosted): the site's one family (confirmed by the user, November 3, 2026). */
+@font-face{font-family:"Instrument Sans";src:url("../fonts/InstrumentSans-latin.woff2") format("woff2");font-weight:400 700;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Instrument Sans";src:url("../fonts/InstrumentSans-latin-ext.woff2") format("woff2");font-weight:400 700;font-style:normal;font-display:swap;unicode-range:U+0100-0130,U+0132-0151,U+0154-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Source Serif 4";src:url("../fonts/SourceSerif4.woff2") format("woff2");font-weight:400 700;font-style:normal;font-display:swap}
+@font-face{font-family:"Source Serif 4";src:url("../fonts/SourceSerif4-Italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
+
+:root{
+  color-scheme:light;
+  --bg:#f9f9f7; --surface:#fcfcfb; --tint:rgba(11,11,11,.045);
+  --ink:#0b0b0b; --ink2:#52514e; --ink3:#6e6c66;
+  --rule:rgba(11,11,11,.12); --rule2:rgba(11,11,11,.3);
+  --brand:#00438d; --brand-ink:#ffffff; --brand2:#294c94; --navy:#002776; --warm:#e31a31;
+  --focus:#00438d;
+  --r:14px; --r-sm:9px;
+  --display:"Source Serif 4","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --ease:cubic-bezier(.65,0,.35,1);
+  --t:1s;
+  --site-bar:48px;
+  --measure:40rem; --wrap:80rem; --gutter:clamp(16px,4vw,48px);
+  --shadow:0 1px 2px rgba(11,11,11,.06),0 6px 24px rgba(11,11,11,.08);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#121415; --surface:#1a1d1f; --tint:rgba(241,240,236,.06);
+    --ink:#f1f0ec; --ink2:#b9b7b1; --ink3:#8f8d87;
+    --rule:rgba(241,240,236,.14); --rule2:rgba(241,240,236,.32);
+    --brand:#6ea4e6; --brand-ink:#0b0b0b; --focus:#8fbaf0;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 24px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#121415; --surface:#1a1d1f; --tint:rgba(241,240,236,.06);
+  --ink:#f1f0ec; --ink2:#b9b7b1; --ink3:#8f8d87;
+  --rule:rgba(241,240,236,.14); --rule2:rgba(241,240,236,.32);
+  --brand:#6ea4e6; --brand-ink:#0b0b0b; --focus:#8fbaf0;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 24px rgba(0,0,0,.4);
+}
+@media (prefers-reduced-motion:reduce){:root{--t:1ms}}

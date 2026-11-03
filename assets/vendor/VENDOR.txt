@@ -1,0 +1,6 @@
+Third-party files served from this site so that visitors' browsers contact no outside host (audit, November 2, 2026).
+Fetched unchanged from their public CDNs; `eleventy.config.js` rewrites the dashboards' CDN URLs to these files at build.
+
+- d3 7.9.0 (ISC), topojson-client 3.1.0 (ISC), world-atlas 2.0.2 countries-50m (ISC), three.js r128 (MIT)
+- gsap 3.12.5 (GreenSock standard licence; see gsap.com/licensing)
+- flag-icons 7.2.3 (MIT), flags/4x3 only

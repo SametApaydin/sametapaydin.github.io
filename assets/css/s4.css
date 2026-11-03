@@ -1,0 +1,216 @@
+/* The home page (first built as sample S4) and the dashboards list: the globe as the first screen. Instrument Sans only; pure white ground, near-black ink; IPC blue for links and
+   focus only; the IPC red for Türkiye and the active stop only. No boxes, no shadows, no serif. */
+:root{
+  --bg:#ffffff; --surface:#ffffff; --ink:#0b0b0b; --ink2:#4f4e4b;
+  --brand:#00438d; --focus:#00438d;
+  --display:var(--body);
+  --s4-red:#e31a31; --s4-redA:.6; --s4-dotA:.07; --s4-dotB:.32;
+  --s4-hh:max(600px,calc(100svh - 60px));
+  --s4-gap:2rem;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1012; --surface:#0e1012; --ink:#f1f0ec; --ink2:#b4b2ac;
+    --brand:#7fb0ee; --focus:#7fb0ee; --s4-redA:.9; --s4-dotA:.08; --s4-dotB:.36;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1012; --surface:#0e1012; --ink:#f1f0ec; --ink2:#b4b2ac;
+  --brand:#7fb0ee; --focus:#7fb0ee; --s4-redA:.9; --s4-dotA:.08; --s4-dotB:.36;
+}
+
+/* one family: Instrument Sans, also in the shell's consent panel. Type scale: page title 2.5rem, section 1.5rem, sub 1.125rem, text 1rem, small .875rem; tight tracking as sizes grow */
+body.mra{font-size:1rem;line-height:1.55}
+main p{text-wrap:pretty}
+main h1,main h2,main h3,.consent h2{font-family:var(--body)}
+main .num,.s4-fig{font-variant-numeric:tabular-nums lining-nums}
+.s4-wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gutter)}
+
+/* ---------- the first screen ---------- */
+.s4-hero{position:relative;min-height:var(--s4-hh);overflow:hidden}
+.s4-ground{position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none}
+.s4-cv,.s4-still{display:block;width:100%;height:100%}
+.s4-still{color:var(--ink)}
+.s4-still .d{fill:currentColor}
+.s4-still .tr{fill:var(--s4-red)}
+.s4-still .arc,.s4-still .ring{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-dasharray:0 8}
+.s4-still .arc{stroke-opacity:.55}
+.s4-still .ring{stroke-opacity:.35}
+.s4-still .pin{fill:currentColor}
+
+.s4-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s4-gap);min-height:var(--s4-hh)}
+.s4-col{grid-column:1/6;position:relative;z-index:1;padding:clamp(2rem,6vh,3.75rem) 0 clamp(2rem,6vh,3.5rem)}
+.s4-h1{font-size:clamp(1.5rem,1.05rem + 1vw,1.75rem);font-weight:500;line-height:1.18;letter-spacing:-.024em;margin:0;max-width:24em;text-wrap:pretty}
+
+/* what the terms mean, in the text column */
+.s4-defs{margin-top:clamp(1.25rem,3.5vh,2.5rem)}
+.s4-defs h2{font-size:1.0625rem;font-weight:600;line-height:1.25;letter-spacing:-.012em;margin:0 0 .3rem}
+.s4-defs p{font-size:.9375rem;line-height:1.55;color:var(--ink2);margin:0 0 clamp(1rem,2.4vh,1.5rem);max-width:33em}
+.s4-defs p:last-child{margin-bottom:0}
+
+/* the stop's facts: small, in the map's bottom right corner, with the globe showing through a soft see-through ground */
+.s4-panel{position:absolute;z-index:1;right:1.25rem;top:calc(var(--s4-hh) - clamp(1.25rem,3vh,2rem));transform:translateY(-100%);width:14.75rem;text-align:right;background:color-mix(in srgb,var(--bg) 62%,transparent);box-shadow:0 0 18px 14px color-mix(in srgb,var(--bg) 62%,transparent)}
+
+/* the captions: one at a time with JavaScript, a plain list without */
+.s4-caps{list-style:none;margin:0;padding:0}
+.s4-cap+.s4-cap{margin-top:3rem}
+.s4-js .s4-caps{display:grid}
+.s4-js .s4-cap{grid-area:1/1;margin:0;opacity:0;transition:opacity calc(var(--t)*.3) var(--ease)}
+.s4-js .s4-cap.is-on{opacity:1;transition:opacity calc(var(--t)*.45) var(--ease) calc(var(--t)*.15)}
+.s4-ev{font-size:.8125rem;font-weight:600;line-height:1.2;letter-spacing:-.01em;margin:0;text-wrap:balance}
+.s4-date{font-size:.6875rem;color:var(--ink2);margin:.1rem 0 0}
+.s4-fig{font-size:1.375rem;font-weight:500;line-height:1;letter-spacing:-.025em;margin:.25rem 0 .15rem;white-space:nowrap}
+.s4-u{font-size:.4em;font-weight:400;letter-spacing:0;margin-left:.08em}
+.s4-what{font-size:.6875rem;line-height:1.35;margin:0}
+.mra .s4-pause{display:inline-flex;align-items:center;gap:.4rem;min-height:1.75rem;margin-top:.6rem;padding:.2rem .7rem;border:0;border-radius:999px;background:var(--tint);color:var(--ink);font:inherit;font-size:.8125rem;font-weight:500;line-height:1;cursor:pointer}
+.mra .s4-pause[hidden]{display:none}
+.mra .s4-pause:hover{background:color-mix(in srgb,var(--ink) 14%,transparent)}
+.mra .s4-pause:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.s4-pause i{box-sizing:border-box;width:.56rem;height:.65rem;border-inline:.17rem solid currentColor}
+.s4-pause.is-paused i{border:0;background:currentColor;clip-path:polygon(0 0,100% 50%,0 100%)}
+
+/* ---------- the dashboards tab: centred; with motion, one pinned field of dots (panolar.js); without, a plain list ---------- */
+.s4-lead{margin:0 0 1.8rem;font-size:1.0625rem}
+.pano{text-align:center}
+.pano-h{font-size:clamp(1.75rem,4.8vh,2.5rem);font-weight:500;line-height:1.05;letter-spacing:-.032em;margin:0;padding:clamp(1rem,2.6vh,1.75rem) var(--gutter) 0}
+.pi{position:relative;display:inline-flex;max-width:100%;box-sizing:border-box;overflow-x:auto;scrollbar-width:none;gap:.1rem;margin-top:clamp(.7rem,1.8vh,1.1rem);padding:.2rem;border-radius:999px;background:var(--tint)}
+.pi::-webkit-scrollbar{display:none}
+.mra .pi a{flex:0 0 auto;white-space:nowrap;position:relative;z-index:1;padding:.32rem .85rem;border-radius:999px;font-size:.875rem;font-weight:500;letter-spacing:-.005em;color:var(--ink2);text-decoration:none;transition:color calc(var(--t)*.2) var(--ease)}
+.mra .pi a:hover,.mra .pi a[aria-current]{color:var(--ink)}
+.pi-pill{position:absolute;left:0;top:.2rem;bottom:.2rem;width:0;border-radius:999px;background:var(--bg);box-shadow:0 1px 2px rgba(11,11,11,.12);opacity:0;transition:transform calc(var(--t)*.32) var(--ease),width calc(var(--t)*.32) var(--ease)}
+html:not(:has(.ps-on)) .mra .pi a[aria-current]{color:var(--ink2)}
+.pl{list-style:none;margin:0 auto;padding:0 var(--gutter);max-width:50rem}
+.pe{position:relative;margin-top:clamp(2rem,5vh,3rem)}
+.pe h2{font-size:1.5rem;font-weight:500;line-height:1.15;letter-spacing:-.024em;margin:0 0 .35rem}
+.mra .pe h2 a{color:var(--ink);text-decoration-color:var(--rule2)}
+.pe h2 a::after{content:"";position:absolute;inset:0}
+@media (hover:hover) and (pointer:fine){.mra .pe h2 a:hover{color:var(--brand);text-decoration-color:currentColor}}
+.pe-line{font-size:1rem;line-height:1.45;color:var(--ink2);margin:0 auto 1.1rem;max-width:38em}
+.pe-fig{margin:0}
+.pm{display:block;width:100%;height:auto;color:var(--ink)}
+.pm-n{display:none}
+.pm text{font:400 12.5px var(--body);fill:var(--ink2);font-variant-numeric:tabular-nums lining-nums}
+.pm .pm-v{fill:var(--ink);font-weight:500}
+.pm-rule{fill:var(--rule2)}
+.pm-mark{fill:var(--ink2);opacity:.55}
+.pm-mark-r{fill:var(--s4-red);opacity:.55}
+.pm-g{fill:var(--ink);opacity:.34}
+.pm-k{fill:var(--ink);opacity:.82}
+.pm-arc{fill:none;stroke:var(--ink);stroke-opacity:.6;stroke-width:1.6;stroke-dasharray:0 6;stroke-linecap:round}
+.pm .pm-h{paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
+.pm-r{fill:var(--s4-red);opacity:.72}
+.pe-fig figcaption{font-size:.875rem;line-height:1.4;color:var(--ink2);margin:.6rem auto 0;max-width:38em}
+.s4-cov{color:var(--ink2);font-size:.875rem;line-height:1.4;margin:.25rem auto 0;max-width:38em}
+.ps-cue{display:none}
+.s4-method{margin:clamp(2rem,5vh,3rem) 0 0;font-size:1rem}
+.s4-method a{font-weight:500}
+
+/* with motion: the header stays, the words sit above and below a pinned stage, the dots do the rest */
+.ps-on .ps{height:calc(100svh + 270svh)}
+.ps-on .ps-stick{position:sticky;top:var(--hh,60px);height:calc(100svh - var(--hh,60px));display:flex;flex-direction:column;overflow:hidden}
+.ps-on .ps-cv{position:absolute;left:0;top:0;pointer-events:none}
+.ps-on .pano-h,.ps-on .pi{position:relative;z-index:1;flex:0 0 auto}
+.ps-on .pi{align-self:center}
+.ps-on .pl{position:relative;flex:1 1 auto;display:grid;width:100%;max-width:none;min-height:0}
+.ps-on .pe{grid-area:1/1;margin:0;padding:clamp(.8rem,2vh,1.4rem) 0 clamp(3rem,6.5vh,3.6rem);display:flex;flex-direction:column;min-height:0;opacity:0;pointer-events:none;transition:opacity calc(var(--t)*.35) var(--ease)}
+.ps-on .pe.is-on{opacity:1;pointer-events:auto}
+/* no fade until the first scene has settled, so the four scenes never show at once; a new scene waits for the old one to go */
+.ps-on:not(.ps-ready) .pe{transition:none}
+.ps-ready .pe.is-on{transition-delay:calc(var(--t)*.2)}
+html.ps-early .pe:not(.is-on){visibility:hidden}
+.ps-on .pe-line{margin-bottom:0}
+.ps-on .pe-fig{flex:1 1 auto;display:flex;flex-direction:column;justify-content:flex-end;min-height:0}
+.ps-on .pe-fig .pm{display:none}
+.ps-on .pe-fig figcaption{margin-top:0}
+.ps-on .ps-cue{display:flex;flex-direction:column;align-items:center;gap:.15rem;position:absolute;left:0;right:0;bottom:.45rem;margin:0;font-size:.875rem;font-weight:500;color:var(--ink);transition:opacity calc(var(--t)*.3) var(--ease);pointer-events:none}
+.ps-on .ps-cue::after{content:"";width:.5rem;height:.5rem;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);animation:ps-nudge 1.6s ease-in-out infinite}
+@keyframes ps-nudge{0%,100%{translate:0 -2px}50%{translate:0 3px}}
+.nw{white-space:nowrap}
+
+.mra .form{gap:1.1rem}
+main:has(.s4-hero)+.ft{margin-top:0;padding-top:1.5rem}
+.mra .form label{font-size:1rem}
+.mra .form input[type=email],.mra .form input[type=text],.mra .form textarea{border:1px solid var(--ink2);border-radius:var(--r-sm);background:var(--bg);padding:.75rem .85rem;max-width:26rem}
+.mra .form textarea{max-width:none}
+.mra .form .check{color:var(--ink);font-size:.9375rem;font-weight:400}
+.mra .form .check input{accent-color:var(--ink);width:1.05rem;height:1.05rem}
+.mra .s4-btn,.mra button.btn,.mra a.btn{font:500 1rem var(--body);background:var(--ink);color:var(--bg)!important;padding:.8rem 1.5rem;border:0;border-radius:var(--r-sm)}
+@media (hover:hover) and (pointer:fine){.mra .s4-btn:hover,.mra button.btn:not([disabled]):hover,.mra a.btn:hover{background:var(--brand);filter:none}}
+.mra .form .err{color:var(--ink);font-weight:600}
+.mra .form .msg{border:0;background:none;padding:0;border-radius:0;color:var(--ink);font-weight:500}
+.mra .form .note{color:var(--ink2)}
+
+/* ---------- inner pages: heading on the left, text on the right ---------- */
+.art{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s4-gap);align-items:start;padding-top:clamp(2.5rem,6vh,4rem)}
+.art-h{grid-column:1/6;position:sticky;top:clamp(1.5rem,4vh,2.5rem)}
+.art-b{grid-column:6/13;min-width:0}
+.art h1,.s4-dash h1{font-size:clamp(2rem,1.5rem + 1.4vw,2.75rem);font-weight:500;line-height:1.05;letter-spacing:-.032em;margin:0 0 .9rem}
+.art-lead{font-size:1.125rem;line-height:1.4;letter-spacing:-.01em;color:var(--ink2);margin:0 0 .8rem;max-width:28em}
+.mra .art .draft{font-style:normal;color:var(--ink2);font-size:.9375rem;margin:0 0 1rem}
+.art-b>:first-child{margin-top:0}
+.art-b h2{font-size:1.5rem;font-weight:500;line-height:1.15;letter-spacing:-.024em;margin:2.75rem 0 .6rem}
+.art-b h3{font-size:1.125rem;font-weight:600;letter-spacing:-.012em;margin:1.75rem 0 .4rem}
+.art-b p,.art-b ul,.art-b ol{max-width:36em}
+.art-b .facts{grid-template-columns:9.5rem 1fr;gap:.85rem 1.5rem;margin:0 0 1rem;max-width:none}
+.art-b .facts dt{font-weight:400;color:var(--ink2)}
+.art-b .facts dd{font-weight:500}
+.art-b .modules{margin:.8rem 0 0;max-width:none}
+.art-b .modules li::before{font-size:1.0625rem;line-height:1.55;color:var(--ink2);font-variant-numeric:tabular-nums lining-nums}
+.art-b .people{grid-template-columns:repeat(auto-fill,minmax(14rem,1fr));gap:1.25rem 2rem}
+.art-b .people li{display:block}
+.art-b .people .face{display:none}
+.art-b .people span{color:var(--ink2)}
+.art-b address{margin-bottom:.5rem}
+
+/* ---------- tablet and phone: the globe above the caption ---------- */
+@media (max-width:1099px){
+  :root{--s4-hh:auto}
+  .s4-hero{display:flex;flex-direction:column;min-height:0;padding-bottom:2.5rem}
+  .s4-grid,.s4-col,.s4-panel{display:contents}
+  .s4-h1,.s4-caps,.s4-defs{padding-left:var(--gutter);padding-right:var(--gutter)}
+  .s4-h1{order:1;padding-top:1.5rem;font-size:1.375rem;max-width:none}
+  .s4-ground{order:2;position:relative;bottom:auto;height:min(86vw,540px);margin:.75rem 0 .25rem}
+  .s4-caps{order:4}
+  .mra .s4-pause{order:3;align-self:flex-end;margin:0 var(--gutter) .75rem}
+  .s4-defs{order:7;margin-top:2.25rem}
+  /* below the globe the facts have their own space, so they keep a readable size */
+  .s4-panel{text-align:left}
+  .s4-ev{font-size:1.125rem}
+  .s4-date,.s4-what{font-size:.875rem}
+  .s4-fig{font-size:2.25rem;font-weight:500}
+}
+@media (max-width:899px){
+  .art{display:block}
+  .art-h{position:static;margin-bottom:2.25rem}
+}
+@media (max-width:600px){
+  .pm-w{display:none}
+  .pm-n{display:block}
+  .pm text{font-size:12px}
+  .art-b .facts{grid-template-columns:7.5rem 1fr;gap:.8rem 1rem}
+}
+html:not(.s4-js) .s4-panel{position:relative;right:auto;top:auto;transform:none;grid-column:8/13;background:var(--bg);box-shadow:none;width:auto;text-align:left;padding:1.5rem;align-self:start;margin:clamp(2rem,6vh,3.75rem) 0 0}
+@media (max-width:1099px){html:not(.s4-js) .s4-panel{padding:0;margin:0;background:none}}
+html:not(.s4-js) .s4-cv{display:none}
+/* the shell's slim header lays its links out as a row (its nav has no display:flex of its own) */
+
+/* tables in article pages (the cookie notice): the table standard's hairlines; on phones each record stacks, with its label */
+.art-b table{width:100%;border-collapse:collapse;margin:1.25rem 0 1.5rem;font-size:.875rem;line-height:1.45}
+.art-b th{text-align:left;font-weight:500;color:var(--ink2);padding:.4rem .75rem .4rem 0;border-bottom:1px solid var(--rule2)}
+.art-b td{padding:.55rem .75rem .55rem 0;border-bottom:1px solid var(--rule);vertical-align:top;overflow-wrap:anywhere}
+.art-b td code{font-size:.8125rem;white-space:nowrap}
+@media (max-width:640px){
+  .art-b thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .art-b table,.art-b tbody,.art-b tr,.art-b td{display:block}
+  .art-b tr{padding:.5rem 0;border-bottom:1px solid var(--rule2)}
+  .art-b td{border:0;padding:.15rem 0}
+  .art-b td:first-child{font-weight:500}
+  html[lang="tr"] .art-b td:nth-child(2)::before{content:"Amaç: ";color:var(--ink2)}
+  html[lang="tr"] .art-b td:nth-child(3)::before{content:"Süre: ";color:var(--ink2)}
+  html[lang="tr"] .art-b td:nth-child(4)::before{content:"Taraf: ";color:var(--ink2)}
+  html[lang="tr"] .art-b td:nth-child(5)::before{content:"Hukuki dayanak: ";color:var(--ink2)}
+  html[lang="en"] .art-b td:nth-child(2)::before{content:"Purpose: ";color:var(--ink2)}
+  html[lang="en"] .art-b td:nth-child(3)::before{content:"Duration: ";color:var(--ink2)}
+  html[lang="en"] .art-b td:nth-child(4)::before{content:"Party: ";color:var(--ink2)}
+  html[lang="en"] .art-b td:nth-child(5)::before{content:"Legal basis: ";color:var(--ink2)}
+}

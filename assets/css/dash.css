@@ -1,0 +1,117 @@
+/* Loaded only on dashboard pages, after shell.css. The dashboards' own files stay untouched and synced; what the site
+   wants different inside them is set here. */
+
+/* one type set: Instrument Sans everywhere. The maps and the defence page read --body and --display;
+   the storyline names its fonts directly. The rail's tree lines and progress blocks stay monospaced: they are drawings. */
+:root{--display:var(--body)}
+.viz-root,
+.viz-root *:not(.branch):not(.rail-progress):not(.rail-progress *){font-family:var(--body)!important}
+.viz-root{letter-spacing:-.003em;-webkit-font-smoothing:antialiased}
+
+/* one type scale for all four dashboards, the site's own. Each text role has one size, weight, tracking, line height and gap,
+   whichever dashboard it sits in. !important: the dashboards set these in rules of varying strength, some inside media queries.
+   Chart axes, map labels and other text drawn inside a figure stay with the figure. */
+:root{
+  --t-display:clamp(2rem,1.5rem + 1.4vw,2.75rem);  /* opening titles */
+  --t-section:clamp(1.25rem,1.1rem + .6vw,1.5rem); /* scene and panel titles */
+  --t-sub:1.125rem;                                /* titles of a card or chart */
+  --t-body:1rem; --t-small:.875rem; --t-label:.8125rem;
+  --t-fig:clamp(2rem,4.2vw,3.5rem); --t-fig2:2rem; /* headline figures, second-level figures */
+}
+.viz-root *,.cap .eyebrow{text-transform:none!important}
+
+/* opening titles */
+.hero .kicker,.hero .hero-intro .kicker,.hero h1,.act-break h2,.cap h1{font-size:var(--t-display)!important;font-weight:500!important;line-height:1.05!important;letter-spacing:-.032em!important;margin:0 0 1rem!important}
+.hero .kicker,.hero .hero-intro .kicker{color:var(--text-primary)}
+/* scene and panel titles */
+.cap h2,.outro h2,.after h2,.hero p.hero-tagline,.head .cap .lead,.card h2,#detail h2,#top h2,#method h2{font-size:var(--t-section)!important;font-weight:500!important;font-style:normal!important;line-height:1.15!important;letter-spacing:-.024em!important}
+.cap h2,.outro h2,.after h2,.card h2,#detail h2,#top h2,#method h2{margin:0 0 .6rem!important}
+/* titles of a card or chart */
+.step h3,#chartTitle,.hero-questions li,.pt .sec .t,#scope .pl,#bal b,.ex-name,.after summary,summary{font-size:var(--t-sub)!important;font-weight:500!important;line-height:1.25!important;letter-spacing:-.014em!important}
+.step h3{margin:0 0 .4rem!important}
+.hero-questions li{margin:0 0 .25rem}
+.tree-rail .rail-title{font-size:var(--t-small)!important;font-weight:600!important;letter-spacing:-.012em!important;line-height:1.3!important}
+/* running text */
+.hero p:not(.hero-tagline):not(.hero-cue),.outro p,.cap p,.after p,.head .def{font-size:var(--t-body)!important;line-height:1.55!important;letter-spacing:-.003em!important}
+.hero p:not(.hero-tagline):not(.hero-cue),.outro p{margin:0 0 .75rem!important}
+.cap p{margin-bottom:.75rem!important}
+.cap p:last-child{margin-bottom:0!important}
+.step p,#chartSub,.c-sub,.hero-cue,.hero .hero-intro p.hero-cue,#lede,#method p,.ex-row,.after li,.meas button,#dMore,.explore-cta,.back-top,.data-text,.tree-rail .rail-act{font-size:var(--t-small)!important;line-height:1.5!important;letter-spacing:-.003em!important}
+.step .card .more p{margin-top:.5rem!important}
+/* labels, captions, sources */
+.cap .eyebrow,.counter .k,.counter .n,.counter .note,.exdir .k,.exlab,.ex-note,.ex-more,.exkey,.hint,#chapters button,.src,#src,.foot,#note,#dir .k,#scope,#lede .hint,#years .cap,.pt caption,.pt .sec th,.pt .here,.btxt,.btxt .bt,.head .cap,.step .num,.step .num .act-name,.step .num .scene-count,.act-break-kicker,.scroll-cue,.region-legend .lbl,table.data-table th,.toc-panel .toc-act-jump,.tree-rail .rail-scene,.toc-panel .toc-link,footer.note,.top-controls .toc-toggle{font-size:var(--t-label)!important;line-height:1.4!important;letter-spacing:0!important}
+.cap .eyebrow,.act-break-kicker{margin:0 0 .5rem!important}
+.step .num{margin-bottom:.5rem!important;font-weight:500!important}
+.step .num .scene-count{margin-top:0!important}
+.tree-rail .rail-act,.step .num .act-name{font-weight:500!important}
+.tree-rail .rail-scene.on{font-weight:500!important}
+/* the trade panels' small text joins the label size */
+#years .cap,#detail .stats dt,#detail .mixcap,#dGap,#dLine .ends,#top .of,#top .cap,#tList em,#tList s,#tLeg,#tFind label,.top,#dir .k,#bal,#bal,#meas,#scope,#top:not(.all) #tMore{font-size:var(--t-label)!important;letter-spacing:0!important}
+/* one firmness for labels and links: no 650 to 750 weights */
+.act-break-kicker,.toc-panel .toc-act-jump,.toc-panel .toc-link.active,.explore-cta,.back-top{font-weight:500!important}
+.data-label{font-weight:600!important}
+/* figures */
+.counter .v,.counter .v.s,.head .n,#dir .n{font-size:var(--t-fig)!important;font-weight:500!important;line-height:1!important;letter-spacing:-.03em!important}
+.exdir .n,.card .big,#top .big{font-size:var(--t-fig2)!important;font-weight:500!important;line-height:1.05!important;letter-spacing:-.03em!important}
+.counter .u,#dir .n small{font-size:var(--t-sub)!important;font-weight:500!important;letter-spacing:-.01em!important;margin-left:.3rem!important}
+.exdir .n small{font-size:var(--t-label)!important;font-weight:500!important;letter-spacing:0!important}
+/* one card padding */
+.step .card,#detail,#top,#method,.card{padding:1.5rem!important}
+
+/* the storyline's ground: one flat colour, as on the rest of the site, with no grey cloud in the middle */
+body.neighbor-flow{--bg:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body.neighbor-flow{--bg:#0e1012}}
+:root[data-theme="dark"] body.neighbor-flow{--bg:#0e1012}
+.viz-root{--page:var(--bg)!important;background:var(--bg)!important;background-attachment:scroll!important;transition:none!important}
+
+/* one ground on every dashboard, as on the rest of the site */
+:root{--bg:#fff;--link:var(--brand)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1012}}
+:root[data-theme="dark"]{--bg:#0e1012}
+:root[data-theme="dark"] .card .cells .l{color:var(--ink2)}
+
+/* the trade page: white ground and map, as on the rest of the site; the floating cards step to a soft grey instead of a shadow */
+:root:not([data-theme="dark"]):has(#gl){--bg:#fff;--surface:#f3f3f1;--halo:255,255,255;--trhalo:255,255,255;--trglow:rgba(255,255,255,0);--panel-edge:none}
+
+/* storyline: audit fixes */
+/* the opening and the controls in the site's look: ink, a tone step for cards, IPC blue for links only. Data colours stay. */
+.viz-root{--accent-text:var(--brand)!important;--card-tone:#f3f3f1;--pill-on:rgba(11,11,11,.09)}
+:root[data-theme="dark"] .viz-root{--card-tone:#1a1d1f;--pill-on:rgba(241,240,236,.14)}
+.viz-root::before{display:none!important}
+.hero-questions{border-left:0!important;padding-left:0!important}
+.hero .hero-intro p.hero-cue{color:var(--text-secondary)!important}
+.stage-controls button,.stage-controls select,.stage-detail .chip,.tm-chips .chip{background:var(--tint)!important;border-color:transparent!important;color:var(--text-secondary)!important;font-weight:500!important}
+.stage-controls button[aria-pressed="true"],.stage-controls button.active,.stage-detail .chip[aria-pressed="true"]{background:var(--pill-on)!important;color:var(--text-primary)!important}
+.stage-controls button:hover{color:var(--text-primary)!important}
+.stage-controls .year-slider input[type="range"]{accent-color:var(--text-secondary)}
+.outro .explore-cta{background:var(--pill-on);color:var(--text-primary)}
+.nav-controls button{background:none;border:0;box-shadow:none;color:var(--text-secondary)}
+.nav-controls button:not(:disabled):hover{background:var(--tint);color:var(--text-primary)}
+.toc-toggle{box-shadow:none}
+.top-progress{background:var(--ink)}
+/* the card: full-size running text in the primary colour, on a tone step */
+.step .card{background:var(--card-tone);border:0;border-radius:var(--r);box-shadow:none}
+.step .card p{font-size:var(--t-body)!important;line-height:1.5!important;color:var(--text-primary)}
+/* phones and tablets: the dashboard's round icon again (line 42 set its label's size), level with the chart's title while the bar
+   is away; when the bar returns, the chart moves down under it and the icon with it. The title's float keeps its words clear of the icon. */
+@media (max-width:1000px){
+  .top-controls .toc-toggle{font-size:0!important;line-height:1!important}
+  .top-controls{transition:top .25s cubic-bezier(.65,0,.35,1)}
+  body:has(.mra.sb.hide) .top-controls{top:8px!important}
+  body.neighbor-flow .sticky-pane{padding-top:8px;transition:padding-top .25s cubic-bezier(.65,0,.35,1)}
+  body:has(.mra.sb:not(.hide)) .sticky-pane{padding-top:calc(var(--site-bar) + 8px);max-height:calc(60svh + var(--site-bar))}
+  #chartTitle::before{content:"";float:right;width:46px;height:42px}
+  .step .card,.step .card.expanded{padding:1rem!important}
+}
+@media (max-width:1000px) and (max-height:500px) and (orientation:landscape){
+  body:has(.mra.sb:not(.hide)) .sticky-pane{max-height:none}
+}
+
+/* ticaret: audit fixes */
+/* sheets and stacked layouts: the band starts under the site bar; figures at the second size; the card padding gives way to the map */
+@media (max-width:1180px),(max-height:640px){
+  #dir{top:var(--site-bar)}
+  #dir .n{font-size:var(--t-fig2)!important}
+  #detail,#top{padding:.75rem 1rem!important}
+}
+@media (max-height:640px){body:has(#gl){padding-top:var(--site-bar)}}

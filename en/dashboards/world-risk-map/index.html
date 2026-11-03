@@ -1,0 +1,1433 @@
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="tr">
+<head><script>try{localStorage.setItem('trr-lang','en')}catch(e){}</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World trade risk map · Macro Risk Academy</title>
+<meta name="description" content="Import and export risk of 87 economies, the world median and Türkiye’s rank.">
+<script>
+  // theme before first paint: light by default, the site-wide key trr-theme
+  (function () { let t = 'light'; try { t = localStorage.getItem('trr-theme') || 'light'; } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light'); })();
+</script>
+<style>
+:root{color-scheme:light;--bg:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--ink3:#6e6c66;--rule:rgba(11,11,11,.12);
+--rule2:rgba(11,11,11,.3);--accent:#2a78d6;--link:#2470cc;--sel:#831b53;--land:#e6e6e1;--nodata:#cfcec8;--r:14px;--r-sm:9px;--tint:rgba(11,11,11,.045);
+--display:'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
+--body:system-ui,-apple-system,'Segoe UI',sans-serif;--ease:cubic-bezier(.65,0,.35,1)}
+body.m-exp{--sel:#00746c}
+:root[data-theme="dark"] body.m-exp{--sel:#66bdb3}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#050506;--surface:#0d0e10;--ink:#f5f5f2;--ink2:#b9b8b1;--ink3:#8a8984;
+--rule:rgba(255,255,255,.12);--rule2:rgba(255,255,255,.3);--accent:#3987e5;--link:#3987e5;--sel:#dd95b3;--land:#1b1f26;--nodata:#3a3e46;--tint:rgba(255,255,255,.05)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums lining-nums}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.sr-focus:focus-within{position:fixed;left:16px;top:56px;width:300px;height:auto;max-height:70vh;overflow:auto;clip:auto;white-space:normal;margin:0;
+  z-index:40;background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:10px}
+.sr-focus button{all:unset;display:block;cursor:pointer;padding:3px 6px;border-radius:6px;font-size:13px}
+.sr-focus button:focus-visible{outline:2px solid var(--accent)}
+
+.top{height:48px;display:flex;align-items:center;gap:18px;padding:0 28px;background:var(--bg);border-bottom:1px solid var(--rule);font-size:13px;color:var(--ink2);white-space:nowrap}
+.top .brand{font-family:var(--display);font-weight:600;font-size:16px;color:var(--ink);text-decoration:none}
+.top .name{margin-left:auto;color:var(--ink3)}
+.theme-toggle{width:30px;height:30px;border-radius:50%;border:1px solid var(--rule);background:transparent;color:var(--ink2);cursor:pointer;display:grid;place-items:center;padding:0}
+.theme-toggle:hover{color:var(--ink);border-color:var(--rule2)}
+.theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.app{display:grid;grid-template-columns:372px 1fr;grid-template-rows:1fr 132px;height:calc(100% - 48px - 34px);min-height:600px}
+.side{grid-row:1;padding:22px 22px 12px 28px;display:flex;flex-direction:column;gap:16px;overflow:auto}
+/* more below: the panel fades at its foot until scrolled to the end (re-test, October 29, 2026: no scroll cue) */
+.side.more{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 36px),transparent)}
+.stage{position:relative;overflow:hidden}
+.app{transition:grid-template-rows .35s var(--ease)}
+.app.slim{grid-template-rows:1fr 58px}
+.app.slim .btxt{display:none}
+.app.slim .bandL{padding-top:10px}
+.band{grid-column:1 / -1;display:grid;grid-template-columns:372px minmax(0,1fr);border-top:1px solid var(--rule);min-height:0;overflow:hidden}
+.bandL{display:flex;gap:14px;align-items:flex-start;padding:22px 22px 0 28px;min-width:0}
+.play{width:38px;height:38px;flex:none;border-radius:50%;border:1px solid var(--rule2);background:var(--surface);color:var(--ink);cursor:pointer;display:grid;place-items:center;padding:0;transition:background .15s,color .15s,border-color .15s}
+.play svg{margin-left:1px}
+.play:hover{border-color:var(--ink)}
+.play[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.play[aria-pressed="true"] svg{margin-left:0}
+.play:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btxt{display:flex;flex-direction:column;gap:7px;min-width:0;font-size:12px;color:var(--ink2)}
+.btxt .bt{font-size:13px;font-weight:600;color:var(--ink)}
+.bk{display:flex;flex-wrap:wrap;gap:4px 12px}
+.bk span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.bk .sw{display:inline-block;width:9px;height:9px;border-radius:50%}
+.bk .sw.area{width:16px;height:9px;border-radius:5px 5px 1px 1px;opacity:.75}
+.btxt .bh{color:var(--ink3)}
+.track{position:relative;min-width:0;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.track.drag{cursor:grabbing}
+.track svg{display:block;position:absolute;inset:0}
+.track:focus{outline:none}
+.track:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;border-radius:var(--r-sm)}
+.foot{height:34px;display:flex;align-items:center;gap:14px;padding:0 28px;border-top:1px solid var(--rule);font-size:12px;color:var(--ink3);white-space:nowrap;overflow:hidden}
+.foot a{color:var(--link);text-decoration:none}
+.foot a:hover{text-decoration:underline}
+
+.meas{display:flex;flex-wrap:wrap;gap:4px 14px;border-bottom:1px solid var(--rule)}
+.meas button{all:unset;cursor:pointer;padding:0 0 9px;margin-bottom:-1px;border-bottom:2px solid transparent;color:var(--ink3);font-size:13.5px;font-weight:500;white-space:nowrap}
+.meas button[aria-pressed="true"]{color:var(--ink);border-color:var(--accent)}
+.meas button:hover{color:var(--ink)}
+.meas button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.pswitch{display:inline-flex;align-self:flex-start;gap:2px;padding:3px;border-radius:999px;background:var(--tint)}
+.prow{display:flex;flex-wrap:wrap;gap:8px;margin-top:-4px}
+.prow[hidden]{display:none}
+/* Partner payı: the Çin / ABD table (world medians in the head, the economy in the card) */
+.head.duo .n,.head.duo .cap,.head.duo .def{display:none}
+.ptab{margin-top:4px}.ptab[hidden]{display:none}
+.pt{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums lining-nums}
+.pt caption{text-align:left;font-size:13px;color:var(--ink3);padding:0 0 2px}
+.pt th,.pt td{padding:7px 0 6px;text-align:right;font-weight:400;white-space:nowrap}
+.pt th:not(:first-child),.pt td{width:64px;padding-left:8px}
+.pt .sec th:not(:first-child){white-space:normal;line-height:1.25}
+.pt .sec th{padding-top:16px;vertical-align:bottom;font-size:13px;font-weight:500;color:var(--ink2);border-bottom:1px solid var(--rule2)}
+.pt tbody:first-of-type .sec th{padding-top:8px}
+.pt .sec th:first-child{text-align:left;white-space:normal}
+.pt .sec .t{display:block;white-space:nowrap;font-family:var(--display);font-size:19px;font-weight:600;line-height:1.2;color:var(--ink2)}
+.pt tbody.on .sec .t{color:var(--ink)}
+.pt .here{display:block;font-size:12.5px;color:var(--ink3);margin-top:2px}
+.pt tbody tr:not(.sec) th{text-align:left;font-weight:600;color:var(--ink);white-space:normal;line-height:1.3}
+.pt tbody tr:not(.sec)>*{border-bottom:1px solid var(--rule);font-size:16px}
+.pt .m{color:var(--ink2)}
+.pt .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:1px}
+/* the row dot hangs left of the name, so a name that wraps stays beside it (October 29, 2026) */
+.pt tbody tr:not(.sec) th{position:relative;padding-left:17px}.pt tbody tr:not(.sec) th .dot{position:absolute;left:0;top:calc(7px + .65em - 4.5px);margin:0}
+.card .pt .sec .t{font-size:16px;white-space:normal}.card .pt{table-layout:fixed}.card .pt .sec th:first-child{width:auto}.card .pt tbody tr:not(.sec)>*{font-size:14px}.card .pt th:not(:first-child),.card .pt td{width:54px}
+.rankT[hidden]{display:none}.rankT .pt{margin-top:2px}
+.rk-go{all:unset;cursor:pointer}.rk-go:hover{text-decoration:underline}.rk-go:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.ptab-go{all:unset;display:block;margin-top:2px;cursor:pointer;color:var(--link);font-size:12.5px;font-weight:500;font-family:var(--body)}
+.ptab-go:hover{text-decoration:underline}.ptab-go:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.pswitch button{all:unset;cursor:pointer;padding:4px 14px;border-radius:999px;font-size:13px;font-weight:500;color:var(--ink2);transition:background .15s,color .15s}
+.pswitch button:hover{color:var(--ink)}
+.pswitch button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.pswitch button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.head .n{display:block;font-family:var(--display);font-weight:600;font-size:60px;line-height:1;letter-spacing:-.015em;white-space:nowrap;margin-top:6px}
+.head .cap{display:block;font-size:13px;color:var(--ink3);margin-top:6px}
+.head .cap .lead{display:block;font-family:var(--display);font-size:25px;line-height:1.2;color:var(--ink);margin:2px 0 6px}
+.head .cap .lead b{font-weight:700;white-space:nowrap}.head .cap .lead .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin:0 6px 0 4px;vertical-align:2px}
+.head .def{font-size:16px;line-height:1.4;color:var(--ink);margin:14px 0 0;max-width:28ch}
+@media (min-width:901px){.side.sel .head{display:none}}
+/* legend and switches: one row from 1440 px, the switches on their own row under the legend below that (audit, November 2,
+   2026: the switches covered the legend up to 1366 px); on phones the legend goes to the foot of the map */
+.stagebar{position:absolute;left:18px;right:18px;top:12px;z-index:3;display:flex;align-items:flex-start;justify-content:space-between;gap:4px 20px;pointer-events:none}
+.stagebar>*{pointer-events:auto}
+@media (min-width:901px) and (max-width:1439px){.stagebar{flex-direction:column;justify-content:flex-start}}
+.mlegend{min-width:0;display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--ink3);
+  background:color-mix(in srgb,var(--bg) 85%,transparent);padding:4px 6px;border-radius:8px}
+.mlegend .row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:2px 0}
+.mlegend .sw{display:flex;flex-direction:column;align-items:flex-start;min-width:34px;margin-right:4px}
+.mlegend .sw i{display:block;width:32px;height:8px;border-radius:3px;margin-bottom:3px}
+.mlegend .sw.cat{flex-direction:row;align-items:center;gap:5px;min-width:0;margin:0 10px 0 0}
+.mlegend .sw.cat i{width:10px;height:10px;border-radius:50%;margin:0}
+.mlegend .sw.cat.nd i{border-radius:2px}
+.mlegend .nd i{background:repeating-linear-gradient(45deg,var(--nodata) 0 2px,transparent 2px 5px);border:1px solid var(--nodata)}
+.mlegend .t{font-size:11px;color:var(--ink3)}
+.skey{position:absolute;left:18px;bottom:12px;z-index:3;font-size:11px;color:var(--ink3);pointer-events:none}
+.skey svg{display:block;overflow:visible}
+.skey .t{margin-bottom:4px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:16px 18px;position:relative}
+.card[hidden]{display:none}
+.card .x{all:unset;cursor:pointer;position:absolute;right:12px;top:10px;font-size:18px;color:var(--ink3);width:24px;text-align:center}
+.card .x:focus-visible{outline:2px solid var(--accent);border-radius:4px}
+.card h2{font-family:var(--display);font-weight:600;font-size:23px;line-height:1.15;margin:0 26px 2px 0}
+.card h2:focus{outline:none}
+.card .sub{font-size:12px;color:var(--ink3);margin:0 0 10px}
+.card .big{font-family:var(--display);font-weight:600;font-size:34px;line-height:1}
+.card .rk{font-size:13px;color:var(--ink2);margin:4px 0 0}
+.card .big small{font-family:var(--body);font-size:13px;font-weight:500;color:var(--ink2);margin-left:6px}
+.card dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:14px 0 0;font-size:13px}
+.card dt{color:var(--ink3)}
+.card dd{margin:0;text-align:right}
+.card .note{font-size:12px;color:var(--ink3);margin:12px 0 0;line-height:1.4}
+.card .strip{display:block;margin:12px 0 0;overflow:visible}
+.card .snote{font-size:11px;color:var(--ink3);margin:2px 0 0}
+.card .cells{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 0}
+.card .cells div{background:var(--tint);border-radius:var(--r-sm);padding:7px 10px}
+.card .cells .l{display:block;font-size:11px;color:var(--ink3)}
+.card .cells .v{display:block;font-size:17px;font-weight:600;line-height:1.3}
+.card .cells .v small{font-size:12px;font-weight:500;color:var(--ink2)}
+.card .sec{margin-top:14px;padding-top:10px;border-top:1px solid var(--rule)}
+.card .st{font-size:12px;color:var(--ink3);margin-bottom:5px}
+.card .sec .bk{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:11px;color:var(--ink2);margin-bottom:4px}
+.card .sec .bk span{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.card .sec .bk.one{flex-wrap:nowrap;gap:12px;overflow:hidden}
+.card .sec .bk.one span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;display:inline-block}
+.card .sec .bk.one span:first-child svg{vertical-align:middle;margin-right:4px}
+.card svg.ch,.card svg.ost{display:block}
+/* shorter desktop screens: tighter card spacing, so the five risk sources fit (with chartH) */
+/* shorter desktop screens (1440 × 900, 1366 × 768): the side tables tighter, so Sıralama fits beside the headline */
+@media (min-width:901px) and (max-height:979px){.side .pt th,.side .pt td{padding-top:4px;padding-bottom:3px}.side .pt .sec th{padding-top:10px}.head .n{font-size:48px}.head .def{margin-top:8px}.pt .sec .t{font-size:17px}}
+@media (min-width:901px) and (max-height:979px){.side{padding-top:14px;gap:10px}.card{padding:12px 16px}.card .sec{margin-top:10px;padding-top:8px}.card dl,.card .cells{margin-top:10px}.card .sub{margin-bottom:6px}}
+
+.switches{flex:none;display:flex;gap:16px;font-size:13px}
+.switches button{all:unset;cursor:pointer;color:var(--link);font-weight:500;background:color-mix(in srgb,var(--bg) 85%,transparent);padding:2px 4px;border-radius:6px}
+.switches button:hover{text-decoration:underline}
+.switches button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.tip{position:fixed;pointer-events:none;z-index:20;background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-sm);
+  padding:8px 10px;font-size:12px;box-shadow:0 4px 18px rgba(0,0,0,.08);opacity:0;transition:opacity .12s;max-width:240px}
+.tip b{font-size:13px}
+.tip .v{font-variant-numeric:tabular-nums}
+.tip .m{color:var(--ink3)}
+
+svg text{font-family:var(--body)}
+.lbl{font-size:12px;font-weight:600;fill:var(--ink);paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round}
+.lbl.sm{font-weight:500;fill:var(--ink2)}
+.lbl.tr{font-size:13.5px;font-weight:700;stroke-width:3.5px}
+/* a name that had to sit on other dots: full ink on a wider halo (audit, November 2, 2026: Vietnam and Hong Kong on dark dots) */
+.lbl.over{fill:var(--ink);stroke-width:5px}
+.axis text{font-size:11px;fill:var(--ink3)}
+.axis line,.axis path{stroke:var(--rule2)}
+.dot{cursor:pointer}
+.loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink3);font-size:14px}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media (max-width:900px){
+  html,body{overflow-x:hidden}
+  .top{padding:0 16px;gap:10px}
+  .top .name{display:none}
+  .theme-toggle{margin-left:auto}
+  .app{display:flex;flex-direction:column;height:auto;min-height:0}
+  .side{padding:16px 16px 4px;overflow:visible;order:1}
+  .stage{order:2;height:min(62vw,520px);min-height:320px}
+  .band{order:3;height:112px;transition:height .35s var(--ease);grid-template-columns:auto minmax(0,1fr)}
+  .bandL{padding:16px 0 0 14px}
+  .btxt{display:none}
+  .app.slim .band{height:58px}
+  .app.slim .bandL{padding-top:10px}
+  .head .n{font-size:44px}
+  .head .def{max-width:none}
+  .stagebar{display:contents}
+  .mlegend{position:absolute;z-index:3;bottom:6px;left:10px;max-width:calc(100% - 20px)}
+  .skey{display:none}
+  .switches{position:absolute;z-index:3;top:6px;left:12px;right:12px;gap:4px 12px;flex-wrap:wrap;justify-content:flex-end}
+  .card{position:fixed;left:0;right:0;bottom:58px;z-index:30;border-radius:var(--r) var(--r) 0 0;max-height:min(40vh,380px);overflow:auto;box-shadow:0 -6px 24px rgba(0,0,0,.14)}
+  /* with a selection the year strip stays at the foot of the screen, under the card sheet (re-test, October 29, 2026:
+     the sheet covered it) */
+  .app.slim .band{position:fixed;left:0;right:0;bottom:0;z-index:31;background:var(--bg);transition:none}
+  .app > .rankT{order:4;padding:14px 16px 6px}
+  body:has(.app.slim){padding-bottom:58px}
+  .foot{padding:8px 16px;height:auto;white-space:normal;flex-wrap:wrap}
+}
+</style>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://www.makroriskakademi.com/en/dashboards/world-risk-map/">
+<link rel="alternate" hreflang="tr" href="https://www.makroriskakademi.com/tr/panolar/dunya-risk-haritasi/">
+<link rel="alternate" hreflang="en" href="https://www.makroriskakademi.com/en/dashboards/world-risk-map/">
+<link rel="alternate" hreflang="x-default" href="https://www.makroriskakademi.com/tr/panolar/dunya-risk-haritasi/">
+<link rel="stylesheet" href="/assets/css/shell.css">
+<link rel="stylesheet" href="/assets/css/dash.css">
+<link rel="icon" href="/assets/img/favicon-ipc.ico">
+</head>
+<body>
+
+<header class="mra sb" lang="en" data-hd>
+  <div class="sb-left">
+    <a class="sb-brand" href="/en/">
+      <span class="sb-logo"><img src="/assets/img/logo-en.png" alt="Istanbul Policy Center" width="300" height="58"></span>
+      <span class="sb-rule" aria-hidden="true"></span>
+      <span class="sb-name">Macro Risk Academy</span>
+    </a>
+    <span class="sb-pg"><span aria-hidden="true">/</span> World trade risk map</span>
+  </div>
+  <nav class="sb-nav" aria-label="Site">
+    <span class="nav-pill" aria-hidden="true"></span>
+    <a href="/en/dashboards/" aria-current="page">Dashboards</a><a href="/en/academy/">Academy</a><a href="/en/programme/">Programme</a><a href="/en/who-we-are/">Who we are</a><a href="/en/contact/">Contact</a>
+  </nav>
+  <div class="sb-utils">
+    <span class="sb-notice">In Turkish for now</span>
+    <a class="sb-btn" href="/tr/panolar/dunya-risk-haritasi/" hreflang="tr" lang="tr" data-lang="tr" title="Türkçeye geçin">TR</a>
+    <button class="sb-btn" type="button" data-theme-toggle aria-label="Switch theme" data-l-light="Light theme" data-l-dark="Dark theme"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
+    <button class="sb-btn" type="button" data-menu aria-controls="sb-more" aria-expanded="false" aria-label="Menu"><svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path d="M2.5 6h13M2.5 12h13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+  </div>
+  <div class="sb-more" id="sb-more">
+    <div class="sb-more-nav"><a href="/en/dashboards/">Dashboards</a><a href="/en/academy/">Academy</a><a href="/en/programme/">Programme</a><a href="/en/who-we-are/">Who we are</a><a href="/en/contact/">Contact</a></div>
+    <div><a href="/en/imprint/">Imprint</a><a href="/en/privacy/">Privacy</a><a href="/en/cookies/">Cookies</a><button type="button" data-consent-open>Cookie settings</button></div>
+  </div>
+</header>
+<aside class="mra sb-note" lang="en" aria-label="In Turkish for now" data-note><p>This dashboard is in Turkish; the English version is in preparation.</p><button type="button" data-note-close aria-label="Close"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" fill="none"/></svg></button></aside>
+<script src="/assets/js/site.js" defer></script>
+
+<noscript><p class="mra sb-noscript" lang="en">This dashboard needs JavaScript. Turn it on in your browser, or see the list of dashboards and the method page.</p></noscript>
+
+<header class="top">
+  <a class="brand" href="./">IPM · Risk endeksi</a>
+  <span class="name">87 ekonominin ithalat ve ihracat riski, 1995–2024</span>
+  <button class="theme-toggle" id="theme" type="button" aria-label="Koyu temaya geç">
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7 1a6 6 0 0 1 0 12z" fill="currentColor"/></svg>
+  </button>
+</header>
+<main class="app">
+  <h1 class="sr">Risk endeksi haritası</h1>
+  <aside class="side">
+    <div class="meas" id="meas" role="group" aria-label="Ölçü"></div>
+    <div class="head" id="head"><span class="n num" id="headN"></span><span class="cap" id="headCap"></span><p class="def" id="def"></p><div class="ptab" id="pTab" hidden></div></div>
+    <div class="rankT" id="rankT"></div>
+    <section class="card" id="card" hidden aria-labelledby="cardName"><h2 id="cardName" tabindex="-1"></h2></section>
+  </aside>
+  <div class="stage" id="stage">
+    <div class="stagebar">
+      <div class="mlegend" id="legend" aria-hidden="true"></div>
+      <div class="switches"><button id="vSwitch" type="button"></button><button id="hSwitch" type="button"></button></div>
+    </div>
+    <div class="skey" id="skey" aria-hidden="true"></div>
+    <svg id="stageSvg" role="img" aria-label="87 ekonominin dünya haritası; aynı veri klavyeyle sıralı listede"></svg>
+    <div class="loading" id="loading">Harita yükleniyor</div>
+  </div>
+  <div class="band" id="band">
+    <div class="bandL">
+      <button class="play" id="play" type="button" aria-pressed="false"></button>
+      <div class="btxt"><span class="bt" id="bandT"></span><span class="bk" id="bandK"></span><span class="bh">Sürükleyin ya da ← → tuşlarını kullanın</span></div>
+    </div>
+    <div class="track" id="track" tabindex="0" role="slider" aria-label="Yıl" aria-valuenow="2024" aria-valuemin="1995" aria-valuemax="2024"><svg id="bandSvg" aria-hidden="true"></svg></div>
+  </div>
+  <!-- after the controls in the tab order (re-test, October 29, 2026: 87 hidden buttons came first) -->
+  <nav class="sr sr-focus" id="list" aria-label="87 ekonomi, sıralı"></nav>
+</main>
+<footer class="foot">
+  <span>Kaynak: CEPII BACI HS92 (V202601), 1995–2024, HS 71 (altın ve diğer kıymetliler) hariç</span>
+  <a href="/en/dashboards/trade-risk/#act-iv-title" data-local="/en/dashboards/trade-risk/#act-iv-title">Türkiye'nin ticaret riski: Parçalanan dünya</a>
+</footer>
+<div class="tip" id="tip" aria-hidden="true"></div>
+<div class="sr" id="live" aria-live="polite"></div>
+
+<script src="/assets/vendor/d3-7.9.0.min.js"></script>
+<script src="/assets/vendor/topojson-client-3.1.0.min.js"></script>
+<script src="data/data.js"></script>
+<script src="data/data_top5.js"></script>
+<script>
+(function () {
+  // risk sources shown, as lines on the map and rows in the card (five, so the play-through shows partners change;
+  // user, October 29, 2026; the page data holds five)
+  const D = window.RISK, T5 = window.RISK5, NSRC = 5;
+  // Partner payı (user, October 29, 2026): China's share of import risk minus the US share, in points; > 0 orange
+  // (China higher), otherwise blue. Not a quantity for China and the US themselves (own share), so marked na.
+  D.eco.forEach(e => {
+    // from the 2-decimal shares, unrounded, so the colour compares the shares themselves (re-test, October 29, 2026:
+    // Lithuania 2008, 0,67 against 0,65, had shown as a tie); the formatters round for display only
+    const diff = (a, b) => a.map((v, i) => v != null && b[i] != null ? +(v - b[i]).toFixed(2) : null);
+    e.cud = diff(e.cn, e.us); e.xcud = diff(e.xcn, e.xus);  // import side, export side (shares of export risk)
+    if (e.c === 156 || e.c === 842) e.na = [...(e.na || []), 'cud', 'xcud'];
+  });
+  D.med.cud = D.years.map((_, i) => d3.median(D.eco, e => e.cud[i]));
+  D.med.xcud = D.years.map((_, i) => d3.median(D.eco, e => e.xcud[i]));
+  // the keys of the side shown on Partner payı: shares of import risk and imports, or of export risk and exports
+  const sideK = (m = st.m) => m === 'cux' ? { cn: 'xcn', us: 'xus', w: 'ihracat' } : { cn: 'cn', us: 'us', w: 'ithalat' };
+  const naK = (e, k) => (e.na || []).includes(k);
+  const expSide = (m = st.m) => m === 'exp' || m === 'cux';
+  // the five largest risk partners of an economy in a year: suppliers on the import measures, buyers on İhracat
+  // on Partner payı only China and the US, as [code, risk %, import %] (user, October 29, 2026)
+  const srcOf = (c, yi = st.yi, m = st.m) => isPart(m)
+    ? [[156, sideK(m).cn], [842, sideK(m).us]].filter(([pc, k]) => pc !== c && byCode.get(c)[k][yi] != null).map(([pc, k]) => [pc, byCode.get(c)[k][yi], byCode.get(c)[k + 'i'][yi]])
+    : (((m === 'exp' ? T5.xtop : T5.top)[c] || [])[yi] || []);
+  const YEARS = D.years, NY = YEARS.length, TR = 792;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const L = d3.formatLocale({ decimal: ',', thousands: '.', grouping: [3], currency: ['', ' $'] });
+  const f1 = L.format(',.1f'), f0 = L.format(',.0f');
+  const fpct = v => '%' + f1(v);
+  const fsign = v => (v > 0 ? '+' : v < 0 ? '−' : '±') + f1(Math.abs(v));
+  const fbn = v => v >= 1 ? f0(v) + ' mlr $' : f0(v * 1000) + ' mn $';
+  const short = n => n.replace(/ \[.*\]/, '');
+  const POSS = { 0: 'ı', 1: 'i', 2: 'si', 3: 'ü', 4: 'ü', 5: 'i', 6: 'sı', 7: 'si', 8: 'i', 9: 'u' };
+  const fpctPoss = v => { const t = fpct(v); return `${t}'${POSS[t.slice(-1)]}`; };
+  // China's lead over the US in points; a lead under 0,05 with two decimals (it still sets the colour), "eşit" only for
+  // equal shares, never "ABD +0,0" (re-test, October 29, 2026)
+  const f2 = L.format(',.2f');
+  const fduo = v => v === 0 ? 'eşit' : (v > 0 ? 'Çin +' : 'ABD +') + (Math.abs(v) < .05 ? f2 : f1)(Math.abs(v)) + ' puan';
+
+  // ---------- colour (plan section 8) ----------
+  // Wine ramp: single hue built in OKLCH from the UK Government Analysis Function dark pink #801650, six ordinal classes;
+  // light steps validated on #f9f9f7, dark steps (low values near the ground, high values light) on #0d0e10.
+  // Orbit: AF orange, dark blue, turquoise, and a grey for "other"; dark steps re-lit for #0d0e10; all pairs pass the
+  // colour-blind and normal-vision checks (dataviz validator, October 25, 2026).
+  // Partner shares (October 26, 2026): China a red ramp around the flag red #DE2910 (hue 29), the US a blue ramp ending
+  // in the flag's Old Glory Blue #0A3161 (hue 262); light and dark steps pass the ordinal checks on #f9f9f7 and #0d0e10.
+  const PAL = {
+    light: { ramp: ['#db94b1', '#c67799', '#b15b82', '#9a3d6a', '#831b53', '#65003b'],
+      exp: ['#60bfb6', '#37a79e', '#158e85', '#00746c', '#005a53', '#00413c'],
+      cn: ['#ea9184', '#e46e5f', '#d84a3d', '#c72219', '#a30d09', '#7c0202'], us: ['#98add3', '#7994c5', '#5b7bb7', '#3f62a2', '#294987', '#143065'], orb: { c: '#F46A25', u: '#12436D', e: '#28A197', o: '#c9c6bf' } },
+    dark:  { ramp: ['#872257', '#9d416d', '#b25d83', '#c8799b', '#dd95b3', '#f2b2cc'],
+      exp: ['#0a5f58', '#16766e', '#2a8d84', '#45a59b', '#66bdb3', '#8ed5cb'],
+      cn: ['#8d1b14', '#b3241b', '#d7352a', '#e86152', '#f2897b', '#f9aea3'], us: ['#2a4a88', '#3c61a7', '#5279c1', '#7092d0', '#8fabde', '#afc5ec'], orb: { c: '#F46A25', u: '#8a9ff0', e: '#2fb3a8', o: '#77756e' } }
+  };
+  let theme = document.documentElement.getAttribute('data-theme');
+  // the partner shares get their own single-hue ramps: China in flag red, the US in flag blue (user, October 26, 2026);
+  // İhracat its own teal, from the same UK Analysis Function turquoise (user, October 29, 2026; ordinal checks pass on
+  // both surfaces)
+  const ramp = (m = st.m) => PAL[theme][m.startsWith('cn') ? 'cn' : m.startsWith('us') ? 'us' : m === 'exp' ? 'exp' : 'ramp'], orbCol = o => PAL[theme].orb[o];
+  const ORB = { c: 'Çin', u: 'ABD', e: 'AB beşlisi', o: 'Diğer' };
+  const ORB_T = { e: 'Almanya, Fransa, İtalya, İspanya veya Hollanda' };
+  const ORB_ORDER = ['c', 'u', 'e', 'o'];
+
+  // ---------- measures ----------
+  const M = {
+    // dom: the ranking axis fits every large economy in every year (import maximum Meksika 1998, 158,2; export Kanada
+    // 2003, 716,9); small economies above it sit past a break at the axis end, labelled with their value (re-test,
+    // October 29, 2026; the axis used to stop at 145 and draw them at the end as if they were 145)
+    imp: { k: 'imp', tab: 'İthalat', label: 'İthalat riski', breaks: [30, 40, 50, 60, 80], fmt: f1, dom: [15, 160], log: false,
+      def: 'Yüksek değer: tedarikçisi az, yerine konması zor ithalat' },
+    exp: { k: 'exp', tab: 'İhracat', label: 'İhracat riski', breaks: [100, 150, 200, 300, 400], fmt: f0, dom: [45, 720], log: true,
+      def: 'Yüksek değer: az sayıda alıcıya bağlı ihracat' },
+    cn: { k: 'cn', tab: 'Partner payı', label: "Çin'in risk payı", who: 'Çin', own: "Çin'in kendi ithalatı", breaks: [10, 20, 30, 40, 50], fmt: fpct, dom: [0, 100], log: false, pct: true,
+      def: "İthalat riskinin Çin'den gelen payı" },
+    us: { k: 'us', tab: 'Partner payı', label: "ABD'nin risk payı", who: 'ABD', own: "ABD'nin kendi ithalatı", breaks: [10, 20, 30, 40, 50], fmt: fpct, dom: [0, 100], log: false, pct: true,
+      def: "İthalat riskinin ABD'den gelen payı" },
+    // the same partners' share of the economy's imports (trade), so the gap between risk and trade can be seen
+    cni: { k: 'cni', tab: 'Partner payı', label: "Çin'in ticaret payı", who: 'Çin', breaks: [10, 20, 30, 40, 50], fmt: fpct, dom: [0, 100], log: false, pct: true,
+      def: "İthalatın Çin'den gelen payı" },
+    usi: { k: 'usi', tab: 'Partner payı', label: "ABD'nin ticaret payı", who: 'ABD', breaks: [10, 20, 30, 40, 50], fmt: fpct, dom: [0, 100], log: false, pct: true,
+      def: "İthalatın ABD'den gelen payı" },
+    cu: { k: 'cud', tab: 'Partner payı', label: 'Çin ve ABD', duo: true, fmt: v => fduo(v), dom: [-100, 100], log: false, def: '' },
+    cux: { k: 'xcud', tab: 'Partner payı', label: 'Çin ve ABD, ihracat', duo: true, fmt: v => fduo(v), dom: [-100, 100], log: false, def: '' },
+    orb: { k: 'tp', tab: 'Ana partner', label: 'Ana partner', cat: true, fmt: fpct, dom: [0, 100], log: false, pct: true,
+      def: 'İthalat riskinin en büyük kısmını taşıyan partner' }
+  };
+
+  // ---------- state + hash (#y=2024&m=imp&v=rank&c=792&h=1) ----------
+  const st = { yi: NY - 1, m: 'imp', view: 'map', sel: null, hide: false };
+  const byCode = new Map(D.eco.map(e => [e.c, e]));
+  (function () {
+    const h = new URLSearchParams(location.hash.slice(1));
+    const y = +h.get('y'); if (YEARS.includes(y)) st.yi = YEARS.indexOf(y);
+    if (M[h.get('m')]) st.m = h.get('m');
+    // the trade-share views left the tab (user, October 29, 2026: the shares are in İthalat's card); old links land on
+    // the risk share
+    if (['cn', 'us', 'cni', 'usi'].includes(st.m)) st.m = 'cu';
+    if (h.get('v') === 'rank') st.view = 'rank';
+    const c = +h.get('c'); if (byCode.has(c)) st.sel = c;
+    st.hide = h.get('h') === '1';
+  })();
+  function writeHash() {
+    const p = new URLSearchParams({ y: YEARS[st.yi], m: st.m });
+    if (st.view === 'rank') p.set('v', 'rank');
+    if (st.sel) p.set('c', st.sel);
+    if (st.hide) p.set('h', '1');
+    history.replaceState(null, '', '#' + p.toString());
+  }
+
+  const val = (e, m = st.m, yi = st.yi) => e[M[m].k][yi];
+  const cls = (v, m = st.m) => v == null ? -1 : d3.bisectRight(M[m].breaks, v);
+  function colour(e, m = st.m, yi = st.yi) {
+    if (M[m].cat) { const o = e.orb[yi]; return o ? orbCol(o) : null; }
+    if (M[m].duo) { const v = val(e, m, yi); return v == null ? null : orbCol(v > 0 ? 'c' : v < 0 ? 'u' : 'o'); }
+    const c = cls(val(e, m, yi), m); return c < 0 ? null : ramp(m)[c];
+  }
+  // a selected small economy stays on the map when the small ones are hidden (re-test, October 29, 2026)
+  const visible = e => !(st.hide && e.small) || e.c === st.sel;
+  const na = (e, m = st.m) => (e.na || []).includes(M[m].k);
+  function ranked(m = st.m, yi = st.yi) {
+    const a = D.eco.filter(e => val(e, m, yi) != null);
+    if (M[m].cat) a.sort((x, y) => ORB_ORDER.indexOf(x.orb[yi]) - ORB_ORDER.indexOf(y.orb[yi]) || y.tp[yi] - x.tp[yi]);
+    else a.sort((x, y) => val(y, m, yi) - val(x, m, yi));
+    return a;
+  }
+  const rankCache = new Map();
+  function rankOf(c, m = st.m, yi = st.yi) {
+    if (M[m].cat) return null;
+    // ranked among the economies on the map: recounted when the small ones are hidden
+    const key = [m, yi, st.hide, st.hide ? st.sel : ''].join('|');
+    if (!rankCache.has(key)) {
+      const a = D.eco.filter(e => visible(e) && val(e, m, yi) != null).sort((x, y) => val(y, m, yi) - val(x, m, yi));
+      rankCache.set(key, { pos: new Map(a.map((e, i) => [e.c, i + 1])), n: a.length });
+    }
+    const r = rankCache.get(key), p = r.pos.get(c); return p ? { r: p, n: r.n } : null;
+  }
+  const pname = c => (D.partners[c] || T5.partners[c] || { n: String(c) }).n;
+  const xScale = (m, a, b) => (M[m].log ? d3.scaleLog() : d3.scaleLinear()).domain(M[m].dom).range([a, b]).clamp(true);
+  // the ranking axis: an outlier zone past the axis end when an economy on the map goes above it in any year (so the
+  // axis does not change while the years play); values above the axis share the zone, spread by the collision force
+  // values inside the zone keep their order (log of the overshoot against the highest value of any year)
+  // on narrow stages the axis takes more of the width, so the dots spread out rather than pile up
+  const rankM = (m, w) => w < 600 ? { l: M[m].cat ? 70 : 24, r: 24, o: 50 } : { l: 70, r: 50, o: 84 };
+  const outMax = m => !M[m].cat && !M[m].duo ? d3.max(D.eco.filter(e => !(st.hide && e.small)).flatMap(e => e[M[m].k])) : 0;
+  function rankX(m, w) {
+    const g = rankM(m, w), hi = M[m].dom[1], top = outMax(m), out = top > hi, end = w - g.r - (out ? g.o : 0), x = xScale(m, g.l, end);
+    const z = d3.scaleLog().domain([hi, top || hi + 1]).range([end + (w < 600 ? 22 : 30), w - g.r]).clamp(true);
+    const f = v => out && v > hi ? z(v) : x(v);
+    return Object.assign(f, { end, out, x });
+  }
+
+  const $ = s => document.querySelector(s);
+
+  // ---------- tooltip ----------
+  const tip = $('#tip');
+  const isPart = (m = st.m) => m === 'cu' || m === 'cux';
+  // "Çin: ithalat riskinin %34,6'sı · ithalatın %15,3'ü", the figure on the map in bold
+  // The page's one table style (user, October 29, 2026: "a standard text font style for tables across tabs"); every
+  // table on the page is built here: a row group per section, its header row holding the section title (display face)
+  // over an optional note or link, and the column names; rows with a colour dot for the partner, the name, figures in
+  // tabular numbers (the second one muted), a hairline between rows. groups: [{ title, sub, on, cols, rows: [{ col,
+  // name, cells }] }].
+  function dataTable(groups, cap = '') {
+    let h = `<table class="pt">${cap ? `<caption>${cap}</caption>` : ''}`;
+    for (const g of groups) {
+      h += `<tbody${g.on ? ' class="on"' : ''}><tr class="sec"><th scope="colgroup"><span class="t">${g.title}</span>${g.sub || ''}</th>`
+        + g.cols.map(([c, tt]) => `<th scope="col"${tt ? ` title="${tt}"` : ''}>${c}</th>`).join('') + '</tr>';
+      for (const r of g.rows) h += `<tr><th scope="row"><i class="dot" style="background:${r.col}"></i>${r.name}</th>`
+        + r.cells.map((c, k) => `<td${k === 1 ? ' class="m"' : ''}>${c}</td>`).join('') + '</tr>';
+      h += '</tbody>';
+    }
+    return h + '</table>';
+  }
+  const shareCols = wd => [['risk payı'], [`${wd} payı`], ['kat', `risk payı ÷ ${wd} payı`]];
+  const shareCells = (r, t) => [r != null ? fpct(r) : '–', t != null ? fpct(t) : '–', r != null && t > 0 ? f1(r / t) + '×' : '–'];
+  // Partner payı: İthalat and İhracat groups in a fixed order; the side on the map marked "haritada", the other with a
+  // "Haritada gösterin" link; China and the US only, a country's own share left out
+  function bothTables(rv, tv, ok, cap = '') {
+    return dataTable([['cu', 'İthalat riski', 'ithalat'], ['cux', 'İhracat riski', 'ihracat']].map(([m, t, wd]) => {
+      const K = sideK(m), on = m === st.m;
+      return { title: t, on, cols: shareCols(wd),
+        sub: on ? '<span class="here">haritada</span>' : `<button class="ptab-go" type="button" data-m="${m}">Haritada gösterin</button>`,
+        rows: [K.cn, K.us].filter(ok).map(k => { const o = k.endsWith('cn') ? 'c' : 'u'; return { col: orbCol(o), name: o === 'c' ? 'Çin' : 'ABD', cells: shareCells(rv(k), tv(k)) }; }) };
+    }), cap);
+  }
+  function riskTrade(who, r, t, riskShown) {
+    const b = (txt, on) => on ? `<span class="v"><b>${txt}</b></span>` : `<span class="v">${txt}</span>`;
+    return `${who}: ithalat riskinin ${r == null ? '–' : b(fpctPoss(r), riskShown)} · ithalatın ${t == null ? '–' : b(fpctPoss(t), !riskShown)}`;
+  }
+  function showTip(ev, e) {
+    const v = val(e), rk = rankOf(e.c), y = st.yi;
+    let h = `<b>${short(e.n)}</b><br>`;
+    if (isPart()) { const K = sideK(); h += [['Çin', e[K.cn][y]], ['ABD', e[K.us][y]]].filter(d => d[1] != null).map(([n, r]) => `${n} <span class="v">${fpct(r)}</span>`).join(' · ') + ` <span class="m">${K.w} riskinin payı</span>`; }
+    else if (v == null) h += na(e) ? '' : 'veri yok';
+    else if (M[st.m].cat) h += riskTrade(pname(e.top[y]), e.tp[y], e.tpi[y], true);
+    else h += `${M[st.m].label}: <span class="v">${M[st.m].fmt(v)}</span>${rk ? ` <span class="m">· sıra ${rk.r}/${rk.n}</span>` : ''}`;
+    // with an economy selected, one of its partners also shows its share in that economy's risk (re-test, October 29,
+    // 2026: the partner's own index alone read as if it were the share)
+    if (st.sel && st.sel !== e.c && !isPart()) {
+      const s = srcOf(st.sel).slice(0, NSRC).find(t => t[0] === e.c);
+      if (s) h += `<br>${short(byCode.get(st.sel).n)} · ${expSide() ? 'ihracat' : 'ithalat'} riskindeki payı <span class="v"><b>${fpct(s[1])}</b></span>`;
+    }
+    const bill = expSide() ? ['ihracat', e.xb[y]] : ['ithalat', e.ib[y]];
+    h += `<br><span class="m">${YEARS[y]} · ${bill[0]} ${bill[1] != null ? fbn(bill[1]) : 'veri yok'}${e.small ? ' · küçük ekonomi' : ''}</span>`;
+    tip.innerHTML = h; tip.style.opacity = 1; moveTip(ev);
+  }
+  function moveTip(ev) {
+    const w = tip.offsetWidth, x = ev.clientX + 14 + w > innerWidth ? ev.clientX - w - 14 : ev.clientX + 14;
+    tip.style.left = x + 'px'; tip.style.top = (ev.clientY + 14) + 'px';
+  }
+  const hideTip = () => { tip.style.opacity = 0; };
+
+  // ---------- measure words (M2 rolling digits) ----------
+  function rollTo(el, to, fmt) {
+    const from = +el.dataset.v;
+    el.dataset.v = to;
+    if (reduced || !isFinite(from) || from === to) { el.textContent = fmt(to); return; }
+    d3.select(el).transition().duration(450).ease(d3.easeCubicOut)
+      .tween('n', () => { const i = d3.interpolateNumber(from, to); return t => { el.textContent = fmt(i(t)); }; });
+  }
+  function renderMeasures() {
+    const box = $('#meas');
+    // four tabs; "Partner payı" compares China's and the US share of each economy's import risk
+    const isP = isPart();
+    if (!box.children.length) for (const k of ['imp', 'exp', 'ps', 'orb']) {
+      const b = document.createElement('button'); b.type = 'button'; b.dataset.k = k;
+      b.textContent = k === 'ps' ? 'Partner payı' : M[k].tab; b.setAttribute('aria-label', k === 'ps' ? 'Partner payı: Çin ve ABD' : M[k].label);
+      b.onclick = () => { const to = k === 'ps' ? (st.ps || 'cu') : k; if (st.m !== to) { st.m = to; update(true); } };
+      box.appendChild(b);
+    }
+    for (const b of box.children) b.setAttribute('aria-pressed', b.dataset.k === 'ps' ? isP : st.m === b.dataset.k);
+    // one number: the world figure for the chosen measure and year (M2 rolling digits)
+    const nEco = D.eco.filter(e => val(e) != null).length;
+    if (M[st.m].cat) {
+      const nc = D.eco.filter(e => e.orb[st.yi] === 'c').length;
+      if ($('#headN').dataset.m !== st.m) { $('#headN').dataset.v = ''; $('#headN').dataset.m = st.m; }
+      rollTo($('#headN'), nc, f0);
+      // China is the point of this view (user, October 29, 2026): the line under the number names it large, in its colour
+      $('#headCap').innerHTML = `<span class="lead">ekonominin ana partneri <b><i class="dot" style="background:${orbCol('c')}"></i>Çin</b></span>${YEARS[st.yi]}`;
+    } else if (!isP) {
+      if ($('#headN').dataset.m !== st.m) { $('#headN').dataset.v = ''; $('#headN').dataset.m = st.m; }
+      rollTo($('#headN'), D.med[st.m][st.yi], M[st.m].fmt);
+      $('#headCap').textContent = `dünya medyanı, ${YEARS[st.yi]}, ${nEco} ekonomi`;
+    }
+    $('#def').textContent = M[st.m].def;
+    // Partner payı: the table alone, larger, in place of the big number (user, October 29, 2026); world medians, the
+    // kat column is the ratio of the two medians
+    $('#head').classList.toggle('duo', isP);
+    $('#pTab').hidden = !isPart();
+    $('#pTab').innerHTML = isPart() ? bothTables(k => D.med[k][st.yi], k => D.med[k + 'i'][st.yi], () => true, `Dünya medyanı, ${YEARS[st.yi]}, ${nEco} ekonomi`) : '';
+    // legend on the map; "veri yok" when any year of the measure has such an economy, so the legend stays the same
+    // while the years play (a partner's own share is left unlabelled)
+    const lg = $('#legend');
+    let row = '';
+    if (M[st.m].cat) for (const o of ORB_ORDER) row += `<span class="sw cat"><i style="background:${orbCol(o)}"></i>${ORB[o]}</span>`;
+    else if (M[st.m].duo) {
+      // how many economies on the map fall on each side this year (re-test, October 29, 2026: visitors counted dots);
+      // "eşit" only in a year that has such a case; China and the US themselves in grey
+      const vs = D.eco.filter(visible).map(e => val(e)).filter(v => v != null), nC = vs.filter(v => v > 0).length, nU = vs.filter(v => v < 0).length, nE = vs.length - nC - nU;
+      row += `<span class="sw cat"><i style="background:${orbCol('c')}"></i>Çin'in payı daha yüksek: ${nC}</span><span class="sw cat"><i style="background:${orbCol('u')}"></i>ABD'nin payı daha yüksek: ${nU}</span>`
+        + (nE ? `<span class="sw cat"><i style="background:${orbCol('o')}"></i>eşit: ${nE}</span>` : '')
+        + `<span class="sw cat"><i style="background:var(--nodata)"></i>Çin ve ABD (kendi payı yok)</span>`;
+    }
+    else {
+      const br = M[st.m].breaks, f = M[st.m].pct ? (v => '%' + v) : (v => v);
+      ramp().forEach((c, i) => { row += `<span class="sw"><i style="background:${c}"></i>${i === 0 ? '< ' + f(br[0]) : f(br[i - 1]) + '+'}</span>`; });
+    }
+    const empty = D.eco.filter(e => visible(e) && YEARS.some((_, i) => val(e, st.m, i) == null));
+    const ndc = M[st.m].cat || M[st.m].duo ? 'sw cat nd' : 'sw nd';
+    if (empty.some(e => !na(e))) row += `<span class="${ndc}" style="margin-left:8px"><i></i>veri yok</span>`;
+    drawSizeKey();
+    lg.innerHTML = `<div class="row">${row}</div>` + (M[st.m].cat ? '<div class="t">AB beşlisi: Almanya, Fransa, İtalya, İspanya, Hollanda</div>' : '')
+      + (M[st.m].cat && st.sel && st.view === 'map' ? '<div class="t">Seçili ekonominin partnerleri: partnerin kendi rengi</div>' : '');
+  }
+
+  // nested circles for the dot sizes (map view only), bottom-aligned, labelled on the right
+  function drawSizeKey() {
+    const k = $('#skey'), rs = Map_.rs;
+    if (!rs || st.view !== 'map') { k.innerHTML = ''; return; }
+    const vals = [100, 500, 2000], R = rs(vals[2]), w = 2 * R + 64, h = 2 * R + 2;
+    let svg = `<svg width="${w}" height="${h}">`;
+    vals.forEach(v => { const r = rs(v), cy = h - 1 - r;
+      svg += `<circle cx="${R + 1}" cy="${cy}" r="${r}" fill="none" stroke="var(--ink3)" stroke-width="1"/>`;
+      svg += `<line x1="${R + 1}" x2="${2 * R + 10}" y1="${cy - r}" y2="${cy - r}" stroke="var(--ink3)" stroke-width=".75" stroke-dasharray="2 2"/>`;
+      svg += `<text x="${2 * R + 14}" y="${cy - r + 3.5}" fill="var(--ink3)" style="font-size:10.5px">${f0(v)}</text>`; });
+    k.innerHTML = `<div class="t">Daire alanı: ${expSide() ? 'ihracat' : 'ithalat'}, mlr $</div>${svg}</svg>`;
+  }
+
+  // ---------- country card ----------
+  // Value and rank; where the economy sits this year (the class bar, median marked); change since 1995 and 2019; the
+  // economy's series against the world median and Türkiye (lines named at their ends; a click picks a year); the
+  // five largest sources of its import risk, in the partner's orbit colour; notes.
+  let focusCard = false;
+  // the card's series chart shrinks on shorter screens so five risk sources fit without scrolling (1440 × 900)
+  const chartH = () => innerHeight >= 980 ? 132 : innerHeight >= 880 ? 96 : innerHeight >= 820 ? 80 : 64;
+  const EU5 = new Set([276, 251, 381, 724, 528]);
+  const orbOf = pc => pc === 156 ? 'c' : pc === 842 ? 'u' : EU5.has(pc) ? 'e' : 'o';
+  function renderCard() {
+    const card = $('#card');
+    $('.side').classList.toggle('sel', !!st.sel);
+    if (!st.sel) { card.hidden = true; return; }
+    card.hidden = false;
+    const e = byCode.get(st.sel), y = st.yi, v = val(e), rk = rankOf(e.c), cat = M[st.m].cat, k = cat ? 'tp' : M[st.m].k;
+    let h = `<button class="x" type="button" aria-label="Kapat">×</button><h2 id="cardName" tabindex="-1">${short(e.n)}</h2>`;
+    // Partner payı: only the economy's shares against China and the US, and how the chosen partner's two shares
+    // moved; nothing of İthalat's card (user, October 29, 2026)
+    if (isPart()) {
+      h += `<p class="sub">Çin ve ABD: ${st.m === 'cux' ? 'İhracat' : 'İthalat'}, ${YEARS[y]}</p>`;
+      h += `<div class="ptab">${bothTables(k => e[k][y], k => e[k + 'i'][y], k => !naK(e, k))}</div>`;
+      h += `<div class="sec"><div class="bk one">${[['c', 'Çin', sideK().cn], ['u', 'ABD', sideK().us]].filter(d => !naK(e, d[2])).map(([o, n]) => `<span><svg width="18" height="6" aria-hidden="true"><line x1="1" x2="17" y1="3" y2="3" stroke="${orbCol(o)}" stroke-width="2.25" stroke-linecap="round"/></svg>${n}</span>`).join('')}</div><svg class="pch" width="100%" height="${chartH()}" role="img" aria-label="${short(e.n)}: Çin'in ve ABD'nin ${sideK().w} riskindeki payı, 1995–2024"></svg></div>`;
+    } else {
+      h += `<p class="sub">${M[st.m].label}, ${YEARS[y]}</p>`;
+      if (v == null) h += na(e) ? '' : `<div class="big">veri yok</div>`;
+      else if (cat) h += `<div class="big">${pname(e.top[y])}<small class="num">${fpct(e.tp[y])} ithalat riskinin</small></div>`;
+      else h += `<div class="big num">${M[st.m].fmt(v)}</div>${rk ? `<p class="rk">${rk.n} ekonomi içinde ${rk.r}. sırada (1. en yüksek risk)<br>dünya medyanı ${M[st.m].fmt(D.med[st.m][y])}</p>` : ''}`;
+      if (!cat && v != null) h += `<svg class="strip" width="100%" height="36" role="img" aria-label="${rk ? `${rk.n} ekonomi arasında ${rk.r}. sıra` : ''}"></svg>`;
+      // the strip's scale, where it is not plain: the export scale is logarithmic; a value above the axis end is marked
+      // (re-test, October 29, 2026)
+      if (!cat && v != null) { const sn = [M[st.m].log ? 'logaritmik ölçek, en yüksek olası değer 1000' : '', v > M[st.m].dom[1] ? `değer ölçeğin üstünde (> ${f0(M[st.m].dom[1])})` : ''].filter(Boolean);
+        if (sn.length) h += `<p class="snote">${sn.join(', ')}</p>`; }
+      if (!cat && v != null) {
+        const cell = (yy, l) => { const a = e[k][YEARS.indexOf(yy)]; return a != null && YEARS[y] > yy ? `<div><span class="l">${l}</span><span class="v num">${fsign(v - a)}${M[st.m].pct ? '<small> puan</small>' : ''}</span></div>` : ''; };
+        const cs = cell(1995, "1995'ten beri") + cell(2019, "2019'dan beri");
+        if (cs) h += `<div class="cells">${cs}</div>`;
+      }
+      if (!na(e)) {
+        if (cat) h += `<div class="sec"><div class="st">Ana partner, 1995–2024</div><svg class="ost" width="100%" height="36" role="img" aria-label="${short(e.n)}: yıllara göre ana partner"></svg></div>`;
+        else {
+          const lk = (stroke, wd, dash, lab) => `<span><svg width="18" height="6" aria-hidden="true"><line x1="1" x2="17" y1="3" y2="3" stroke="${stroke}" stroke-width="${wd}" stroke-dasharray="${dash}" stroke-linecap="round"/></svg>${lab}</span>`;
+          const keys = [lk('var(--sel)', 2.25, '', short(e.n)), lk('var(--ink3)', 1.5, '', 'dünya medyanı')];
+          if (e.c !== TR) keys.push(lk('var(--ink2)', 1.5, '1 3', 'Türkiye'));
+          h += `<div class="sec"><div class="bk one">${keys.join('')}</div><svg class="ch" width="100%" height="${chartH()}" role="img" aria-label="${short(e.n)}: ${M[st.m].label}, 1995–2024"></svg></div>`;
+        }
+      }
+      h += '<dl>';
+      if (st.m === 'exp') h += `<dt>İhracat</dt><dd class="num">${e.xb[y] != null ? fbn(e.xb[y]) : 'veri yok'}</dd>`;
+      else h += `<dt>İthalat</dt><dd class="num">${e.ib[y] != null ? fbn(e.ib[y]) : 'veri yok'}</dd>`;
+      const t5 = srcOf(e.c, y);
+      // China's and the US share on the import measures, unless it is the big number or already in the source list below
+      const inSrc = new Set(t5.slice(0, NSRC).map(t => t[0]));
+      if (st.m !== 'exp') for (const pk of ['cn', 'us']) if (pk !== st.m.slice(0, 2) && !inSrc.has(pk === 'cn' ? 156 : 842) && !na(e, pk))
+        h += `<dt>${M[pk].label}</dt><dd class="num">${e[pk][y] != null ? fpct(e[pk][y]) : 'veri yok'}</dd>`;
+      h += '</dl>';
+      if (t5.length) {
+        const ex = st.m === 'exp', tl = ex ? 'ihracat' : 'ithalat';
+        h += `<div class="sec">${dataTable([{ title: ex ? 'Riskin bağlı olduğu alıcılar' : 'Risk kaynakları', on: true, cols: shareCols(tl),
+          rows: t5.slice(0, NSRC).map(([pc, r, im]) => ({ col: orbCol(orbOf(pc)), name: pname(pc), cells: shareCells(r, im) })) }])}</div>`;
+      }
+    }
+    const notes = [];
+    if (e.sig === 'common') notes.push('İkame esneklikleri bu ekonomi için ülkeye özgü değil, ortak (medyan) değerlerden');
+    if (e.bl && YEARS[y] < 1999) notes.push("1995–1998: BACI'nin Belçika–Lüksemburg birimi, endekste olduğu gibi");
+    if (e.small) notes.push(`Küçük ekonomi: 2024 ithalatı ${D.smallBn} mlr $'ın altında`);
+    if (/\[/.test(e.n)) notes.push('Ad için karar bekleniyor');
+    if (notes.length) h += `<p class="note">${notes.join('<br>')}</p>`;
+    card.innerHTML = h;
+    card.querySelector('.x').onclick = () => select(null, true);
+    drawCardGraphics(card, e);
+    cardW = card.clientWidth;
+    if (focusCard) { card.querySelector('h2').focus(); focusCard = false; }
+  }
+  let rbDrawn = null, cardW = 0;
+  // redraw the card graphics if the card changes width after drawing (layout switch, scrollbar)
+  new ResizeObserver(() => { const c = $('#card'); if (c.hidden || !st.sel || c.clientWidth === cardW) return; cardW = c.clientWidth;
+    c.querySelectorAll('svg.strip,svg.ch,svg.ost,svg.pch').forEach(s => d3.select(s).selectAll('*').remove()); drawCardGraphics(c, byCode.get(st.sel)); }).observe($('#card'));
+  function drawCardGraphics(card, e) {
+    const s1 = card.querySelector('svg.strip'), s2 = card.querySelector('svg.ch'), s3 = card.querySelector('svg.ost'), s4 = card.querySelector('svg.pch');
+    if (s1) drawStrip(s1, e); if (s2) drawSeries(s2, e); if (s3) drawOrbStrip(s3, e); if (s4) drawPartnerSeries(s4, e);
+  }
+  // where the economy sits this year: the class bar (the map's legend), a notch for the world median, a thumb for the value
+  function drawStrip(svg, e) {
+    const w = svg.getBoundingClientRect().width || 280, s = d3.select(svg), x = xScale(st.m, 7, w - 7), yb = 12;
+    const ed = [M[st.m].dom[0], ...M[st.m].breaks, M[st.m].dom[1]];
+    ramp().forEach((c, i) => { const a = x(ed[i]), b = x(ed[i + 1]);
+      s.append('rect').attr('x', a + (i ? 1 : 0)).attr('y', yb - 3).attr('width', Math.max(0, b - a - (i ? 1 : 0) - (i < 5 ? 1 : 0))).attr('height', 6).attr('rx', 3).attr('fill', c); });
+    const mx = x(D.med[st.m][st.yi]);
+    s.append('line').attr('x1', mx).attr('x2', mx).attr('y1', yb + 5).attr('y2', yb + 11).attr('stroke', 'var(--ink2)').attr('stroke-width', 1.5).attr('stroke-linecap', 'round');
+    const vx = x(val(e));
+    if (Math.abs(vx - mx) > 30) s.append('text').attr('x', Math.max(14, Math.min(w - 14, mx))).attr('y', yb + 22).attr('text-anchor', 'middle').style('font-size', '10.5px').style('fill', 'var(--ink3)').text('medyan');
+    s.append('circle').attr('cx', vx).attr('cy', yb).attr('r', 7).attr('fill', 'var(--surface)').attr('stroke', 'var(--ink)').attr('stroke-width', 2.5);
+  }
+  // the economy's own series against the world median (and Türkiye), labelled at the line ends instead of axes and a
+  // legend; the current year as a dot with its value; a click picks a year
+  function drawSeries(svg, e) {
+    const w = svg.getBoundingClientRect().width || 280, h = chartH(), m = { l: 4, r: 6, t: 20, b: 16 }, k = M[st.m].k, s = d3.select(svg);
+    const x = d3.scaleLinear().domain([1995, 2024]).range([m.l, w - m.r]);
+    const ser = c => YEARS.map((yy, i) => byCode.get(c)[k][i]);
+    const mine = ser(e.c), tr = e.c !== TR ? ser(TR) : [], med = D.med[st.m], fmt = M[st.m].fmt;
+    const ext = d3.extent([...mine, ...tr, ...med].filter(v => v != null));
+    const pad = (ext[1] - ext[0]) * .08 || 1;
+    const y = d3.scaleLinear().domain([Math.max(0, ext[0] - pad), ext[1] + pad]).range([h - m.b, m.t]);
+    const ln = d3.line().defined(d => d != null).x((d, i) => x(YEARS[i])).y(d => y(d)).curve(d3.curveMonotoneX);
+    const ar = d3.area().defined(d => d != null).x((d, i) => x(YEARS[i])).y0(h - m.b).y1(d => y(d)).curve(d3.curveMonotoneX);
+    const gid = 'cg' + e.c;
+    const gr = s.append('defs').append('linearGradient').attr('id', gid).attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 1);
+    gr.append('stop').attr('offset', 0).attr('stop-color', 'var(--sel)').attr('stop-opacity', .18);
+    gr.append('stop').attr('offset', 1).attr('stop-color', 'var(--sel)').attr('stop-opacity', 0);
+    s.append('path').attr('d', ar(mine)).attr('fill', `url(#${gid})`);
+    s.append('line').attr('x1', m.l).attr('x2', w - m.r).attr('y1', h - m.b + .5).attr('y2', h - m.b + .5).attr('stroke', 'var(--rule)');
+    s.append('path').attr('d', ln(med)).attr('fill', 'none').attr('stroke', 'var(--ink3)').attr('stroke-width', 1.25).attr('opacity', .8);
+    if (tr.length) s.append('path').attr('d', ln(tr)).attr('fill', 'none').attr('stroke', 'var(--ink2)').attr('stroke-width', 1.5).attr('stroke-dasharray', '1 3').attr('stroke-linecap', 'round');
+    const p = s.append('path').attr('d', ln(mine)).attr('fill', 'none').attr('stroke', 'var(--sel)').attr('stroke-width', 2).attr('stroke-linejoin', 'round');
+    // draw the line once per selection and measure (M4), not on every year step
+    const key = e.c + st.m;
+    if (!reduced && rbDrawn !== key) {
+      const len = p.node().getTotalLength();
+      p.attr('stroke-dasharray', len).attr('stroke-dashoffset', len).transition().duration(600).ease(d3.easeCubicOut).attr('stroke-dashoffset', 0)
+        .on('end', () => p.attr('stroke-dasharray', null));
+    }
+    rbDrawn = key;
+    [[1995, 'start'], [2024, 'end']].forEach(([yy, a]) => s.append('text').attr('class', 'num').attr('x', x(yy)).attr('y', h - 2).attr('text-anchor', a)
+      .style('font-size', '10.5px').style('fill', 'var(--ink3)').text(yy));
+    // the first value, so the line has a scale without an axis
+    const i0 = mine.findIndex(v => v != null);
+    if (i0 >= 0 && st.yi - i0 > 4) s.append('text').attr('class', 'lbl sm num').attr('x', x(YEARS[i0])).attr('y', y(mine[i0]) - 7).style('font-size', '10.5px').text(fmt(mine[i0]));
+    const cv = mine[st.yi], cx = x(YEARS[st.yi]);
+    if (cv != null) {
+      s.append('line').attr('x1', cx).attr('x2', cx).attr('y1', y(cv)).attr('y2', h - m.b).attr('stroke', 'var(--sel)').attr('stroke-width', 1).attr('stroke-dasharray', '2 2').attr('opacity', .6);
+      s.append('circle').attr('cx', cx).attr('cy', y(cv)).attr('r', 4.5).attr('fill', 'var(--sel)').attr('stroke', 'var(--surface)').attr('stroke-width', 2);
+      s.append('text').attr('class', 'lbl num').attr('x', cx > w - 30 ? w - 2 : Math.max(14, cx)).attr('y', y(cv) - 9).attr('text-anchor', cx > w - 30 ? 'end' : 'middle').style('font-size', '11px').text(fmt(cv));
+    }
+    s.style('cursor', 'pointer').on('click', ev => { const [px] = d3.pointer(ev); const i = YEARS.indexOf(Math.max(1995, Math.min(2024, Math.round(x.invert(px))))); if (i >= 0 && i !== st.yi) { st.yi = i; update(false); } });
+  }
+  // Partner payı: China's and the US share of the economy's import risk, 1995–2024, one line each in the partner's
+  // colour (a country's own share left out); both values at the current year; a click picks a year
+  // values beside their dots (left of them near the right edge), at least 13 px apart and inside [lo, hi]; returns
+  // [{ x, y, anchor }] in the order given (pts sorted from the highest value down)
+  function sideLabels(x, ys, w, lo, hi) {
+    const left = x > w - 70, out = ys.map(y => y + 4);
+    for (let k = 1; k < out.length; k++) if (out[k] - out[k - 1] < 13) out[k] = out[k - 1] + 13;
+    const over = out.length ? out[out.length - 1] - hi : 0; if (over > 0) for (let k = 0; k < out.length; k++) out[k] -= over;
+    if (out.length && out[0] < lo) { const d = lo - out[0]; for (let k = 0; k < out.length; k++) out[k] += d; }
+    return out.map(y => ({ x: left ? x - 9 : x + 9, y, anchor: left ? 'end' : 'start' }));
+  }
+  function drawPartnerSeries(svg, e) {
+    const w = svg.getBoundingClientRect().width || 280, h = chartH(), m = { l: 4, r: 6, t: 20, b: 16 }, s = d3.select(svg);
+    const K = sideK(), sers = [['c', K.cn], ['u', K.us]].filter(([, k]) => !naK(e, k)).map(([o, k]) => ({ col: orbCol(o), v: e[k] }));
+    const x = d3.scaleLinear().domain([1995, 2024]).range([m.l, w - m.r]);
+    const top = d3.max(sers.flatMap(d => d.v).filter(v => v != null)) || 1;
+    const y = d3.scaleLinear().domain([0, top * 1.08]).range([h - m.b, m.t]);
+    const ln = d3.line().defined(d => d != null).x((d, i) => x(YEARS[i])).y(d => y(d)).curve(d3.curveMonotoneX);
+    s.append('line').attr('x1', m.l).attr('x2', w - m.r).attr('y1', h - m.b + .5).attr('y2', h - m.b + .5).attr('stroke', 'var(--rule)');
+    for (const d of sers) s.append('path').attr('d', ln(d.v)).attr('fill', 'none').attr('stroke', d.col).attr('stroke-width', 2).attr('stroke-linejoin', 'round');
+    [[1995, 'start'], [2024, 'end']].forEach(([yy, a]) => s.append('text').attr('class', 'num').attr('x', x(yy)).attr('y', h - 2).attr('text-anchor', a)
+      .style('font-size', '10.5px').style('fill', 'var(--ink3)').text(yy));
+    const cx = x(YEARS[st.yi]), pts = sers.filter(d => d.v[st.yi] != null).map(d => ({ col: d.col, v: d.v[st.yi] })).sort((a, b) => b.v - a.v);
+    if (pts.length) s.append('line').attr('x1', cx).attr('x2', cx).attr('y1', m.t - 4).attr('y2', h - m.b).attr('stroke', 'var(--ink3)').attr('stroke-width', 1).attr('stroke-dasharray', '2 2').attr('opacity', .6);
+    const lab = sideLabels(cx, pts.map(d => y(d.v)), w, m.t, h - m.b - 4);
+    pts.forEach((d, k) => {
+      s.append('circle').attr('cx', cx).attr('cy', y(d.v)).attr('r', 4.5).attr('fill', d.col).attr('stroke', 'var(--surface)').attr('stroke-width', 2);
+      s.append('text').attr('class', 'lbl num').attr('x', lab[k].x).attr('y', lab[k].y).attr('text-anchor', lab[k].anchor).style('font-size', '11px').text(fpct(d.v));
+    });
+    s.style('cursor', 'pointer').on('click', ev => { const [px] = d3.pointer(ev); const i = YEARS.indexOf(Math.max(1995, Math.min(2024, Math.round(x.invert(px))))); if (i >= 0 && i !== st.yi) { st.yi = i; update(false); } });
+  }
+  // the main partner year by year, in orbit colours; the current year outlined
+  function drawOrbStrip(svg, e) {
+    const w = svg.getBoundingClientRect().width || 280, s = d3.select(svg), step = (w - 2) / NY;
+    YEARS.forEach((yy, i) => { const o = e.orb[i];
+      s.append('rect').attr('x', 1 + i * step + .75).attr('y', 4).attr('width', step - 1.5).attr('height', 16).attr('rx', 2.5)
+        .attr('fill', o ? orbCol(o) : 'var(--nodata)').attr('opacity', i === st.yi ? 1 : .7)
+        .attr('stroke', i === st.yi ? 'var(--ink)' : 'none').attr('stroke-width', 1.5); });
+    [[0, 'start'], [NY - 1, 'end']].forEach(([i, a]) => s.append('text').attr('x', a === 'start' ? 1 : w - 1).attr('y', 33).attr('text-anchor', a)
+      .style('font-size', '10.5px').style('fill', 'var(--ink3)').text(YEARS[i]));
+    s.style('cursor', 'pointer').on('click', ev => { const [px] = d3.pointer(ev); const i = Math.max(0, Math.min(NY - 1, Math.floor((px - 1) / step))); if (i !== st.yi) { st.yi = i; update(false); } });
+  }
+
+  // ---------- time band: a year scrubber over the world figure ----------
+  // One column per year (the world median, in the map's class colour; in the orbit view the economies stacked by main
+  // partner), Türkiye and the selection as thin lines, a ruler, and a knob carrying the year. The static layer is
+  // rebuilt only when the measure, selection, size or theme changes; a year change moves the knob, so dragging holds.
+  const band = { key: null };
+  function drawBand() {
+    const host = $('#track'), w = host.clientWidth, h = host.clientHeight;
+    host.setAttribute('aria-valuenow', YEARS[st.yi]); host.setAttribute('aria-valuetext', String(YEARS[st.yi]));
+    const key = [st.m, st.sel, st.hide, w, h, theme].join('|');
+    if (key !== band.key) { band.key = key; buildBand(w, h); }
+    moveBand();
+  }
+  function buildBand(w, h) {
+    const svg = d3.select('#bandSvg').attr('width', w).attr('height', h); svg.selectAll('*').remove();
+    const phone = w < 600, m = { l: 10, r: phone ? 12 : 26 };
+    const step = (w - m.l - m.r) / NY, cx = i => m.l + step * (i + .5);
+    const cat = M[st.m].cat, duo = M[st.m].duo, k = M[st.m].k;
+    const bw = cat ? Math.max(3, Math.min(14, step * .5)) : Math.max(3, Math.min(7, step * .3)), top = 24, base = h - 44;
+    const gB = svg.append('g'), gL = svg.append('g'), gC = svg.append('g').style('pointer-events', 'none');
+    const cols = [], key = []; band.lines = []; band.ext = [];
+    // with an economy selected the band shrinks to the year strip alone (ruler, knob, play): the card already shows the
+    // series against the world median (user, October 26, 2026)
+    // while the band grows or shrinks it can be too short for the chart (the d3 "negative height" warning): strip only
+    const slim = !!st.sel || base - top < 16;
+    if (slim) { /* the year strip only */ }
+    else if (duo) {
+      // Partner payı: the world medians of China's and the US share of import risk, one line each (user, October 29,
+      // 2026), on one scale from zero
+      const K = sideK(), top2 = d3.max([...D.med[K.cn], ...D.med[K.us]]);
+      const y = d3.scaleLinear().domain([0, top2 * 1.12]).range([base, top]); band.y = y;
+      const mLine = d3.line().x((d, i) => cx(i)).y(d => y(d)).curve(d3.curveMonotoneX);
+      gB.append('line').attr('x1', m.l).attr('x2', w - m.r).attr('y1', base + .5).attr('y2', base + .5).style('stroke', 'var(--rule)');
+      // a scale without an axis: one faint gridline at a round share, and the zero line named (re-test, October 29, 2026)
+      const gstep = top2 > 24 ? 20 : top2 > 12 ? 10 : 5;
+      gB.append('line').attr('x1', m.l + 22).attr('x2', w - m.r).attr('y1', y(gstep)).attr('y2', y(gstep)).style('stroke', 'var(--rule)').style('stroke-dasharray', '2 3');
+      for (const [v, yy] of [[gstep, y(gstep)], [0, base]]) gB.append('text').attr('class', 'num').attr('x', m.l).attr('y', yy + 3.5).style('font-size', '10px').style('fill', 'var(--ink3)').text('%' + v);
+      // the gap between the two medians, tinted by whichever is higher (the map's rule): the area between the lines,
+      // clipped above and below the US line (a difference chart; same curve, so the edges meet)
+      const cnS = D.med[K.cn], usS = D.med[K.us], X = (d, i) => cx(i);
+      const gap = d3.area().x(X).y0((d, i) => y(usS[i])).y1((d, i) => y(cnS[i])).curve(d3.curveMonotoneX);
+      const df2 = svg.append('defs');
+      df2.append('clipPath').attr('id', 'gapUp').append('path').attr('d', d3.area().x(X).y0(0).y1((d, i) => y(usS[i])).curve(d3.curveMonotoneX)(usS));
+      df2.append('clipPath').attr('id', 'gapDn').append('path').attr('d', d3.area().x(X).y0(h).y1((d, i) => y(usS[i])).curve(d3.curveMonotoneX)(usS));
+      gB.append('path').attr('d', gap(usS)).attr('fill', orbCol('c')).attr('opacity', .16).attr('clip-path', 'url(#gapUp)');
+      gB.append('path').attr('d', gap(usS)).attr('fill', orbCol('u')).attr('opacity', theme === 'dark' ? .22 : .14).attr('clip-path', 'url(#gapDn)');
+      for (const [o, kk, n] of [['c', K.cn, 'Çin'], ['u', K.us, 'ABD']]) {
+        gB.append('path').attr('d', mLine(D.med[kk])).attr('fill', 'none').attr('stroke', orbCol(o)).attr('stroke-width', 2.5).attr('stroke-linecap', 'round');
+        band.lines.push({ s: D.med[kk], col: orbCol(o), n });
+        key.push(`<span><i class="sw" style="background:${orbCol(o)}"></i>${n}'${n === 'Çin' ? 'in' : 'nin'} payı</span>`);
+      }
+      $('#bandT').textContent = `Dünya medyanı, ${K.w} riski, 1995–2024`;
+    }
+    else if (cat) {
+      const vis = D.eco.filter(visible), y = d3.scaleLinear().domain([0, vis.length]).range([0, Math.max(0, base - top)]);
+      YEARS.forEach((yy, i) => {
+        const g = gB.append('g'); let y0 = base;
+        for (const o of ORB_ORDER) {
+          const n = vis.filter(e => e.orb[i] === o).length; if (!n) continue;
+          const hh = y(n);
+          g.append('rect').attr('x', cx(i) - bw / 2).attr('y', y0 - hh + .75).attr('width', bw).attr('height', Math.max(.5, hh - 1.5)).attr('rx', Math.min(2, bw / 3)).attr('fill', orbCol(o))
+            .datum({ o, n, mid: y0 - hh / 2, hh });
+          y0 -= hh;
+        }
+        cols.push(g);
+      });
+      for (const o of ORB_ORDER) key.push(`<span><i class="sw" style="background:${orbCol(o)}"></i>${ORB[o]}</span>`);
+      $('#bandT').textContent = 'Ana partnere göre ekonomi sayısı';
+    } else {
+      // the band shows the world median alone, on a scale fitted to its own range, so a small but real change reads
+      // (a zero-based scale flattened İthalat's 43-49 movement); the selection and Türkiye are compared in the card's
+      // chart (merging them into the band was tried and reverted, October 26, 2026)
+      const ex = d3.extent(D.med[st.m]), rg = ex[1] - ex[0] || 1;
+      const y = d3.scaleLinear().domain([Math.max(0, ex[0] - rg * .35), ex[1] + rg * .15]).range([base, top]);
+      band.y = y;
+      // the world median as one smoothed area; a horizontal gradient carries each year's class colour from the map
+      const gid = 'bandG', med = D.med[st.m];
+      const gr = svg.append('defs').append('linearGradient').attr('id', gid).attr('gradientUnits', 'userSpaceOnUse')
+        .attr('x1', cx(0)).attr('x2', cx(NY - 1)).attr('y1', 0).attr('y2', 0);
+      med.forEach((v, i) => gr.append('stop').attr('offset', i / (NY - 1)).attr('stop-color', ramp()[cls(v)]));
+      const mArea = d3.area().x((d, i) => cx(i)).y0(base).y1(d => y(d)).curve(d3.curveMonotoneX);
+      const mLine = d3.line().x((d, i) => cx(i)).y(d => y(d)).curve(d3.curveMonotoneX);
+      // fade the area towards the baseline (a vertical mask over the horizontal class gradient)
+      const df = svg.select('defs'), fg = df.append('linearGradient').attr('id', 'bandF').attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 1);
+      fg.append('stop').attr('offset', 0).attr('stop-color', '#fff').attr('stop-opacity', .55);
+      fg.append('stop').attr('offset', 1).attr('stop-color', '#fff').attr('stop-opacity', .04);
+      df.append('mask').attr('id', 'bandM').append('rect').attr('x', 0).attr('y', top).attr('width', w).attr('height', Math.max(0, base - top)).attr('fill', 'url(#bandF)');
+      gB.append('path').attr('d', mArea(med)).attr('fill', `url(#${gid})`).attr('mask', 'url(#bandM)');
+      gB.append('path').attr('d', mLine(med)).attr('fill', 'none').attr('stroke', `url(#${gid})`).attr('stroke-width', 2.5).attr('stroke-linecap', 'round');
+      key.push(`<span>${M[st.m].label}</span>`);
+      // the lowest and highest year named on the line, so the fitted scale has its numbers
+      const iMin = med.indexOf(ex[0]), iMax = med.indexOf(ex[1]);
+      band.ext = [[iMin, y(ex[0]) + 15], [iMax, y(ex[1]) - 8]].map(([i, ly]) => ({ i,
+        t: gB.append('text').attr('class', 'lbl sm num').attr('x', cx(i)).attr('y', ly).attr('text-anchor', i === 0 ? 'start' : i === NY - 1 ? 'end' : 'middle')
+          .style('font-size', '10.5px').text(M[st.m].fmt(med[i])) }));
+      $('#bandT').textContent = 'Dünya medyanı, 1995–2024';
+    }
+    $('#bandK').innerHTML = key.join('');
+    // ruler
+    const gR = svg.append('g').attr('class', 'axis'), ry = slim ? 20 : h - 37;
+    gR.append('line').attr('x1', m.l).attr('x2', w - m.r).attr('y1', ry).attr('y2', ry).style('stroke', 'var(--rule)');
+    YEARS.forEach((yy, i) => gR.append('line').attr('x1', cx(i)).attr('x2', cx(i)).attr('y1', ry).attr('y2', ry + (yy % 5 ? 3 : 6)).style('stroke', yy % 5 ? 'var(--rule)' : 'var(--rule2)'));
+    const majors = (phone ? [1995, 2005, 2015, 2024] : [1995, 2000, 2005, 2010, 2015, 2020, 2024]);
+    const yl = majors.map(yy => gR.append('text').attr('class', 'num').attr('x', cx(YEARS.indexOf(yy))).attr('y', slim ? 46 : h - 13).attr('text-anchor', 'middle').text(yy).datum(YEARS.indexOf(yy)));
+    // cursor: hairline, dots on the lines, the value over the column, the knob
+    const hair = gC.append('line').attr('y1', top - 6).attr('y2', h - 31).attr('stroke', 'var(--ink)').attr('stroke-width', 1).style('display', slim ? 'none' : null);
+    const mdot = cat || slim || duo ? null : gC.append('circle').attr('r', 4.5).attr('fill', 'var(--surface)').attr('stroke', 'var(--ink)').attr('stroke-width', 2);
+    const ghost = cat || slim || duo ? null : gC.append('circle').attr('r', 3.5).attr('fill', 'none').attr('stroke', 'var(--ink2)').attr('stroke-width', 1.25).style('display', 'none');
+    const dots = band.lines.map(Lx => gC.append('circle').attr('r', Lx.tr ? 3.5 : 4.5).attr('fill', Lx.col).attr('stroke', 'var(--bg)').attr('stroke-width', 2));
+    // value labels in ink (the Partner payı medians, named), the dot beside them carries the colour
+    band.lines.forEach(Lx => { Lx.t = gC.append('text').attr('class', 'lbl num').style('font-size', Lx.tr ? '10.5px' : '11.5px').style('fill', Lx.n ? 'var(--ink)' : Lx.col); });
+    const vlab = gC.append('text').attr('class', 'lbl num').attr('text-anchor', 'middle').style('font-size', '11.5px');
+    const segs = gC.append('g');
+    const knob = gC.append('g');
+    const ky = slim ? ry - 11.5 : h - 31;
+    knob.append('rect').attr('x', -24).attr('y', ky).attr('width', 48).attr('height', 23).attr('rx', 11.5).attr('fill', 'var(--ink)');
+    const kt = knob.append('text').attr('class', 'num').attr('y', ky + 16).attr('text-anchor', 'middle').style('font-size', '12.5px').style('font-weight', 650).style('fill', 'var(--bg)');
+    Object.assign(band, { w, h, m, step, cx, bw, base, cols, yl, hair, dots, vlab, segs, knob, kt, cat, duo, phone, mdot, ghost, slim });
+  }
+  function moveBand() {
+    const B = band, i = st.yi, x = B.cx(i), hv = B.hover;
+    B.cols.forEach((c, j) => c.attr('opacity', j === i ? 1 : j === hv ? .75 : B.cat ? .45 : .5));
+    const kx = Math.max(25, Math.min(B.w - 25, x));
+    B.yl.forEach(t => t.style('opacity', Math.abs(B.cx(t.datum()) - kx) < 40 ? 0 : 1));
+    // the hairline only joins the marks to the knob: from the column's foot, or from the median dot, down to the knob
+    const lowY = B.slim ? 0 : B.cat ? B.base - 4 : B.duo ? Math.max(...B.lines.map(L => B.y(L.s[i]))) : Math.max(B.y(D.med[st.m][i]), ...B.lines.map(L => L.s[i] == null ? -Infinity : B.y(L.s[i])));
+    B.hair.attr('x1', x).attr('x2', x).attr('y1', lowY + 5).attr('y2', B.h - 31);
+    B.knob.attr('transform', `translate(${kx},0)`); B.kt.text(YEARS[i]);
+    B.segs.selectAll('*').remove(); B.vlab.text(''); (B.lines || []).forEach(L => L.t && L.t.text(''));
+    if (B.slim) return;
+    if (B.duo) {
+      // both values in one label above the upper dot, as two spaced parts (the figures carry decimal commas, so a comma
+      // between them would misread), so nothing sits on a line
+      const pts = B.lines.map((L, j) => ({ L, dt: B.dots[j], v: L.s[i] })).sort((a, b) => b.v - a.v);
+      pts.forEach(d => d.dt.attr('cx', x).attr('cy', B.y(d.v)).style('display', null).raise());
+      const t = B.lines[0].t, tw = 132, lx = Math.max(B.m.l + tw / 2, Math.min(B.w - B.m.r - tw / 2, x));
+      t.attr('x', lx).attr('y', Math.max(12, B.y(pts[0].v) - 11)).attr('text-anchor', 'middle').style('fill', 'var(--ink)').text('');
+      B.lines.forEach((L, j) => t.append('tspan').attr('dx', j ? 12 : 0).text(`${L.n} ${fpct(L.s[i])}`));
+      return;
+    }
+    if (B.cat) {
+      if (B.bw < 13) return;
+      B.cols[i].selectAll('rect').each(function (d) {
+        if (d.hh < 13) return;
+        B.segs.append('text').attr('class', 'num').attr('x', x).attr('y', d.mid + 4).attr('text-anchor', 'middle').style('font-size', '10.5px').style('font-weight', 650)
+          .style('fill', d3.hcl(orbCol(d.o)).l > 62 ? '#0b0b0b' : '#fff').text(d.n);
+      });
+    } else {
+      B.dots.forEach((dt, j) => { const v = B.lines[j].s[i]; dt.attr('cx', x).attr('cy', v == null ? -99 : B.y(v)).style('display', v == null ? 'none' : null); });
+      const v = D.med[st.m][i];
+      B.mdot.attr('cx', x).attr('cy', B.y(v)).raise();
+      if (hv != null && hv !== i) B.ghost.style('display', null).attr('cx', B.cx(hv)).attr('cy', B.y(D.med[st.m][hv])); else B.ghost.style('display', 'none');
+      B.ext.forEach(({ i: j, t }) => t.style('opacity', Math.abs(B.cx(j) - x) < 44 ? 0 : 1));
+      // values: the highest mark labelled above it, the others beside their dots; a side label that would touch
+      // the one before it is left out (Türkiye's first)
+      const marks = [{ y: B.y(v), t: B.vlab, v }, ...B.lines.filter(L => L.s[i] != null).map(L => ({ y: B.y(L.s[i]), t: L.t, v: L.s[i], tr: L.tr }))]
+        .sort((a, b) => a.y - b.y || (a.tr ? 1 : -1));
+      // when the selection sits on the median, the selection takes the label above and is drawn on top
+      if (marks[1] && marks[0].t === B.vlab && !marks[1].tr && marks[1].y - marks[0].y < 6) marks.unshift(marks.splice(1, 1)[0]);
+      B.dots.forEach((dt, j) => { if (!B.lines[j].tr) dt.raise(); });
+      const side = x > B.w - 70 ? -10 : 10, anc = side > 0 ? 'start' : 'end';
+      let lastY = -99;
+      marks.forEach((mk, j) => {
+        if (j === 0) return mk.t.attr('x', x).attr('y', mk.y - 11).attr('text-anchor', 'middle').text(M[st.m].fmt(mk.v));
+        if (mk.y - lastY < 13) return;
+        mk.t.attr('x', x + side).attr('y', mk.y + 4).attr('text-anchor', anc).text(M[st.m].fmt(mk.v)); lastY = mk.y;
+      });
+    }
+  }
+  // pointer: press anywhere on the track and drag; the year follows the pointer (pointer capture on the track itself)
+  let playT = null;
+  function setPlay(on) {
+    clearInterval(playT); playT = null;
+    const b = $('#play'); b.setAttribute('aria-pressed', on); b.setAttribute('aria-label', on ? 'Durdurun' : 'Yılları oynatın');
+    b.innerHTML = on ? '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1.5" width="2.6" height="9" rx="1" fill="currentColor"/><rect x="7.4" y="1.5" width="2.6" height="9" rx="1" fill="currentColor"/></svg>'
+      : '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.6v8.8a.6.6 0 0 0 .9.5l7-4.4a.6.6 0 0 0 0-1L3.9 1.1a.6.6 0 0 0-.9.5z" fill="currentColor"/></svg>';
+    if (!on) return;
+    if (st.yi === NY - 1) { st.yi = 0; update(false); }
+    playT = setInterval(() => { if (st.yi >= NY - 1) return setPlay(false); st.yi++; update(false); }, 700);
+  }
+  function wireBand() {
+    const tr = $('#track');
+    let drag = false, raf = 0, want = null;
+    const idx = ev => { const r = tr.getBoundingClientRect(), B = band; return Math.max(0, Math.min(NY - 1, Math.floor((ev.clientX - r.left - B.m.l) / B.step))); };
+    const go = i => { want = i; if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (want !== st.yi) { st.yi = want; update(false); } }); };
+    tr.addEventListener('pointerdown', ev => { if (ev.button) return; setPlay(false); drag = true; tr.classList.add('drag'); tr.setPointerCapture(ev.pointerId); go(idx(ev)); ev.preventDefault(); tr.focus({ preventScroll: true }); });
+    tr.addEventListener('pointermove', ev => {
+      if (drag) return go(idx(ev));
+      if (ev.pointerType === 'mouse') { const i = idx(ev); if (i !== band.hover) { band.hover = i; moveBand(); } }
+    });
+    const end = () => { drag = false; tr.classList.remove('drag'); };
+    tr.addEventListener('pointerup', end); tr.addEventListener('pointercancel', end);
+    tr.addEventListener('pointerleave', () => { if (band.hover != null) { band.hover = null; moveBand(); } });
+    tr.addEventListener('keydown', ev => {
+      const s = { ArrowLeft: -1, ArrowDown: -1, ArrowRight: 1, ArrowUp: 1, PageDown: -5, PageUp: 5 }[ev.key];
+      let i = ev.key === 'Home' ? 0 : ev.key === 'End' ? NY - 1 : s ? Math.max(0, Math.min(NY - 1, st.yi + s)) : null;
+      if (i == null) return;
+      ev.preventDefault(); setPlay(false); if (i !== st.yi) { st.yi = i; update(false); }
+    });
+    $('#play').onclick = () => setPlay(!playT);
+    setPlay(false);
+  }
+
+  // label widths measured in the label's own font (the old per-letter guess let neighbours touch on phones)
+  const textCtx = document.createElement('canvas').getContext('2d');
+  const textW = (t, cls) => { textCtx.font = `${cls === 'lbl tr' ? '700 13.5px' : cls === 'lbl sm' ? '500 12px' : '600 12px'} system-ui,-apple-system,'Segoe UI',sans-serif`; return textCtx.measureText(t).width; };
+
+  // ---------- the map: one circle per economy (sample S1) ----------
+  const FALLBACK = { '212': [-61.37, 15.42], '308': [-61.68, 12.12], '659': [-62.78, 17.33], '670': [-61.2, 13.25],
+    '480': [57.55, -20.25], '446': [113.55, 22.17], '344': [114.17, 22.32], '702': [103.82, 1.35] };
+  const LANES = { c: .3, u: .48, e: .66, o: .84 };
+  let world;
+  const Map_ = {
+    async mount(svg, w, h) {
+      if (!world) world = await d3.json('/assets/vendor/world-atlas-2.0.2-countries-50m.json');
+      svg.selectAll('*').remove();
+      Object.assign(this, { w, h, cache: {}, first: true, lastView: null });
+      const phone = w < 760;
+      const frame = { type: 'MultiPoint', coordinates: [[-170, -55], [180, -55], [-170, 80], [180, 80], [0, -55], [0, 80], [-100, 80], [100, 80], [60, 80],
+        [-168, 0], [179, 0], [-168, 30], [179, 30], [-168, -30], [179, -30]] };
+      // room for the switches above the map; on phones and tablets the legend sits below it (audit, November 2, 2026)
+      const tight = w < 600 && innerWidth <= 900;
+      const proj = d3.geoEqualEarth().fitExtent([[10, tight ? 58 : 46], [w - 10, h - (tight ? 66 : innerWidth <= 900 ? 44 : 8)]], frame);
+      const defs = svg.append('defs');
+      defs.append('pattern').attr('id', 'nd').attr('width', 5).attr('height', 5).attr('patternUnits', 'userSpaceOnUse').attr('patternTransform', 'rotate(45)')
+        .append('rect').attr('width', 2).attr('height', 5).attr('fill', 'var(--nodata)');
+      this.proj = proj;
+      const path = d3.geoPath(proj);
+      this.gLand = svg.append('g');
+      this.gLand.append('path').attr('d', path(topojson.feature(world, world.objects.land))).attr('fill', 'var(--land)');
+      const all = topojson.feature(world, world.objects.countries).features;
+      const feats = new Map(all.map(f => [f.id, f]));
+      // the 87 economies' own territory: hovering or clicking anywhere on it is the same as the dot
+      const byId = new Map(D.eco.map(e => [e.id, e]));
+      this.gShapes = svg.append('g');
+      this.shapes = this.gShapes.selectAll('path').data(all.filter(f => byId.has(f.id)).map(f => ({ f, e: byId.get(f.id) })), d => d.e.c)
+        .join('path').attr('class', 'shape').attr('d', d => path(d.f)).attr('fill', 'transparent').attr('stroke', 'none').style('cursor', 'pointer')
+        .on('pointerenter', (ev, d) => this.enter(ev, d.e)).on('pointermove', (ev, d) => this.enter(ev, d.e))
+        .on('pointerleave', () => { this.hover(null); hideTip(); })
+        .on('click', (ev, d) => { ev.stopPropagation(); select(st.sel === d.e.c ? null : d.e.c); });
+      this.gAxis = svg.append('g').attr('class', 'axis').style('opacity', 0);
+      this.gLinks = svg.append('g').style('pointer-events', 'none');
+      this.gDots = svg.append('g');
+      this.gHover = svg.append('g').style('pointer-events', 'none');
+      this.gLab = svg.append('g').style('pointer-events', 'none');
+      // dot area = the trade bill, made more pronounced (user, October 26, 2026): the largest bill (about 3.600 mlr $)
+      // gets a 46 px radius on desktop, 24 px on phones
+      this.rs = d3.scaleSqrt().domain([0, 3600]).range([0, phone ? 24 : 46]);
+      const centre = f => {
+        const polys = f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates.map(c => ({ type: 'Polygon', coordinates: c })) : [f.geometry];
+        return d3.geoCentroid(polys.reduce((a, b) => d3.geoArea(b) > d3.geoArea(a) ? b : a));
+      };
+      // any partner's position (partners need not be among the 87): its largest polygon's centroid
+      this.ll = id => { if (FALLBACK[id]) return FALLBACK[id]; const f = feats.get(id); return f ? centre(f) : null; };
+      this.nodes = D.eco.map(e => {
+        const ll = this.ll(e.id) || [0, 0];
+        const [x0, y0] = proj(ll);
+        return { e, x0, y0 };
+      });
+      this.dots = this.gDots.selectAll('circle').data(this.nodes, d => d.e.c).join('circle').attr('class', 'dot')
+        .attr('cx', d => d.x0).attr('cy', d => d.y0).attr('r', 0).attr('stroke', 'var(--bg)').attr('stroke-width', 1)
+        .on('pointerenter', (ev, d) => this.enter(ev, d.e))
+        .on('pointermove', (ev, d) => this.enter(ev, d.e))
+        .on('pointerleave', () => { this.hover(null); hideTip(); })
+        .on('click', (ev, d) => { ev.stopPropagation(); select(st.sel === d.e.c ? null : d.e.c); });
+    },
+    // pointer over a dot or its territory; nothing while the pointer has not moved since a click changed the page
+    enter(ev, e) {
+      if (quiet) return;
+      if (this.hovered !== e.c) { this.hover(e.c); showTip(ev, e); } else moveTip(ev);
+    },
+    // the import bill sizes the dots, the export bill on İhracat
+    rOf(d, yi) { const v = (expSide() ? d.e.xb : d.e.ib)[yi]; return v == null ? 4 : Math.max(3.5, this.rs(v)); },
+    layout() {
+      const { w, h } = this, yi = st.yi, out = new Map(), vis = this.nodes.filter(d => visible(d.e));
+      if (st.view === 'map') {
+        // the selected dot stays on its own country and its neighbours make room (user, October 29, 2026: France's dot sat
+        // over the Bay of Biscay, away from its highlighted outline, the partner lines starting there)
+        const ns = vis.map(d => ({ d, x: d.x0, y: d.y0, r: this.rOf(d, yi), ...(d.e.c === st.sel ? { fx: d.x0, fy: d.y0 } : {}) }));
+        const sim = d3.forceSimulation(ns).force('x', d3.forceX(n => n.d.x0).strength(.35)).force('y', d3.forceY(n => n.d.y0).strength(.35))
+          .force('c', d3.forceCollide(n => n.r + 1).iterations(3)).stop();
+        for (let i = 0; i < 220; i++) sim.tick();
+        ns.forEach(n => out.set(n.d.e.c, n));
+      } else {
+        const cat = M[st.m].cat, x = rankX(st.m, w), Z = this.rankZone(), slim = w < 600;
+        const ns = vis.filter(d => val(d.e) != null).map(d => {
+          const v = cat ? d.e.tp[yi] : val(d.e), ty = cat ? this.laneY(d.e.orb[yi]) : Z.narrow ? (Z.t + Z.b) / 2 : h * .55;
+          return { d, tx: x(v), ty, x: x(v), y: ty, r: Math.max(slim ? 4 : 4.5, this.rOf(d, yi) * .75) };
+        });
+        const sim = d3.forceSimulation(ns).force('x', d3.forceX(n => n.tx).strength(slim ? .6 : 1)).force('y', d3.forceY(n => n.ty).strength(cat ? .1 : .03))
+          .force('c', d3.forceCollide(n => n.r + .8).iterations(3)).stop();
+        // the dots stay between the median label and the axis label, so none covers them (audit, November 2, 2026)
+        for (let i = 0; i < 260; i++) { sim.tick(); for (const n of ns) { n.y = Math.max(Z.t + n.r, Math.min(Z.b - n.r, n.y)); n.x = Math.max(n.r + 1, Math.min(w - n.r - 1, n.x)); } }
+        ns.forEach(n => out.set(n.d.e.c, n));
+      }
+      return out;
+    },
+    // the ranking axis baseline; on phones it rises above the legend, which sits at the bottom of the map there
+    axisY() {
+      const lg = document.getElementById('legend');
+      return this.h - 26 - (innerWidth <= 900 && st.view === 'rank' && lg ? lg.offsetHeight + 8 : 0);
+    },
+    // where the median line starts: under the switches, and under the legend when that sits above the map
+    rankTop() {
+      const sr = $('#stage').getBoundingClientRect(), bs = [...document.querySelectorAll('#stage .switches button')].map(b => b.getBoundingClientRect().bottom - sr.top);
+      if (innerWidth > 900) return Math.max(70, ...bs.map(b => b + 6));
+      return Math.max(30, ...bs.map(b => b + 4));
+    },
+    // the band the ranking's dots keep to; on phones and tablets (innerWidth <= 900) only Türkiye and the median are named
+    rankZone() {
+      const narrow = innerWidth <= 900, duo2 = M[st.m].duo && this.w < 600;
+      return { narrow, t: this.rankTop() + (M[st.m].cat ? 0 : 14), b: this.axisY() - (duo2 ? 32 : 22) };
+    },
+    laneY(o) {
+      if (innerWidth > 900) return this.h * LANES[o];
+      const Z = this.rankZone(), i = ORB_ORDER.indexOf(o);
+      return Z.t + (Z.b - Z.t) * (i + .5) / ORB_ORDER.length;
+    },
+    drawAxis() {
+      const { w, h } = this, g = this.gAxis; g.selectAll('*').remove();
+      if (st.view !== 'rank') return;
+      const m = st.m, cat = M[m].cat, X = rankX(m, w), x = X.x, yb = this.axisY(), G = rankM(m, w), xl = G.l, xr = w - G.r, y0 = this.rankTop(), hy = yb - (X.out ? 10 : 6);  // hy: the axis captions, clear of the break
+      g.append('line').attr('x1', xl).attr('x2', X.end).attr('y1', yb).attr('y2', yb);
+      if (X.out) {
+        // the break: two short slants, then the zone for the values above the axis
+        for (const dx of [9, 15]) g.append('line').attr('x1', X.end + dx - 2.5).attr('x2', X.end + dx + 2.5).attr('y1', yb + 6).attr('y2', yb - 6).style('stroke', 'var(--ink3)');
+        g.append('line').attr('x1', X.end + (w < 600 ? 20 : 24)).attr('x2', xr + 6).attr('y1', yb).attr('y2', yb).style('stroke-dasharray', '2 3');
+        g.append('text').attr('x', xr + (w < 600 ? 18 : 0)).attr('y', yb + 16).attr('text-anchor', 'end').text(`${f0(M[m].dom[1])} üstü`);
+      }
+      const ticks = M[m].duo ? [-100, -50, 0, 50, 100] : M[m].pct ? [0, 25, 50, 75, 100] : [...new Set([M[m].dom[0], ...M[m].breaks, M[m].dom[1]])];
+      ticks.forEach(t => { g.append('line').attr('x1', x(t)).attr('x2', x(t)).attr('y1', yb).attr('y2', yb + 4);
+        g.append('text').attr('x', x(t)).attr('y', yb + 16).attr('text-anchor', 'middle').text(M[m].duo ? Math.abs(t) : M[m].pct ? '%' + t : Math.round(t)); });
+      g.append('text').attr('x', xr).attr('y', hy).attr('text-anchor', 'end').text(cat ? 'en büyük partnerin ithalat riskindeki payı →' : M[m].duo ? "Çin'in payı daha yüksek (puan) →" : 'daha yüksek risk →');
+      // on a narrow stage the two directions take a row each (they do not fit side by side)
+      if (M[m].duo) g.append('text').attr('x', xl).attr('y', yb - (w < 600 ? 20 : 6)).text("← ABD'nin payı daha yüksek (puan)");
+      // the export axis is logarithmic and its values pass 100: say so, with the ceiling the formula sets (re-test,
+      // October 29, 2026; 1000 × Σ ExportShare × Σ sh², which is 1000 when every product goes to a single buyer)
+      if (M[m].log) g.append('text').attr('x', xl).attr('y', hy).text(w < 760 ? 'logaritmik ölçek' : 'logaritmik ölçek, en yüksek olası değer 1000 (her ürün tek alıcıya)');
+      if (cat) for (const o of ORB_ORDER) g.append('text').attr('x', 16).attr('y', this.laneY(o) + 4).style('font-weight', 600).style('fill', 'var(--ink2)').text(ORB[o]);
+      else if (M[m].duo) g.append('line').attr('x1', x(0)).attr('x2', x(0)).attr('y1', y0).attr('y2', w < 600 ? yb - 32 : yb).style('stroke', 'var(--ink2)').style('stroke-dasharray', '3 3');
+      else {
+        const mv = D.med[m][st.yi];
+        g.append('line').attr('x1', x(mv)).attr('x2', x(mv)).attr('y1', y0).attr('y2', yb).style('stroke', 'var(--ink2)').style('stroke-dasharray', '3 3');
+        g.append('text').attr('x', x(mv) + 6).attr('y', y0 + 10).style('fill', 'var(--ink2)').text(`Dünya medyanı ${M[m].fmt(mv)}`);
+      }
+    },
+    // hovering a dot or its territory: tint the territory in the dot's colour, ring the dot, and draw a short
+    // connector when the dot was pushed away from its country by the layout
+    hover(c) {
+      this.hovered = c;
+      this.paintShapes();
+      const g = this.gHover; g.selectAll('*').remove();
+      if (c == null || st.view !== 'map' || !this.pos) return;
+      const p = this.pos.get(c), n = this.nodes.find(d => d.e.c === c); if (!p) return;
+      if (Math.hypot(p.x - n.x0, p.y - n.y0) > p.r + 2) g.append('line').attr('x1', p.x).attr('y1', p.y).attr('x2', n.x0).attr('y2', n.y0)
+        .attr('stroke', 'var(--ink2)').attr('stroke-width', 1).attr('stroke-dasharray', '2 2');
+      g.append('circle').attr('cx', p.x).attr('cy', p.y).attr('r', p.r + 1.5).attr('fill', 'none').attr('stroke', 'var(--ink)').attr('stroke-width', 1.5);
+    },
+    paintShapes() {
+      const on = c => c === this.hovered || c === st.sel;
+      this.shapes.attr('fill', d => on(d.e.c) && st.view === 'map' ? (colour(d.e) || 'var(--nodata)') : 'transparent')
+        .attr('fill-opacity', d => d.e.c === st.sel ? .28 : .2)
+        .attr('stroke', d => on(d.e.c) && st.view === 'map' ? (colour(d.e) || 'var(--nodata)') : 'none').attr('stroke-width', 1)
+        .style('pointer-events', d => st.view === 'map' && visible(d.e) ? null : 'none');
+    },
+    // the selected economy's five largest sources of import risk (on İhracat: the five buyers carrying the most export
+    // risk), as lines from its dot; a
+    // partner already drawn for the same economy (the year changes, play) is redrawn at once, only new ones draw in
+    drawLinks(pos, delay) {
+      const g = this.gLinks; g.selectAll('*').remove();
+      this.partnerLab = [];
+      const prev = this.drawn && this.drawn.sel === st.sel && this.drawn.m === st.m ? this.drawn.set : new Set();
+      this.drawn = null;
+      if (!st.sel || st.view !== 'map') return;
+      const src = pos.get(st.sel); if (!src) return;
+      const top = srcOf(st.sel).slice(0, NSRC);
+      this.drawn = { sel: st.sel, m: st.m, set: new Set(top.map(t => t[0])) };
+      const FOLD = { 58: '056', 711: '710', 891: '688', 736: '729', 530: '531' };
+      const isoOf = c => FOLD[c] || ({ 251: '250', 579: '578', 757: '756', 842: '840', 699: '356', 490: '158' }[c]) || String(c).padStart(3, '0');
+      const wS = d3.scaleSqrt().domain([0, 100]).range([0, 7]);
+      top.forEach(([pc, r0, imp], i) => {
+        const risk = r0;
+        let t = pos.get(pc);
+        if (!t) { const ll = this.ll(isoOf(pc)); if (!ll) return; const [x, y] = this.proj(ll); t = { x, y, r: 3 }; }
+        const dx = t.x - src.x, dy = t.y - src.y, dist = Math.hypot(dx, dy); if (dist < 1) return;
+        // bend towards the north, as long routes look on a world map (keeps lines off the dots in between)
+        let nx = -dy / dist, ny = dx / dist; if (ny > 0) { nx = -nx; ny = -ny; }
+        const bend = Math.min(90, dist * .22), mx = (src.x + t.x) / 2 + nx * bend, my = (src.y + t.y) / 2 + ny * bend;
+        const path = g.append('path').attr('d', `M${src.x},${src.y} Q${mx},${my} ${t.x},${t.y}`).attr('fill', 'none')
+          .attr('stroke', 'var(--ink)').attr('stroke-opacity', .7).attr('stroke-width', Math.max(1.2, wS(risk))).attr('stroke-linecap', 'round');
+        if (!pos.get(pc)) g.append('circle').attr('cx', t.x).attr('cy', t.y).attr('r', 3.5).attr('fill', 'var(--ink)');
+        if (!reduced && !prev.has(pc)) { const len = path.node().getTotalLength();
+          path.attr('stroke-dasharray', len).attr('stroke-dashoffset', len).transition().delay(delay + i * 120).duration(550).ease(d3.easeCubicOut)
+            .attr('stroke-dashoffset', 0).on('end', () => path.attr('stroke-dasharray', null)); }
+        this.partnerLab.push({ c: pc, x: t.x, y: t.y, r: t.r, txt: `${pname(pc)} ${fpct(risk)}` });
+      });
+    },
+    update(animate) {
+      // on the map the selected economy's dot is pinned to its country (below), so the layout depends on the selection
+      const key = `${st.view}|${st.m}|${st.yi}|${st.hide}|${st.view === 'map' || st.hide ? st.sel : ''}`;  // a hidden small economy stays when selected
+      const pos = this.cache[key] || (this.cache[key] = this.layout());
+      this.pos = pos;
+      const go = animate && !reduced, toRank = st.view === 'rank';
+      const order = new Map(ranked().map((e, i) => [e.c, i]));
+      this.gLand.transition().duration(go ? 500 : 0).style('opacity', toRank ? .22 : 1);
+      this.drawAxis();
+      this.gAxis.transition().duration(go ? 500 : 0).delay(go && toRank ? 400 : 0).style('opacity', toRank ? 1 : 0);
+      const P = d => pos.get(d.e.c);
+      const partners = new Set(st.sel && !toRank ? srcOf(st.sel).slice(0, NSRC).map(t => t[0]) : []);
+      const op = d => !P(d) ? 0 : (!st.sel || st.sel === d.e.c || partners.has(d.e.c) ? 1 : toRank ? .3 : .15);
+      // Ana partner with a selection: the partners' dots in the partner's own colour, as in the card's table (user,
+      // October 29, 2026); the selected economy keeps its main-partner colour
+      const idCol = M[st.m].cat && st.sel && !toRank;
+      this.dots.attr('fill', d => idCol && partners.has(d.e.c) && d.e.c !== st.sel ? orbCol(orbOf(d.e.c)) : colour(d.e) || (na(d.e) ? 'var(--nodata)' : 'url(#nd)')).style('pointer-events', d => P(d) ? null : 'none')
+        .attr('stroke', d => d.e.c === TR ? 'var(--ink)' : 'var(--bg)').attr('stroke-width', d => d.e.c === TR ? 2.25 : 1);
+      this.dots.filter(d => d.e.c === TR).raise();
+      if (go && this.lastView !== null && this.lastView !== st.view) {
+        // order first, then size (staged transitions): positions move staggered by rank, then radii settle
+        this.dots.transition().duration(650).delay(d => (order.get(d.e.c) ?? 87) * 6).ease(d3.easeCubicInOut)
+          .attr('cx', d => P(d) ? P(d).x : d.x0).attr('cy', d => P(d) ? P(d).y : d.y0).attr('opacity', op)
+          .transition().duration(280).attr('r', d => P(d) ? P(d).r : 0);
+      } else {
+        this.dots.transition().duration(this.first || reduced ? 0 : 350)
+          .attr('cx', d => P(d) ? P(d).x : d.x0).attr('cy', d => P(d) ? P(d).y : d.y0)
+          .attr('r', d => P(d) ? P(d).r : 0).attr('opacity', op);
+      }
+      const labDelay = go && this.lastView !== null && this.lastView !== st.view ? 1000 : (this.first || reduced ? 0 : 350);
+      this.lastView = st.view; this.first = false;
+      this.paintShapes(); this.hover(null);
+      this.drawLinks(pos, labDelay);
+      // only the year changed (play, the strip, arrow keys): labels show at once; a fade longer than the 0,7 s play
+      // step kept every name invisible while playing
+      const scene = `${st.sel}|${st.view}|${st.m}|${st.hide}`, yearOnly = scene === this.lastScene; this.lastScene = scene;
+      // labels: Türkiye always (name, thin outline on its dot), the selection (ring), its risk sources; with nothing
+      // selected also the ten highest on the measure among the large economies (small ones never named; user,
+      // October 29, 2026), each only where it clears every label and dot
+      const lab = this.gLab; lab.selectAll('*').remove();
+      const items = [];
+      const pl = new Map(this.partnerLab.map(p => [p.c, p]));
+      const show = [TR]; if (st.sel && st.sel !== TR) show.push(st.sel);
+      // the narrow ranking names only Türkiye and the median (and a selection); the rest by tap or the table below
+      const narrowRank = toRank && innerWidth <= 900;
+      let ends = [];
+      if (!st.sel && !narrowRank) {
+        ends = D.eco.filter(e => !e.small && pos.has(e.c)).map(e => [e.c, M[st.m].cat ? e.tp[st.yi] : M[st.m].duo ? (val(e) == null ? null : Math.abs(val(e))) : val(e)])
+          .filter(d => d[1] != null).sort((a, b) => b[1] - a[1]).slice(0, 10).map(d => d[0]);
+      }
+      // in the ranking, the economies past the axis end are always named with their value (the axis cannot show it)
+      const outs = toRank && !narrowRank && rankX(st.m, this.w).out ? D.eco.filter(e => pos.has(e.c) && val(e) > M[st.m].dom[1]).map(e => e.c) : [];
+      for (const c of [...new Set([...show, ...outs, ...ends])]) {
+        const p = pos.get(c); if (!p) continue;
+        // in the ranking the highest is always named
+        const isTR = c === TR, isSel = c === st.sel, isOut = outs.includes(c), opt = !isTR && !isSel && !isOut && !(toRank && c === ends[0]);
+        const nm = short(byCode.get(c).n);
+        items.push({ x: p.x, y: p.y, r: p.r, c, ring: isSel, ringCol: 'var(--accent)', opt,
+          cls: isTR ? 'lbl tr' : isSel ? 'lbl' : 'lbl sm', txt: pl.has(c) ? pl.get(c).txt : isOut ? `${nm} ${M[st.m].fmt(val(byCode.get(c)))}` : nm });
+        pl.delete(c);
+      }
+      for (const p of pl.values()) items.push({ x: p.x, y: p.y, r: p.r, c: p.c, cls: 'lbl', txt: p.txt, part: true });
+      // place each label above, below, right or left of its dot: the first spot that clears the labels already
+      // placed and the selected economy's dot
+      // the switches and the legend count as placed labels, so no name runs under them (re-test, October 29, 2026)
+      const sr = $('#stage').getBoundingClientRect();
+      const boxes = [...document.querySelectorAll('#stage .switches button, #legend, #stageSvg .axis text')].map(el => el.getBoundingClientRect()).filter(b => b.width)
+        .map(b => ({ x: b.left - sr.left - 2, y: b.top - sr.top - 2, w: b.width + 4, h: b.height + 4 }));
+      const selP = st.sel ? pos.get(st.sel) : null;
+      const hits = b => boxes.some(o => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y) ||
+        (selP && b.x < selP.x + selP.r && b.x + b.w > selP.x - selP.r && b.y < selP.y + selP.r && b.y + b.h > selP.y - selP.r);
+      const rank = it => it.ring ? 0 : it.opt ? 2 : 1;
+      items.sort((a, b) => rank(a) - rank(b));
+      const dotHit = (b, c) => [...pos].some(([dc, q]) => dc !== c && b.x < q.x + q.r && b.x + b.w > q.x - q.r && b.y < q.y + q.r && b.y + b.h > q.y - q.r);
+      const placed = new Map();
+      for (const it of items) {
+        const tw = textW(it.txt, it.cls) + 4, th = it.cls === 'lbl tr' ? 17 : 15;
+        const spots = [[it.x - tw / 2, it.y - it.r - 7 - 11, 'middle'], [it.x - tw / 2, it.y + it.r + 4, 'middle'],
+          [it.x + it.r + 5, it.y - 7, 'start'], [it.x - it.r - 5 - tw, it.y - 7, 'end'],
+          // further out, with a short leader, for the end labels that cannot sit next to their dot
+          // (risk-source labels too: with five, neighbours such as Hollanda and Norveç would otherwise overlap)
+          ...(it.opt || it.part || narrowRank ? [[it.x - tw / 2, it.y - it.r - 34, 'middle', 1], [it.x - it.r - 26 - tw, it.y - 7, 'end', 1], [it.x + it.r + 26, it.y - 7, 'start', 1],
+            [it.x - tw / 2, it.y + it.r + 22, 'middle', 1]] : [])]
+          .map((sp, k) => (sp.k = k, sp)).filter(([x, y]) => y > 4 && y + th < this.h && x > 0 && x + tw < this.w);
+        // while only the year changes, a label first tries the side it had last year, so names do not hop around
+        const was = yearOnly ? this.spotOf.get(it.c) : undefined;
+        if (was != null) spots.sort((a, b) => (b.k === was) - (a.k === was));
+        const self = it.ring && it.x === (selP && selP.x);
+        // top-ten and partner names first look for a spot clear of other dots too (re-test, October 29, 2026: "Kanada"
+        // sat on the US dot)
+        const soft = it.opt || it.part || (narrowRank && !it.ring);
+        let spot = spots.find(([x, y]) => { const b = { x, y, w: tw, h: th }; return self ? !boxes.some(o => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y) : !hits(b) && !(soft && dotHit(b, it.c)); });
+        // in dense clusters (East Asia) such a name may sit over other dots, on its halo, rather than be dropped
+        // (on the small map of a phone a top-ten name is left out instead: tap or the table below; audit, November 2, 2026)
+        if (!spot && soft && !(it.opt && this.w < 600)) spot = spots.find(([x, y]) => !hits({ x, y, w: tw, h: th }));
+        // a top-ten name, or on phones a partner name, with no free spot is left out (the card's table lists partners)
+        if (!spot && (it.opt || (it.part && this.w < 760))) continue;
+        spot = spot || spots[0] || [it.x - tw / 2, it.y + it.r + 4, 'middle'];
+        placed.set(it.c, spot.k);
+        const g = lab.append('g').style('opacity', yearOnly ? 1 : 0);
+        if (it.ring) g.append('circle').attr('cx', it.x).attr('cy', it.y).attr('r', it.r + 3).attr('fill', 'none').attr('stroke', it.ringCol).attr('stroke-width', 2);
+        boxes.push({ x: spot[0], y: spot[1], w: tw, h: th });
+        const tx = spot[2] === 'middle' ? spot[0] + tw / 2 : spot[2] === 'start' ? spot[0] : spot[0] + tw;
+        if (spot[3]) {
+          const ly = spot[2] === 'middle' ? (spot[1] < it.y ? spot[1] + th : spot[1]) : spot[1] + 7, lx = spot[2] === 'middle' ? tx : spot[2] === 'start' ? tx - 3 : tx + 3;
+          const a = Math.atan2(ly - it.y, lx - it.x);
+          g.append('line').attr('x1', it.x + Math.cos(a) * (it.r + 1.5)).attr('y1', it.y + Math.sin(a) * (it.r + 1.5)).attr('x2', lx).attr('y2', ly)
+            .attr('stroke', 'var(--ink3)').attr('stroke-width', .8);
+        }
+        g.append('text').attr('class', it.cls + (dotHit({ x: spot[0], y: spot[1], w: tw, h: th }, it.c) ? ' over' : '')).attr('x', tx).attr('y', spot[1] + 11).attr('text-anchor', spot[2]).text(it.txt);
+        if (!yearOnly) g.transition().delay(labDelay + (it.ring ? 0 : 300)).duration(250).style('opacity', 1);
+      }
+      this.spotOf = placed;
+    }
+  };
+
+  // ---------- Sıralama: the ends of the ranking, visible (re-test, October 29, 2026: the list was screen-reader only) ----
+  // In the side panel while nothing is selected, in the page's table style; it follows the measure, the year and the
+  // small-economy switch, and a row selects its economy. Five per end on İthalat and İhracat, three on phones and short
+  // screens; on Partner payı (its median table sits above) three, two on short screens; on Ana partner the counts.
+  function renderRank() {
+    const box = $('#rankT');
+    // on phones the table goes under the year strip, so the map stays near the top of the page
+    const host = innerWidth <= 900 ? $('.app') : $('.side');
+    if (box.parentNode !== host) host.appendChild(box);
+    box.hidden = !!st.sel;
+    if (st.sel) { box.innerHTML = ''; return; }
+    const y = st.yi, r = ranked().filter(visible), n = r.length, phone = innerWidth <= 900 || innerHeight < 980;
+    const go = e => `<button class="rk-go" type="button" data-c="${e.c}">${short(e.n)}</button>`;
+    const word = { 3: 'üç', 5: 'beş' };
+    let groups;
+    if (M[st.m].cat) {
+      groups = [{ title: 'Ana partnere göre', on: true, cols: [['ekonomi']],
+        rows: ORB_ORDER.map(o => ({ col: orbCol(o), name: ORB[o], cells: [f0(r.filter(e => e.orb[y] === o).length)] })) }];
+    } else if (M[st.m].duo) {
+      const k = innerWidth > 900 && innerHeight < 980 ? 2 : 3, cn = r.filter(e => val(e) > 0).slice(0, k), us = r.filter(e => val(e) < 0).reverse().slice(0, k);
+      const rows = a => a.map(e => ({ col: colour(e), name: go(e), cells: [f1(Math.abs(val(e)))] }));
+      groups = [{ title: "Çin'in payı en çok önde", on: true, cols: [['fark', 'puan']], rows: rows(cn) },
+        { title: "ABD'nin payı en çok önde", on: true, cols: [['fark', 'puan']], rows: rows(us) }].filter(g => g.rows.length);
+    } else {
+      const k = phone ? 3 : 5, rows = (a, i0) => a.map((e, i) => ({ col: colour(e), name: go(e), cells: [M[st.m].fmt(val(e)), f0(i0 + i + 1) + '.'] }));
+      groups = [{ title: `En yüksek ${word[k]}`, on: true, cols: [[M[st.m].label.toLocaleLowerCase('tr')], ['sıra']], rows: rows(r.slice(0, k), 0) },
+        { title: `En düşük ${word[k]}`, on: true, cols: [[M[st.m].label.toLocaleLowerCase('tr')], ['sıra']], rows: rows(r.slice(Math.max(k, n - k)), Math.max(k, n - k)) }];
+    }
+    box.innerHTML = dataTable(groups, `Sıralama: ${n} ekonomi, ${YEARS[y]}`);
+    box.querySelectorAll('.rk-go').forEach(b => b.onclick = () => select(+b.dataset.c, true));
+  }
+
+  // ---------- keyboard list: the accessible form of the map (ranked) ----------
+  function renderList() {
+    const nav = $('#list');
+    const r = ranked().filter(visible);
+    nav.innerHTML = `<p style="margin:0 0 6px;font-size:12px;color:var(--ink3)">${M[st.m].label}, ${YEARS[st.yi]}: sıralı liste</p>` +
+      r.map((e, i) => `<button type="button" data-c="${e.c}">${i + 1}. ${short(e.n)}: ${M[st.m].cat ? pname(e.top[st.yi]) + ' ' + fpct(e.tp[st.yi]) : M[st.m].fmt(val(e))}</button>`).join('');
+    nav.querySelectorAll('button').forEach(b => b.onclick = () => select(+b.dataset.c, true));
+  }
+
+  // ---------- update ----------
+  function announce() {
+    if (!st.sel) return;
+    const e = byCode.get(st.sel), v = val(e), rk = rankOf(e.c);
+    $('#live').textContent = `${short(e.n)} seçildi. ${YEARS[st.yi]}, ${M[st.m].label}: ${v == null ? (na(e) ? 'uygulanamaz' : 'veri yok') : M[st.m].cat ? pname(e.top[st.yi]) + ' ' + fpct(e.tp[st.yi]) : M[st.m].fmt(v) + (rk ? `, sıra ${rk.r} / ${rk.n}` : '')}`;
+  }
+  // after a click that changes the page the tooltip waits until the pointer moves (re-test, October 29, 2026)
+  let quiet = null;
+  addEventListener('pointermove', ev => { if (quiet && Math.hypot(ev.clientX - quiet[0], ev.clientY - quiet[1]) > 3) quiet = null; }, true);
+  addEventListener('pointerdown', ev => { quiet = [ev.clientX, ev.clientY]; }, true);
+  // a selection made from a list or table row returns focus there when the card closes (Escape, ×); otherwise to the
+  // view switch, the first control on the map (re-test, October 29, 2026: focus was lost)
+  let opener = null;
+  function select(c, fromKeys) {
+    const was = st.sel; st.sel = c;
+    if (c && fromKeys) focusCard = true;
+    if (c && !was) { const a = document.activeElement; opener = a && a.dataset && a.dataset.c ? { c: a.dataset.c, box: a.closest('#rankT') ? '#rankT' : '#list' } : null; }
+    hideTip();
+    update(false);
+    if (c && c !== was) announce();
+    if (!c && fromKeys) {
+      const back = opener && document.querySelector(`${opener.box} [data-c="${opener.c}"]`);
+      (back || $('#vSwitch')).focus(); opener = null;
+    }
+  }
+  function update(animate) {
+    $('.app').classList.toggle('slim', !!st.sel);
+    document.body.classList.toggle('m-exp', st.m === 'exp');
+    renderMeasures(); renderRank(); renderCard(); drawBand(); renderList();
+    const nSmall = D.eco.filter(e => e.small).length, n = D.eco.filter(e => val(e) != null && visible(e)).length;
+    if (isPart()) st.ps = st.m;  // the Partner payı tab reopens the side last shown
+    $('#vSwitch').textContent = st.view === 'map' ? `Sıralamaya geçin (${n} ekonomi)` : 'Haritaya dönün';
+    $('#hSwitch').textContent = st.hide ? `Küçük ekonomileri gösterin (${nSmall})` : `Küçük ekonomileri gizleyin (${nSmall})`;
+    Map_.update(animate);
+    writeHash();
+    sideCue();
+  }
+  const sideCue = () => { const s = $('.side'); s.classList.toggle('more', innerWidth > 900 && s.scrollHeight - s.scrollTop - s.clientHeight > 4); };
+  $('.side').addEventListener('scroll', sideCue, { passive: true }); addEventListener('resize', sideCue);
+
+  // ---------- theme ----------
+  function setThemeLabel() { $('#theme').setAttribute('aria-label', theme === 'dark' ? 'Açık temaya geç' : 'Koyu temaya geç'); }
+  setThemeLabel();
+  $('#theme').onclick = () => {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    try { localStorage.setItem('trr-theme', theme); } catch (e) {}
+    setThemeLabel(); update(false);
+  };
+
+  // local file: the storyline link points at the local storyline (deploy keeps ../storyline/)
+  if (location.protocol === 'file:') document.querySelectorAll('a[data-local]').forEach(a => a.href = a.dataset.local);
+
+  // ---------- start ----------
+  const stage = $('#stage'), svg = d3.select('#stageSvg');
+  // the map is fitted to the stage as it is without a selection: on desktop a selection shrinks the band (132 → 58 px)
+  // and the stage grows, and refitting then moved the map ~34 px under the pointer, so the tooltip named the economy
+  // now under it (re-test, October 29, 2026); the extra height is left empty at the bottom
+  const fitH = h => h - (innerWidth > 900 && $('.app').classList.contains('slim') ? 74 : 0);
+  const size = () => { const w = stage.clientWidth, h = stage.clientHeight; svg.attr('width', w).attr('height', h); return [w, fitH(h)]; };
+  let [w, h] = size();
+  Map_.mount(svg, w, h).then(() => {
+    $('#loading').remove();
+    // the "Haritada gösterin" links in the Partner payı tables (head and card are re-rendered, so delegated); focus goes
+    // to the link that now leads back, so the keyboard is not dropped to the top of the page
+    document.addEventListener('click', ev => { const b = ev.target.closest('.ptab-go'); if (!b || st.m === b.dataset.m) return;
+      const inCard = !!b.closest('.card'), kb = document.activeElement === b; st.m = b.dataset.m; update(true);
+      if (kb) (inCard ? $('#card') : $('#pTab')).querySelector('.ptab-go')?.focus(); });
+    $('#vSwitch').onclick = () => { st.view = st.view === 'map' ? 'rank' : 'map'; update(true); };
+    $('#hSwitch').onclick = () => { st.hide = !st.hide; update(true); };
+    svg.on('click', ev => { if (ev.target === svg.node()) select(null); });
+    wireBand();
+    addEventListener('keydown', ev => { if (ev.key === 'Escape' && st.sel) select(null, true); });
+    let t, last = [w, h];
+    new ResizeObserver(() => { size(); clearTimeout(t); t = setTimeout(async () => { [w, h] = size(); if (w === last[0] && h === last[1]) return; last = [w, h]; await Map_.mount(svg, w, h); update(false); }, 120); }).observe(stage);
+    new ResizeObserver(() => drawBand()).observe($('#track'));
+    update(false);
+    if (st.sel) announce();
+  }).catch(() => { $('#loading').textContent = 'Harita yüklenemedi; bağlantıyı denetleyip sayfayı yenileyin'; });
+})();
+</script>
+
+<div class="mra consent" lang="en" id="consent" role="region" aria-labelledby="consent-h">
+  <div class="consent-in">
+    <div>
+      <h2 id="consent-h">Cookies</h2>
+      <p>This site keeps only your theme and language choice, and this decision, in your browser. No analytics tool is loaded. <a href="/en/cookies/">Cookie notice</a></p>
+    </div>
+    <div class="btns">
+      <button type="button" data-act="accept">Accept all</button>
+      <button type="button" data-act="reject">Reject all</button>
+      <button type="button" data-act="prefs" aria-expanded="false" aria-controls="consent-prefs">Preferences</button>
+    </div>
+    <div class="prefs" id="consent-prefs">
+      <div class="row"><input type="checkbox" id="c-nec" name="necessary" checked disabled><label for="c-nec">Necessary</label><small>Your theme and language choice, and your cookie decision. Theme and cookie records are written only when you click; the language record when you open a dashboard.</small></div>
+      <div class="row"><input type="checkbox" id="c-ana" name="analytics"><label for="c-ana">Analytics</label><small>No analytics tool is loaded in this prototype.</small></div>
+      <div class="btns" style="margin-top:.6rem"><button type="button" data-act="save">Save</button></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+
