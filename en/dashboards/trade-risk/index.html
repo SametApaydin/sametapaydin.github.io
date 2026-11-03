@@ -13,16 +13,14 @@
 <title>Türkiye’s trade risk · Macro Risk Academy</title>
 <meta name="description" content="How Türkiye’s import and export risk changed hands over thirty years, in four acts.">
 <script>
-// Runs synchronously in <head>, before the .viz-root rules below ever paint, so a returning
-// visitor's saved theme (or a first-time system dark-mode preference) applies with no light-mode
-// flash. localStorage failures (private browsing, etc.) just fall back to the static
-// data-theme="light" already on <html>.
+
+
+
+
 (function () {
   try {
     var stored = localStorage.getItem("trr-theme");
-    var theme = stored === "dark" || stored === "light"
-      ? stored
-      : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    var theme = stored === "dark" ? "dark" : "light"; 
     document.documentElement.dataset.theme = theme;
   } catch (e) {}
 })();
@@ -32,40 +30,21 @@
     color-scheme: light;
     --surface-1: #fcfcfb; --page: #f9f9f7;
     --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781;
-    /* Text roles only (audit, November 2, 2026): --text-muted and --accent also colour data marks, so they stay and
-       running labels and links read these instead, which pass 4.5:1 on the page and on the card. */
+    
     --text-quiet: #6e6c66; --accent-text: #1f66bd; --accent-fill: #1f66bd; --dust-boost: 1;
     --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
     --accent: #2a78d6; --warn: #e34948; --good: #1baf7a; --gold: #eda100; --violet: #4a3aa7;
     --forest: #006400; --navy: #104281; --skyblue: #86b6ef; --tan: #9a8f7a; --vermillion: #c1440e;
     --slate: #55707c;
-    /* In-band tier labels on scene 8's stacked area chart (progress.md 2ba): recomputed WCAG
-       contrast for all 5 tier fills in both themes. Primary/Resource-based/Low-tech are dark
-       enough for near-black ink in both themes (--tech-ink-dark, never redefined below).
-       Medium-tech/High-tech are only dark enough for white ink in light theme; their dark-theme
-       hexes are lighter and need near-black ink too, hence --tech-ink-flip, redefined per theme. */
+    
     --tech-ink-dark: #0b0b0b; --tech-ink-flip: #fff;
     --region-eu: #697ae1; --region-asia: #822878; --region-americas: #f19241; --region-cis: #c04023;
     --region-mena: #4bc3d1; --region-africa: #56B4E9; --region-oceania: #B8A400;
-    /* Vertical/grid reference lines (scenes 4, 9, 10, 12, 15, 17, 18) read var(--text-muted) at
-       this opacity rather than full strength, dark needed less dilution than light to still read
-       against the full-bleed page background at the same perceived softness, see progress.md 2z. */
+    
     --ref-line-opacity: 0.4;
-    /* In-chart definitions/annotations that carry real interpretive content (what a line means,
-       what a claim is), not axis ticks or de-emphasized subtitles. Trialled on scene 1 only
-       (progress.md 2y) as a fix for var(--text-muted) reading as tiring against the full-bleed
-       background; full var(--text-secondary) turned out too dark/heavy once applied ("too
-       blackish"), this blends the two. Rolled out to the same category of element on scenes 3, 6,
-       9, and 16 (progress.md 2ae) after finding they had the identical problem; the shared .c-sub
-       chart subtitle was deliberately left alone both times, different role (a quiet caption under
-       a bold title, not content the reader needs to interpret the chart), a bigger, unvalidated
-       change. Resolved per-theme automatically since it references those vars rather than fixed
-       hex. */
+    
     --annot-text: color-mix(in srgb, var(--text-secondary) 55%, var(--text-muted));
-    /* Ambient trade-route background (.viz-root::before below); dark redefines this darker since
-       the underlying SVG otherwise reads fainter against a dark page, see the two dark blocks
-       below. Kept low in both themes per user feedback that the lines competed with the charts
-       for attention. */
+    
     --ambient-opacity: .05;
   }
   @media (prefers-color-scheme: dark) {
@@ -107,18 +86,7 @@
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     color: var(--text-primary);
     position: relative; isolation: isolate;
-    /* Full-bleed tint, covering the hero, every scene, and the trailing space after the last
-       scene, not just the chart pane while scenes are showing: `background-attachment: fixed`
-       positions the gradient relative to the *viewport*, not this element's own box, which spans
-       the entire page. Without `fixed`, a percentage-based position here would hit the exact same
-       bug the original tint (2u) had on .scrolly: 15%/42%/whatever-percent of a many-thousand-px
-       box lands mostly off-screen. .viz-root itself has no set width, so it already spans the full
-       viewport with no separate breakout hack needed (unlike the .sticky-pane version this
-       replaced, which had to fight its way out of a narrower grid column). `--scene-accent`
-       already holds scene 1's color by the time this first paints (`showScene(0)` runs
-       immediately), so the hero opens on the same tone the story starts at, and after the last
-       scene the trailing padding continues in that scene's color instead of reverting to a plain
-       white gap. */
+    
     background:
       radial-gradient(ellipse 1400px 1100px at 50% 42%,
         color-mix(in srgb, var(--scene-accent) 30%, transparent), transparent 70%),
@@ -127,10 +95,7 @@
     transition: background 1.2s ease;
   }
 
-  /* The selected prototype's actual render path: one small SVG background tile on a fixed
-     pseudo-element. This stays visually identical to the reviewed prototype and avoids the large
-     masked inline SVG, per-mark animations and scene-by-scene opacity transitions that made the
-     first production integration expensive and nearly invisible through the chart centre. */
+  
   .viz-root::before {
     content: ""; position: fixed; z-index: 0; pointer-events: none;
     inset: -110px -90px; opacity: var(--ambient-opacity);
@@ -158,13 +123,9 @@
     font-size: 38px; font-weight: 600; letter-spacing: -.018em; margin: 0 0 14px; line-height: 1.12;
   }
   .hero p { font-size: 16px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 10px; }
-  /* Opening framing block (September 15, 2026 Turkish review): context paragraphs, three guiding
-     questions and a scroll prompt, set apart from the headline below by a short rule. */
+  
   .hero .hero-intro p { text-align: left; }
-  /* The opening is two screens of its own, each at least one viewport tall with its content
-     centered: .hero-intro (framing text and questions), then .hero-main (headline, paragraph,
-     tagline). The 22vh bottom margin matches body.neighbor-flow .sticky-pane's -22vh runway, so
-     neither Scene 1's chart nor its card shows until the reader scrolls past the second screen. */
+  
   .hero:not(.outro) { max-width: 820px; padding-top: 0; padding-bottom: 0; margin-bottom: 22vh; }
   .hero-main { max-width: 720px; margin-inline: auto; }
   .hero .hero-intro .kicker { font-size: 20px; letter-spacing: .07em; margin-bottom: 20px; }
@@ -177,9 +138,7 @@
   .hero-questions li { font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif; font-size: 18px; font-weight: 600; font-style: normal; color: var(--text-primary); line-height: 1.35; }
   .hero .hero-intro p.hero-cue { text-align: center; font-size: 14px; color: var(--accent-text); margin-top: 14px; }
   .hero p.hero-tagline { font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif; font-size: 22px; font-weight: 600; font-style: italic; color: var(--text-primary); margin-top: 18px; }
-  /* Closing bookend after scene 18, reuses .hero's centered layout/kicker/paragraph styles but
-     its own smaller heading (h2, not a second h1) -- an echo of the opening hook, not a literal
-     duplicate. Previously the page just stopped after the last step card with no wrap-up. */
+  
   .outro h2 {
     font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
     font-size: 30px; font-weight: 600; letter-spacing: -.012em; margin: 0 0 14px; line-height: 1.2;
@@ -189,8 +148,7 @@
     color: var(--accent-text); text-decoration: none;
   }
   .outro .back-top:hover { text-decoration: underline; }
-  /* Primary CTA to the standalone map dashboard (Global Fragility Map), a bigger action than the
-     plain-text "Back to the top" utility link above, so it gets a filled pill instead. */
+  
   .outro .explore-cta {
     display: inline-block; margin-top: 4px; margin-bottom: 14px; padding: 10px 22px;
     background: var(--accent-fill); color: #fff; font-size: 14px; font-weight: 650;
@@ -199,10 +157,7 @@
   .outro .explore-cta:hover { opacity: .88; }
   .scroll-cue { margin-top: 34px; font-size: 13px; color: var(--text-quiet); }
 
-  /* Registered so the browser can smoothly animate a color through this custom property (plain
-     custom properties don't transition on their own); lets showScene() wash the sticky chart pane
-     (see .sticky-pane below) toward each scene's own color instead of a flat, static gradient
-     forever tied to one fixed color. */
+  
   @property --scene-accent {
     syntax: '<color>';
     inherits: true;
@@ -211,8 +166,7 @@
   .scrolly {
     display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 898px) minmax(0, 1fr);
     column-gap: 28px; row-gap: 10vh; max-width: 1618px; margin: 0 auto; padding: 0 20px 12vh;
-    /* Transparent, not var(--page): .viz-root now carries the full-bleed tint (see above), an
-       opaque background here would sit on top of it and hide it everywhere .scrolly covers. */
+    
     background: transparent;
   }
   .sticky-pane {
@@ -221,17 +175,10 @@
     justify-content: center;
   }
   .chart-holder {
-    /* Without this, #tooltip (position:absolute) resolves to .sticky-pane as its containing
-       block instead, since that's the nearest positioned ancestor, not this element. That's a
-       100vh flex container centering a much shorter box inside it, so every left/right/top the
-       JS sets (all computed relative to *this* element's own rect) was being applied against
-       the wrong, taller, differently-offset box, throwing off both axes. */
+    
     position: relative;
     width: 100%;
-    /* No card: was `background: var(--surface-1); border: 1px solid var(--border); border-radius:
-       14px`. Removing it lets .sticky-pane's own background (above) show straight through, so the
-       chart visually sits on the same continuous colored surface as the rest of the page instead
-       of floating inside its own separate white box. Padding kept so content doesn't touch edges. */
+    
     background: none; border: none; padding: 18px 18px 12px;
     transition: opacity .7s cubic-bezier(.4,0,.2,1), transform .7s cubic-bezier(.4,0,.2,1);
   }
@@ -250,8 +197,7 @@
   .stage-controls button[aria-pressed="true"], .stage-controls button.active { background: var(--accent-fill); color: #fff; border-color: var(--accent-fill); font-weight: 600; }
   .stage-controls .year-slider { display: flex; align-items: center; gap: 8px; width: 100%; font-size: 13px; color: var(--text-quiet); font-variant-numeric: tabular-nums; }
   .stage-controls .year-slider input[type="range"] { flex: 1; accent-color: var(--accent); cursor: pointer; }
-  /* Scene 1 "How is it calculated?" button and the info card it opens (October 5, 2026): the HHI and sigma
-     definitions moved out of the chart into this card so the chart itself can stay short. */
+  
   .stage-controls button.info-btn { margin-left: auto; background: transparent; color: var(--accent-text); border-color: var(--accent-text); font-weight: 600; }
   .stage-controls button.info-btn:hover { background: var(--accent-fill); color: #fff; }
   .info-modal { position: fixed; inset: 0; z-index: 300; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(0,0,0,0.38); }
@@ -269,9 +215,7 @@
     font-family: inherit; font-size: 13px; padding: 6px 10px; cursor: pointer;
     background: var(--page); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 999px;
   }
-  /* Trade-map scene only: a persistent tab row (built once by sceneTradeMap(), never rebuilt on
-     tab switch) sits above each tab's own sub-controls; this rule just gives the tab row a little
-     breathing room from the sub-controls row beneath it without a whole new component. */
+  
   .tm-tabs { width: 100%; padding-bottom: 8px; border-bottom: 1px dashed var(--border); margin-bottom: 2px; display: flex; flex-wrap: wrap; gap: 8px; }
   .tm-subcontrols { width: 100%; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .tm-presets { width: 100%; display: flex; flex-wrap: wrap; gap: 6px; }
@@ -286,9 +230,7 @@
   .tm-chips .chip .chip-remove:hover { opacity: 1; }
   .tm-chips .chip .chip-remove.disabled { cursor: not-allowed; opacity: .25; }
   .tm-chips .chip .chip-remove.disabled:hover { opacity: .25; }
-  /* Below-chart placement (stageDetail), replacing the .region-legend these chips took over from:
-     same divider treatment that legend used, so the relocated chips still read as a chart companion
-     rather than butting straight up against the caption text above them. */
+  
   .stage-detail .tm-chips { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
   .tm-back-link { background: none; border: none; color: var(--accent-text); font-size: 13px; cursor: pointer; padding: 4px 0; text-align: left; }
   .tm-back-link:hover { text-decoration: underline; }
@@ -299,9 +241,7 @@
   .stage-detail .chip[aria-pressed="true"] { border-color: var(--text-primary); font-weight: 650; }
   .stage-detail .big-number { font-size: 30px; font-weight: 700; color: var(--text-primary); text-align: center; }
   .stage-detail .big-caption { font-size: 13px; color: var(--text-quiet); margin-top: 2px; }
-  /* Scoped to an explicit <strong> inside a caption (only scene 5 uses one so far, to call out
-     its own click-to-isolate hint against an otherwise easy-to-miss default view), not a blanket
-     change to every big-caption -- same "narrow, precedented change" reasoning as 2ae. */
+  
   .stage-detail .big-caption strong { color: var(--text-secondary); font-weight: 700; }
   .region-legend {
     display: flex; flex-wrap: wrap; align-items: center; gap: 3px 14px; margin-top: 8px;
@@ -343,16 +283,7 @@
   .act-break {
     grid-column: 1 / -1; min-height: 88vh; display: flex; align-items: center;
     justify-content: center; text-align: center; position: relative; z-index: 2;
-    /* No interactive content ever lives inside .act-break-inner (just a kicker/heading/rule), but
-       its box is tall enough (min-height 88vh) that its tail end can still overlap the viewport
-       top at a neighboring scene's resting scroll position, even fully transparent (opacity 0 on
-       .act-break-inner when not .active). Unlike .step, which gets `inert` toggled by JS, nothing
-       ever disabled this section's own pointer-events, so that invisible overlap silently
-       intercepted clicks meant for whatever scene sits underneath it. Bug found 2026-08-15 while
-       testing the new trade-map scene, whose tab row happens to sit unusually high in the layout
-       (~150px) where this had never been visibly reachable before; the underlying overlap is a
-       pre-existing property of every act-break, not specific to that scene, so fixed unconditionally
-       here rather than worked around locally. */
+    
     pointer-events: none;
   }
   .act-break[data-act-index="1"] { grid-row: 4; }
@@ -360,11 +291,7 @@
   .act-break[data-act-index="3"] { grid-row: 17; }
   .act-break-inner {
     max-width: 760px; padding: 80px 24px;
-    /* Hidden until .act-break gets its .active toggle (see showInterlude/exitInterlude), so the
-       heading rises/fades into place instead of just sitting there in normal scroll flow while
-       the chart disappears with no complementary motion. Chart sinks + fades out (see
-       .interlude-active .chart-holder below); this rises + fades in, so the two read as one
-       handoff instead of an empty gap. */
+    
     opacity: 0; transform: translateY(18px);
     transition: opacity .5s cubic-bezier(.4,0,.2,1) .06s, transform .5s cubic-bezier(.4,0,.2,1) .06s;
   }
@@ -389,16 +316,13 @@
     .act-break h2 { font-size: clamp(32px, 10vw, 46px); }
   }
 
-  /* Scroll-weighted scene handoff. Adjacent cards crossfade; a card that is not on its way in or out
-     is at opacity 0 (no ghosts, audit November 2, 2026). Act interludes retain their authored full-screen
-     pause; the chart and every card disappear while an interlude crosses the viewport midpoint. */
+  
   body.neighbor-flow { overflow-x: hidden; }
   body.neighbor-flow .scrolly {
     row-gap: 0; padding-top: 22vh; padding-bottom: 22vh;
   }
   body.neighbor-flow .sticky-pane {
-    /* Extend the sticky figure through both 22vh boundary runways so Scenes 1 and 18 can meet the
-       figure at the viewport midpoint instead of the figure entering late or leaving early. */
+    
     margin-top: -22vh; margin-bottom: -22vh;
   }
   body.neighbor-flow .step { min-height: 56vh; margin-top: 0; margin-bottom: 0; }
@@ -413,21 +337,14 @@
   body.neighbor-flow .chart-holder {
     z-index: 3; transition: none; will-change: opacity, transform;
   }
-  /* Scroll-scrubbed opacity/transform (see updateNeighborFlow) writes a new inline value on every
-     scroll tick; transitioning that would make the chart visibly lag behind the wheel/finger, so
-     it stays `transition: none` above. Entering/leaving an interlude is a one-off discrete swap
-     instead of a continuous scrub, so it gets its own short-lived transition via this class
-     (added by primeChartActFade(), called from showInterlude()/exitInterlude(), removed again
-     once the transition finishes so normal scroll-scrubbing goes back to instant). */
+  
   body.neighbor-flow .chart-holder.act-fade {
     transition: opacity .4s cubic-bezier(.4,0,.2,1), transform .4s cubic-bezier(.4,0,.2,1);
   }
   body.neighbor-flow .viz-root.interlude-active .chart-holder.act-fade {
     transition: none;
   }
-  /* Act headings follow the reader's scroll position instead of switching on at the midpoint and
-     then running a detached timer. updateNeighborFlow() supplies their opacity/offset every frame;
-     transitions here would lag behind the wheel or finger and recreate the apparent pop. */
+  
   body.neighbor-flow .act-break-inner { transition: none; }
   body.neighbor-flow .chart-flow-ghost {
     position: absolute; z-index: 2; left: 0; top: 50%; width: 100%;
@@ -459,16 +376,12 @@
     body.neighbor-flow .step { min-height: auto; margin: 6vh 0; }
   }
   .step .card {
-    /* A tone step: opaque ground, no blur, no shadow (audit, November 2, 2026; it was translucent
-       and blurred, so the chart's colours ran behind the words on phones). */
+    
     background: var(--surface-1);
     border: 1px solid var(--border); border-radius: 12px;
     padding: 16px 20px;
   }
-  /* showScene() already marks every non-current step inert. Hide those cards visually as well,
-     while leaving each 108vh step in the layout to preserve scroll geometry. This is deliberately
-     instant (no opacity transition): an outgoing scene's card and an incoming scene's card must
-     never be visible at the same time. */
+  
   .step[inert] .card { opacity: 0; visibility: hidden; pointer-events: none; }
   .step:not([inert]) .card { opacity: 1; visibility: visible; }
   .step .num { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
@@ -511,8 +424,7 @@
     border: 1px solid var(--border); border-radius: 999px; box-shadow: 0 2px 10px rgba(0,0,0,.08);
   }
   .theme-toggle:hover { background: var(--page); }
-  /* Language toggle sits alone top-left (August 25, 2026), mirroring the theme/Contents cluster
-     on the right, and shows the flag + code of the language it switches TO. */
+  
   .lang-controls { position: fixed; top: 20px; left: 20px; z-index: 50; }
   .lang-toggle {
     font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: .04em; height: 36px; padding: 0 12px 0 9px; cursor: pointer;
@@ -552,24 +464,14 @@
     text-transform: uppercase; color: var(--text-quiet);
   }
   .toc-panel .toc-act-jump:hover { color: var(--text-primary); background: var(--page); }
-  /* Without this, an open Contents panel just occludes whatever step-card text happens to sit
-     behind it (worst on scenes 16-18, whose right-aligned cards are tall enough to reach that
-     high), reading as broken/truncated text rather than "a menu is open." Dimming the whole page
-     behind the panel (itself and the toggle both sit at z-index 50, one above this) makes the
-     occlusion unambiguous instead. */
+  
   .toc-scrim {
     position: fixed; inset: 0; z-index: 49; background: rgba(0, 0, 0, .35);
     opacity: 0; pointer-events: none; transition: opacity .2s ease;
   }
   .toc-scrim.open { opacity: 1; pointer-events: auto; }
   @media (max-width: 900px) {
-    /* Cards flow full-width and tightly stacked here (no per-row centering like desktop's
-       108vh rows), so a fixed corner element sits over whatever card content happens to
-       scroll past underneath it, at any scroll position, not just at page load. Shrinking to
-       an icon-only circle keeps that collision area small; it can't be eliminated without
-       reserving permanently blank space, not worth it for a nav affordance this size. Placed
-       in its own media block after the base .toc-toggle rule (not inside the earlier shared
-       mobile block) so it actually wins the cascade instead of being overridden by it. */
+    
     .top-controls { top: 12px; right: 12px; gap: 6px; }
     .toc-toggle { width: 40px; height: 40px; padding: 0; justify-content: center; font-size: 0; }
     .toc-toggle::before { content: "\2261"; font-size: 18px; }
@@ -596,8 +498,7 @@
   }
 
   .progress-rail {
-    /* Right, not left: aligns with the Contents toggle above and the nav-controls below, so all
-       three nav surfaces sit on the same edge instead of the rail being the odd one out. */
+    
     position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 50;
     display: flex; flex-direction: column; gap: 9px;
   }
@@ -609,10 +510,7 @@
   .progress-rail .rail-dot.active { width: 9px; height: 9px; background: var(--accent); border-color: var(--accent); }
   .progress-rail .rail-dot.act-start:not(:first-child) { margin-top: 7px; }
   @media (max-width: 900px) {
-    /* Same collision reality as the Contents toggle and nav-controls (2s/2t): a fixed element
-       sitting over continuously-flowing single-column content on mobile. A slim, narrow rail at
-       the very edge has much less to collide with than a button ever did, so left as-is rather
-       than pre-emptively shrinking it; revisit only if verification actually shows a problem. */
+    
     .progress-rail { right: 8px; gap: 7px; }
   }
 
@@ -661,13 +559,9 @@
     .viz-root::before { animation: none !important; transform: none; }
   }
 
-  /* ===== Tree rail (October 6, 2026; user chose toc-samples/sample-2-tree-rail.html) =====
-     Desktop (>1000 px): sticky left tree of acts and scenes replaces the Contents dropdown and the
-     right-hand dots; every scene card sits in one 340 px right-hand column (fixes the ~143 px cards
-     the old 3-column grid left at 1280 px); nav buttons move bottom-left under the rail. Phones and
-     tablets keep the Contents button, which opens a centred menu. Source: toc-samples/build_samples.py. */
+  
   .tree-rail { display: none; }
-  @media (min-width: 1001px) {
+  @media (min-width: 1181px) {
     .toc-toggle, .progress-rail { display: none !important; }
     .scrolly { grid-template-columns: minmax(0, 1fr) 340px; max-width: 1560px;
       padding-left: 288px; padding-right: 28px; column-gap: 32px; }
@@ -699,7 +593,7 @@
     .tree-rail .rail-progress b { color: var(--accent-text); font-weight: 400; }
     .nav-controls { right: auto; left: 28px; bottom: 24px; }
   }
-  @media (max-width: 1000px) {
+  @media (max-width: 1180px) {
   .toc-panel { top: 50%; left: 50%; right: auto; width: min(560px, calc(100vw - 32px));
     transform: translate(-50%, -47%); border-radius: 14px; z-index: 51;
     transition: max-height .25s ease, opacity .2s ease, transform .25s ease; }
@@ -712,16 +606,13 @@
   .progress-rail { display: none !important; }
   .top-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; z-index: 61;
     background: var(--accent); transition: width .1s linear; pointer-events: none; }
-  /* ===== Audit fixes, November 2, 2026 (design-notes/audit-2026-11-02 of the site) ===== */
-  /* Rail and playback controls fade out as the closing block reaches them. */
+  
+  
   .nav-controls { transition: opacity .25s ease, visibility .25s; }
   .viz-root.past-story .nav-controls { opacity: 0; visibility: hidden; pointer-events: none; }
 
-  /* Phones and tablets, up to 1000 px (S1-1; the audit measured up to 900, and 901-1000 had the same fault: the old
-     three-column grid left the cards a zero-width column over the chart). The chart is pinned at the top of the screen on an opaque ground and sits
-     above the cards in the stacking order; each card comes up from below, rests under the chart if it fits, and leaves
-     by passing under it, never over it. updateStackedFlow() picks the scene; only the active card is ever shown. */
-  @media (max-width: 1000px) {
+  
+  @media (max-width: 1180px) {
     .viz-root { background: var(--page); background-attachment: scroll; transition: none; }
     .viz-root::before { display: none; }
     body.neighbor-flow .scrolly { grid-template-columns: minmax(0, 1fr); padding: 0 16px 8vh; row-gap: 0; }
@@ -729,7 +620,7 @@
     .toc-toggle::before { content: "\2261"; font-size: 18px; }
     .toc-toggle .chevron { display: none; }
     body.neighbor-flow .sticky-pane {
-      /* All rows, by number: "1 / -1" means row 1 when no rows are declared, and pinning then rests on a Chrome leniency. */
+      
       grid-column: 1; grid-row: 1 / 23; align-self: start; position: sticky; top: 0; z-index: 3;
       display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start;
       height: auto; max-height: 60vh; max-height: 60svh; margin: 0; padding: 52px 0 6px;
@@ -742,7 +633,7 @@
     .chart-holder .c-sub { margin-bottom: 6px; }
     .chart-holder .stage-controls { gap: 6px; margin-bottom: 6px; }
     .chart-holder svg#stage { max-height: 40vh; max-height: 40svh; }
-    /* A long legend scrolls inside the pinned figure; the chart keeps its size. */
+    
     .chart-holder .stage-detail { flex: 0 1 auto; min-height: 0; overflow-y: auto; margin-top: 6px; line-height: 1.4; }
     .chart-holder .tooltip { position: absolute; }
 
@@ -753,30 +644,30 @@
     body.neighbor-flow .step[data-step="0"] { margin-top: 60vh; margin-top: 60svh; }
     .step .card, .step .card.expanded { width: 100%; max-width: none; padding: 14px 16px; }
     .step .card.rests { position: sticky; top: calc(var(--pane-h, 0px) + 8px); }
-    /* Only the active card shows, at every moment; the fade is for the one arriving, the one leaving is already under the chart. */
+    
     body.neighbor-flow .step.neighbor-card[inert] .card { opacity: 0 !important; visibility: hidden !important; transition: none; }
     body.neighbor-flow .step.neighbor-card:not([inert]) .card { opacity: 1; visibility: visible !important; transition: opacity .18s linear; }
     body.neighbor-flow .act-break { grid-column: 1; min-height: 72vh; z-index: 4; margin-top: 18vh; margin-top: 18svh; }
     .act-break h2 { scroll-margin-top: 30vh; }
 
-    /* The Contents button waits for the story, as the desktop rail does: on the opening's running text it would sit on words. */
+    
     .viz-root:not(.story-in) #tocToggle { visibility: hidden; }
     .viz-root:not(.story-in) .nav-controls { opacity: 0; visibility: hidden; pointer-events: none; }
-    /* Playback controls, tablets: a column at the edge, in a gutter the card leaves free. */
+    
     .nav-controls { flex-direction: column; }
     .step .card, .step .card.expanded { width: calc(100% - 44px); }
   }
-  /* Phones: no gutter to spare, and four buttons would print on the card's words. Scrolling and the Contents button do the job. */
+  
   @media (max-width: 600px) {
     .nav-controls { display: none; }
     .step .card, .step .card.expanded { width: 100%; }
-    /* Short phones need the room: the figure gives up to 16% of its height at 667 px tall (none at 844), and the card's label goes on one line where it fits. */
+    
     .chart-holder svg#stage { max-height: 24vh; max-height: 24svh; }
     .step .num { display: flex; flex-wrap: wrap; column-gap: 10px; }
     .step .num .scene-count { margin-top: 0; }
   }
-  /* Landscape on a short screen (also 200% zoom on a laptop): chart and card side by side. */
-  @media (max-width: 1000px) and (max-height: 500px) and (orientation: landscape) {
+  
+  @media (max-width: 1180px) and (max-height: 500px) and (orientation: landscape) {
     body.neighbor-flow .scrolly { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); column-gap: 16px; }
     body.neighbor-flow .sticky-pane { height: 100vh; height: 100svh; max-height: none; }
     .chart-holder svg#stage { flex: 1 1 0; min-height: 110px; max-height: none; }
@@ -792,10 +683,10 @@
   }
 </style>
 <meta name="robots" content="noindex">
-<link rel="canonical" href="https://www.makroriskakademi.com/en/dashboards/trade-risk/">
-<link rel="alternate" hreflang="tr" href="https://www.makroriskakademi.com/tr/panolar/ticaret-riski/">
-<link rel="alternate" hreflang="en" href="https://www.makroriskakademi.com/en/dashboards/trade-risk/">
-<link rel="alternate" hreflang="x-default" href="https://www.makroriskakademi.com/tr/panolar/ticaret-riski/">
+<link rel="canonical" href="https://sametapaydin.github.io/en/dashboards/trade-risk/">
+<link rel="alternate" hreflang="tr" href="https://sametapaydin.github.io/tr/panolar/ticaret-riski/">
+<link rel="alternate" hreflang="en" href="https://sametapaydin.github.io/en/dashboards/trade-risk/">
+<link rel="alternate" hreflang="x-default" href="https://sametapaydin.github.io/tr/panolar/ticaret-riski/">
 <link rel="stylesheet" href="/assets/css/shell.css">
 <link rel="stylesheet" href="/assets/css/dash.css">
 <link rel="icon" href="/assets/img/favicon-ipc.ico">
@@ -805,8 +696,7 @@
 <header class="mra sb" lang="en" data-hd data-hide>
   <div class="sb-left">
     <a class="sb-brand" href="/en/">
-      <span class="sb-logo"><img src="/assets/img/logo-en.png" alt="Istanbul Policy Center" width="300" height="58"></span>
-      <span class="sb-rule" aria-hidden="true"></span>
+      <span class="mark"><img class="mk-l" src="/assets/img/logo-mark-en.png" alt="Istanbul Policy Center" width="92" height="58"><img class="mk-d" src="/assets/img/logo-mark-en-dark.png" alt="Istanbul Policy Center" width="92" height="58"></span>
       <span class="sb-name">Macro Risk Academy</span>
     </a>
     <span class="sb-pg"><span aria-hidden="true">/</span> Türkiye’s trade risk</span>
@@ -827,9 +717,11 @@
   </div>
 </header>
 
+
+
 <script src="/assets/js/site.js" defer></script>
 
-<noscript><p class="mra sb-noscript" lang="en">This dashboard needs JavaScript. Turn it on in your browser, or see the list of dashboards and the method page.</p></noscript>
+<noscript><p class="mra sb-noscript" lang="en">This dashboard needs JavaScript. Turn it on in your browser, or see <a href="/en/dashboards/">the list of dashboards</a> and <a href="/en/dashboards/method/">the method page</a>.</p></noscript>
 
 <main class="viz-root">
 
@@ -1033,9 +925,7 @@
 
 <div class="hero outro">
   <div>
-    <!-- Local path today; the map dashboard is not yet deployed. Once it is (planned as a sibling
-         GitHub Pages path alongside this story, e.g. fragility-map/ next to storyline/), update
-         this href to that published URL instead of the local relative path. -->
+    
     <a class="explore-cta" href="/en/dashboards/world-risk-map/" target="_blank" rel="noopener">Veri setinin tamamını kendiniz keşfedin</a>
   </div>
   <a class="back-top" href="#" id="backToTop">Başa dön</a>
@@ -1058,13 +948,13 @@ function el(tag, attrs) {
   return e;
 }
 function escapeHtml(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
-// ---------------------------------------------------------------------------------------------
-// Language layer (August 25, 2026). LANG is "tr" (default, every load) or "en"; I18N holds every
-// user-facing string outside DATA, keyed by stable ids; L(key, vars) looks up LANG then falls
-// back to English, interpolating {name} slots. Numbers: fmtM/pct/num follow LANG (Turkish uses a
-// decimal comma, "%" before the number, "mn"/"mlr" for million/billion). dn(name) maps a DATA
-// display name (country, product, sector) through NAME_TR when Turkish; trCase() attaches
-// vowel-harmonised Turkish case suffixes to proper nouns used inside sentence templates.
+
+
+
+
+
+
+
 var I18N = { en: {"ui": {"title": "The Risk Didn't Grow, It Changed Hands", "contents": "Contents", "navFirst": "First scene", "navPrev": "Previous scene", "navNext": "Next scene", "navLast": "Last scene", "rail": "Scene progress", "chartAria": "Story chart", "act": "Act", "scene": "Scene", "gotoAct": "Go to Act {roman}: {title}", "cta": "Explore the full dataset yourself", "backTop": "Back to the top", "dataLabel": "Data:", "themeToLight": "Switch to light theme", "themeToDark": "Switch to dark theme", "langSwitch": "Türkçeye geç", "langBtn": "TR", "selectYear": "Select year"}, "hero": {"kicker": "Türkiye's trade risk", "intro": ["Global trade is on the cusp of a major transformation. Economic protectionism is surging. Trade and technology wars have become the new normal. For governments and corporations alike, managing exposure, understanding exactly who you depend on, is now just as critical as the volume and composition of your trade. Geopolitical dynamics are fundamentally rewiring economic relations.", "At the Istanbul Policy Center (IPC) of Sabancı University, we are mapping the interdependencies of this new era. The IPC Foreign Trade Risk Index brings 30 years of complex trade networks directly to your screen, translating raw data into actionable geoeconomic narratives."], "questions": ["Where are Türkiye's structural dependencies concentrated?", "What are the critical bottlenecks within Türkiye's global supply chains?", "Which product categories present emerging opportunities for investment and growth?"], "cue": "Scroll down to uncover the geoeconomic realities behind the numbers and explore Türkiye's foreign trade story.", "h1": "The risk didn't grow for Türkiye<br>It changed hands", "p": "Every country depends on suppliers it could lose overnight to a war, a sanction or a closed strait. This is also Türkiye's story: not how much it trades, but how much of that trade could not be replaced if a relationship broke. The IPC Foreign Trade Risk Index traces, product by product, thirty years of data and extends to the rest of the world.", "tagline": "The number has barely moved. Everything behind it has.", "scroll": "scroll ↓"}, "actH2": {"ii": "The index stayed almost flat<br>The countries carrying it changed", "iii": "Some dependencies are vulnerabilities<br>Others become leverage", "iv": "World trade first diversified, then concentrated again, this time around China"}, "acts": ["Reading Risk", "Türkiye's Dependencies", "Technology & Leverage", "A Fragmenting World"], "cards": [["What is the Import Risk Index?", ["Import share tells you how much you buy from a partner, not what happens if that partner disappears. This index measures that, product by product, and sums up how fragile the import basket is in a single number."]], ["Import risk held, export risk halved", ["Türkiye's foreign trade risk is measured with two separate indices, one for imports and one for exports. The Export Risk Index is calculated much like the Import Risk Index: each sector's export share is multiplied by how few countries its buyers are concentrated in (buyer concentration). The one difference is that the substitutability term is left out, because it can only be estimated on the import side. Over the past thirty years the two indices moved in opposite directions: import risk fluctuated within a narrow band and returned almost to where it started, while export risk fell by more than half.", "The rest of this story is about why."]], ["Same risk, new source: the China shock", ["Thirty years ago China was close to zero in Türkiye's import risk; today it is the single largest source of it. The EU and the United States moved the other way, giving up most of the share they once held. The headline number ended almost exactly where it started; Türkiye's import risk simply traveled from the West to the East."]], ["Türkiye's trade map: buying from the East, selling to the West", ["First, set risk aside and look only at trade shares. Germany was Türkiye's largest supplier through the 1990s and 2000s; in 2014 China took its place. Exports tell a different story: Germany is still Türkiye's number-one export market, while China does not even make the top ten. Türkiye is an economy that buys from the East and sells to the West, and this asymmetry underpins everything that follows."]], ["Size is not risk", ["China is not only Türkiye's largest supplier; it carries far more risk than its size alone implies: 15% of imports but 35% of the risk. That is because its goods sit in concentrated markets and are hard to substitute. Germany runs the other way: its share of Türkiye's imports has fallen, and its risk contribution has fallen faster, because it sells substitutable goods in crowded markets."]], ["And the change was fast", ["China's path is the clearest: up and to the right on both axes, followed by Russia. They are joined by Brazil, whose risk weight now runs three times its tiny import share. The United States, Germany, and Italy moved the opposite way: their share of Türkiye's imports fell, and their risk share fell even faster. The sources of Türkiye's import risk have shifted within a single generation."]], ["Some dependencies are a choice, not fate", ["If we set Türkiye's supplier concentration against peer economies sector by sector, it sits close to the average in most sectors. But in a handful of sectors it is far more concentrated than peers buying the very same goods, and that is a procurement choice, not a market fact. Roughly a fifth of Türkiye's import value sits in that fixable zone, led by refined fuels."]], ["Every sector has its own story", ["In computers, the supplier structure changed completely: first Germany led, then the United Kingdom, and today China holds nearly half the market. Yet the sector's risk moved far less than this turnover would suggest, because the index looks not at who the supplier is but at how few countries supply the product and how easily it can be substituted. In iron and steel, the trend itself is the story: risk peaked in the mid-2000s and then fell to roughly a third of that level as Russia's share declined. These examples show that sector risk cannot be read off the headline; each sector needs its own look."]], ["Technological change happened on the export side only", ["On the export side, the shift is real: low-tech apparel once accounted for more than half of export risk and now accounts for under a quarter, with medium technology (vehicles and machinery) taking its place. The export index fell by more than half along the way. On the import side, the technology mix looks much as it did thirty years ago, with roughly half the risk still in medium- and high-tech goods. The import basket did change, but it changed in who supplies it, not in the kind of technology Türkiye depends on."]], ["High tech carries more risk than its share of imports", ["For high-technology goods (phones, computers, pharmaceuticals, aircraft), the risk they pose is greater than their weight in Türkiye's import bill. For medium-technology goods (machinery and vehicles), the opposite is true: they are the single biggest line in what Türkiye buys, yet they carry less risk than their size suggests, because many countries can supply them."]], ["The riskiest products: large import value, a single supplier", ["Some products are risky because their imports are concentrated among very few suppliers and the goods themselves are hard to substitute. This mostly includes energy and critical manufactured products such as data storage units and aircraft, for which the number of capable suppliers worldwide is very low."]], ["Critical raw materials can be chokepoints", ["Although the trade in critical raw materials is small, these materials matter far more than their monetary value: production stops without them, which makes them a real source of import risk. Most of Türkiye's imports of rare earths, magnesium, silicon and bauxite, and of the magnets made from rare earths, come from China. What looks like a list of separate materials is, to a large extent, a single dependency."]], ["Türkiye is a dominant world seller in some products", ["Türkiye's dominant positions are mostly in agricultural products and minerals, along with some manufactured textiles. Türkiye's position in manufactured goods and minerals has grown over this period, even as traditional goods slowly lose ground in the world market."]], ["Export concentration is both leverage and risk", ["For Türkiye, export concentration is seen mostly in agricultural products and minerals. A high share of the world market gives Türkiye an advantage, but the Export Risk Index measures this concentration as risk: if only a few buyers take most of a product, those buyers can turn to other suppliers. The easier the product is to source elsewhere, the faster that switch happens.", "In recent years, drones and firearms have become high-value-added entries in this group."]], ["The Great Retracement", ["Zooming out from Türkiye to the world: the median import-concentration index fell from 49 in 1995 to 45 by 2008, as countries broadly diversified their supplier base. It has since climbed back to almost exactly where it started. The progress globalization made in spreading out the median country's import risk has been reversed since 2008, the same years in which world trade openness stopped increasing. Geoeconomic fragmentation is on the rise."]], ["Russia is now the most import-concentrated major economy", ["Türkiye has a diversified import pattern and, in the world ranking, sits well down the field as a result. For countries like Mexico and Canada, geography largely explains their high concentration: the pull of a single dominant neighbor. Russia's story is mostly about geopolitics: its index rose sharply after the war in Ukraine began, as it was disconnected from the West and its import basket narrowed to a single partner, China."]], ["One economy, two orbits", ["Every major economy is positioned by how much of its import risk points to China (horizontal) versus the United States (vertical). Proximity is part of the story: China's neighbors increasingly rely on Beijing, not just as a share of imports but even more so for import risk. The American cluster is mostly its own neighbors. China's pull now reaches well beyond the region, as far as Germany and the United States themselves. The picture has changed: thirty years ago, China's share of import risk was close to zero for nearly every country here. The shift toward China is dramatic."]], ["China's grip on the world's import risk", ["China's dominance is not just about its rising share of what countries import. The risk it creates runs ahead of its presence in trade because China's dominance is concentrated mostly in sectors where alternatives are fewest. In many economies on this chart, China supplies less than 30% of imports yet accounts for more than half of their import risk."]], ["What if the EU counts as one supplier?", ["Even when the EU is treated as a single supplier, Türkiye's position hardly changes: its index stays relatively low compared with other countries. The index rises significantly, though, for economies tightly integrated with EU trade (Switzerland, Norway, the UK, Morocco), because most of their import risk already comes from the EU. Counting 27 suppliers as one naturally raises their measured import risk."]]], "footer": "UN Comtrade / CEPII BACI trade flows, 1995–2024. Import Risk Index = supplier concentration (HHI) discounted by ease of substitution, summed by import share; 2024 patched from the current HS classification where it and the 30-year HS92 series diverge. Istanbul Policy Center (IPC), Sabancı University: Türkiye geopolitical trade-dependence project."}, tr: {"ui": {"title": "Risk artmadı, kaynağı değişti", "contents": "İçindekiler", "navFirst": "İlk sahne", "navPrev": "Önceki sahne", "navNext": "Sonraki sahne", "navLast": "Son sahne", "rail": "Sahne ilerlemesi", "chartAria": "Hikâye grafiği", "act": "Perde", "scene": "Sahne", "gotoAct": "Perde {roman} bölümüne git: {title}", "cta": "Veri setinin tamamını kendiniz keşfedin", "backTop": "Başa dön", "dataLabel": "Veri:", "themeToLight": "Açık temaya geç", "themeToDark": "Koyu temaya geç", "langSwitch": "Switch to English", "langBtn": "EN", "selectYear": "Yıl seçin"}, "hero": {"kicker": "Türkiye'nin ticaret riski", "intro": ["Küresel ticaretin mimarisi köklü bir değişimden geçiyor. Ekonomik korumacılık yükseliyor; ticaret ve teknoloji savaşları “yeni normal” hâline geliyor. Artık hükümetler ve şirketler için “kiminle ne kadar ticaret yaptığınız” kadar “kime ne ölçüde bağımlı olduğunuz” da kritik önem taşıyor. Jeopolitik dinamikler, ekonomik ilişkileri kökten yeniden şekillendiriyor.", "Sabancı Üniversitesi İstanbul Politikalar Merkezi (İPM) olarak bu yeni dönemin karşılıklı bağımlılık haritasını çıkarıyoruz. İPM Dış Ticaret Risk Endeksi, son otuz yılın karmaşık ticaret ağlarını ekranınıza taşıyor ve ham verileri karar alıcılar için yol gösterici jeoekonomik analizlere dönüştürüyor."], "questions": ["Türkiye'nin yapısal bağımlılıkları hangi alanlarda yoğunlaşıyor?", "Türkiye'nin parçası olduğu küresel tedarik zincirlerindeki kritik darboğazlar neler?", "Hangi ürün grupları yeni yatırım ve büyüme fırsatları sunuyor?"], "cue": "Rakamların ardındaki jeoekonomik gerçekleri keşfetmek ve Türkiye'nin dış ticaret hikâyesini adım adım izlemek için sayfayı aşağı kaydırın.", "h1": "Türkiye için risk artmadı;<br>riskin kaynağı değişti", "p": "Her ülke; bir savaş, bir yaptırım ya da kapanan bir boğaz yüzünden bir gecede kaybedebileceği tedarikçilere bağımlıdır. Türkiye de bu anlamda bir istisna değil. Asıl soru, Türkiye'nin ne kadar ticaret yaptığı değil; bir ticari ilişki koptuğunda bu ticaretin ne kadarının yerine konamayacağı. İPM Dış Ticaret Risk Endeksi, Türkiye'nin otuz yıllık dış ticaret verisini ürün ürün inceliyor ve dünyanın geri kalanıyla karşılaştırıyor.", "tagline": "Otuz yılda Türkiye'nin ithalat riski neredeyse hiç değişmedi, ama bu rakamın ardındaki hemen her şey değişti.", "scroll": "kaydırın ↓"}, "actH2": {"ii": "Endeks neredeyse hiç kıpırdamadı<br>Riski taşıyan ülkeler ise değişti", "iii": "Her bağımlılık bir zaaf değildir<br>Bazıları pazarlık gücüne dönüşür", "iv": "Dünya ticareti önce çeşitlendi, sonra yeniden yoğunlaştı, bu kez Çin odaklı olarak"}, "acts": ["Riski Anlamak", "Türkiye'nin Bağımlılıkları", "Teknoloji ve Pazarlık Gücü", "Parçalanan Dünya"], "cards": [["İthalat Risk Endeksi nedir?", ["İthalat payı, bir partnerden ne kadar aldığınızı gösterir; o partner devreden çıkarsa ne olacağını göstermez. Bu endeks bunu ürün ürün ölçüyor ve ithalat sepetinin ne kadar kırılgan olduğunu tek bir rakamla özetliyor."]], ["İthalat riski değişmedi, ihracat riski yarıya indi", ["Türkiye'nin dış ticaret riski biri ithalat, diğeri ihracat için olmak üzere iki ayrı endeksle ölçülüyor. İhracat Risk Endeksi de İthalat Risk Endeksi'ne benzer şekilde hesaplanıyor: her sektörün ihracat payı, o sektördeki alıcıların ne kadar az sayıda ülkede toplandığıyla (alıcı yoğunlaşması) çarpılıyor. Tek fark, ikame edilebilirlik unsurunun hesaba katılmaması; çünkü bu unsur yalnızca ithalat tarafında hesaplanabiliyor. Son otuz yıl boyunca bu iki endeks birbirine zıt bir seyir izledi; ithalat riski dar bir aralıkta dalgalanarak neredeyse başladığı seviyeye geri dönerken, ihracat riski ise yarıdan fazla azaldı.", "Hikâyenin geri kalanı bunun nedenini anlatıyor."]], ["Aynı risk, yeni kaynak: Çin şoku", ["Otuz yıl önce Çin'in Türkiye'nin ithalat riskindeki payı sıfıra yakındı; bugün ise Çin bu riskin en büyük kaynağı hâline gelmiş durumda. AB ile ABD bu anlamda ters yönde ilerlediler ve Türkiye'nin ithalat riskindeki payları giderek azaldı. Toplamda Türkiye'nin ithalat riski artmadı; yalnızca riskin kaynağı Batı'dan Doğu'ya kaydı."]], ["Türkiye'nin ticaret haritası: Doğu'dan alıyor, Batı'ya satıyor", ["Önce, risk hesabına girmeden yalnızca ticaret paylarına bakalım. 1990'lar ve 2000'ler boyunca Türkiye'nin en büyük tedarikçisi Almanya'ydı; 2014'te ise yerini Çin aldı. İhracatta ise tablo farklı. Almanya hâlâ Türkiye'nin bir numaralı ihracat pazarı, Çin ise ilk ona bile giremiyor. Türkiye, Doğu'dan alıp Batı'ya satan bir ekonomi. Sonraki sahnelerde anlatılan her şeyin temelinde bu asimetri yatıyor."]], ["Ticaretin büyüklüğü risk değildir", ["Çin, Türkiye'nin yalnızca en büyük tedarikçisi değil; ithalattaki payının ötesinde çok daha fazla risk de taşıyor. Türkiye'nin ithalatının %15'i Çin'den geliyor, ancak ithalat riskinin %35'i Çin kaynaklı. Bunun nedeni, Çin'den alınan ürünlerin alternatif tedarikçilerinin az sayıda olması ve dolayısıyla bu ürünlerin kolay ikame edilememesi. Almanya'da ise tablo tam tersi. Almanya'nın ithalattaki payı azaldı, risk katkısı ise daha da hızlı geriledi. Bunun sebebi de Almanya'nın çok sayıda tedarikçinin bulunduğu pazarlarda kolayca ikame edilebilen ürünler satıyor olması."]], ["Üstelik bu dönüşüm hızlı yaşandı", ["En belirgin değişim Çin'de; bu ülkenin hem ithalattaki payı hem de risk çarpanı istikrarlı biçimde yükseldi. Rusya da aynı yönde ilerledi. Brezilya'nın ithalattaki payı küçük kalsa da riskteki ağırlığı bu payın üç katına ulaştı. ABD, Almanya ve İtalya ise ters yönde hareket ettiler; ithalattaki payları azaldı, risk payları ise daha da hızlı geriledi. Otuz yıl gibi kısa bir sürede, Türkiye'nin ithalat riskinin ağırlık merkezi tamamen yer değiştirdi."]], ["Bazı bağımlılıklar kader değil, tercih", ["Tedarikçi yoğunlaşmasını sektör bazında benzer ekonomilerle karşılaştırdığımızda, Türkiye'nin çoğu sektörde ortalamaya yakın olduğu görülüyor. Ancak birkaç sektörde Türkiye, aynı ürünleri ithal eden benzer ülkelere kıyasla çok daha az sayıda tedarikçiye bağımlı durumda. Bu konum, piyasa koşullarının dayattığı bir zorunluluk değil; bir tedarik tercihi. Türkiye'nin ithalatının yaklaşık beşte biri, tedarikçi çeşitlendirmesiyle riskin azaltılabileceği bu sektörlerde yer alıyor. Bunların başında rafine petrol ürünleri geliyor."]], ["Her sektörün kendi dinamiği var", ["Bilgisayarlarda tedarikçi yapısı tamamen değişti. Önceleri Almanya, ardından Birleşik Krallık öne çıkıyordu; bugün ise pazarın neredeyse yarısı Çin'in elinde. Ne var ki sektörün riski, bu köklü değişimin düşündürdüğünden çok daha az dalgalandı. Çünkü endeks, tedarikçinin kim olduğuna değil, tedarikin ne kadar az sayıda ülkede toplandığına ve ürünün ne kadar kolay ikame edilebildiğine bakıyor. Demir-çelikte ise asıl dikkat çeken, eğilimin kendisi. Sektörün riski 2000'lerin ortasında zirve yapmışken sonra Rusya'nın payının azalmasıyla yaklaşık üçte birine indi. Bu örnekler, sektörel riskin genel başlıklar üzerinden okunamayacağını; her sektörün ayrıca incelenmesi gerektiğini gösteriyor."]], ["Teknolojik dönüşüm yalnızca ihracatta yaşandı", ["İhracat tarafında gerçek bir dönüşüm söz konusu. Bir zamanlar ihracat riskinin yarısından fazlasını oluşturan düşük teknolojili hazır giyimin payı, bugün dörtte birin altına indi. Yerini taşıtlar ve makineler gibi orta teknolojili ürünler aldı. Bu süreçte İhracat Risk Endeksi de yarıdan fazla geriledi. İthalat tarafında ise teknoloji bileşimi otuz yıl öncekine çok benziyor; riskin yaklaşık yarısı hâlâ orta ve yüksek teknolojili ürünlerden kaynaklanıyor. Yani ithalat sepeti değişti; ancak değişen, Türkiye'nin bağımlı olduğu teknolojinin türü değil, bu teknolojiyi kimden aldığı oldu."]], ["Yüksek teknoloji, ithalattaki payından daha fazla risk taşıyor", ["Yüksek teknolojili ürünlerin (telefonlar, bilgisayarlar, ilaçlar, uçaklar) yarattığı risk, Türkiye'nin ithalat faturasındaki ağırlıklarından daha büyük. Orta teknolojili ürünlerde, yani makine ve taşıtlarda ise durum tam tersi. Bu grup, Türkiye'nin ithalatındaki en büyük kalem olmasına rağmen nispeten daha az risk taşıyor. Bunun sebebi ise bu ürünlerin pek çok ülkeden tedarik edilebiliyor olması."]], ["En riskli ürünler: Büyük ithalat hacmi, tek tedarikçi", ["Bazı ürünler, ithalatları çok az sayıda tedarikçide yoğunlaştığı ve başka bir kaynaktan temin edilmeleri zor olduğu için risk taşır. Türkiye için bu grupta ağırlıklı olarak enerji ile veri depolama birimleri ve uçaklar gibi kritik sanayi ürünleri yer alıyor. Bu ürünleri tedarik edebilecek ülke sayısı dünyada oldukça sınırlı."]], ["Kritik hammaddeler birer darboğaz olabilir", ["Kritik hammaddelerin ticaret hacmi küçük olsa da önemleri parasal değerlerinin çok üzerindedir. Bu maddeler olmadan üretim durur. Bu nedenle kritik hammaddeler, gerçek bir ithalat riski kaynağıdır. Türkiye'nin nadir toprak elementleri, magnezyum, silisyum ve boksit ithalatının, ayrıca nadir toprak elementlerinden üretilen mıknatısların büyük bölümü Çin'den geliyor. Yani birbirinden bağımsız malzemelerin listesi gibi görünen şey, aslında büyük ölçüde tek bir bağımlılık kaynağıdır."]], ["Türkiye bazı ürünlerde dünya pazarında söz sahibi", ["Türkiye'nin dünya pazarında öne çıktığı ürünler ağırlıklı olarak tarım ürünleri ve mineraller; bunlara bazı tekstil mamulleri de ekleniyor. İncelenen dönemde Türkiye, imalat sanayi ürünlerinde ve minerallerde konumunu güçlendirdi; geleneksel ihraç ürünleri ise dünya pazarında yavaş yavaş pay kaybediyor."]], ["İhracatta yoğunlaşma hem koz hem risk", ["Türkiye'nin ihracatında yoğunlaşma ağırlıklı olarak tarım ürünleri ve minerallerde görülüyor. Dünya pazarındaki yüksek pay Türkiye'ye bir avantaj sağlasa da, İhracat Risk Endeksi bu yoğunlaşmayı bir risk olarak ölçüyor. Bir ürünün büyük bölümünü sadece birkaç alıcı satın alıyorsa, bu alıcılar başka tedarikçilere yönelebilir. Ürünü başka bir kaynaktan bulmak ne kadar kolaysa, bu geçiş de o kadar hızlı olur.", "Son yıllarda insansız hava araçları ve ateşli silahlar da bu gruba yüksek katma değerli ürünler olarak eklendi."]], ["Büyük Tersine Dönüş", ["Şimdi Türkiye'den yeniden dünyaya bakalım. 86–87 ekonomide medyan ithalat yoğunlaşma endeksi, 1995'teki 49 düzeyinden 2008'de 45'e geriledi. Ülkelerin tedarikçi tabanlarını geniş ölçüde çeşitlendirdiği bu dönemde küreselleşme zirveye ulaştı. O tarihten bu yana ise endeks yeniden yükselerek tam olarak başladığı noktaya döndü. Yani ülkelerin ithalat riskini farklı kaynaklara yayma eğilimi 2008 sonrasında tersine döndü. Bu dönem, küresel ticari açıklığın artışının durduğu yıllara denk geliyor. Jeoekonomik parçalanma derinleşiyor."]], ["İthalatı en dar tabana sıkışan büyük ekonomi Rusya", ["Türkiye'nin ithalatı oldukça çeşitlenmiş bir yapıya sahip; bu nedenle Türkiye, yoğunlaşma sıralamasında alt sıralarda yer alıyor. Meksika ve Kanada gibi ülkelerde ise yüksek yoğunlaşmayı büyük ölçüde coğrafya açıklıyor, çünkü bu ülkeler tek bir büyük komşu ekonominin çekim alanında. Rusya'da ise belirleyici olan jeopolitik dinamikler. Ukrayna'daki savaşın başlamasının ardından Rusya'nın endeks değeri keskin biçimde yükseldi; Batı'yla bağları koptukça ithalat sepeti tek bir partnere, Çin'e doğru daraldı."]], ["Tek dünya ekonomisi, iki çekim merkezi", ["Grafikte her büyük ekonomi, ithalat riskinin ne kadarının Çin'den (yatay eksen), ne kadarının ABD'den (dikey eksen) kaynaklandığına göre konumlanıyor. Coğrafi yakınlık tablonun bir parçası. Çin'in komşuları Pekin'e giderek daha fazla bağımlı hâle geliyor. Bu bağımlılık ithalat payında görülüyor, ithalat riskinde ise çok daha belirgin bir şekilde ortaya çıkıyor. ABD'nin çevresindeki küme ise ağırlıklı olarak kendi komşularından oluşuyor. Çin'in çekim gücü artık kendi bölgesinin çok ötesine, Almanya'ya, hatta ABD'nin kendisine kadar uzanıyor. Bu yeni bir durum, çünkü otuz yıl önce Çin'in ithalat riskindeki payı, buradaki ülkelerin neredeyse tamamında sıfıra yakındı. Çin'e doğru yaşanan kayma çarpıcı boyutlarda."]], ["Çin'in küresel ithalat riski üzerindeki ağırlığı", ["Çin'in ağırlığı, yalnızca ülkelerin ithalatındaki payının artmasından ibaret değil. Çin'in yarattığı risk, ticaretteki payının çok önünde; çünkü Çin'in güçlü olduğu alanlar çoğunlukla alternatif tedarikçinin en az bulunduğu sektörlerden oluşuyor. Grafikteki pek çok ekonomide Çin, ithalatın %30'undan azını karşılıyor; ancak bu ekonomilerin ithalat riskinin yarısından fazlası Çin kaynaklı."]], ["AB tek bir tedarikçi sayılırsa ne olur?", ["AB'yi tek bir tedarikçi olarak ele aldığımızda bile Türkiye'nin konumu pek değişmiyor. Türkiye'nin endeks değeri diğer ülkelere kıyasla görece düşük kalıyor. Buna karşın AB ile ticari açıdan sıkı biçimde bütünleşmiş ekonomilerde (İsviçre, Norveç, Birleşik Krallık, Fas) endeks belirgin şekilde yükseliyor; zira bu ülkelerin ithalat riskinin büyük bölümü zaten AB kaynaklı. 27 tedarikçiyi tek bir tedarikçi olarak saymak, bu ülkelerin ölçülen ithalat riskini doğal olarak artırıyor."]]], "footer": "BM Comtrade / CEPII BACI ticaret akışları, 1995–2024. İthalat Risk Endeksi = ikame kolaylığıyla iskonto edilmiş tedarikçi yoğunlaşması (HHI), ithalat payıyla ağırlıklandırılıp toplanır; 2024, otuz yıllık HS92 serisiyle ayrıştığı yerlerde güncel HS sınıflandırmasından yamalanmıştır. Sabancı Üniversitesi İPM, Türkiye jeopolitik ticaret bağımlılığı projesi."} };
 var LANG = "tr";
 function i18nMerge(dst, src) {
@@ -1105,9 +995,9 @@ function dn(name) {
   if (LANG !== "tr" || name === undefined || name === null) return name;
   return NAME_TR[name] !== undefined ? NAME_TR[name] : name;
 }
-// Turkish case suffix with vowel harmony and consonant hardening, apostrophe for proper nouns.
-// kind: "dan" (ablative), "a" (dative), "in" (genitive), "i" (accusative), "da" (locative),
-// "la" (instrumental). Handles all-caps abbreviations (ABD, AB, BAE) by their spoken last letter.
+
+
+
 var TR_LETTER_VOWEL = { A: "a", B: "e", C: "e", D: "e", E: "e", F: "e", G: "e", H: "e", I: "ı", İ: "i", J: "e", K: "a", L: "e", M: "e", N: "e", O: "o", P: "e", R: "e", S: "e", T: "e", U: "u", Ü: "ü", V: "e", Y: "e", Z: "e" };
 function trCase(name, kind) {
   name = String(name);
@@ -1116,11 +1006,11 @@ function trCase(name, kind) {
   var lastVowel = null, lastChar = core.charAt(core.length - 1).toLowerCase();
   var DIGIT = { "0": ["ı", "r"], "1": ["i", "r"], "2": ["i", "i"], "3": ["ü", "ç"], "4": ["ö", "t"], "5": ["e", "ş"], "6": ["ı", "ı"], "7": ["i", "i"], "8": ["i", "z"], "9": ["u", "z"] };
   if (isAbbr) {
-    // Spoken letter names (a, be, ce, de, ..., ka) all end in a vowel, so the suffix attaches as after a vowel.
+    
     lastVowel = TR_LETTER_VOWEL[core.charAt(core.length - 1)] || "e"; lastChar = lastVowel;
   } else if (/^\d+$/.test(core) && /0$/.test(core)) {
-    // Numbers ending in 0 are spoken by their last non-zero word (2020 "yirmi", 2010 "on", 2000 "bin",
-    // 1900 "yüz"), not "sıfır": 2020'de, 2010'da, 2000'de. Fixed October 6, 2026.
+    
+    
     var TENS = { "1": ["o", "n"], "2": ["i", "i"], "3": ["u", "z"], "4": ["ı", "k"], "5": ["i", "i"], "6": ["ı", "ş"], "7": ["i", "ş"], "8": ["e", "n"], "9": ["a", "n"] };
     var spoken = /000$/.test(core) ? ["i", "n"] : /00$/.test(core) ? ["ü", "z"] : TENS[core.charAt(core.length - 2)] || ["ı", "r"];
     lastVowel = spoken[0]; lastChar = spoken[1];
@@ -1158,7 +1048,7 @@ var SW = 720, SH = 400;
 var SM = { l: 46, r: 18, t: 18, b: 34 };
 
 function clearStage() { stage.innerHTML = ""; stageControls.innerHTML = ""; stageDetail.innerHTML = ""; }
-// The clickable legend chips are spans: this makes aria-pressed valid on them and lets the keyboard reach them.
+
 function chipAsButton(chip) {
   chip.setAttribute("role", "button");
   chip.tabIndex = 0;
@@ -1169,16 +1059,16 @@ function chipAsButton(chip) {
 function showTooltip(evt, html) {
   tooltip.innerHTML = html;
   tooltip.style.opacity = "1";
-  // Clear both each time and measure with neither set, so the box lays out at its true
-  // natural width first. Measuring alone isn't enough though: CSS shrink-to-fit for an
-  // absolutely positioned box with only `left` (or only `right`) set computes width from the
-  // distance to the *container's opposite edge*, not from the actual content need, so the same
-  // content can still wrap once positioned, anywhere except right at the very edge (confirmed
-  // live: a 187px-natural box positioned mid-chart shrank to ~146px and wrapped its longest
-  // line). Pinning an explicit pixel width here, before any positioning happens, stops CSS from
-  // re-shrinking it later. The +4px covers a hairline sub-pixel gap between this measurement and
-  // final layout that otherwise still wraps the longest line by itself; 260 matches the
-  // `.tooltip` CSS rule's own max-width so genuinely long content still wraps as designed.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   tooltip.style.left = "auto";
   tooltip.style.right = "auto";
   tooltip.style.width = "auto";
@@ -1203,10 +1093,10 @@ function showTooltip(evt, html) {
     xT = "-50%";
   }
 
-  // Vertically, default to *below* the cursor: a tall multi-row tooltip (e.g. the 5-partner
-  // breakdown) then only ever grows into whatever's below it, never back up over unrelated
-  // content above the cursor (a different panel, the chart title). Only flip to above when
-  // there genuinely isn't room below in the actual browser viewport.
+  
+  
+  
+  
   var gap = 12;
   var yT, yPos;
   if (evt.clientY + gap + th <= window.innerHeight - 8) {
@@ -1220,8 +1110,8 @@ function showTooltip(evt, html) {
 }
 function hideTooltip() { tooltip.style.opacity = "0"; }
 
-// Regular 5-year ticks (plus the exact start/end years) instead of an index-based midpoint,
-// which lands on an arbitrary year for a 30-year, odd-length series (e.g. 1995/2009/2024).
+
+
 function fiveYearTicks(years) {
   var y0 = years[0], y1 = years[years.length - 1];
   var ticks = [y0];
@@ -1269,7 +1159,7 @@ function scatterFrame(maxX, maxY, xFmt, yFmt, xLabel, yLabel) {
     stage.appendChild(lblx);
   }
   if (xLabel) {
-    // Below the tick labels, clear of the plot (it sat between plot and ticks, among the dots near zero).
+    
     var xl = el("text", { x: SM.l + plotW / 2, y: SH - 6, "text-anchor": "middle", "font-size": "10.5", fill: "var(--text-muted)" });
     xl.textContent = xLabel;
     stage.appendChild(xl);
@@ -1317,11 +1207,11 @@ function addYearHover(years, getters, frame, fmt) {
   hit.addEventListener("mouseleave", hideTooltip);
   stage.appendChild(hit);
 }
-// Rounds the corners of a polyline without fitting a spline through it: each interior point stays
-// the exact data value (used as the quadratic curve's control point), and the curve only reaches
-// into the two segments touching it, capped at half their length. That keeps every real reversal
-// visible while softening the sharp V-angles a straight-segment polyline gets on noisy year-over-
-// year data, and, unlike a Catmull-Rom fit, it can't overshoot past a point that never occurred.
+
+
+
+
+
 function roundedPath(pts, radius) {
   if (pts.length < 3) {
     return pts.map(function (p, i) { return (i ? "L" : "M") + p[0] + "," + p[1]; }).join("");
@@ -1342,24 +1232,24 @@ function roundedPath(pts, radius) {
   return d;
 }
 
-// Vertical decluttering for a set of left-anchored text labels that may start out at
-// overlapping positions (used by scenes 6 and 16). Estimates each label's width from character
-// count rather than live DOM measurement (labels aren't in the document yet at call time), sorts
-// top-to-bottom, and nudges a label down just enough to clear an already-placed one whenever
-// their horizontal spans actually overlap; labels with no horizontal overlap keep their original
-// y untouched. Returns each entry with its original y preserved as `y0` (compare `y !== y0` to
-// decide whether a moved label needs its own leader line back to what it's labelling). Any extra
-// fields on an input entry (font-weight, opacity, whatever a specific scene's label styling
-// needs) pass straight through untouched, only `y`/`y0`/`width` are computed here.
+
+
+
+
+
+
+
+
+
 function declutterLabels(entries, minGap) {
   minGap = minGap || 11;
   var charW = 5.8;
-  // Coordinates are fractional pixels. After moving a label to exactly `other.y + minGap`,
-  // floating-point subtraction can still report the gap as microscopically less than minGap
-  // (for example 10.999999999999972 instead of 11). The old unbounded `while (moved)` then
-  // assigned the same y forever and froze the browser. Treat sub-micro-pixel differences as
-  // equal, require every move to make real forward progress, and bound the number of passes as
-  // a final guarantee that label layout can never lock the main thread.
+  
+  
+  
+  
+  
+  
   var epsilon = 1e-7;
   var placed = entries.map(function (e) {
     var copy = {};
@@ -1390,15 +1280,15 @@ function declutterLabels(entries, minGap) {
   return out;
 }
 
-// Coalesces rapid repeat calls (e.g. every "input" event a native range slider fires during a
-// fast real drag, which can queue up far faster than a fresh chart rebuild can keep pace with)
-// into at most one call per animation frame. Reported as a slider that "gets stuck" mid-drag on
-// scenes 9 and 16 specifically, the two whose per-frame rebuild is heaviest (scene 9's 5 trails,
-// scene 16's ~65-country cloud plus comet dust); a burst of unthrottled "input" events there can
-// pile up more synchronous redraws than the browser can paint in between, and each new redraw
-// starts from a fully torn-down stage (stage.innerHTML = ""), so a backlog reads as the chart
-// hanging rather than just lagging one frame behind. Only the last call in a burst actually runs
-// once queued, since only the final slider position matters, not every intermediate one.
+
+
+
+
+
+
+
+
+
 function rafThrottle(fn) {
   var scheduled = false;
   return function () {
@@ -1408,7 +1298,7 @@ function rafThrottle(fn) {
   };
 }
 
-/* ============================ scene 0: what is this number ============================ */
+
 
 var s0State = { presetIdx: 3, sigma: 1.5 };
 var S0_PRESETS = [
@@ -1445,8 +1335,8 @@ function scene0() {
   infoBtn.addEventListener("click", function () { openS1Info(infoBtn); });
   stageControls.appendChild(infoBtn);
 
-  // Same fix as scenes 6/7/8/10's sliders: redraw only the chart on drag, never touch
-  // stageControls, or recreating the <input> mid-drag drops pointer capture.
+  
+  
   var sliderWrap = document.createElement("div");
   sliderWrap.className = "year-slider";
   var minLbl = document.createElement("span");
@@ -1472,8 +1362,8 @@ function scene0() {
   drawScene0Chart();
 }
 
-// Built on every open from L("s1.info.*"), so it always matches the current language; the backdrop
-// covers the language toggle, so the language cannot change while the card is open.
+
+
 var s1InfoReturnFocus = null;
 function openS1Info(opener) {
   var modal = document.getElementById("s1InfoModal");
@@ -1482,7 +1372,7 @@ function openS1Info(opener) {
     modal.id = "s1InfoModal";
     modal.className = "info-modal";
     modal.addEventListener("click", function (e) { if (e.target === modal) closeS1Info(); });
-    // Inside .viz-root, not <body>: the colour/font tokens (and dark mode) are scoped to .viz-root.
+    
     (document.querySelector(".viz-root") || document.body).appendChild(modal);
   }
   var html = '<div class="info-card" role="dialog" aria-modal="true" aria-labelledby="s1InfoTitle">' +
@@ -1516,9 +1406,9 @@ function drawScene0Chart() {
   var preset = S0_PRESETS[s0State.presetIdx];
   var shares = preset.shares;
   var colors = ["var(--accent)", "var(--warn)", "var(--gold)", "var(--good)", "var(--violet)"];
-  // Simplified October 5, 2026: the intro line, the HHI definition and example, the "split across n
-  // suppliers" line, the sigma definitions, the panel sub-labels and the "highlighted panel" note
-  // moved into the "How is it calculated?" card (openS1Info); the chart keeps headings and numbers.
+  
+  
+  
   var barW = SW - SM.l - SM.r, barH = 72, yBars = 36, x = SM.l;
 
   var header1 = el("text", { x: SM.l, y: 20, "font-size": "14", "font-weight": "650", fill: "var(--text-primary)" });
@@ -1536,9 +1426,9 @@ function drawScene0Chart() {
     x += w;
   });
 
-  // Every supplier's own bar gets its own squared term, in the same left-to-right order as
-  // the bars above, so a reader can see why an even 5-way split writes out as five separate
-  // 0.20² terms rather than a single "5 ×" shortcut.
+  
+  
+  
   var hhi = shares.reduce(function (s, v) { return s + v * v; }, 0);
   var hhiLbl = el("text", { x: SM.l, y: yBars + barH + 22, "font-size": "13", "font-weight": "650", fill: "var(--text-primary)" });
   hhiLbl.textContent = "HHI = " + s0HhiExpansion(shares) + " = " + num(hhi, 2);
@@ -1557,23 +1447,23 @@ function drawScene0Chart() {
   stage.appendChild(header2);
 
 
-  // Three fixed isoquant-style reference cases, replacing the earlier single live-updating curve:
-  // combinations of "supplier A" and "supplier B" quantities that meet the same import need. A
-  // straight line (p=1) means the two are perfect substitutes, a one-for-one swap with no loss; a
-  // curve hugging the axes (p→0, the Leontief limit) means the buyer needs roughly both in fixed
-  // proportion, so losing one is hard to offset with the other. Shown as three static panels
-  // instead of one curve that only moves when the slider is dragged, so the full range of the
-  // concept reads at a glance even if the reader never touches the slider; whichever panel the
-  // current slider position falls into is still highlighted live, same fillColor rule as the gauge.
+  
+  
+  
+  
+  
+  
+  
+  
   var isoY0 = header2Y + 18, panelW = 82, panelCurveH = 34, panelGap = 16;
   var fillColor = factor >= 0.6 ? "var(--warn)" : factor <= 0.35 ? "var(--good)" : "var(--gold)";
   var activeIdx = factor >= 0.6 ? 0 : factor <= 0.35 ? 2 : 1;
-  // Sub-labels deliberately echo the slider's own two end-words ("hard to replace" / "easy to
-  // replace") rather than showing sigma values: p=0.62's actual sigma (~1.9) doesn't match a
-  // literal "σ ≈ 1" caption, and even the exact endpoints (p=0.3/1.0, sigma 0.2/4.0) read as
-  // misleadingly precise next to a live readout that's never quite at the "no discount" limit
-  // those numbers seem to promise. One quantitative source of truth (the readout) beats two that
-  // can disagree.
+  
+  
+  
+  
+  
+  
   var isoPanels = [
     { p: 0.3, name: "Captive", sub: "(hard to replace)" },
     { p: 0.62, name: "Partial", sub: "(medium)" },
@@ -1612,12 +1502,12 @@ function drawScene0Chart() {
     stage.appendChild(nameLbl);
   });
 
-  // Gauge bar kept alongside the three panels rather than dropped: the panels explain *why* the
-  // discount behaves this way in three fixed reference cases, the bar is still the quickest read
-  // of *how much* discount the exact current slider position gives. Fill is normalized to the
-  // slider's own realized factor range (0.2 min sigma -> factor 0.83; 4.0 max sigma -> factor 0.2),
-  // not the absolute 0-1 scale, so dragging to either end always shows a fully empty or full bar
-  // instead of stalling partway (factor itself never actually reaches 0 or 1 on this slider).
+  
+  
+  
+  
+  
+  
   var isoTextX = SM.l + 3 * panelW + 2 * panelGap + 18, gaugeW = 232, gaugeH = 10;
   var factorAtSigmaMin = 1 / (1 + 0.2), factorAtSigmaMax = 1 / (1 + 4.0);
   var gaugeFillFrac = (factor - factorAtSigmaMax) / (factorAtSigmaMin - factorAtSigmaMax);
@@ -1641,9 +1531,9 @@ function drawScene0Chart() {
     caption = L("s1.capDiv");
   }
 
-  // Drawn in-SVG right under the sigma readout, not in stageDetail: stageDetail always starts
-  // after the full 720x400 viewBox regardless of how much of it this scene actually uses, which
-  // left a large dead gap between the sigma line and this equation when it lived there instead.
+  
+  
+  
   var bigNumY = isoY0 + panelCurveH + 14 + 50;
   var bigNumber = el("text", { x: SW / 2, y: bigNumY, "text-anchor": "middle", "font-size": "26", "font-weight": "700", fill: "var(--text-primary)" });
   bigNumber.textContent = num(hhi, 2) + " × " + num(factor, 2) + " = " + num(combined, 2);
@@ -1656,10 +1546,10 @@ function drawScene0Chart() {
   stageDetail.innerHTML = "";
 }
 
-/* ============================ scene: Import Risk Index vs. Export Risk Index ============================ */
 
-// Reuses Türkiye's own two aggregate series already embedded for scenes 4 and 9 (DATA.scene5,
-// DATA.scene10), just drawn side by side instead of as two separate full-width scenes.
+
+
+
 function sceneIndices() {
   chartTitle.textContent = L("s2.title");
   chartSub.textContent = L("s2.sub");
@@ -1671,13 +1561,13 @@ function sceneIndices() {
   drawIndicesPanel(0, L("s2.imp"), DATA.scene5.years, DATA.scene5.values, "var(--accent)");
   drawIndicesPanel(1, L("s2.exp"), DATA.scene10.years, DATA.scene10.values, "var(--good)");
 
-  // Caption under the chart removed October 5, 2026 (user): it repeated the scene card's text.
+  
   stageDetail.innerHTML = "";
 }
 
 function drawIndicesPanel(side, title, years, vals, color, fmt) {
-  // Import (side 0) keeps its y-axis on the outer left; export (side 1) mirrors it onto the
-  // outer right instead of clustering both axes next to the center divider.
+  
+  
   fmt = fmt || function (v) { return v.toFixed(0); };
   var panelW = SW / 2, x0 = side * panelW;
   var l = side === 0 ? 38 : 16, r = side === 0 ? 16 : 38, t = 44, b = 34;
@@ -1690,11 +1580,11 @@ function drawIndicesPanel(side, title, years, vals, color, fmt) {
   var titleLbl = el("text", { x: x0 + l, y: 26, "font-size": "13", "font-weight": "650", fill: color });
   titleLbl.textContent = title;
   stage.appendChild(titleLbl);
-  // Import tops out around 32, export around 184 -- each panel keeps its own scale so its own
-  // shape stays legible (forcing one shared axis would flatten Import's visible swings against
-  // Export's much larger range). That's a deliberate choice, but a reader skimming both panels
-  // side by side could still misread the two lines' visual slopes as directly comparable when
-  // they aren't; a small explicit note heads that off without changing either series' own scale.
+  
+  
+  
+  
+  
   var scaleNote = el("text", { x: x0 + l, y: 38, "font-size": "9", "font-style": "italic", fill: "var(--annot-text)" });
   scaleNote.textContent = L("s2.ownScale", { max: Math.round(maxY) });
   stage.appendChild(scaleNote);
@@ -1736,14 +1626,14 @@ function drawIndicesPanel(side, title, years, vals, color, fmt) {
   stage.appendChild(hit);
 }
 
-/* ============================ scene: Import Risk Index vs. Import Share ============================ */
 
-// Faithful recreation of chart-pack Story 01/18 ("Thirty years in one chart: the risk didn't
-// grow, it migrated"): a single stacked two-panel chart, NOT two side-by-side panels like the
-// previous two scenes. Top = Türkiye's own Import Risk Index (DATA.scene5, same series the
-// standalone "Now, Türkiye's own line" scene uses). Bottom = the same 5 named partners' share of
-// that risk over time (DATA.scene6.series), the exact data "The rotation" scene later explores
-// interactively; here it's static, matching the chart-pack image.
+
+
+
+
+
+
+
 var S_IMPORT_STORY_COLORS = { China: "var(--accent)", EU27: "var(--violet)", Russia: "var(--warn)", Germany: "var(--forest)", USA: "var(--gold)" };
 var S_IMPORT_STORY_ORDER = ["China", "EU27", "Russia", "Germany", "USA"];
 var sImportStoryState = { isolate: null };
@@ -1755,10 +1645,10 @@ function sceneImportStory() {
 
   var years = DATA.scene5.years, vals = DATA.scene5.values;
 
-  // Panel A: the index line, 18-166.
-  // aL/aR match bL/bR exactly (panel B's margins, set below) so both panels share one x-axis
-  // scale: any given year lands at the same pixel x in both, keeping 2024 (and every other
-  // year) vertically aligned between the stacked charts instead of drifting apart.
+  
+  
+  
+  
   var aTop = 18, aBottom = 166, aL = 42, aR = 80;
   var aPlotTop = aTop + 20, aPlotBottom = aBottom - 6, aPlotH = aPlotBottom - aPlotTop;
   var aPlotW = SW - aL - aR;
@@ -1778,12 +1668,12 @@ function sceneImportStory() {
     stage.appendChild(lbl);
   });
 
-  // The "flat for 25 years (22-28 band)" shading spans the full chart width, matching the
-  // chart-pack image, since every year's value (including the 2020-24 climb) still sits inside
-  // 22-28; the point is how close to the top of that same band 2024 gets, not that it breaks out.
-  // Tinted with --accent rather than --grid: --grid is itself only a shade off the full-bleed
-  // page background in both themes (they're the same neutral family), so at any opacity the band
-  // was reading as invisible against it; a color-mix accent wash keeps real contrast in both.
+  
+  
+  
+  
+  
+  
   stage.appendChild(el("rect", {
     x: aXF(0), y: aYF(28), width: aXF(years.length - 1) - aXF(0), height: aYF(22) - aYF(28),
     fill: "color-mix(in srgb, var(--accent) 14%, transparent)"
@@ -1795,17 +1685,17 @@ function sceneImportStory() {
   var aPath = vals.map(function (v, i) { return (i ? "L" : "M") + aXF(i) + "," + aYF(Math.max(aYMin, Math.min(aYMax, v))); }).join("");
   stage.appendChild(el("path", { d: aPath, fill: "none", stroke: "var(--accent)", "stroke-width": 2.5, "stroke-linejoin": "round" }));
 
-  // "Highest since 2002" reference: an arrow from just above the word "since" (not the end of
-  // "2002") pointing at the 2024 point, using the margin space that opened up once panel A's
-  // right margin was widened to match panel B's.
+  
+  
+  
   var lastX = aXF(years.length - 1), lastY = aYF(vals[vals.length - 1]);
   var cornerX = SW - 8, cornerY = aPlotBottom - 4;
   var aRefLbl = el("text", { x: cornerX, y: cornerY, "text-anchor": "end", "font-size": "9.5", fill: "var(--annot-text)" });
   aRefLbl.textContent = L("s3.highest");
   stage.appendChild(aRefLbl);
 
-  // Centered above the text's estimated width (right-anchored at cornerX), rather than trying
-  // to target one specific word; text-top sits about one cap-height above the baseline.
+  
+  
   var refLblLen = aRefLbl.textContent.length;
   var arrowX0 = cornerX - (refLblLen * 5.2) / 2, arrowY0 = cornerY - 8;
   var arrowX1 = lastX + 4, arrowY1 = lastY + 4;
@@ -1834,7 +1724,7 @@ function sceneImportStory() {
   aHit.addEventListener("mouseleave", hideTooltip);
   stage.appendChild(aHit);
 
-  // Panel B: the 5-partner share-of-risk breakdown, 186-366.
+  
   var bTop = 186, bBottom = 366, bL = 42, bR = 80;
   var bPlotTop = bTop + 14, bPlotBottom = bBottom - 22, bPlotH = bPlotBottom - bPlotTop;
   var bPlotW = SW - bL - bR;
@@ -1876,9 +1766,9 @@ function sceneImportStory() {
   S_IMPORT_STORY_ORDER.forEach(function (name) {
     var series = DATA.scene6.series[name];
     var isolated = sImportStoryState.isolate === name;
-    // Editorial default: China is the visual protagonist because the three annotated crossings
-    // are the scene's actual finding. A reader can still click any other series to promote it;
-    // clearing that selection returns to this authored first reading.
+    
+    
+    
     var defaultFocused = !sImportStoryState.isolate && name === "China";
     var dimmed = sImportStoryState.isolate ? !isolated : !defaultFocused;
     var lineOpacity = sImportStoryState.isolate ? (isolated ? 1 : 0.15) : (defaultFocused ? 1 : 0.32);
@@ -1886,11 +1776,11 @@ function sceneImportStory() {
     var d = series.map(function (v, i) { return (i ? "L" : "M") + bXF(i) + "," + bYF(v); }).join("");
     var g = el("g", { style: "cursor:pointer" });
     g.appendChild(el("path", { d: d, fill: "none", stroke: S_IMPORT_STORY_COLORS[name], "stroke-width": (isolated || defaultFocused) ? 3 : 1.6, "stroke-linejoin": "round", opacity: lineOpacity }));
-    // No separate fat hit-path here: bHit below sits on top of the whole plot area (it needs to,
-    // for the year-hover tooltip), so it would swallow any click target drawn under it anyway.
-    // Clicking directly on a line is handled by bHit's own click listener instead, by nearest-line
-    // distance. This group's click listener only fires for label clicks, since the label sits to
-    // the right of bHit's rect, outside its bounds.
+    
+    
+    
+    
+    
     var lbl = el("text", { x: bL + bPlotW + 6, y: endY[name] + 3, "font-size": "10.5", "font-weight": (isolated || defaultFocused) ? "700" : "600", fill: S_IMPORT_STORY_COLORS[name], opacity: labelOpacity });
     lbl.textContent = dn(name) + " " + pct(series[series.length - 1], 0);
     g.appendChild(lbl);
@@ -1901,8 +1791,8 @@ function sceneImportStory() {
     stage.appendChild(g);
   });
 
-  // China's rise, marked where it overtakes each rival, matching the chart-pack's callouts.
-  // Dimmed along with China's line whenever another partner is isolated.
+  
+  
   var chinaSeries = DATA.scene6.series.China;
   var chinaDimmed = sImportStoryState.isolate && sImportStoryState.isolate !== "China";
   [
@@ -1929,8 +1819,8 @@ function sceneImportStory() {
     showTooltip(evt, '<div class="t-value">' + years[i] + '</div>' + rows);
   });
   bHit.addEventListener("mouseleave", hideTooltip);
-  // Click isolates whichever line sits nearest the cursor's y at that year; a click too far from
-  // every line (empty space) clears the isolation instead of picking a nearest-anyway match.
+  
+  
   bHit.addEventListener("click", function (evt) {
     var rect = stage.getBoundingClientRect();
     var xPx = (evt.clientX - rect.left) * (SW / rect.width);
@@ -1949,15 +1839,15 @@ function sceneImportStory() {
   stageDetail.innerHTML = '<div class="big-caption">' + L("s3.caption") + '</div>';
 }
 
-/* ============================ scene: trade map at a glance ============================ */
 
-// New scene (2026-08-15 user request): four descriptive, non-risk-weighted charts about
-// Türkiye's trade, switched via a persistent tab row built once in stageControls (never rebuilt
-// on tab switch. clearStage() is only called from sceneTradeMap() itself, on scene entry, same
-// "don't recreate a live control mid-interaction" rule this file's slider convention already
-// follows). Every tab's own sub-controls live in one #tmSubcontrols div, cleared and repopulated
-// per tab switch by that tab's own draw function.
-// Opens on "totals" since October 6, 2026 (user): the card text leads into it and its title is the one in the copy doc.
+
+
+
+
+
+
+
+
 var sTMState = { tab: "totals", partnerCodes: [276], bilateralFlow: "imp", rankMode: "partners", rankFlow: "imp", rankYear: 2024, rankDrill: null };
 var TM_TABS = [
   { key: "totals", label: "Totals & world share" },
@@ -1998,35 +1888,35 @@ function drawTMActiveTab() {
   else drawTMRankingsChart(sub);
 }
 
-/* ---- Tab 1: bilateral explorer ---- */
 
-// Cycled by selection order, not by anything meaningful about the partner itself -- with
-// "unlimited" partners selectable (user's own 2026-08-15 choice), visual distinction degrades past
-// this palette's length, so the caption below the chart says so once more than 10 are selected.
+
+
+
+
 var TM_PARTNER_PALETTE = ["var(--accent)", "var(--good)", "var(--gold)", "var(--violet)",
   "var(--vermillion)", "var(--navy)", "var(--forest)", "var(--skyblue)", "var(--tan)", "var(--warn)"];
 
-// EU-27 and OECD (38-member, 2024) BACI partner codes, resolved from
-// ../Geo_Trade_Risk_Index_Methodology/data/baci_extract/country_codes_V202601.csv by exact ISO3
-// match, not name search: a quick fuzzy substring check during planning silently matched the wrong
-// row for several countries (e.g. "France" matched Mayotte), confirming this needed exact codes.
-// Two of that file's own rows carry a duplicate ISO3 (Belgium 56 vs the historical
-// Belgium-Luxembourg 58; Germany 276 vs the historical Fed. Rep. of Germany(...1990) 280) and a
-// plain dict lookup silently picked the historical code for both -- forced to the modern one here.
-// Also folds in the six BACI-vs-ISO-numeric exceptions already documented in that folder's
-// CLAUDE.md (France 251, Norway 579, Switzerland 757, USA 842; India/Taiwan don't apply to either
-// list). Türkiye's own code (792, an OECD member) is harmlessly present here but never actually
-// appears in DATA.tradeMapBilateral.partners (a country isn't its own trade partner), so it drops
-// out naturally at the intersection step in the click handler below, no special-case needed.
+
+
+
+
+
+
+
+
+
+
+
+
 var TM_EU_CODES = [40, 56, 100, 191, 196, 203, 208, 233, 246, 251, 276, 300, 348, 372, 380, 428,
   440, 442, 470, 528, 616, 620, 642, 703, 705, 724, 752];
 var TM_OECD_CODES = [36, 40, 56, 124, 152, 170, 188, 203, 208, 233, 246, 251, 276, 300, 348, 352,
   372, 376, 380, 392, 410, 428, 440, 442, 484, 528, 554, 579, 616, 620, 703, 705, 724, 752, 757,
   792, 826, 842];
 
-// Top-N partner codes by the currently-toggled flow (Imports/Exports), latest embedded year
-// (2024). Ranks by whichever flow is active rather than a separate total-trade metric, matching
-// how the rankings tab's own top-10 already works (confirmed with the user rather than assumed).
+
+
+
 function tmTopPartnerCodes(n) {
   var flow = sTMState.bilateralFlow;
   var partners = DATA.tradeMapBilateral.partners;
@@ -2059,8 +1949,8 @@ function drawTMBilateralChart(sub) {
   addSelect.addEventListener("change", function () {
     var code = +addSelect.value;
     if (code && sTMState.partnerCodes.indexOf(code) === -1) sTMState.partnerCodes.push(code);
-    // Full rebuild, not drawInner(): the chips row (built once above, not inside drawInner) needs
-    // a new chip added, same reason the chip-remove handler below already rebuilds the whole tab.
+    
+    
     drawTMBilateralChart(sub);
   });
   sub.appendChild(addSelect);
@@ -2089,8 +1979,8 @@ function drawTMBilateralChart(sub) {
     btn.textContent = L("s4.presets")[pair[0]];
     btn.type = "button";
     btn.addEventListener("click", function () {
-      // Presets replace the current selection (confirmed with the user), so each click is a
-      // clean jump to that group rather than an accumulating add.
+      
+      
       var codes = pair[1]().filter(function (c) { return byCode[c]; });
       if (codes.length) sTMState.partnerCodes = codes;
       drawTMBilateralChart(sub);
@@ -2122,12 +2012,12 @@ function drawTMBilateralChart(sub) {
     selected.forEach(function (p, idx) {
       var color = TM_PARTNER_PALETTE[idx % TM_PARTNER_PALETTE.length];
       var vals = p[sTMState.bilateralFlow];
-      // Rounded corners, not a spline fit through the data: roundedPath() (already used by scene6's
-      // own trails) softens the sharp V-angles a straight-segment polyline gets on noisy
-      // year-over-year data, without moving or smoothing the underlying values themselves, and
-      // without the overshoot risk of a true Catmull-Rom curve. Segmented on null gaps the same way
-      // the old straight-line version was, so a missing year still breaks the line rather than
-      // curving through a value that was never recorded.
+      
+      
+      
+      
+      
+      
       var segments = [], current = [];
       vals.forEach(function (v, i) {
         if (v === null) {
@@ -2163,10 +2053,10 @@ function drawTMBilateralChart(sub) {
       (selected.length > TM_PARTNER_PALETTE.length ? L("s4.bilPalette", { n: TM_PARTNER_PALETTE.length }) : '') + '</div>';
     stageDetail.innerHTML = caption;
 
-    // The selection chips (name, color swatch, remove control) used to live above the chart in
-    // #tmSubcontrols, duplicating the same names/colors the below-chart .region-legend also showed.
-    // Now that the legend is gone, this is the sole below-chart list -- same chips, same remove
-    // behavior, just relocated into stageDetail instead of built as a second, separate list.
+    
+    
+    
+    
     var chipsRow = document.createElement("div");
     chipsRow.className = "tm-chips";
     sTMState.partnerCodes.forEach(function (code, idx) {
@@ -2179,9 +2069,9 @@ function drawTMBilateralChart(sub) {
       swatch.style.background = TM_PARTNER_PALETTE[idx % TM_PARTNER_PALETTE.length];
       chip.appendChild(swatch);
       chip.appendChild(document.createTextNode(dn(p.name)));
-      // Always render the remove control, even with only one partner selected: hiding it entirely
-      // at that point (the prior behavior) made removal undiscoverable for anyone who only ever saw
-      // the single-partner default state. The last-remaining chip keeps it visible but inert instead.
+      
+      
+      
       var isLast = sTMState.partnerCodes.length <= 1;
       var remove = document.createElement("span");
       remove.className = "chip-remove" + (isLast ? " disabled" : "");
@@ -2204,7 +2094,7 @@ function drawTMBilateralChart(sub) {
   }
 }
 
-/* ---- Tab 2: totals and world share ---- */
+
 
 function drawTMTotalsChart(sub) {
   sub.innerHTML = "";
@@ -2227,10 +2117,10 @@ function drawTMTotalsChart(sub) {
 
 function drawTMTwoLinePanel(side, title, years, valsA, valsB, labelA, labelB, fmt) {
   var panelW = SW / 2, x0 = side * panelW;
-  // Side 1's right margin is much wider than side 0's left margin (42 vs 16): its outer axis
-  // labels sit past the plot's right edge, and this scene's own tall stage-detail card would
-  // otherwise cover them at the sticky pane's actual rendered width (same fix as the
-  // value-added chart's end labels).
+  
+  
+  
+  
   var l = side === 0 ? 42 : 16, r = side === 0 ? 16 : 90, t = 30, b = 34;
   var plotW = panelW - l - r, plotH = SH - t - b;
   var maxY = Math.max.apply(null, valsA.concat(valsB)) * 1.15;
@@ -2276,17 +2166,17 @@ function drawTMTwoLinePanel(side, title, years, valsA, valsB, labelA, labelB, fm
   stage.appendChild(hit);
 }
 
-// Partner-row region colors for this tab only (not the bilateral explorer, per explicit user
-// request). Reuses the 7-region palette already defined in every theme block
-// (--region-eu/asia/americas/cis/mena/africa/oceania) but scene6's own S6_REGION_COLOR only
-// classifies its own curated 12-country roster -- this tab's rows can be any of the 107 distinct
-// partner codes that actually appear across DATA.tradeMapRankings' top-10 partner lists and
-// DATA.tradeMapItemPartners' item-drilldown breakdowns (confirmed by walking both embedded objects
-// directly before writing this table, not guessed). "eu" here means geographic Europe (matches
-// scene6's own broad usage), not strictly EU membership, so non-EU European partners like the UK,
-// Norway and Switzerland are included rather than falling back to gray. Any code somehow missing
-// from this table (e.g. a future data refresh surfaces a new partner) falls back to
-// var(--text-muted) rather than breaking.
+
+
+
+
+
+
+
+
+
+
+
 var TM_REGION_LABEL = {
   eu: "Europe", asia: "Asia", americas: "Americas", cis: "CIS / Eurasia", mena: "MENA",
   africa: "Africa", oceania: "Oceania"
@@ -2310,8 +2200,8 @@ var TM_REGION_OF = (function () {
   return map;
 })();
 
-// Legend for the region-colored partner bars above, listing only the regions actually present
-// among the rows currently on screen (never all 7 at once, since at most 10 rows are shown).
+
+
 function tmRegionLegendHtml(rows) {
   var seen = [];
   rows.forEach(function (r) {
@@ -2325,18 +2215,18 @@ function tmRegionLegendHtml(rows) {
   return '<div class="region-legend"><span class="lbl">' + L("s4.regionLbl") + '</span>' + items + '</div>';
 }
 
-// Item-row category colors, reusing CATEGORY_COLOR/CATEGORY_LABEL as-is (defined later in this
-// file, in the chokepoints/"dominant seller" scenes) rather than inventing a new palette, per
-// explicit user request that colors match the same meaning across scenes. That constant is itself
-// keyed by 6-digit HS6 code; this tab's items are HS-3, one level coarser, so this is a new
-// HS-3-level lookup, not a re-export of the existing one. Built by walking every HS-3 code that can
-// actually appear across DATA.tradeMapRankings' item lists and DATA.tradeMapPartnerItems'
-// drill-down breakdowns (127 distinct codes, confirmed by walking both objects directly before
-// classifying anything, not guessed), classified by HS chapter, and cross-checked line by line
-// against every HS-3 code CATEGORY_COLOR/scene8/scene9 already classify at the HS-6 level (title
-// wherever a prefix overlapped, e.g. 260/720/721/730/740/760 already meant "metals" there, 251/252
-// already "minerals", 270/271 already "energy", the 510-630 range already "textiles") so the two
-// systems agree wherever they cover the same ground.
+
+
+
+
+
+
+
+
+
+
+
+
 var TM_ITEM_CATEGORY = (function () {
   var groups = {
     agro: [10, 20, 30, 40, 50, 70, 71, 80, 90, 91, 100, 110, 120, 150, 151, 160, 170, 180, 190, 200,
@@ -2357,30 +2247,30 @@ var TM_ITEM_CATEGORY = (function () {
   return map;
 })();
 
-// Category conveys the hue; import/export conveys a light-vs-dark variant of that same hue,
-// replacing the old flat, category-unrelated blue/green flow fill (per explicit user request for
-// "better light/dark alternatives" to that pair). Both toggling flow for the same item and
-// comparing two different items at the same flow stay visually meaningful this way: same hue
-// across a flow switch (still coal, still metals), lighter for imports / the plain category color
-// for exports. color-mix() already has precedent elsewhere in this file (e.g. the scene-4 dot
-// stroke), so this isn't a new technique for the codebase.
+
+
+
+
+
+
+
 function tmItemFill(hs3) {
   var cat = TM_ITEM_CATEGORY[hs3];
   var base = cat ? CATEGORY_COLOR[cat] : "var(--text-muted)";
   return sTMState.rankFlow === "imp" ? "color-mix(in srgb, " + base + " 55%, white)" : base;
 }
-// Drill-down rows use whichever flow the drill itself is on, not necessarily sTMState.rankFlow
-// (both stay in sync in practice since the same toggle drives both views, but this keeps the
-// function honest about which flow it's actually shading for).
+
+
+
 function tmItemFillForFlow(hs3, flow) {
   var cat = TM_ITEM_CATEGORY[hs3];
   var base = cat ? CATEGORY_COLOR[cat] : "var(--text-muted)";
   return flow === "imp" ? "color-mix(in srgb, " + base + " 55%, white)" : base;
 }
 
-// Legend for the category-colored item bars, same "only what's on screen" convention as
-// tmRegionLegendHtml above. Order follows CATEGORY_LABEL's own key order for a stable legend
-// sequence rather than first-seen order.
+
+
+
 function tmCategoryLegendHtml(rows) {
   var present = {};
   rows.forEach(function (r) {
@@ -2395,23 +2285,23 @@ function tmCategoryLegendHtml(rows) {
   return '<div class="region-legend"><span class="lbl">' + L("s4.categoryLbl") + '</span>' + items + '</div>';
 }
 
-/* ---- Tab 3: top-10 rankings by year ---- */
 
-// Row labels are right-anchored at a fixed x (labelX=172 in both the top-10 list and the
-// drill-down view below), so a long, un-shortened description (a raw HS6 description with no
-// SECTOR_FRIENDLY override, e.g. "Chromium ores and concentrates") can grow past the SVG's own
-// left edge (x=0), silently clipped rather than wrapped. Full name still reaches the tooltip; only
-// the always-visible row label is capped here.
+
+
+
+
+
+
 function tmRowLabel(name, maxChars) {
   if (name.length <= maxChars) return name;
   return name.slice(0, maxChars - 1).trim() + "…";
 }
 
-// SECTOR_FRIENDLY's own entries are deliberately lowercase (they read naturally inline in this
-// file's other scenes' prose, e.g. "led by a single sector: refined fuels"), but next to a properly
-// capitalized partner name in this scene's own rankings rows, tooltip and drill-down titles, a
-// lowercase item name reads as unpolished. Applied only here, not to SECTOR_FRIENDLY/
-// sceneSectorLabel() themselves, which stay correct as-is for every other scene that uses them.
+
+
+
+
+
 function tmCapitalize(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
@@ -2475,8 +2365,8 @@ function drawTMRankingsChart(sub) {
   slider.step = "1";
   slider.value = String(sTMState.rankYear);
   slider.setAttribute("aria-label", L("ui.selectYear"));
-  // Same fix as every other slider scene: redraw only the chart on drag, never touch sub or
-  // stageControls, or recreating the <input> mid-drag drops the browser's pointer capture.
+  
+  
   slider.addEventListener("input", function () {
     sTMState.rankYear = +slider.value;
     drawInner();
@@ -2602,14 +2492,14 @@ function drawTMRankingsChart(sub) {
   }
 }
 
-/* ============================ scene 4: size is not risk ============================ */
 
-// Faithful recreation of chart-pack Story 03/18 ("Size is not risk"): a dumbbell/lollipop chart,
-// one row per partner, pale dot = share of Türkiye's imports, solid dot = share of the import-risk
-// index, connected by a line and labelled with the multiplier (risk share ÷ import share). Reuses
-// DATA.scene7, the same 12-partner, 30-year panel the old scrolly build's year-slider trail
-// scatter used ("why the small numbers lie"), just read one year at a time instead of as a trail,
-// and in the chart-pack's own fixed row order rather than resorted per year.
+
+
+
+
+
+
+
 var s4State = { year: 2024 };
 
 function scene4() {
@@ -2627,8 +2517,8 @@ function scene4() {
   slider.step = "1";
   slider.value = String(s4State.year);
   slider.setAttribute("aria-label", L("ui.selectYear"));
-  // Same fix as every other slider scene: redraw only the chart on drag, never touch
-  // stageControls, or recreating the <input> mid-drag drops the browser's pointer capture.
+  
+  
   slider.addEventListener("input", function () {
     s4State.year = +slider.value;
     drawScene4Chart();
@@ -2655,8 +2545,8 @@ function drawScene4Chart() {
     var pt = c.series[yi];
     return { country: c.country, imp: pt.imp, risk: pt.riskc, mult: pt.mult, value_m: pt.value_m };
   });
-  // Re-sorted by multiplier every year (highest first), rather than the chart-pack's fixed
-  // 2024 order, so row order itself tells the story as the slider moves.
+  
+  
   rows.sort(function (a, b) { return b.mult - a.mult; });
 
   var labelX = 122, chartX = 130, rightPad = 46;
@@ -2667,13 +2557,13 @@ function drawScene4Chart() {
 
   [0, 1, 2, 3, 4].forEach(function (t) {
     var val = maxV / 4 * t, x = xF(val);
-    // stroke: var(--text-muted), not var(--grid): same root cause as the scene-3 shading fix,
-    // --grid is only a shade off the full-bleed page background in both themes, so these
-    // vertical reference lines were invisible against it. opacity 0.6 dials the full-strength
-    // text-muted back down (user felt the first pass, at full opacity, read as too saturated)
-    // while staying well clear of --grid's own too-close-to-background problem. Same fix applied
-    // everywhere else this exact pattern showed up (scenes 9, 10, 12, 15, 17, 18), see progress.md
-    // 2y/2z.
+    
+    
+    
+    
+    
+    
+    
     stage.appendChild(el("line", { x1: x, x2: x, y1: SM.t, y2: SM.t + rows.length * rowH, stroke: "var(--text-muted)", "stroke-width": 1, opacity: "var(--ref-line-opacity)" }));
     var lbl = el("text", { x: x, y: SM.t + rows.length * rowH + 14, "text-anchor": "middle", "font-size": "10", fill: "var(--text-muted)" });
     lbl.textContent = pct(val, 0);
@@ -2691,9 +2581,9 @@ function drawScene4Chart() {
 
     var g = el("g", { style: "cursor:pointer" });
     g.appendChild(el("line", { x1: x1, x2: x2, y1: y, y2: y, stroke: color, "stroke-width": 2, opacity: "0.5" }));
-    // stroke: var(--text-muted), not var(--baseline) — the latter is only a couple steps off
-    // the page background in dark mode (both are near-black), leaving this ring invisible
-    // against the full-bleed theme; text-muted keeps a real contrast margin in both themes.
+    
+    
+    
     g.appendChild(el("circle", { cx: x1, cy: y, r: 4, fill: "var(--surface-1)", stroke: "var(--text-muted)", "stroke-width": 1.4 }));
     g.appendChild(el("circle", { cx: x2, cy: y, r: 5, fill: color }));
     var mlbl = el("text", { x: Math.max(x1, x2) + 9, y: y + 4, "font-size": "11", "font-weight": "650", fill: color });
@@ -2726,7 +2616,7 @@ function drawScene4Chart() {
   document.getElementById("s4GermanyMult").textContent = byName.Germany.mult.toFixed(2) + "×";
 }
 
-/* ============================ scene 6: why small numbers lie ============================ */
+
 
 var s6State = { year: 2024, isolate: null, flow: "imports" };
 var S6_REGION_COLOR = {
@@ -2734,10 +2624,10 @@ var S6_REGION_COLOR = {
   cis: "var(--region-cis)", mena: "var(--region-mena)"
 };
 var S6_REGION_LABEL = { eu: "EU", asia: "Asia", americas: "Americas", cis: "CIS / Eurasia", mena: "MENA" };
-// Only a handful of countries carry a permanent on-canvas label (the ones the step-card
-// prose discusses by name); the rest sit in a tight low-share/low-multiplier corner where
-// every added label collided, so they get hover-only detail instead, same
-// graceful-degradation pattern the rest of this page already follows.
+
+
+
+
 var S6_FLOW = {
   imports: {
     dataKey: "scene7", xMax: 20, yMax: 4,
@@ -2786,9 +2676,9 @@ function scene6() {
   slider.step = "1";
   slider.value = String(s6State.year);
   slider.setAttribute("aria-label", L("ui.selectYear"));
-  // Same fix as scenes 7/8's sliders: redraw only the chart on drag, never touch
-  // stageControls, or recreating the <input> mid-drag drops pointer capture. The flow
-  // toggle above follows the same rule: its click handler redraws the chart only.
+  
+  
+  
   slider.addEventListener("input", function () {
     s6State.year = +slider.value;
     drawScene6Chart();
@@ -2820,9 +2710,9 @@ function drawScene6Chart() {
   refLbl.textContent = L(isImp6 ? "s6.refImp" : "s6.refExp");
   stage.appendChild(refLbl);
 
-  // Click empty space (no bubble or trail under the cursor) clears any isolation. Appended before
-  // the bubbles/trails below so it sits underneath them in paint order: a click that actually
-  // lands on a bubble or trail still hits that element first and runs its own toggle instead.
+  
+  
+  
   var clearHit = el("rect", { x: SM.l, y: SM.t, width: frame.plotW, height: frame.plotH, fill: "transparent" });
   clearHit.addEventListener("click", function () {
     if (s6State.isolate) { s6State.isolate = null; drawScene6Chart(); }
@@ -2833,12 +2723,12 @@ function drawScene6Chart() {
     return Math.max.apply(null, c.series.map(function (s) { return s.value_m; }));
   }));
 
-  // Two passes so a later country's trail can never render on top of an earlier
-  // country's bubble: with 12 countries the trails cross this crowded lower-left
-  // corner constantly, and interleaving trail-then-bubble per country let a trail
-  // steal a bubble's hover target when it happened to cross that pixel.
-  // Countries with no data yet at this year (Iraq's export series starts 2003, not
-  // 1995) are dropped rather than crashing on an empty "cur" point.
+  
+  
+  
+  
+  
+  
   var curByCountry = data.map(function (c) {
     var color = S6_REGION_COLOR[c.region] || "var(--accent)";
     var upto = c.series.filter(function (s) { return s.year <= year; });
@@ -2850,13 +2740,13 @@ function drawScene6Chart() {
         return [frame.xF(Math.min(s.imp, cfg.xMax)), frame.yF(Math.min(s.mult, cfg.yMax))];
       });
       var d = roundedPath(pts, 5);
-      // Default (nothing isolated) opacity lowered from an earlier 0.4: with 12 countries'
-      // trails constantly crossing the same crowded lower-left corner, 0.4 read as a genuine
-      // tangle before a reader had done anything. Calmer by default, still clearly present as
-      // context; isolated (0.8) and dimmed (0.06) unchanged.
+      
+      
+      
+      
       stage.appendChild(el("path", { d: d, fill: "none", stroke: color, "stroke-width": isolated ? 2.2 : 1.4, opacity: dimmed ? 0.06 : (isolated ? 0.8 : 0.25) }));
-      // Fat invisible stroke so the trail itself is clickable, not just the dot at its
-      // end: same fix as scene5's rotation lines, a 1.4px trail is a near-impossible target.
+      
+      
       var trailHit = el("path", { d: d, fill: "none", stroke: "transparent", "stroke-width": 12, style: "cursor:pointer" });
       trailHit.addEventListener("click", function () {
         s6State.isolate = (s6State.isolate === c.country ? null : c.country);
@@ -2911,8 +2801,8 @@ function drawScene6Chart() {
   });
   stageDetail.appendChild(chipsWrap);
 
-  // Card copy always cites the imports framing (China/Germany import-side numbers), regardless
-  // of which flow is currently toggled, since that's what the step-card prose is about.
+  
+  
   var chinaS = DATA.scene7.filter(function (c) { return c.country === "China"; })[0];
   var germanyS = DATA.scene7.filter(function (c) { return c.country === "Germany"; })[0];
   var chinaPt = chinaS.series.filter(function (s) { return s.year <= year; }).slice(-1)[0];
@@ -2928,7 +2818,7 @@ function drawScene6Chart() {
   }
 }
 
-/* ============================ scene 10: concentration is a choice ============================ */
+
 
 var s10State = { year: 2024 };
 
@@ -2947,8 +2837,8 @@ function scene10() {
   slider.step = "1";
   slider.value = String(s10State.year);
   slider.setAttribute("aria-label", L("ui.selectYear"));
-  // Same fix as every other slider scene: redraw only the chart on drag, never touch
-  // stageControls, or recreating the <input> mid-drag drops the browser's pointer capture.
+  
+  
   slider.addEventListener("input", function () {
     s10State.year = +slider.value;
     drawScene10Chart();
@@ -2979,28 +2869,28 @@ function drawScene10Chart() {
   stage.appendChild(el("rect", { x: xB, y: y0, width: xMax - xB, height: yB - y0, fill: "var(--text-muted)", opacity: "0.08" }));
   stage.appendChild(el("line", { x1: x0, x2: xMax, y1: yB, y2: yB, stroke: "var(--baseline)", "stroke-width": 1, "stroke-dasharray": "3 4" }));
   stage.appendChild(el("line", { x1: xB, x2: xB, y1: y0, y2: yMax, stroke: "var(--baseline)", "stroke-width": 1, "stroke-dasharray": "3 4" }));
-  // Label the boundary threshold itself, not just the two zones it creates: placed at the
-  // line's right end since that part of the plot is empty of bubbles at every year, unlike
-  // the left end which sits inside the crowded "fixable" cluster.
+  
+  
+  
   var boundaryLbl = el("text", { x: xMax - 4, y: yB - 5, "text-anchor": "end", "font-size": "9", fill: "var(--annot-text)" });
   boundaryLbl.textContent = L("s7.boundaryTr", { v: num(boundary, 2) });
   stage.appendChild(boundaryLbl);
-  // Vertical line's own axis (peer-median HHI) had no label of its own before, only the
-  // horizontal Türkiye-HHI line did. Placed near the top of the plot, rotated to run alongside
-  // the line itself, since the line's lower half sits inside the crowded cluster and its upper
-  // half is clear at every year.
+  
+  
+  
+  
   var vBoundaryLbl = el("text", { x: xB - 5, y: 12, "text-anchor": "end", "font-size": "9", fill: "var(--annot-text)", transform: "rotate(-90 " + (xB - 5) + " 12)" });
   vBoundaryLbl.textContent = L("s7.boundaryPeer", { v: num(boundary, 2) });
   stage.appendChild(vBoundaryLbl);
-  // The reference diagonal is "Türkiye HHI = peer median HHI" (y = x), so it must run through
-  // the origin (0,0) to (MAXD,MAXD) — corner (x0,yMax) to (xMax,y0), not (x0,y0) to (xMax,yMax),
-  // which is the anti-diagonal and doesn't pass through 0. Chart-pack page 4 ("Most of Türkiye's
-  // concentration is a choice") has the correct through-the-origin version; a prior port of this
-  // chart drew the anti-diagonal instead.
-  // stroke: var(--text-muted), not var(--baseline) — same full-bleed-background contrast issue
-  // as line 1670's fix: --baseline is only a couple steps off the page background in dark mode
-  // (both near-black), leaving this reference line too faint in both themes to read as the "y=x"
-  // line it's meant to be; text-muted keeps a real contrast margin, width bumped 1 -> 1.4 to match.
+  
+  
+  
+  
+  
+  
+  
+  
+  
   stage.appendChild(el("line", { x1: x0, x2: xMax, y1: yMax, y2: y0, stroke: "var(--text-muted)", "stroke-width": 1.4, "stroke-dasharray": "2 3" }));
   var zone1 = el("text", { x: x0 + 6, y: y0 + 14, "font-size": "9.5", "font-weight": "650", fill: "var(--warn)" });
   zone1.textContent = L("s7.zone1");
@@ -3028,12 +2918,12 @@ function drawScene10Chart() {
       calloutEntries.push({ text: dn(r.callout), x: cx + radius + 4, y: cy + 3, anchorX: cx + radius + 1, anchorY: cy });
     }
   });
-  // Several callouts land close enough together (especially in the crowded low-HHI cluster at
-  // non-2024 years) to overlap into an unreadable mess if drawn at their raw cx+radius+4
-  // position. Decluttered with a thin leader line back to the bubble whenever a label had to
-  // move, the same hardcoded-anchor-plus-leader-line pattern already used elsewhere in this
-  // project's own scatter/dumbbell charts for this exact recurring problem (see
-  // ../Geo_Trade_Risk_Index_Methodology/CLAUDE.md).
+  
+  
+  
+  
+  
+  
   declutterLabels(calloutEntries, 11).forEach(function (lbl) {
     if (Math.abs(lbl.y - lbl.y0) > 2) {
       stage.appendChild(el("line", { x1: lbl.anchorX, y1: lbl.anchorY, x2: lbl.x - 3, y2: lbl.y - 3, stroke: "var(--text-muted)", "stroke-width": 1, opacity: "0.5" }));
@@ -3060,28 +2950,28 @@ function drawScene10Chart() {
   document.getElementById("s11StructNames").textContent = topStruct.map(sceneSectorLabel).join(", ");
 }
 
-// Hand-picked prose names for every HS-3 sector that ranks among the top fixable/structural
-// sector by value in any year 1995-2024 (broader set than the chart's own bubble callouts,
-// since this feeds a sentence rather than a space-constrained label).
+
+
+
 var SECTOR_FRIENDLY = {
   100: "wheat", 120: "soybeans", 151: "vegetable oils", 240: "tobacco", 260: "iron ore",
   270: "coal and crude oil", 271: "refined petroleum", 291: "PTA (terephthalic acid)",
   340: "surfactants", 420: "handbags and cases", 511: "wool fabrics", 640: "footwear",
   720: "ferrous scrap", 790: "zinc", 844: "weaving machines", 845: "metal-rolling mills",
   846: "machine tools", 847: "data processing machines", 850: "batteries",
-  // 852 deliberately NOT hard-coded here (was "smartphones"): its own HS-3 bucket means a
-  // different, differently-sized thing depending on classification vintage (HS92's "Transmission
-  // apparatus" bundles far more than smartphones; HS22's narrower 852 is specifically "Flat panel
-  // display modules", smartphones sit under 851 there instead, see the 2024 HS22 patch below).
-  // A single static label can't be right for both, so this falls through to sceneSectorLabel()'s
-  // per-row callout instead, which is set per year/vintage.
+  
+  
+  
+  
+  
+  
   854: "photosensitive equipment", 870: "cars", 871: "motorcycles", 880: "aircraft",
   940: "lamps and lighting", 950: "toys"
 };
 
-// Prefer the hand-picked name above (or the chart's own callout); otherwise derive a short
-// label from the representative-product description (category name before the colon, trimmed
-// back to a full word if the raw string was cut off mid-word at its 46-char export limit).
+
+
+
 function sceneSectorLabel(r) {
   if (SECTOR_FRIENDLY[r.hs3]) return SECTOR_FRIENDLY[r.hs3];
   if (r.callout) return r.callout.toLowerCase();
@@ -3093,11 +2983,11 @@ function sceneSectorLabel(r) {
   return name.toLowerCase();
 }
 
-/* ============================ scene: the long rotation ============================ */
 
-// Hand-picked era/supplier callouts per sector, replicating chart-pack Story 10/18's static
-// annotations (build_chart_E2.py's PANELS list). Position is (fractional year, risk_x1000 value)
-// in each panel's own local coordinates, not pixels, so it survives the panel-size math below.
+
+
+
+
 var S_ROTATION_COUNTRY = {
   12: "Algeria", 156: "China", 251: "France", 276: "Germany", 372: "Ireland",
   643: "Russia", 752: "Sweden", 804: "Ukraine", 826: "United Kingdom", 842: "USA"
@@ -3136,7 +3026,7 @@ function drawSceneRotationChart() {
   var plotW = panelW - leftPad - rightPad;
   var plotH = panelBoxH - titleH - tickH;
   var yMax = 4.8;
-  var xMin = 1995, xMax = 2027; // padded past 2024 so the end-of-line value label has room
+  var xMin = 1995, xMax = 2027; 
 
   sectors.forEach(function (sec, idx) {
     var col = idx % cols, row = Math.floor(idx / cols);
@@ -3170,9 +3060,9 @@ function drawSceneRotationChart() {
     var pts = years.map(function (yr, i) { return [xF(yr), yF(sec.risk[i])]; });
     var pathD = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + "," + p[1].toFixed(1); }).join("");
     var areaD = pathD + "L" + xF(years[years.length - 1]).toFixed(1) + "," + yF(0).toFixed(1) + "L" + xF(years[0]).toFixed(1) + "," + yF(0).toFixed(1) + "Z";
-    // Deliberately not var(--accent): that color is reused below for the "China" callout text,
-    // and every panel's line would otherwise be visually identical to that specific callout,
-    // wrongly implying the line itself always represents China's contribution.
+    
+    
+    
     stage.appendChild(el("path", { d: areaD, fill: "var(--navy)", opacity: "0.12", stroke: "none" }));
     stage.appendChild(el("path", { d: pathD, fill: "none", stroke: "var(--navy)", "stroke-width": 1.6 }));
 
@@ -3202,28 +3092,28 @@ function drawSceneRotationChart() {
   });
 }
 
-/* ============================ scene: the technology ladder ============================ */
+
 
 var S_TECH_TIERS = ["Primary", "Resource-based", "Low tech", "Medium tech", "High tech"];
-// "Medium tech" was `--skyblue`, directly adjacent to "High tech"'s `--navy` in the stack --
-// both blue family, borderline for blue-cone (tritanopia) color vision deficiency, mitigated
-// only by the direct end-of-series % labels. Reassigned to a new `--vermillion` (a warm
-// red-orange, Okabe-Ito-style choice, maximally separated from navy on the hue wheel and from
-// "Low tech"'s green below it too) rather than reusing an existing var: every other already-
-// defined hue either sits adjacent to a color already used elsewhere in *this* stack (`--forest`
-// next to "Low tech"'s green) or would recreate the exact same-color-different-meaning problem
-// just fixed for scenes 11-13 (`--violet` already means `metals` in CATEGORY_COLOR). "High tech"
-// stays `--navy`, unchanged, since it's the chart's own headline tier (see scene 9's "1.49x"
-// amplification figure).
+
+
+
+
+
+
+
+
+
+
 var S_TECH_COLOR = {
   "Primary": "var(--tan)", "Resource-based": "var(--gold)", "Low tech": "var(--good)",
   "Medium tech": "var(--vermillion)", "High tech": "var(--navy)"
 };
-// Ink for the in-band tier labels drawn on top of each fill above (drawSceneTechChart). Three
-// tiers are dark enough for near-black ink in both themes; Medium/High tech's dark-theme fills
-// are lighter than their light-theme fills and need near-black too, so --tech-ink-flip carries
-// the per-theme difference instead of a hardcoded literal (see the --tech-ink-* comment near the
-// top of the file).
+
+
+
+
+
 var S_TECH_INK = {
   "Primary": "var(--tech-ink-dark)", "Resource-based": "var(--tech-ink-dark)",
   "Low tech": "var(--tech-ink-dark)",
@@ -3277,8 +3167,8 @@ function drawSceneTechChart() {
       stage.appendChild(lbl);
     });
 
-    // Stack bottom-to-top in S_TECH_TIERS order, tracking each tier's running cumulative
-    // percentage so the polygon for a tier spans [cumBefore, cumBefore + thisTier].
+    
+    
     var cum = years.map(function () { return 0; });
     S_TECH_TIERS.forEach(function (tier) {
       var vals = d.tiers[tier];
@@ -3293,8 +3183,8 @@ function drawSceneTechChart() {
       var labelX = xF(years[years.length - 1]) - 4;
       var ink = S_TECH_INK[tier];
       if (lastV > 7.5) {
-        // Band is tall enough for both the tier name and its value, in place of the below-chart
-        // legend this replaced (progress.md 2ba).
+        
+        
         var midY = yF(bottom[bottom.length - 1] + lastV / 2);
         var nameLbl = el("text", { x: labelX, y: midY - 3, "text-anchor": "end", "font-size": "8.5", "font-weight": "700", fill: ink });
         nameLbl.textContent = dn(tier);
@@ -3327,28 +3217,28 @@ function drawSceneTechChart() {
   });
 }
 
-/* ============================ scene: money buys machines ============================ */
 
-// Hand-placed label anchors for Türkiye's five tier dots in the 2024 overview, replicating
-// chart-pack Story 17/18's own hand-tuned LAB dict (build_chart_tech.py, N2 section), since an
-// auto-placement rule would just re-collide with the 59-country background cloud the source
-// script was avoiding by hand.
+
+
+
+
+
 var S_TECH_AMP_LAB = {
   "Low tech": [3, 4], "Primary": [33, 9], "High tech": [3, 31],
   "Resource-based": [25, 39], "Medium tech": [54, 15]
 };
 
-// Two modes sharing one scene, the same drill-down convention as scene 10 (sChokeState):
-// "overview" is the original static 2024 snapshot (59-country background cloud, exactly chart-
-// pack Story 17/18); "trail" is Türkiye's own 5 tiers traced 1995 to a selected year via a
-// slider, added in a later session after confirming the background cloud itself can't be
-// animated (tech_cross_country_2024.csv only exists for 2024, a much heavier per-country BACI
-// computation that was only ever run for that one year -- no historical equivalent exists for
-// the other 58 economies). Clicking a Türkiye dot in "overview" switches to "trail"; a "back"
-// chip in "trail" switches back. Unlike scene 10, this mode switch also needs to add/remove a
-// slider control, handled by renderTechAmpControls(), kept separate from the slider's own
-// "input" handler so dragging never touches stageControls mid-drag (same rule every other
-// slider scene follows, or the browser drops pointer capture).
+
+
+
+
+
+
+
+
+
+
+
 var sTechAmpState = { mode: "overview", year: 2024 };
 
 function sceneTechAmp() {
@@ -3381,7 +3271,7 @@ function renderTechAmpControls() {
   slider.setAttribute("aria-label", L("ui.selectYear"));
   var throttledDraw = rafThrottle(drawSceneTechAmpChart);
   slider.addEventListener("input", function () {
-    sTechAmpState.year = +slider.value; // always tracks the live value, even between throttled redraws
+    sTechAmpState.year = +slider.value; 
     throttledDraw();
   });
   var maxLbl = document.createElement("span");
@@ -3488,8 +3378,8 @@ function drawTechAmpTrailChart() {
   chartTitle.textContent = L("s10.title");
   chartSub.textContent = L("s10.subTr", { year: year });
 
-  // 48, not the overview's 78: that axis had to fit 59 countries' worth of tier shares, this one
-  // only ever needs to fit Türkiye's own 30-year range (real max across all 5 tiers is ~42).
+  
+  
   var lim = 48;
   var l = 46, r = 12, tM = 10, b = 34;
   var plotX = l, plotY = tM, plotW = SW - l - r, plotH = SH - tM - b;
@@ -3524,10 +3414,10 @@ function drawTechAmpTrailChart() {
   underLbl.textContent = L("s10.under");
   stage.appendChild(underLbl);
 
-  // Trail per tier from 1995 up to the selected year, same rounded-corner treatment scene 5 uses
-  // for its own volatile year-over-year trails (roundedPath, radius 4). Labels use declutterLabels
-  // (scene 6/16's helper) rather than hand-placed anchors: with only 5 dots and no background
-  // cloud to dodge, it's enough to keep them apart as their relative positions shift year to year.
+  
+  
+  
+  
   var calloutEntries = [];
   S_TECH_TIERS.forEach(function (tier) {
     var val = trSeries.tiers[tier].valpct, risk = trSeries.tiers[tier].riskpct;
@@ -3574,27 +3464,27 @@ function drawTechAmpTrailChart() {
   stageDetail.appendChild(chipsWrap);
 }
 
-/* ============================ scene: tiny money, absolute chokepoints ============================ */
 
-var sChokeState = { drilldown: null }; // null = overview, else a materials[].key
+
+var sChokeState = { drilldown: null }; 
 var S_CHOKE_COLOR = {
   China: "var(--accent)", Russia: "var(--warn)", Morocco: "var(--gold)", "South Africa": "var(--good)",
   USA: "var(--navy)", Germany: "var(--violet)", Belgium: "var(--slate)", Ukraine: "var(--vermillion)"
 };
-// Fallback palette deliberately avoids every fixed color above; no drill-down has more than 3
-// unfixed top-4 suppliers (checked against the full 15-material dataset, August 24, 2026), so
-// the 3 fallbacks never wrap into a same-chart collision.
+
+
+
 var S_CHOKE_FALLBACK = ["var(--skyblue)", "var(--tan)", "var(--forest)"];
 function chokeColor(name, fallbackIdx) {
   if (name === "Other") return "var(--text-muted)";
   if (S_CHOKE_COLOR[name]) return S_CHOKE_COLOR[name];
   return S_CHOKE_FALLBACK[fallbackIdx % S_CHOKE_FALLBACK.length];
 }
-// Dark bars (China/Russia) read a bold white label; Morocco/South Africa's lighter fills need
-// dark ink instead, same rule build_charts.py itself uses for this exact chart. The four
-// suppliers added August 24, 2026 sit on fills that are dark in light mode but medium-light in
-// dark mode (navy/violet/slate/vermillion), so they take var(--page), which flips the right way
-// in both themes -- the same reasoning as leverageInk()'s `def` case.
+
+
+
+
+
 function chokeInk(name) {
   if (name === "Morocco" || name === "South Africa") return "var(--text-primary)";
   if (name === "USA" || name === "Germany" || name === "Belgium" || name === "Ukraine") return "var(--page)";
@@ -3617,8 +3507,8 @@ function drawChokeOverview() {
   chartSub.innerHTML = L("s11.sub") +
     '<span style="display:block; text-align:right; font-weight:650; color:var(--text-secondary); margin-top:2px;">' + L("s11.subHint") + '</span>';
 
-  // Shared bar geometry with scenes 12 and 13 (harmonized August 25, 2026): labels end at x=198,
-  // bars start at 206, 60px reserved for the value label, rows fill SH - SM.t - 26, 25% gridlines.
+  
+  
   var labelX = 198, chartX = 206, rightPad = 60;
   var plotW = SW - chartX - SM.r - rightPad;
   var rowH = (SH - SM.t - 26) / materials.length;
@@ -3675,10 +3565,10 @@ function drawChokeDrilldown(key) {
   var maxY = Math.max.apply(null, m.totalByYear) * 1.15 || 1;
   var frame = lineChartFrame(maxY, fmtM, m.years);
 
-  // Discrete per-year columns, not a connected line: with values swinging by an order of
-  // magnitude year to year (these are thin, volatile chokepoint flows, not smooth trends), a
-  // path connecting two isolated points would draw a slope across years where nothing actually
-  // moved gradually. A bar per year, height 0 where nothing was recorded, is the honest version.
+  
+  
+  
+  
   var barW = frame.plotW / m.years.length * 0.7;
   var fallbackCounter = 0;
   var colorFor = {};
@@ -3729,7 +3619,7 @@ function drawChokeDrilldown(key) {
   stageDetail.appendChild(chipsWrap);
 }
 
-/* ============================ scene 7: the chokepoints you've never heard of ============================ */
+
 
 var CATEGORY_COLOR = {
   agro: "var(--good)", minerals: "var(--gold)", textiles: "var(--accent)", metals: "var(--violet)",
@@ -3739,10 +3629,10 @@ var CATEGORY_LABEL = {
   agro: "Agro-food", minerals: "Minerals", textiles: "Textiles & manufactured", metals: "Metals",
   energy: "Energy", manufactured: "Manufactured & industrial"
 };
-// Ink for labels printed inside a CATEGORY_COLOR-filled bar, following chokeInk()'s rules:
-// gold/green fills are dark enough in both themes for --text-primary's normal flip; violet and
-// slate are dark in light mode but medium-light in dark mode, so they need --page (which flips
-// the opposite way); red/blue stay white.
+
+
+
+
 function categoryInk(cat) {
   if (cat === "agro" || cat === "minerals") return "var(--text-primary)";
   if (cat === "metals" || cat === "manufactured") return "var(--page)";
@@ -3765,8 +3655,8 @@ function scene7() {
   slider.step = "1";
   slider.value = String(s7State.year);
   slider.setAttribute("aria-label", L("ui.selectYear"));
-  // Same fix as every other slider scene: redraw only the chart on drag, never touch
-  // stageControls, or recreating the <input> mid-drag drops the browser's pointer capture.
+  
+  
   slider.addEventListener("input", function () {
     s7State.year = +slider.value;
     drawScene7Chart();
@@ -3790,23 +3680,23 @@ function drawScene7Chart() {
   stage.innerHTML = "";
   stageDetail.innerHTML = "";
 
-  // Rows arrive pre-selected as the top 15 by import value (that selection is untouched), but
-  // displayed sorted by supplier share, highest concentration at top, lowest at bottom, per user
-  // request, rather than the source chart's original by-value display order. Re-sorted every
-  // year, not just once, so the row order itself stays meaningful as the slider moves. The "top
-  // chokepoint" prose below still reads off the original by-value order (rows[0]), since that's
-  // a fact about the single largest chokepoint by money, not by concentration.
+  
+  
+  
+  
+  
+  
   var sorted = rows.slice().sort(function (a, b) { return b.share - a.share; });
 
-  // Same bar treatment as scene 11 (user request, August 24, 2026): supplier + share printed
-  // inside the bar, import value to its right. Every bar here is >= 50% of the axis by
-  // construction (majority-supplier rule), so the inline label always has room.
+  
+  
+  
   var barX = 206;
-  var labelSpace = 60; // reserved so the "$X.Xbn" value label always fits after the bar
+  var labelSpace = 60; 
   var scale = (SW - barX - SM.r - labelSpace) / 1.0;
   var rowH = (SH - SM.t - 26) / sorted.length;
 
-  // Same 25% gridlines and axis labels as scenes 11 and 13 (harmonized August 25, 2026).
+  
   [0, 25, 50, 75, 100].forEach(function (v) {
     var x = barX + v / 100 * scale;
     stage.appendChild(el("line", { x1: x, x2: x, y1: SM.t, y2: SM.t + sorted.length * rowH, stroke: "var(--text-muted)", "stroke-width": 1, opacity: "var(--ref-line-opacity)" }));
@@ -3849,26 +3739,26 @@ function drawScene7Chart() {
   document.getElementById("s7TopValue").textContent = fmtM(top.value_m);
 }
 
-/* ============================ scene: what ankara holds, türkiye's own chokepoints ============================ */
 
-// `min`/`agr` intentionally reuse the same colors as CATEGORY_COLOR's `minerals`/`agro` (scenes
-// 11/13): same real-world category, same color, consistent across scenes. `ind`/`def` used to
-// reuse `--accent`/`--warn` too, but those already mean "textiles" and "energy" in CATEGORY_COLOR
-// -- a reader comparing this scene to 11 or 13 would see red mean two different things. Given
-// `--navy`/`--skyblue` here instead, both otherwise only used by the unrelated tech-tier charts
-// (scenes 8/9), not by any category-coded scene.
+
+
+
+
+
+
+
 var S_LEVERAGE_CAT_COLOR = { min: "var(--gold)", agr: "var(--good)", ind: "var(--skyblue)", def: "var(--navy)" };
 var S_LEVERAGE_CAT_LABEL = { min: "Minerals", agr: "Agro-food monopolies", ind: "Industrial niches", def: "Defense" };
-// Lighter fills (gold/green) read a dark-ink inline label; darker fills (blue/red) need white,
-// same rule build_chart_L.py itself uses for this exact chart.
-// `min`/`agr` fills (gold/good) are dark enough in both themes for `--text-primary`'s normal
-// light-mode-black/dark-mode-white flip, unchanged from before. The other two needed their own
-// logic once `ind`/`def` moved off accent/warn (see S_LEVERAGE_CAT_COLOR): `--navy`'s dark-mode
-// value (#6f95c4) isn't actually dark, it's a medium blue-grey, so `def` needs the *opposite* of
-// `--text-primary`'s flip -- `--page` happens to invert exactly right (near-white in light mode,
-// near-black in dark mode) since it's dark in light mode's navy and medium-light in dark mode's.
-// `--skyblue` (`ind`) is light in *both* themes, so it always needs plain dark ink regardless of
-// page theme, no CSS var flips the right way for that, hence the literal.
+
+
+
+
+
+
+
+
+
+
 function leverageInk(cat) {
   if (cat === "min" || cat === "agr") return "var(--text-primary)";
   if (cat === "def") return "var(--page)";
@@ -3891,8 +3781,8 @@ function sceneLeverage() {
   slider.step = "1";
   slider.value = String(sLeverageState.year);
   slider.setAttribute("aria-label", L("ui.selectYear"));
-  // Same fix as every other slider scene: redraw only the chart on drag, never touch
-  // stageControls, or recreating the <input> mid-drag drops the browser's pointer capture.
+  
+  
   slider.addEventListener("input", function () {
     sLeverageState.year = +slider.value;
     drawSceneLeverageChart();
@@ -3922,9 +3812,9 @@ function drawSceneLeverageChart() {
       buyer: p.buyerName[yi], buyerShare: p.buyerSharePct[yi]
     };
   });
-  // Sorted descending by Türkiye's own world-export share every year, highest concentration at
-  // top, lowest at bottom, per user request, matching the same re-sort pattern used for scene 4
-  // (multiplier) and scene 11 (supplier share).
+  
+  
+  
   rows.sort(function (a, b) { return b.share - a.share; });
 
   var barX = 206, labelSpace = 60;
@@ -3950,14 +3840,14 @@ function drawSceneLeverageChart() {
     var g = el("g", { style: "cursor:pointer" });
     g.appendChild(el("rect", { x: barX, y: y + (rowH - barH) / 2, width: bw, height: barH, rx: 4, fill: color }));
     if (r.share > 0 && r.buyer) {
-      // No directional arrow (removed August 25, 2026, user request): scenes 11 and 12 print
-      // "Country XX%" plainly, and the card copy already says this scene's partner is the buyer.
+      
+      
       var buyerText = dn(r.buyer) + " " + pct(r.buyerShare, 0);
-      // Many of these 14 products had single-digit world-export shares decades before their
-      // present-day dominance (e.g. marble cut was 3% in 1995 vs. 45% by 2024), so the bar is
-      // often far too short to hold the inline buyer label the 2024-only chart-pack design
-      // assumes room for. Estimate the label's rendered width and fall back to placing it after
-      // the bar (combined with the value, single line) whenever it wouldn't fit inside.
+      
+      
+      
+      
+      
       var estBuyerW = buyerText.length * 6 + 10;
       if (bw >= estBuyerW) {
         var buyLbl = el("text", { x: barX + bw - 6, y: y + rowH / 2 + 4, "text-anchor": "end", "font-size": "10.5", "font-weight": "700", fill: leverageInk(r.category) });
@@ -3995,7 +3885,7 @@ function drawSceneLeverageChart() {
   document.getElementById("sLevTopValue").textContent = fmtM(top.value);
 }
 
-/* ============================ scene 8: where türkiye is the dominant world seller ============================ */
+
 
 var s8State = { year: 2024 };
 
@@ -4014,8 +3904,8 @@ function scene8() {
   slider.step = "1";
   slider.value = String(s8State.year);
   slider.setAttribute("aria-label", L("ui.selectYear"));
-  // Same fix as every other slider scene: redraw only the chart on drag, never touch
-  // stageControls, or recreating the <input> mid-drag drops the browser's pointer capture.
+  
+  
   slider.addEventListener("input", function () {
     s8State.year = +slider.value;
     drawScene8Chart();
@@ -4032,9 +3922,9 @@ function scene8() {
 
 function drawScene8Chart() {
   var year = s8State.year;
-  // Already the top 15 by Türkiye's own world-export share for this year, pre-sorted descending
-  // in the data itself (selection criterion and display order are the same metric here, unlike
-  // scene 7's top-10-by-value-displayed-by-share case), so no re-sort is needed.
+  
+  
+  
   var rows = DATA.scene9.byYear[String(year)];
   var categories = DATA.scene9.categories;
   chartTitle.textContent = L("s14.title", { year: year });
@@ -4042,12 +3932,12 @@ function drawScene8Chart() {
   stage.innerHTML = "";
   stageDetail.innerHTML = "";
 
-  // Same bar geometry as scenes 11, 12 and 14 (harmonized August 25, 2026): bar height,
-  // corner radius, row budget and 25% gridlines are shared. The label scheme is deliberately
-  // the live page's own ("XX% of world exports" after the bar, buyer in the tooltip), per user
-  // request, so the axis is scaled to leave room for that text rather than for a value label.
+  
+  
+  
+  
   var barX = 206;
-  var labelSpace = 150; // reserved so the "XX% of world exports" label always fits after the bar
+  var labelSpace = 150; 
   var scale = (SW - barX - SM.r - labelSpace) / 1.0;
   var rowH = (SH - SM.t - 26) / rows.length;
 
@@ -4092,7 +3982,7 @@ function drawScene8Chart() {
   document.getElementById("s8TopValue").textContent = fmtM(top.tr_m);
 }
 
-/* ============================ scene: the great retracement ============================ */
+
 
 function sceneRetracement() {
   clearStage();
@@ -4134,7 +4024,7 @@ function drawSceneRetracementChart() {
   yTitle.textContent = L("s15.yLabel");
   stage.appendChild(yTitle);
 
-  // IQR band: top edge along q3 (left to right), then back along q1 (right to left), closed.
+  
   var bandD = years.map(function (yr, i) { return (i ? "L" : "M") + xF(yr).toFixed(1) + "," + yF(q3[i]).toFixed(1); }).join("")
     + years.slice().reverse().map(function (yr, i) {
         var j = years.length - 1 - i;
@@ -4145,7 +4035,7 @@ function drawSceneRetracementChart() {
   var medD = years.map(function (yr, i) { return (i ? "L" : "M") + xF(yr).toFixed(1) + "," + yF(med[i]).toFixed(1); }).join("");
   stage.appendChild(el("path", { d: medD, fill: "none", stroke: "var(--navy)", "stroke-width": 2.4 }));
 
-  // Marker years called out in the story text: 1995 (starting point), 2008 (globalization trough), 2024 (fully retraced).
+  
   [1995, 2008, 2024].forEach(function (yr) {
     var i = years.indexOf(yr);
     var cx = xF(yr), cy = yF(med[i]);
@@ -4174,22 +4064,22 @@ function drawSceneRetracementChart() {
   stage.appendChild(hit);
 }
 
-/* ============================ scene: Russia is now the most import-concentrated major economy ============================ */
 
-// Chart-pack Story 07/18. The source chart (build_charts.py section D) is a 2024-only snapshot
-// built from a separate 2022-2024 extract; ported here as a year slider instead, reusing the same
-// 30-year DATA.sceneRetracement panel's underlying source (panel_hs92_1995_2024.csv) so the whole
-// 1995-2024 span is available, not just three years. 29 majors, aliased to the source script's own
-// display names (Russia/Vietnam/Korea/Taiwan* rather than the panel's raw BACI country names).
-// Belgium's pre-1999 "Belgium(+Lux)" rows were merged into a single continuous "Belgium" series
-// (same real economy, just BACI's own pre-1999 combined coding, see CLAUDE.md); South Africa has no
-// rows before 2000 in the source panel at all and is simply omitted from the ranking in those years
-// rather than shown at a fake zero.
+
+
+
+
+
+
+
+
+
+
 var sWorldRankState = { year: 2024 };
-// Red marks whichever economy is ranked #1 that year, not a fixed "Russia" check: Russia only
-// earns red in years it actually tops the list (2023 on), the same way Mexico is red-equivalent
-// (i.e. rank 0) in, say, 2010. Türkiye keeps a fixed highlight color since it's this story's own
-// reference point every year regardless of rank.
+
+
+
+
 function worldRankColor(name, rank) {
   if (rank === 0) return "var(--warn)";
   if (name === "Türkiye") return "var(--gold)";
@@ -4240,11 +4130,11 @@ function drawSceneWorldRankChart() {
     .filter(function (r) { return r.val !== null; });
   allRows.sort(function (a, b) { return b.val - a.val; });
 
-  // Top 20 by concentration that year, plus Türkiye pinned at the end if she isn't already inside
-  // that group (per the step card copy, she almost always sits well outside it). Keeps the row
-  // count readable instead of drawing all ~29 major economies while still always showing Türkiye;
-  // rank/total displayed in the step card still reference allRows, the true full ranking, not just
-  // the drawn subset.
+  
+  
+  
+  
+  
   var trTrueIdx = allRows.map(function (r) { return r.name; }).indexOf("Türkiye");
   var trInTop20 = trTrueIdx >= 0 && trTrueIdx < 20;
   var rows = allRows.slice(0, 20);
@@ -4275,23 +4165,23 @@ function drawSceneWorldRankChart() {
     lbl.textContent = dn(r.name);
     stage.appendChild(lbl);
 
-    // Mexico (158 in 1998) and a few early years' Canada/Mexico values exceed the fixed 100-max
-    // axis (NAFTA-era single-partner lock-in, see chart-pack Story 06). Cap the drawn bar at the
-    // plot's right edge rather than letting it run past the canvas: the true, uncapped width
-    // would push the value/delta labels off-screen entirely for exactly those rows.
+    
+    
+    
+    
     var barWTrue = xF(r.val) - chartX;
     var barW = Math.min(barWTrue, plotW);
     var offScale = barWTrue > plotW + 0.5;
     var g = el("g");
     g.appendChild(el("rect", { x: chartX, y: y + (rowH - barH) / 2, width: barW, height: barH, fill: color }));
 
-    // Year-over-year change, drawn inside the bar itself, right-aligned near its end. Null for
-    // 1995 (no prior year at all) and for any country's own first year in the panel (e.g. South
-    // Africa's 2000), rather than diffing against a value that doesn't exist. White on the --warn
-    // (red) and --gold bars, both dark/saturated enough for it; --skyblue is too light a fill for
-    // white to read well against, so that one keeps var(--text-primary) instead (black in light
-    // mode, white in dark, same as this chart used before this session's changes). Weight dropped
-    // from 600 to 500 too, per request, it was reading heavier than the rest of the chart's type.
+    
+    
+    
+    
+    
+    
+    
     if (r.delta !== null) {
       var deltaLbl = el("text", { x: chartX + barW - 4, y: y + rowH / 2 + 3, "text-anchor": "end", "font-size": "7.6", "font-weight": "500", fill: color === "var(--skyblue)" ? "var(--text-primary)" : "#fff" });
       deltaLbl.textContent = (r.delta >= 0 ? "+" : "") + num(r.delta, 1);
@@ -4320,31 +4210,31 @@ function drawSceneWorldRankChart() {
   document.getElementById("sWRTrValue").textContent = allRows[trTrueIdx].val.toFixed(0);
 }
 
-/* ============================ scene: one economy, two orbits ============================ */
 
-// Chart-pack Story 18/18, the closing bipolarity chart. Source (build_chart_exposure.py's M2
-// section) is a 2024-only snapshot; ported here as a year slider (1995-2024) over the same
-// 65-country "imports_bn>=18" roster the source itself plots (matching what's actually on
-// screen, not the chart-pack's own caption text, which was computed at a looser, inconsistent
-// $15bn cutoff -- see the step card's "Learn more" for the exact discrepancy). The roster is
-// fixed across all 30 years so each country's comet-dust trail is always comparable to its own
-// later position, rather than a chart whose cast changes as the slider moves.
-//
-// Per explicit user request, this does NOT reuse scene 5's continuous rounded-path trail:
-// instead each bubble carries "comet dust", faint discrete dots at fixed 5-year anchors (1995,
-// 2000, ..., 2020) with no connecting stroke, geometrically fading with age. Echoes are always
-// visible (same "trails always on, just dimmed" default scene 5 itself uses), but only the
-// isolated country's own echoes get hover/tooltip targets, to avoid ~2,000 permanent tiny hit
-// targets across 65 countries x 6 anchors at once.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var sOrbitsState = { year: 2024, isolate: null };
 var ORBIT_COLOR = { china: "var(--accent)", usa: "var(--gold)", eu: "var(--good)", other: "var(--text-muted)" };
 var ORBIT_LABEL = { china: "China is top risk partner", usa: "USA is top", eu: "an EU economy is top", other: "other" };
 var ORBIT_ANCHOR_YEARS = [1995, 2000, 2005, 2010, 2015, 2020];
-// Only the handful of countries the step-card prose or the source chart's own hand-placed
-// labels name explicitly get a permanent on-canvas label; every other country is hover-only,
-// same graceful-degradation pattern as scene 5's S6_FLOW.always.
-// The editorial default labels only Türkiye. Other country names remain available on hover and
-// appear when selected, preventing the 17-label opening state from obscuring the two-orbit shape.
+
+
+
+
+
 var ORBITS_ALWAYS = { "Türkiye": 1 };
 
 function sceneOrbits() {
@@ -4364,7 +4254,7 @@ function sceneOrbits() {
   slider.setAttribute("aria-label", L("ui.selectYear"));
   var throttledDraw = rafThrottle(drawSceneOrbitsChart);
   slider.addEventListener("input", function () {
-    sOrbitsState.year = +slider.value; // always tracks the live value, even between throttled redraws
+    sOrbitsState.year = +slider.value; 
     throttledDraw();
   });
   var maxLbl = document.createElement("span");
@@ -4390,8 +4280,8 @@ function drawSceneOrbitsChart() {
   var frame = scatterFrame(100, 100, function (v) { return pct(v, 0); }, function (v) { return pct(v, 0); },
     L("s17.xLabel"), L("s17.yLabel"));
 
-  // Two short, fixed annotations name the structural reading before the reader explores individual
-  // countries. They use the chart's own orbit colors and sit in open areas of the L-shaped cloud.
+  
+  
   var usOrbitTitle = el("text", { x: frame.xF(3), y: frame.yF(96), "font-size": "10.5", "font-weight": "700", fill: ORBIT_COLOR.usa, style: "pointer-events:none" });
   usOrbitTitle.textContent = L("s17.usOrbit");
   stage.appendChild(usOrbitTitle);
@@ -4405,7 +4295,7 @@ function drawSceneOrbitsChart() {
   chinaOrbitSub.textContent = L("s17.cnSub");
   stage.appendChild(chinaOrbitSub);
 
-  // Click empty space to clear isolation, same pattern/paint-order fix as scene 5.
+  
   var clearHit = el("rect", { x: SM.l, y: SM.t, width: frame.plotW, height: frame.plotH, fill: "transparent" });
   clearHit.addEventListener("click", function () {
     if (sOrbitsState.isolate) { sOrbitsState.isolate = null; drawSceneOrbitsChart(); }
@@ -4414,21 +4304,21 @@ function drawSceneOrbitsChart() {
 
   var maxImports = Math.max.apply(null, countries.map(function (c) { return c.imports[yi] || 0; }));
 
-  // Pass 1: comet-dust echoes for every country, drawn before any bubble so a bubble is never
-  // hidden under a later country's dust (same two-pass paint order scene 5 uses for its trails).
+  
+  
   countries.forEach(function (c) {
     var orbitNow = c.orbit[yi];
     var isolated = sOrbitsState.isolate === c.country || (orbitNow && sOrbitsState.isolate === "orbit:" + orbitNow);
     var dimmed = sOrbitsState.isolate && !isolated;
     var anchors = ORBIT_ANCHOR_YEARS.filter(function (ay) { return ay < year; });
 
-    // Faint connecting line through this country's own dust trail, drawn only when this exact
-    // country (not a whole category) is isolated by click. With only 4 trail colors shared across
-    // 65 countries, same-hued faded dust from *other* nearby countries made it impossible to tell
-    // which faint dot belonged to the one just clicked. Scoped to one country at a time, not drawn
-    // for everyone (or for a whole isolated category, which can be 30+ countries at once), to
-    // avoid recreating the exact clutter the comet-dust design (2n) dropped scene 5's continuous
-    // line to get away from.
+    
+    
+    
+    
+    
+    
+    
     if (sOrbitsState.isolate === c.country && anchors.length > 0) {
       var pathPts = anchors.map(function (ay) {
         var ai = years.indexOf(ay);
@@ -4451,28 +4341,28 @@ function drawSceneOrbitsChart() {
       var ai = years.indexOf(ay);
       var cx = c.china[ai], cy = c.us[ai];
       if (cx == null || cy == null) return;
-      var kBack = anchors.length - 1 - k; // 0 = most recent anchor, fades further back
-      // Linear (not geometric) falloff over at most 6 steps, so every anchor stays visually
-      // distinct instead of the two oldest both collapsing into the same opacity floor. Radius
-      // shrinks slightly with age too, a second cue alongside opacity, purely by recency (not
-      // by trade value) so the trail still reads as uniform "dust," not tiny bubbles.
-      var t = kBack / 5; // 0 (most recent) .. 1 (oldest, i.e. 1995 when all 6 anchors show)
+      var kBack = anchors.length - 1 - k; 
+      
+      
+      
+      
+      var t = kBack / 5; 
       var dotColor = ORBIT_COLOR[c.orbit[ai]] || ORBIT_COLOR.other;
-      // "other" has no hue to lean on as it fades (it's var(--text-muted), pure grey), so the
-      // same opacity floor that a colored trail can still read at leaves it invisible against
-      // the grey-tinted full-bleed background (confirmed near-1:1 contrast either theme). Give
-      // it a shallower fade (higher floor) than the china/usa/eu trails so it stays legible.
-      // Checked against dotColor, not `!ORBIT_COLOR[c.orbit[ai]]`: the data already uses the
-      // literal string "other" for this category (not just a missing/undefined lookup), and
-      // ORBIT_COLOR.other is itself a real, truthy entry, so that lookup never actually fails
-      // here — confirmed live via a console probe before trusting this, not just by reading it.
+      
+      
+      
+      
+      
+      
+      
+      
       var opFloor = dotColor === ORBIT_COLOR.other ? 0.34 : 0.16;
       var baseOp = 0.52 - t * (0.52 - opFloor);
       var baseR = 1.5 + (1 - t) * 1.3;
       var editorialFocus = c.country === "Türkiye";
       var op = dimmed ? baseOp * 0.15 : (isolated ? Math.min(0.8, baseOp * 1.5) : (editorialFocus ? Math.min(0.72, baseOp * 1.3) : baseOp * 0.58));
       var r = isolated ? baseR + 0.9 : baseR;
-      // --dust-boost lifts these small dots on the dark ground only (audit, November 2, 2026); the hues stay.
+      
       var dot = el("circle", {
         cx: frame.xF(Math.min(cx, 100)), cy: frame.yF(Math.min(cy, 100)), r: r,
         fill: dotColor, stroke: "var(--surface-1)", "stroke-width": 0.5,
@@ -4488,7 +4378,7 @@ function drawSceneOrbitsChart() {
     });
   });
 
-  // Pass 2: current-year bubbles.
+  
   var calloutEntries = [];
   countries.forEach(function (c) {
     var cx = c.china[yi], cy = c.us[yi];
@@ -4499,10 +4389,10 @@ function drawSceneOrbitsChart() {
     var isTurkiye = c.country === "Türkiye";
     var px = frame.xF(Math.min(cx, 100)), py = frame.yF(Math.min(cy, 100));
     var radius = 3 + 14 * Math.sqrt((c.imports[yi] || 0) / maxImports);
-    // Flag a real regime change: this economy's #1 risk partner is a different country than it
-    // was the previous year (not just its orbit bucket -- China/USA/EU could stay the same
-    // bucket while the specific partner still shifts, and vice versa a bucket flip is always
-    // itself a partner flip). Null-guarded for 1995 and any country's own first year on record.
+    
+    
+    
+    
     var prevTop = yi > 0 ? c.top[yi - 1] : null;
     var partnerChanged = prevTop != null && c.top[yi] != null && prevTop !== c.top[yi];
     var g = el("g", { style: "cursor:pointer" });
@@ -4537,11 +4427,11 @@ function drawSceneOrbitsChart() {
     stage.appendChild(g);
   });
 
-  // Country-name labels drawn as a separate final pass, after every bubble: with up to 65
-  // countries on screen and a fixed always-labeled roster (`ORBITS_ALWAYS`) plus whatever's
-  // currently isolated, several land close enough together (Germany/Türkiye/USA; Vietnam/Hong
-  // Kong/Russia) to collide outright if drawn inline per-bubble at a fixed offset. Same
-  // declutter-plus-leader-line fix as scene 6's bubble callouts.
+  
+  
+  
+  
+  
   declutterLabels(calloutEntries, 11).forEach(function (lbl) {
     if (Math.abs(lbl.y - lbl.y0) > 2) {
       stage.appendChild(el("line", { x1: lbl.anchorX, y1: lbl.anchorY, x2: lbl.x - 3, y2: lbl.y - 3, stroke: "var(--text-muted)", "stroke-width": 1, opacity: "0.5" }));
@@ -4588,18 +4478,18 @@ function drawSceneOrbitsChart() {
   document.getElementById("sOrbTrUs").textContent = tr.us[yi].toFixed(0);
 }
 
-/* ============================ scene: whose factory? China's grip on world import risk ============================ */
 
-// Chart-pack Story 16/18. Source (build_chart_exposure.py's M1 section) is a 2024-only dumbbell:
-// pale dot = a country's raw import share from China, solid dot = China's share of that country's
-// import-RISK index, connected by a line labelled with the multiplier (risk share / import share).
-// Ported here as a year slider (1995-2024) over the same 65-country roster scene 16 already
-// extracted (imports_bn>=18 in 2024; the source's own M1 cutoff is a looser >=15, close enough to
-// reuse the roster already on hand rather than run a third, near-identical extraction). Rows are
-// the top 15 countries by that year's China risk share, re-picked fresh every year (same "recompute
-// the story's own ranking every year" convention as scenes 4/11/12/13), plus Turkiye/Germany/USA
-// forced in as fixed reference rows even when they fall outside the top 15, matching the source
-// script's own reference-economy treatment (there shown in orange).
+
+
+
+
+
+
+
+
+
+
+
 var sChinaGripState = { year: 2024 };
 var CHINA_GRIP_REF = { "Türkiye": 1, "Germany": 1, "USA": 1 };
 
@@ -4679,13 +4569,13 @@ function drawSceneChinaGripChart() {
 
     var g = el("g", { style: "cursor:pointer" });
     g.appendChild(el("line", { x1: x1, x2: x2, y1: y, y2: y, stroke: color, "stroke-width": 2, opacity: "0.5" }));
-    // stroke: a muted tint of the row's own color, not a flat var(--text-muted) — the PDF page
-    // this chart is built from (chart-pack Story 16/18) pairs "China's share of imports" and
-    // "China's share of import RISK" as a light-blue/dark-navy pair, one hue at two shades, not
-    // shape alone. The earlier var(--baseline)->var(--text-muted) contrast fix (needed, see 2y/2z)
-    // had the side effect of flattening this ring to plain neutral grey, losing that color pairing
-    // entirely; color-mix with var(--text-muted) keeps the same proven contrast while putting the
-    // row's own hue (blue, or gold for the reference rows) back into the ring.
+    
+    
+    
+    
+    
+    
+    
     g.appendChild(el("circle", { cx: x1, cy: y, r: 4, fill: "var(--surface-1)", stroke: "color-mix(in srgb, " + color + " 55%, var(--text-muted))", "stroke-width": 2 }));
     g.appendChild(el("circle", { cx: x2, cy: y, r: 5, fill: color }));
     if (mult != null) {
@@ -4718,17 +4608,17 @@ function drawSceneChinaGripChart() {
   }
 }
 
-/* ============================ scene: countries vs. the EU as one supplier ============================ */
 
-// StoryLine's own final scene (its on-page "Scene 14/14", function scene11(), data DATA.scene12),
-// ported here with a year slider the source (2024-only) lacked. Recomputes each country's whole
-// import-risk index with EU-27 exporters merged into a single pseudo-supplier before the sigma/HHI
-// formula runs (eu_as_bloc.py's own methodology, ported unchanged), compared to the standard index
-// with EU members counted separately. The original ten fixed references are preserved and expanded
-// with South Korea, India, Hong Kong, Mexico, Canada, Singapore, Vietnam, Taiwan, Malaysia and
-// Russia. The additions are large non-EU 2024 importers, with Russia replacing Thailand by user
-// decision. All 20 remain fixed across years. Original-ten values remain unchanged; the added
-// countries use the same HS22 endpoint / HS92 historical split as scenes 10/12/16.
+
+
+
+
+
+
+
+
+
+
 var sEUBlocState = { year: 2024 };
 
 function sceneEUBloc() {
@@ -4833,11 +4723,11 @@ function drawSceneEUBlocChart() {
 }
 
 var SCENES = [scene0, sceneIndices, sceneImportStory, sceneTradeMap, scene4, scene6, scene10, sceneRotation, sceneTech, sceneTechAmp, scene7, sceneChokepoints, scene8, sceneLeverage, sceneRetracement, sceneWorldRank, sceneOrbits, sceneChinaGrip, sceneEUBloc];
-// Four acts follow the argument already present in the 18-scene order, plus one new scene 4
-// ("Trade map at a glance") inserted at the top of Act II per the user's 2026-08-15 request; no
-// other scene is moved. The restrained blue-family palette changes primarily at real narrative
-// boundaries, with only a small within-act drift so the background still feels continuous rather
-// than like four slides.
+
+
+
+
+
 var ACTS = [
   { start: 0, end: 2, roman: "I", title: "Reading Risk", hue: 210, sat: 8 },
   { start: 3, end: 7, roman: "II", title: "Türkiye's Dependencies", hue: 198, sat: 28 },
@@ -4875,13 +4765,13 @@ var navNext = document.getElementById("navNext");
 var navLast = document.getElementById("navLast");
 var vizRoot = document.querySelector(".viz-root");
 var neighborFlow = document.body.classList.contains("neighbor-flow");
-// Up to 1000 px the figure is pinned at the top and the card reads below it (see the CSS block of the same date).
-// Landscape on a short screen puts the two side by side instead.
-var stackedQuery = window.matchMedia("(max-width: 1000px)");
-var sideQuery = window.matchMedia("(max-width: 1000px) and (max-height: 500px) and (orientation: landscape)");
+
+
+var stackedQuery = window.matchMedia("(max-width: 1180px)");
+var sideQuery = window.matchMedia("(max-width: 1180px) and (max-height: 500px) and (orientation: landscape)");
 var stickyPane = document.querySelector(".sticky-pane");
-// A jump lands first where the scene's chart will draw, then again once that chart's height is known, so the card
-// starts right under it. Instant: a smooth scroll would sweep the pinned chart through every scene on the way.
+
+
 function jumpToStep(step, behavior) {
   if (!stackedQuery.matches) { step.scrollIntoView({ behavior: behavior || "smooth", block: "center" }); return; }
   function stepTop() { return step.getBoundingClientRect().top + window.scrollY; }
@@ -4891,18 +4781,18 @@ function jumpToStep(step, behavior) {
   }
   window.scrollTo({ top: stepTop() - window.innerHeight * 0.48, behavior: "instant" });
   requestAnimationFrame(function () { requestAnimationFrame(settle); });
-  setTimeout(settle, 320); // the bar returns on an upward jump and moves the chart down 48 px over .25 s
+  setTimeout(settle, 320); 
 }
-// A real click-and-drag on a year slider can, on some trackpads, register a sliver of incidental
-// vertical scroll alongside the intended horizontal drag. If that jitter crosses the
-// IntersectionObserver's narrow -45%/-45% band into a neighboring scene even briefly, showScene()
-// must defer the switch: clearStage() would otherwise tear out the <input> that still owns the
-// gesture. The guard must describe the gesture, not mere focus. Native range inputs normally stay
-// document.activeElement after pointerup; the old focus-only guard therefore mistook every later
-// wheel/trackpad scroll for an unfinished drag and could leave Scene 1's chart underneath a much
-// later act interlude. Track pointer activity explicitly, with :active as a browser-state fallback,
-// then reconcile the observer's last deferred destination just after pointer release. Delegation
-// covers every slider scene without adding listeners to each dynamically-created input.
+
+
+
+
+
+
+
+
+
+
 var pendingSceneAfterDrag = null;
 var activeSliderPointer = null;
 document.addEventListener("pointerdown", function (e) {
@@ -4925,8 +4815,8 @@ function releasePendingSceneSwitch() {
 function finishSliderPointerGesture() {
   if (!activeSliderPointer && pendingSceneAfterDrag === null) return;
   activeSliderPointer = null;
-  // Let the browser clear :active before showScene() checks activeYearSlider() again. Reconcile the
-  // interlude too: its observer may have fired only once while the gesture guard was active.
+  
+  
   setTimeout(function () {
     releasePendingSceneSwitch();
     syncInterludeFromViewport();
@@ -4935,29 +4825,29 @@ function finishSliderPointerGesture() {
 window.addEventListener("pointerup", finishSliderPointerGesture, true);
 window.addEventListener("pointercancel", finishSliderPointerGesture, true);
 document.addEventListener("lostpointercapture", finishSliderPointerGesture, true);
-// focusout (unlike blur) bubbles, so this one delegated listener catches every scene's own
-// slider losing focus, including a keyboard user tabbing off it.
+
+
 document.addEventListener("focusout", function (e) {
   if (e.target.matches && e.target.matches('.year-slider input[type="range"]')) {
     if (activeSliderPointer === e.target) activeSliderPointer = null;
     releasePendingSceneSwitch();
-    // If incidental vertical motion carried the viewport into an act break while the slider
-    // owned focus, showInterlude() deliberately ignored it. IntersectionObserver may not emit a
-    // second entry after focus is released, so reconcile once the browser has completed the
-    // focus change and activate the break only when its body actually contains the viewport
-    // midpoint.
+    
+    
+    
+    
+    
     setTimeout(syncInterludeFromViewport, 0);
   }
 });
-// A pointer released outside the tab may produce window blur without a matching pointerup here.
+
 window.addEventListener("blur", finishSliderPointerGesture);
 var actFadeTimer = null;
 var interludeRenderedScene = null;
-// See the `.chart-holder.act-fade` CSS comment: interludes are a discrete on/off swap, not the
-// continuous per-frame scroll-scrubbed opacity normal scenes use, so they get a brief transition
-// of their own instead of the `transition: none` scroll-scrubbing needs to stay responsive. The
-// class is removed again once the transition completes so a normal scene resuming right after
-// doesn't inherit a laggy transition on its own scroll-scrubbed updates.
+
+
+
+
+
 function primeChartActFade() {
   chartCard.classList.add("act-fade");
   if (actFadeTimer) clearTimeout(actFadeTimer);
@@ -5021,8 +4911,8 @@ function showScene(i) {
   railDots.forEach(function (d, idx) { d.classList.toggle("active", idx === i); });
   navFirst.disabled = navPrev.disabled = (i === 0);
   navNext.disabled = navLast.disabled = (i === SCENES.length - 1);
-  // Must be set on .viz-root, not documentElement: sceneAccentColor() reads .viz-root's own
-  // computed colorScheme (light/dark is set there, not on <html>, see the top of <style>).
+  
+  
   vizRoot.style.setProperty("--scene-accent", sceneAccentColor(i));
   vizRoot.style.setProperty("--act-accent", actLabelColor(i));
   if (sceneSwitchTimer) { clearTimeout(sceneSwitchTimer); sceneSwitchTimer = null; }
@@ -5039,8 +4929,8 @@ function showScene(i) {
   }
   chartCard.classList.add("is-switching");
   sceneSwitchTimer = setTimeout(function () {
-    // Keep card visibility synchronized with the actual chart replacement, not the observer
-    // trigger 650ms earlier. Otherwise the incoming card can briefly describe the outgoing chart.
+    
+    
     steps.forEach(function (s, idx) { s.inert = (idx !== i); });
     SCENES[i]();
     chartCard.classList.remove("is-switching");
@@ -5050,14 +4940,14 @@ function showScene(i) {
 
 var steps = document.querySelectorAll(".step");
 var interludes = document.querySelectorAll(".act-break");
-// Every step card's own "Learn more" button stays in the DOM for the whole page (unlike the
-// per-scene chart controls, which are torn down and rebuilt on every showScene). Without this,
-// tabbing off an active scene's slider jumps focus straight to the next step card in DOM order,
-// however far off-screen it is, with no scroll and no visual indication anything changed -- a
-// keyboard-only reader has no way to tell what just happened. `inert` removes an off-screen card
-// from both the tab order and the accessibility tree in one property, applied here for the
-// initial paint (before the observer below has fired even once) and again inside showScene() on
-// every scene change.
+
+
+
+
+
+
+
+
 steps.forEach(function (s, idx) { s.inert = (idx !== 0); });
 var observer = new IntersectionObserver(function (entries) {
   entries.forEach(function (entry) {
@@ -5070,16 +4960,16 @@ var interludeObserver = new IntersectionObserver(function (entries) {
     if (entry.isIntersecting) showInterlude(+entry.target.dataset.actIndex);
   });
 }, { rootMargin: "-43% 0px -43% 0px" });
-// Desktop neighbor-flow already owns interlude activation from the viewport midpoint inside its
-// single requestAnimationFrame scroll loop. Observing the same breaks here as well activates them
-// roughly 6% early and races that loop, producing a frame where scene, card and act title are all
-// hidden. The observer remains the controller for the non-neighbor/mobile layout only.
+
+
+
+
 if (!neighborFlow) interludes.forEach(function (b) { interludeObserver.observe(b); });
 
-// Contents nav: builds its entries from each scene's own <h3> rather than a hardcoded list, so
-// it can't drift out of sync with a scene's title. Jumping is just a scroll, the existing
-// IntersectionObserver above (same -45%/-45% band `block: "center"` lands inside) does the actual
-// scene draw, so this never needs to call showScene/SCENES[i] itself.
+
+
+
+
 var tocPanel = document.getElementById("tocPanel");
 var tocToggle = document.getElementById("tocToggle");
 var tocScrim = document.getElementById("tocScrim");
@@ -5087,8 +4977,8 @@ var progressRail = document.getElementById("progressRail");
 function openToc() { tocPanel.inert = false; tocPanel.classList.add("open"); tocPanel.setAttribute("aria-hidden", "false"); tocToggle.setAttribute("aria-expanded", "true"); tocScrim.classList.add("open"); }
 function closeToc() { if (tocPanel.contains(document.activeElement)) tocToggle.focus({ preventScroll: true }); tocPanel.inert = true; tocPanel.classList.remove("open"); tocPanel.setAttribute("aria-hidden", "true"); tocToggle.setAttribute("aria-expanded", "false"); tocScrim.classList.remove("open"); }
 function actTitle(act) { return I18N[LANG].acts[ACTS.indexOf(act)] || act.title; }
-// Rebuilt on every language switch (applyLanguage): clears the panel, rail and index arrays first,
-// then reads each card's live <h3> (already rewritten in the new language) and ACTS titles.
+
+
 function buildNavigation() {
   tocPanel.innerHTML = ""; progressRail.innerHTML = "";
   tocLinks.length = 0; railDots.length = 0;
@@ -5136,8 +5026,8 @@ function buildNavigation() {
     tocPanel.appendChild(a);
     tocLinks.push(a);
 
-    // Same jump-by-scrolling approach as the toc-link above, built in this same loop since both
-    // need the same per-scene title and step reference, no separate scan of `steps` needed.
+    
+    
     var dot = document.createElement("button");
     dot.type = "button"; dot.className = "rail-dot";
     if (i === act.start) dot.classList.add("act-start");
@@ -5156,15 +5046,15 @@ document.addEventListener("click", function (e) {
 });
 document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeToc(); });
 
-// First/prev/next/last: same scroll-and-let-the-observer-redraw approach as the Contents links
-// above, `currentScene` is already tracked by showScene so prev/next just offset from it.
-// First/Last default to an instant jump, not smooth: a multi-second smooth scroll across many
-// scenes sweeps the IntersectionObserver's own hit-band through every scene in between, firing
-// showScene() (and its chart-fade-out) once per scene it passes -- with each fade-out re-applying
-// `is-switching` (opacity 0) before the previous one's timer can finish, the chart holder just
-// sits blanked out for the whole multi-second scroll, reading as a jarring white flash, since
-// `.chart-holder` itself has no background of its own (see 2w) to fall back on while blanked.
-// Prev/Next only ever move one scene, so they keep the smooth single-step fade, which looks fine.
+
+
+
+
+
+
+
+
+
 function goToStep(i, behavior) {
   if (i < 0 || i >= steps.length) return;
   jumpToStep(steps[i], behavior);
@@ -5186,10 +5076,10 @@ navPrev.addEventListener("click", function () { goToStep(interludeAdjacentScene(
 navNext.addEventListener("click", function () { goToStep(interludeAdjacentScene(1)); });
 navLast.addEventListener("click", function () { goToStep(steps.length - 1, "instant"); });
 
-// Theme toggle: the <head> script already picked the initial theme (saved choice, else system
-// preference) before first paint, this just wires the button to flip and persist it. Re-runs
-// sceneAccentColor() and re-applies it immediately rather than waiting for the next scene change,
-// since that function's light/dark branch is only otherwise evaluated from inside showScene(i).
+
+
+
+
 var themeToggle = document.getElementById("themeToggle");
 function syncThemeToggle() {
   var isDark = document.documentElement.dataset.theme === "dark";
@@ -5210,10 +5100,10 @@ themeToggle.addEventListener("click", function () {
   }
 });
 
-// Language toggle (August 25, 2026): no persistence by design, every load starts in Turkish. The
-// button shows the language it switches TO. Static narrative is rewritten from I18N, the
-// Contents menu / rail are rebuilt from the rewritten <h3>s, and the current scene is redrawn so
-// every chart title, legend, tooltip template and control label picks up the new LANG.
+
+
+
+
 var langToggle = document.getElementById("langToggle");
 function syncLangToggle() {
   langToggle.querySelector(".flag").textContent = LANG === "tr" ? "\uD83C\uDDEC\uD83C\uDDE7" : "\uD83C\uDDF9\uD83C\uDDF7";
@@ -5279,10 +5169,10 @@ function applyLanguage(lang) {
 langToggle.addEventListener("click", function () {
   hideTooltip();
   applyLanguage(LANG === "tr" ? "en" : "tr");
-  // Shared across the site's tabs (same key in every page), like "trr-theme".
+  
   try { localStorage.setItem("trr-lang", LANG); } catch (e) {}
 });
-// Every load starts Turkish unless the reader already chose a language on any tab.
+
 var initialLang = "tr";
 try { var storedLang = localStorage.getItem("trr-lang"); if (storedLang === "en" || storedLang === "tr") initialLang = storedLang; } catch (e) {}
 applyLanguage(initialLang);
@@ -5317,8 +5207,8 @@ if (neighborFlow) {
     flowGhostSpacing = 1;
   }
   function captureFlowChartGhost(direction, incomingScene, spacing) {
-    // Reversing during a crossfade promotes the returning ghost at its present opacity, preventing
-    // a flash back to the normal 3% incoming floor.
+    
+    
     var returningOpacity = flowChartGhost && flowGhostScene === incomingScene
       ? parseFloat(getComputedStyle(flowChartGhost).opacity) || 0.03
       : 0.03;
@@ -5346,9 +5236,9 @@ if (neighborFlow) {
     flowGhostStartTime = performance.now();
     flowGhostSpacing = Math.max(1, spacing);
   }
-  // Stacked layout: a card belongs to the chart above it until the card's last line has gone under that chart; only
-  // then does the chart change, so words and figure always match and no text ever lies on text. A card short enough
-  // for the room below the chart rests there (.rests, sticky) for a short run of scrolling; a longer one passes through.
+  
+  
+  
   function updateStackedFlow() {
     var paneBottom = stickyPane.getBoundingClientRect().bottom;
     var side = sideQuery.matches;
@@ -5365,7 +5255,7 @@ if (neighborFlow) {
     chartCard.style.opacity = "";
     chartCard.style.transform = "";
     vizRoot.style.setProperty("--pane-h", stickyPane.offsetHeight + "px");
-    // A legend long enough to scroll inside the figure must be reachable by keyboard.
+    
     if (stageDetail.scrollHeight > stageDetail.clientHeight + 1) stageDetail.tabIndex = 0;
     else stageDetail.removeAttribute("tabindex");
     var room = window.innerHeight - (side ? 0 : stickyPane.offsetHeight) - 16;
@@ -5379,31 +5269,31 @@ if (neighborFlow) {
     flowFrame = null;
     var midpoint = window.innerHeight / 2;
 
-    // Inline scroll styles must never survive ownership of an act break. A large wheel step can
-    // leave the break between animation frames; reset every heading first, then explicitly style
-    // only the one whose physical section currently contains the viewport midpoint.
+    
+    
+    
     interludes.forEach(function (interlude) {
       var inner = interlude.querySelector(".act-break-inner");
       inner.style.opacity = "0";
       inner.style.transform = "translateY(18px)";
     });
 
-    // Interludes keep their full editorial pause. Do not let the nearest-scene calculation exit an
-    // interlude early or clone a chart across an act boundary.
+    
+    
     for (var b = 0; b < interludes.length; b++) {
       var breakRect = interludes[b].getBoundingClientRect();
       if (breakRect.top <= midpoint && breakRect.bottom >= midpoint) {
         removeFlowChartGhost();
         showInterlude(+interludes[b].dataset.actIndex);
-        // Keep the handoff visually continuous without restoring the old wrong-scene overlap.
-        // The chart for the side the reader is approaching is prepared while fully hidden; it can
-        // then crossfade with the title at that side's boundary in either scroll direction.
+        
+        
+        
         var actProgress = Math.max(0, Math.min(1,
           (midpoint - breakRect.top) / Math.max(1, breakRect.height)));
-        // Title and chart take turns instead of crossfading (October 6, 2026): the overlapping curves
-        // left both ~40% visible at once near each edge, the large heading sitting on the chart. The
-        // chart now clears by 0.12 before the title starts at 0.14, and the title clears by 0.86 before
-        // the next chart starts at 0.88.
+        
+        
+        
+        
         var actTitleIn = flowSmoothstep(0.14, 0.26, actProgress);
         var actTitleOut = flowSmoothstep(0.74, 0.86, actProgress);
         var actTitleOpacity = actTitleIn * (1 - actTitleOut);
@@ -5421,8 +5311,8 @@ if (neighborFlow) {
           interludeRenderedScene = preparedScene;
         }
 
-        // Old scene yields on the near edge; the already-prepared correct next scene enters on the
-        // far edge. Math.max makes the same pair of curves work symmetrically in reverse.
+        
+        
         var outgoingActChart = 1 - flowSmoothstep(0.02, 0.12, actProgress);
         var incomingActChart = flowSmoothstep(0.88, 0.98, actProgress);
         var actChartOpacity = Math.max(outgoingActChart, incomingActChart);
@@ -5433,9 +5323,9 @@ if (neighborFlow) {
       }
     }
 
-    // The midpoint has cleared every act break. Release the interlude immediately instead of
-    // waiting for the nearest-scene ownership threshold; otherwise the title can be fully faded
-    // out while the page remains stuck in a blank interlude state for the rest of that gap.
+    
+    
+    
     if (activeInterlude !== null) {
       exitInterlude();
       steps.forEach(function (step, idx) { step.inert = (idx !== currentScene); });
@@ -5492,13 +5382,13 @@ if (neighborFlow) {
 
     var chartOpacity = 0.3 + 0.7 * chartPhase;
     if (flowChartGhost) {
-      // Physical scroll distance stays monotonic across pair boundaries and handles reversals more
-      // reliably than a normalized segment value that resets at each scene centre.
+      
+      
       var advance = flowGhostDirection > 0
         ? (window.scrollY - flowGhostStartScroll) / flowGhostSpacing
         : (flowGhostStartScroll - window.scrollY) / flowGhostSpacing;
-      // Scroll remains the primary driver. A 360ms clock fallback guarantees completion if a
-      // fast wheel/trackpad event lands beyond the threshold and then emits no further movement.
+      
+      
       var elapsedAdvance = (performance.now() - flowGhostStartTime) / 360 * 0.18;
       advance = Math.max(0, advance, elapsedAdvance);
       var incomingBlend = flowSmoothstep(0, 0.18, advance);
@@ -5533,7 +5423,7 @@ if (neighborFlow) {
   }
   window.addEventListener("scroll", requestNeighborFlowUpdate, { passive: true });
   window.addEventListener("resize", requestNeighborFlowUpdate);
-  // The chart's height changes with its tabs and with the bar's return; the card's resting line follows it.
+  
   if (window.ResizeObserver) new ResizeObserver(requestNeighborFlowUpdate).observe(stickyPane);
   showScene(0);
   requestNeighborFlowUpdate();
@@ -5564,20 +5454,20 @@ document.querySelectorAll(".step .card").forEach(function (card) {
   root.appendChild(rail);
   var bar = document.createElement("div"); bar.className = "top-progress"; root.appendChild(bar);
 
-  // Rebuilt from the page's own #tocPanel (which buildNavigation() refills on every language switch),
-  // so titles, act names and the active scene always match; clicks are forwarded to the original links.
+  
+  
   function render() {
-    // On an act title screen the page clears every scene's "active" and marks that act's .act-break
-    // instead; the rail then highlights and opens that act with no scene selected.
+    
+    
     var brk = root.classList.contains("interlude-active") ? document.querySelector(".act-break.active") : null;
     var titleAct = brk ? +brk.dataset.actIndex : -1;
-    rail.lang = document.documentElement.lang;   // correct Turkish capitals (İ) in the uppercase title
+    rail.lang = document.documentElement.lang;   
     var acts = [], cur = null;
     Array.prototype.forEach.call(panel.children, function (el) {
       if (el.classList.contains("toc-act-heading")) { cur = { jump: el.querySelector("button"), scenes: [] }; acts.push(cur); }
       else if (el.classList.contains("toc-link") && cur) cur.scenes.push(el);
     });
-    // The browser-tab title (ui.title), which applyLanguage() keeps in the current language.
+    
     var html = '<div class="rail-title">' + window.__railTitle + '</div><div class="rail-list">';
     acts.forEach(function (a, ai) {
       var on = ai === titleAct || a.scenes.some(function (s) { return s.classList.contains("active"); });
@@ -5608,8 +5498,8 @@ document.querySelectorAll(".step .card").forEach(function (card) {
     var n = 24, f = Math.round(p * n), el = rail.querySelector(".rail-progress");
     if (el) el.innerHTML = "<b>" + "▓".repeat(f) + "</b>" + "░".repeat(n - f) + " " + Math.round(p * 100) + "%";
     var scrolly = document.querySelector(".scrolly"), outro = document.querySelector(".outro");
-    // Rail and playback controls leave as the closing block reaches them (audit S2-5, November 2, 2026), so they never
-    // print over its text or get cut by the footer.
+    
+    
     var past = !!outro && outro.getBoundingClientRect().top < innerHeight - 70;
     var inStory = !!scrolly && scrolly.getBoundingClientRect().top < innerHeight * 0.5;
     rail.classList.toggle("shown", inStory && !past);
@@ -5651,7 +5541,7 @@ document.querySelectorAll(".step .card").forEach(function (card) {
       <span>© 2026 Istanbul Policy Center</span>
       <a href="/en/imprint/">Imprint</a><a href="/en/privacy/">Privacy</a><a href="/en/cookies/">Cookies</a>
       <button type="button" data-consent-open>Cookie settings</button>
-      <span class="ft-proto">Prototype, November 2026</span>
+      <span class="ft-proto">Prototype</span>
     </div>
   </div>
 </footer>
@@ -5668,7 +5558,7 @@ document.querySelectorAll(".step .card").forEach(function (card) {
       <button type="button" data-act="prefs" aria-expanded="false" aria-controls="consent-prefs">Preferences</button>
     </div>
     <div class="prefs" id="consent-prefs">
-      <div class="row"><input type="checkbox" id="c-nec" name="necessary" checked disabled><label for="c-nec">Necessary</label><small>Your theme and language choice, and your cookie decision. Theme and cookie records are written only when you click; the language record when you open a dashboard.</small></div>
+      <div class="row"><input type="checkbox" id="c-nec" name="necessary" checked disabled><label for="c-nec">Necessary</label><small>Your theme and language choice, and your cookie decision. Theme and cookie records are written only when you click; the language record when you open a dashboard or switch language.</small></div>
       <div class="row"><input type="checkbox" id="c-ana" name="analytics"><label for="c-ana">Analytics</label><small>No analytics tool is loaded in this prototype.</small></div>
       <div class="btns" style="margin-top:.6rem"><button type="button" data-act="save">Save</button></div>
     </div>

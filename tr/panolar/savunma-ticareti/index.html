@@ -6,20 +6,19 @@
 
 
 <!doctype html>
-<html lang="tr">
+<html data-theme="light" lang="tr">
 <head><script>try{localStorage.setItem('trr-lang','tr')}catch(e){}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Türkiye’nin savunma ticareti · Makro Risk Akademi</title>
 <meta name="description" content="Türkiye’nin silah ve İHA ihracatçısına dönüşmesi, on sahnede.">
 <script>
-  // theme before first paint (same key and logic as the storyline and the old defence page)
+  
   (function(){try{var t=localStorage.getItem("trr-theme");
-    if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+    if(t!=="dark")t="light"; 
     document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","light");}})();
 </script>
-<!-- Defence tab, scroll-scrub edition (October 6, 2026). A sticky canvas plays one timeline driven by scroll
-     (Apple product-page mechanics); ten scenes, then a live globe explorer. Data inlined by data/build_scroll_data.py. -->
+
 <style>
 :root{
   color-scheme:light;
@@ -43,7 +42,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line
 a{color:var(--accent)}
 button{font:inherit}
 
-/* fixed chrome */
+
 #bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:41}
 .top{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;pointer-events:none}
 .top>*{pointer-events:auto}
@@ -95,7 +94,7 @@ button{font:inherit}
 #chapters button.on i{background:var(--accent);border-color:var(--accent);transform:scale(1.3)}
 #segs{display:none}
 
-/* explorer scene: controls and list live in the caption column */
+
 .cap.live{max-width:min(26rem,calc(100vw - clamp(16px,6vw,96px) - 16px))}
 .cap.live.on{pointer-events:auto}
 .exdir{display:flex;gap:clamp(20px,3vw,36px);margin:16px 0 14px}
@@ -120,9 +119,9 @@ button{font:inherit}
 .exper button[aria-pressed="true"] span{border-color:var(--accent)}
 .exper .all{padding-left:6px}
 .exper .all[aria-pressed="true"]{color:var(--accent);font-weight:600}
-.exmix{display:flex;gap:2px;height:24px;margin:-6px 0}/* 24 px targets, 12 px visible bar; the margin keeps the row's old height */
+.exmix{display:flex;gap:2px;height:24px;margin:-6px 0}
 .exmix button{all:unset;cursor:pointer;height:100%;display:flex;align-items:center;transition:width .5s cubic-bezier(.22,1,.36,1),opacity .2s}
-.exmix button:disabled{cursor:default}/* narrower than a target: drawn only, its name in the key below is the control */
+.exmix button:disabled{cursor:default}
 .exmix button i{display:block;width:100%;height:12px;border-radius:2px}
 .exmix.f button:not([aria-pressed="true"]){opacity:.22}
 .exkey{display:flex;flex-wrap:wrap;gap:0 12px;margin:6px 0 8px;font-size:12px}
@@ -163,7 +162,7 @@ details{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);pad
 summary{cursor:pointer;color:var(--ink);font-family:var(--display);font-size:18px}
 .src{font-size:13px;color:var(--ink3);margin-top:24px}
 
-/* stacked layout, text above and figure below: the canvas code asks the same question (see NARROW) */
+
 @media (max-width:1100px){
   .cap{top:max(10vh,56px)}
   .c-mid{top:39vh}
@@ -183,22 +182,22 @@ summary{cursor:pointer;color:var(--ink);font-family:var(--display);font-size:18p
   #segs i.on{background:var(--accent)}
   #bar{display:none}
 }
-/* tablets: the explorer's controls and list side by side above the globe */
+
 @media (min-width:701px) and (max-width:1100px){
   .cap.live{max-width:calc(100vw - 2*clamp(16px,6vw,96px))}
   .exwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 clamp(24px,4vw,44px)}
   .exwrap .exdir{margin-top:0}
 }
-/* short phones, and any narrow screen too low for the bars: the period bars give way so the globe sits clear */
+
 @media (max-width:700px) and (max-height:780px),(max-width:1100px) and (max-height:560px){
   #exPerL,.exper{display:none}
 }
 </style>
 <meta name="robots" content="noindex">
-<link rel="canonical" href="https://www.makroriskakademi.com/tr/panolar/savunma-ticareti/">
-<link rel="alternate" hreflang="tr" href="https://www.makroriskakademi.com/tr/panolar/savunma-ticareti/">
-<link rel="alternate" hreflang="en" href="https://www.makroriskakademi.com/en/dashboards/defence-trade/">
-<link rel="alternate" hreflang="x-default" href="https://www.makroriskakademi.com/tr/panolar/savunma-ticareti/">
+<link rel="canonical" href="https://sametapaydin.github.io/tr/panolar/savunma-ticareti/">
+<link rel="alternate" hreflang="tr" href="https://sametapaydin.github.io/tr/panolar/savunma-ticareti/">
+<link rel="alternate" hreflang="en" href="https://sametapaydin.github.io/en/dashboards/defence-trade/">
+<link rel="alternate" hreflang="x-default" href="https://sametapaydin.github.io/tr/panolar/savunma-ticareti/">
 <link rel="stylesheet" href="/assets/css/shell.css">
 <link rel="stylesheet" href="/assets/css/dash.css">
 <link rel="icon" href="/assets/img/favicon-ipc.ico">
@@ -208,8 +207,7 @@ summary{cursor:pointer;color:var(--ink);font-family:var(--display);font-size:18p
 <header class="mra sb" lang="tr" data-hd data-hide>
   <div class="sb-left">
     <a class="sb-brand" href="/tr/">
-      <span class="sb-logo"><img src="/assets/img/logo-tr.png" alt="İstanbul Politikalar Merkezi" width="286" height="58"></span>
-      <span class="sb-rule" aria-hidden="true"></span>
+      <span class="mark"><img class="mk-l" src="/assets/img/logo-mark-tr.png" alt="İstanbul Politikalar Merkezi" width="89" height="58"><img class="mk-d" src="/assets/img/logo-mark-tr-dark.png" alt="İstanbul Politikalar Merkezi" width="89" height="58"></span>
       <span class="sb-name">Makro Risk Akademi</span>
     </a>
     <span class="sb-pg"><span aria-hidden="true">/</span> Türkiye’nin savunma ticareti</span>
@@ -230,9 +228,11 @@ summary{cursor:pointer;color:var(--ink);font-family:var(--display);font-size:18p
   </div>
 </header>
 
+
+
 <script src="/assets/js/site.js" defer></script>
 
-<noscript><p class="mra sb-noscript" lang="tr">Bu pano JavaScript ile çalışır. Tarayıcınızda JavaScript’i açın ya da panoların listesine ve yöntem sayfasına bakın.</p></noscript>
+<noscript><p class="mra sb-noscript" lang="tr">Bu pano JavaScript ile çalışır. Tarayıcınızda JavaScript’i açın ya da <a href="/tr/panolar/">panoların listesine</a> ve <a href="/tr/panolar/yontem/">yöntem sayfasına</a> bakın.</p></noscript>
 
 <div id="bar"></div><div id="segs"></div>
 <div class="top"><span class="brand">IPM, Savunma</span><button class="theme-toggle" id="themeToggle" type="button" aria-label="Temayı değiştir">◐</button></div>
@@ -263,7 +263,7 @@ const DATA = {"built":"14 Ekim 2026","milexYears":[1995,2025],"tivYears":[1992,2
 <script>
 (function(){
 "use strict";
-/* ============ helpers ============ */
+
 const nf=(v,d=0)=>v.toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d});
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const lerp=(a,b,t)=>a+(b-a)*t;
@@ -279,7 +279,7 @@ let CSS={};const css=v=>CSS[v]||(CSS[v]=getComputedStyle(document.documentElemen
 const mlr=v=>nf(v/1000,1)+' mlr $';
 const money=v=>v>=1000?nf(v/1000,2)+' mlr $':nf(v,v<100?1:0)+' mn $';
 const tiv=v=>nf(v)+' TIV';
-// Turkish case suffix for a formatted number, following how it is read aloud ("%1,9'a", "%20'si", "2020'de")
+
 const UNIT={0:['ı',0,0],1:['e',0,0],2:['i',1,0],3:['ü',0,1],4:['ö',0,1],5:['e',0,1],6:['ı',1,0],7:['i',1,0],8:['i',0,0],9:['u',0,0]};
 const TENS={1:['o',0,0],2:['i',1,0],3:['u',0,0],4:['ı',0,1],5:['i',1,0],6:['ı',0,1],7:['i',0,1],8:['e',0,0],9:['a',0,0]};
 function lastWord(str){const d=String(str).replace(/[^0-9,]/g,'');const [ip,dp]=d.split(',');const t=dp&&+dp?dp:ip.replace(/\./g,'');
@@ -290,7 +290,7 @@ function sfx(str,kind){const [v,endV,hard]=lastWord(str),back='aıou'.includes(v
   return str+"'"+x;}
 let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
 
-/* ============ data ============ */
+
 const P=DATA.places, TRD=DATA.tr, M0=DATA.milexYears[0], T0=DATA.tivYears[0];
 const nm=k=>(P[k]&&P[k].tr)||k;
 const WINS=DATA.wins, RK=DATA.rank;
@@ -306,14 +306,14 @@ const om=(a,b)=>Math.acos(clamp(dot3(a,b),-1,1));
 const yr=(arr,y,y0)=>arr[y-y0];
 const wsum=(arr,y0,a,b)=>{let s=0;for(let y=a;y<=b;y++)s+=(arr[y-y0]||0);return s;};
 
-// categories per partner and window, grouped
+
 function gsum(C,k,group,ws){const cs=C[k]||{};let s=0;for(const c in cs){if(group&&GOF[c]!==group)continue;for(const w of ws)s+=cs[c][w]||0;}return s;}
 const ALLW=[0,1,2,3,4,5];
 const catTot=side=>{const C=DATA[side],o={};GROUPS.forEach(g=>o[g]=0);for(const k in C)for(const c in C[k])o[GOF[c]]+=C[k][c].reduce((a,b)=>a+b,0);return o;};
 const CIN=catTot('inC'), COUT=catTot('outC');
 const topG=o=>GROUPS.filter(g=>g!=='other').sort((a,b)=>o[b]-o[a])[0];
 
-// drones: one particle per delivered unit
+
 const DR=DATA.drones.filter(d=>d.deliv>0&&d.years&&d.years.length&&PV[d.rec]);
 const BUY={};const DP=[];
 DR.forEach(d=>{const b=BUY[d.rec]||(BUY[d.rec]={k:d.rec,v:PV[d.rec]});const n=Math.round(d.deliv),L=d.years.length;
@@ -322,21 +322,21 @@ Object.values(BUY).forEach(b=>b.om=om(TRV,b.v));
 DP.sort((a,b)=>(a.y+a.f)-(b.y+b.f));
 const DY0=2019,DY1=2025,DU=DP.length,DB=Object.keys(BUY).length;
 
-// suppliers 1996–2000 and partners for the reversal
+
 const IN0=Object.keys(DATA.inW).map(k=>[k,DATA.inW[k][0]]).filter(x=>x[1]>0&&PV[x[0]]).sort((a,b)=>b[1]-a[1]);
 const IN0T=IN0.reduce((s,x)=>s+x[1],0);
 const pct=v=>'%'+nf(v*100,0);
 const CROSS=(()=>{for(let y=1996;y<=2025;y++)if(yr(TRD.exp,y,T0)>yr(TRD.imp,y,T0))return y;return null;})();
 
-// world shares: milex yearly, trade as trailing five-year sums
+
 const share=(y)=>{const i=y-M0;const a=Math.max(T0,y-4);
   const wi=wsum(DATA.world.imp,T0,a,y);
   return {m:TRD.m[i]/DATA.world.m[i], im:wsum(TRD.imp,T0,a,y)/wi, ex:wsum(TRD.exp,T0,a,y)/wi, wm:DATA.world.m[i]};};
 
-// new buyers per window
+
 const NC=DATA.newcust.map(w=>({lab:`${w.from}–${w.to}`,names:w.names.filter(k=>PV[k])}));
 
-/* ============ strings (Turkish; English to follow) ============ */
+
 const g0=TRD.g[0],g1=TRD.g[TRD.g.length-1];
 const S1=share(1995),S2=share(2025);
 const L={
@@ -369,8 +369,8 @@ const L={
   src:`Kaynak: SIPRI Military Expenditure Database 1949–2025 v1.2; SIPRI Arms Transfers Database (11 Eylül 2026'da üretilen tablolar ve kayıt); CEPII BACI (gümrük fasıl 93, HS92; İHA faslı 8806, HS22). Derleme ${DATA.built}.`
 };
 
-/* ============ canvas setup ============ */
-const NARROW=matchMedia('(max-width:1100px)'),PHONE=matchMedia('(max-width:700px)'); // same breakpoints as the CSS
+
+const NARROW=matchMedia('(max-width:1100px)'),PHONE=matchMedia('(max-width:700px)'); 
 function mk(canvas){
   const c={cv:canvas,cx:canvas.getContext('2d'),W:0,H:0,narrow:false,phone:false};
   c.resize=()=>{const d=Math.min(2,devicePixelRatio||1);c.W=canvas.clientWidth;c.H=canvas.clientHeight;c.narrow=NARROW.matches;c.phone=PHONE.matches;
@@ -378,7 +378,7 @@ function mk(canvas){
   return c;
 }
 
-// land dots from the outline (equirectangular 980 × 386.56, lon −180..180, lat 84..−58)
+
 const LAND=(()=>{const oc=document.createElement('canvas');oc.width=980;oc.height=387;const o=oc.getContext('2d');
   o.fill(new Path2D(DATA.world_d));const px=o.getImageData(0,0,980,387).data;const out=[];
   for(let lat=-56;lat<=82;lat+=1.5){const ls=1.5/Math.max(.25,Math.cos(lat*rad));
@@ -406,7 +406,7 @@ function drawTR(c,g,b,label){
   const t=proj(TRV,g,b);if(t[2]<=0||g.a<=.01)return;const x=c.cx;x.save();x.globalAlpha=g.a;x.fillStyle=css('--accent');
   x.beginPath();x.arc(t[0],t[1],4,0,Math.PI*2);x.fill();x.globalAlpha=g.a*.3;x.beginPath();x.arc(t[0],t[1],11,0,Math.PI*2);x.fill();
   let box=null;
-  if(label){x.globalAlpha=g.a;x.font=`600 ${c.narrow?12:14}px ${css('--body')}`;const w=x.measureText('Türkiye').width,X=Math.min(t[0]+12,c.W-w-10),Y=t[1]-12; // kept off the screen edge
+  if(label){x.globalAlpha=g.a;x.font=`600 ${c.narrow?12:14}px ${css('--body')}`;const w=x.measureText('Türkiye').width,X=Math.min(t[0]+12,c.W-w-10),Y=t[1]-12; 
     x.lineJoin='round';x.strokeStyle=css('--bg');x.lineWidth=3;x.strokeText('Türkiye',X,Y);x.fillStyle=css('--ink');x.fillText('Türkiye',X,Y);box=[X,Y,w];}
   x.restore();return box;
 }
@@ -420,7 +420,7 @@ function particle(c,g,b,a,v,o,t,col,head,alpha,r=1.8){
     x.globalAlpha=alpha*(s===0?1:.3/s);x.fillStyle=s===0?head:col;x.beginPath();x.arc(P[0],P[1],s===0?r:r*.7,0,Math.PI*2);x.fill();}
 }
 function dotAt(c,g,b,v,r,col,alpha){const P=proj(v,g,b);if(P[2]<0)return null;const x=c.cx;x.globalAlpha=alpha;x.fillStyle=col;x.beginPath();x.arc(P[0],P[1],r,0,Math.PI*2);x.fill();return P;}
-function labels(c,list,alpha,maxX,avoid){ // list of [x,y,text,strong]; maxX: right edge labels must stay left of; avoid: [x,y,w] boxes already taken
+function labels(c,list,alpha,maxX,avoid){ 
   const x=c.cx;x.font=`500 ${c.narrow?11:13}px ${css('--body')}`;const placed=(avoid||[]).slice(),bg=css('--bg');x.lineJoin='round';
   for(const [px,py,t,strong] of list){const w=x.measureText(t).width;let X=px+9,Y=py+4;if(X+w>(maxX||c.W-10))X=px-9-w;X=Math.max(6,X);
     const busy=()=>placed.some(r=>Math.abs(r[1]-Y)<14&&X<r[0]+r[2]&&X+w>r[0]);
@@ -431,10 +431,10 @@ function labels(c,list,alpha,maxX,avoid){ // list of [x,y,text,strong]; maxX: ri
 const gutter=c=>c.phone?16:clamp(c.W*.06,16,96);
 function axisLab(x,t,X,Y,a){x.globalAlpha=a;x.font=`11px ${css('--body')}`;x.lineJoin='round';x.strokeStyle=css('--bg');x.lineWidth=3;x.strokeText(t,X,Y);x.fillStyle=css('--ink3');x.fillText(t,X,Y);}
 
-/* ============ scenes ============ */
-// cam(n): globe placement while the scene holds; cam2: optional placement at the end of the scene (slow drift)
+
+
 const stage=mk($('cv'));
-const XN={y:.835,R:.275,ty:.835,tR:.275,set:false}; // explorer globe on narrow screens: the room left under the text (exLayout)
+const XN={y:.835,R:.275,ty:.835,tR:.275,set:false}; 
 const SC=[
  {id:'intro',len:95,pre:n=>({x:.5,y:n?1.3:1.42,R:n?.62:.7,a:0,lon:-25,lat:18}),cam:n=>({x:.5,y:n?.68:.66,R:n?.44:.42,a:1,lon:30,lat:34}),cam2:n=>({x:.5,y:n?.66:.64,R:n?.44:.42,a:1,lon:35,lat:38}),arrive:.75,
   draw(t,c,g,b){drawTR(c,g,b,true);}},
@@ -465,7 +465,7 @@ const SC=[
 let TOT=0;SC.forEach(s=>{s.a0=TOT;TOT+=s.len;});SC.forEach(s=>{s.a=s.a0/TOT;s.b=(s.a0+s.len)/TOT;});
 $('track').style.height=(TOT+100)+'vh';
 
-const camM=c=>c.narrow?Math.min(c.W,c.H*.4625)*1.15:Math.min(c.W,c.H); // the stacked layout scales by width, or by height on short or wide screens; 390×844 is unchanged
+const camM=c=>c.narrow?Math.min(c.W,c.H*.4625)*1.15:Math.min(c.W,c.H); 
 function camKeys(n){
   const K=[[0,SC[0].pre(n)]];
   SC.forEach((s,i)=>{if(s.keys){s.keys.forEach(([f,fn])=>K.push([s.a+(s.b-s.a)*f,fn(n)]));return;}
@@ -478,27 +478,26 @@ function cam(p,c){
   const m=camM(c);
   return {x:lerp(A.x,B.x,t)*c.W,y:lerp(A.y,B.y,t)*c.H,R:lerp(A.R,B.R,t)*m,a:lerp(A.a,B.a,t),lon:lerp(A.lon,B.lon,t),lat:lerp(A.lat,B.lat,t)};
 }
-const layer=(t,last)=>sstep(.03,.18,t)*(last?1:1-sstep(.92,1,t)); // a scene's own overlay alpha
+const layer=(t,last)=>sstep(.03,.18,t)*(last?1:1-sstep(.92,1,t)); 
 
-/* ---- country bubbles: area proportional to a yearly value. Scenes 2–3: military spending (constant 2024 US$ m);
-   scene 7: customs chapter 93 exports (current US$ m, every BACI reporter, so ranks match the counter) ---- */
+
 const MX=Object.entries(DATA.mx).map(([k,q])=>({k,tr:q.tr,m:q.m,v:vec(...q.ll)}));
 const C93S=DATA.c93.map(q=>({k:q.k,tr:q.tr,m:q.v,v:q.ll?vec(...q.ll):null}));
 function mxAt(m,fy){const L=m.length-1,i=Math.min(L,Math.floor(fy)),f=fy-i,a=m[i],z=m[Math.min(L,i+1)];return a==null?null:(z==null?a:lerp(a,z,f));}
-// o.set: items (default MX); o.ref: value drawn at 0.037 globe radii (default Türkiye's 2025 spending); o.tLab/o.lab: label text;
-// o.rank: prefix ranks; o.only: label only these countries; o.nLab: labels besides Türkiye; o.vals: values on phones too;
-// o.ring: Türkiye's first-year size as a dashed ring. With o.rank, labels go by rank and US/China/Russia are labelled only in the top 15
-const BIG3={'United States':'--c-us','China':'--c-cn','Russia':'--c-ru'}; // muted own hues; Türkiye keeps the solid accent
+
+
+
+const BIG3={'United States':'--c-us','China':'--c-cn','Russia':'--c-ru'}; 
 const NEIGH=['Greece','Bulgaria','Romania','Ukraine','Russia','Azerbaijan','Armenia','Iran','Iraq','Israel','Egypt','Saudi Arabia'];
 function drawBubbles(c,g,b,fy,op,o){
   if(op<=0)return;const x=c.cx,set=o.set||MX,ref=o.ref||TRD.m[30],k=g.R*.037,its=[];
   let rk=null;if(o.rank){const yi=Math.round(fy);rk=new Map(set.map(q=>[q.k,1+set.filter(z=>(z.m[yi]||0)>(q.m[yi]||0)).length]));}
   for(const q of set){if(!q.v)continue;const v=mxAt(q.m,fy);if(!v)continue;const P=proj(q.v,g,b);if(P[2]<.02)continue;
-    const yv=q.m[Math.min(q.m.length-1,Math.round(fy))]; // label value: same year as the counter
+    const yv=q.m[Math.min(q.m.length-1,Math.round(fy))]; 
     its.push({q,v,yv:yv==null?v:yv,P,r:Math.max(1.1,k*Math.sqrt(v/ref)),T:q.k==='Turkiye'});}
   its.sort((a,z)=>z.r-a.r);
   const ink=css('--ink'),ink2=css('--ink2'),acc=css('--accent');x.save();x.lineWidth=1;
-  const rail=c.narrow?1e9:c.W-80; // fade bubbles whose right edge reaches the chapter dots
+  const rail=c.narrow?1e9:c.W-80; 
   for(const it of its){const f=op*clamp(it.P[2]/.3)*clamp((rail-it.P[0]-it.r)/80);if(it.T)continue;
     const hc=BIG3[it.q.k]&&css(BIG3[it.q.k]);
     x.beginPath();x.arc(it.P[0],it.P[1],it.r,0,Math.PI*2);x.globalAlpha=f*(hc?.32:.13);x.fillStyle=hc||ink;x.fill();x.globalAlpha=f*(hc?.85:.45);x.strokeStyle=hc||ink2;x.stroke();}
@@ -509,14 +508,14 @@ function drawBubbles(c,g,b,fy,op,o){
   if(T)lab.push([T.P[0]+T.r-6,T.P[1],pre(T)+(o.tLab?o.tLab(T.yv):`Türkiye ${nf(T.yv/1000,1)} mlr $`),true]);
   its.filter(i=>!i.T&&i.P[2]>(BIG3[i.q.k]?.15:.35)&&(!o.only||o.only.includes(i.q.k))&&i.P[0]>0&&i.P[0]<xMax&&i.P[1]>0&&i.P[1]<c.H).filter(i=>!rk||!BIG3[i.q.k]||rk.get(i.q.k)<=15).sort((a,z)=>(rk?0:(!!BIG3[z.q.k]-!!BIG3[a.q.k]))||z.v-a.v).slice(0,o.nLab)
     .forEach(i=>lab.push([i.P[0]+i.r-6,i.P[1],pre(i)+(c.narrow&&!o.vals?i.q.tr:o.lab?o.lab(i):`${i.q.tr} ${big(i.yv)}`),false]));
-  const ch=!c.narrow&&document.querySelector('#chapters button.on span'),cr=ch&&ch.getBoundingClientRect(); // keep clear of the active chapter name
+  const ch=!c.narrow&&document.querySelector('#chapters button.on span'),cr=ch&&ch.getBoundingClientRect(); 
   labels(c,lab,op,xMax,cr&&cr.width?[[cr.left-6,cr.top+cr.height*.75,cr.width+40],[cr.left-6,cr.top+cr.height*.75+14,cr.width+40]]:[]);
   if(o.note){x.globalAlpha=op;x.fillStyle=css('--ink3');x.font=`11px ${css('--body')}`;const w=x.measureText(o.note).width;
     x.fillText(o.note,clamp(g.x-w/2,12,c.W-w-12),Math.min(c.H-14,g.y+g.R+22));}
   x.restore();
 }
 
-/* ---- 2 world context ---- */
+
 function drawWorld(t,c,g,b){
   const op=layer(t);if(op<=0)return;const k=clamp((t-.2)/.6),y=Math.round(1995+k*30);const s=share(y);
   const x=c.cx,n=c.narrow;const bx=n?{x0:gutter(c),x1:c.W-gutter(c),y0:c.H*.53}:{x0:c.W*.06,x1:c.W*.5,y0:c.H*.71};
@@ -533,7 +532,7 @@ function drawWorld(t,c,g,b){
   drawBubbles(c,g,b,k*30,op,{nLab:n?3:5,note:n?'':`daire alanı ve sayı: askerî harcama, mlr $ (sabit 2024 fiyatlarıyla), ${y}`});
   setC('w-y',String(y));setC('w-v',nf(s.wm/1000,0));setC('w-s','%'+nf(s.m*100,2));
 }
-/* ---- 3 spending ---- */
+
 function drawSpend(t,c,g,gb){
   const op=layer(t);if(op<=0)return;const k=clamp((t-.2)/.6),fy=k*30,mil=TRD.m,x=c.cx;
   const b=c.narrow?{x0:gutter(c),x1:c.W-gutter(c),y0:c.H*.56,y1:c.H*.69}:{x0:c.W*.06,x1:c.W*.52,y0:c.H*.74,y1:c.H*.9};
@@ -546,12 +545,12 @@ function drawSpend(t,c,g,gb){
   x.fillStyle=css('--accent');x.globalAlpha=op*.15;x.fill();x.globalAlpha=op;
   x.beginPath();pts.forEach((q,i)=>i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]));x.strokeStyle=css('--accent');x.lineWidth=2;x.stroke();
   const Lp=pts[pts.length-1];x.fillStyle=css('--accent');x.beginPath();x.arc(Lp[0],Lp[1],4,0,Math.PI*2);x.fill();
-  [10,20,30].forEach(v=>axisLab(x,`${v} mlr $`,b.x0,Y(v*1000)+13,op));x.restore(); // under their lines: the series runs just above 10 for two decades
+  [10,20,30].forEach(v=>axisLab(x,`${v} mlr $`,b.x0,Y(v*1000)+13,op));x.restore(); 
   drawBubbles(c,g,gb,fy,op,{only:NEIGH,nLab:c.narrow?5:8,ring:true,vals:true,note:c.narrow?'':`Türkiye ve çevresi, askerî harcama ${M0+Math.min(30,Math.round(fy))}; kesikli halka: Türkiye 1995, mlr $`});
-  const yi=Math.min(30,Math.round(fy)),v=mil[yi]; // counter: the year shown, as the bubble labels
+  const yi=Math.min(30,Math.round(fy)),v=mil[yi]; 
   setC('s-y',String(M0+yi));setC('s-v',nf(v/1000,1));setC('s-r',TRD.mRank[yi]?`dünyada ${TRD.mRank[yi]}. sırada, GSYH payı %${nf(TRD.g[yi],1)}`:'');
 }
-/* ---- 4 suppliers 1996–2000 ---- */
+
 const SUPP=(()=>{const out=[];IN0.forEach(([k,v])=>{const n=Math.max(1,Math.round(v/22));const o=om(PV[k],TRV);for(let i=0;i<n;i++)out.push({k,v:PV[k],o,f:rnd()});});return out;})();
 function drawSuppliers(t,c,g,b){
   const op=layer(t)*g.a;if(op<=0)return;const x=c.cx;x.save();
@@ -562,7 +561,7 @@ function drawSuppliers(t,c,g,b){
   const tb=drawTR(c,g,b,true);labels(c,lab,op,0,tb?[tb]:[]);x.restore();
   setC('p-r',`${RK.im[0]}.`);setC('p-n',nf(IN0.length));setC('p-v',nf(Math.round(IN0T)));
 }
-/* ---- 5 reversal ---- */
+
 const REV=(()=>{const mk=(src,dir)=>Object.keys(src).filter(k=>PV[k]&&Math.max(...src[k])>=15).map(k=>{const mx=Math.max(...src[k]);const n=Math.max(1,Math.round(mx/45));
   return {k,dir,w:src[k],o:om(PV[k],TRV),v:PV[k],ps:Array.from({length:n},()=>rnd())};});return mk(DATA.inW,'in').concat(mk(DATA.outW,'out'));})();
 function drawReversal(t,c,g,b){
@@ -580,7 +579,7 @@ function drawReversal(t,c,g,b){
   setC('r-y',String(y));setC('r-i',nf(im));setC('r-e',nf(ex));
   $('r-e').classList.toggle('acc',ex>im);
 }
-/* ---- 6 what it buys vs sells ---- */
+
 const CELL=25;
 const MIX=(()=>{const side=o=>{const cells=[];GROUPS.forEach(gk=>{const n=Math.round(o[gk]/CELL);for(let i=0;i<n;i++)cells.push(gk);});return cells;};
   return {in:side(CIN),out:side(COUT)};})();
@@ -596,7 +595,7 @@ function drawMix(t,c){
     x.fillText(`${cap1(bl.lab)}: ${tiv(Math.round(N*CELL))}`,bl.x0,bl.y0-12);
     for(let i=0;i<N;i++){const ti=.14+.42*(i/N),u=ease(clamp((t-ti)/.12));if(u<=0)break;
       x.globalAlpha=op*u;x.fillStyle=css('--c-'+cells[i]);x.fillRect(bl.x0+(i%cols)*step,bl.y0+Math.floor(i/cols)*step-(1-u)*14,sz,sz);}
-    // key: wraps within the block width
+    
     const right=bl.x0+cols*step;let kx=bl.x0,ky=bl.y0+Math.ceil(N/cols)*step+20;
     x.font=`12px ${css('--body')}`;x.globalAlpha=op*sstep(.5,.62,t);
     GROUPS.slice().sort((a,b)=>tot[b]-tot[a]).forEach(gk=>{const p=tot[gk]/sum;if(p<.005)return;
@@ -606,7 +605,7 @@ function drawMix(t,c){
   }
   x.restore();
 }
-/* ---- 7 customs chapter 93 ---- */
+
 function drawCustoms(t,c,g,gb){
   const op=layer(t);if(op<=0)return;const C93=DATA.customs93,N=C93.years.length,k=clamp((t-.2)/.6),fy=k*(N-1),x=c.cx;
   const b=c.narrow?{x0:gutter(c),x1:c.W-gutter(c),y0:c.H*.56,y1:c.H*.69}:{x0:c.W*.06,x1:c.W*.52,y0:c.H*.74,y1:c.H*.9};
@@ -623,7 +622,7 @@ function drawCustoms(t,c,g,gb){
   const yi=Math.min(N-1,Math.round(fy));
   setC('g-y',String(C93.years[yi]));setC('g-r',`${C93.rank[yi]}.`);setC('g-v',money(C93.tr[yi]));
 }
-/* ---- 8 drones ---- */
+
 const D0=.14,D1=.82,DDUR=.07;
 DP.forEach(p=>p.t=D0+((p.y-DY0)+p.f)/(DY1-DY0+1)*(D1-D0));
 function drawDrones(t,c,g,b){
@@ -638,19 +637,17 @@ function drawDrones(t,c,g,b){
   const y=Math.min(DY1,Math.floor(DY0+clamp((t-D0)/(D1-D0))*(DY1-DY0+1)));
   setC('d-y',String(y));setC('d-u',nf(u));setC('d-b',nf(arrived.size));
 }
-/* ---- 9 UAV weight classes (customs heading 8806, BACI HS22, 2024). Bubbles of the world's drone exporters lift off
-   the globe and land as ranked rows; five columns (toy to military) are then built left to right, the same country
-   travelling from column to column. On phones one column at a time under a strip of Türkiye's five ranks ---- */
+
 const UC=DATA.uavc;
 const UCN=[{n:'Mini ve oyuncak',f:'mini ve oyuncak dronlar',w:"250 g'a kadar",sh:'quad',z:26},{n:'Tüketici',f:'tüketici dronları',w:'250 g – 7 kg',sh:'quad',z:40},
   {n:'Profesyonel',f:'profesyonel dronlar',w:'7–25 kg',sh:'hexa',z:50},{n:'Tarım ve endüstri',f:'tarım ve endüstri dronları',w:'25–150 kg',sh:'hexa',z:62},
   {n:'Askerî sınıf',f:'askerî sınıf İHA',w:'150 kg üzeri',sh:'wing',z:80}];
-const UST=[.3,.42,.51,.6,.69],UDUR=[.1,.08,.08,.08,.09]; // when each column is built (scene time)
+const UST=[.3,.42,.51,.6,.69],UDUR=[.1,.08,.08,.08,.09]; 
 const uProg=(t,i)=>ease(clamp((t-UST[i])/UDUR[i]));
 const ULL={};[UC.all,...UC.cls].forEach(b=>b.top.forEach(q=>{if(q.ll)ULL[q.k]=vec(...q.ll);}));
 const USH={'Birleşik Krallık':'B. Krallık'};
 const uShare=v=>'%'+nf(v,v<1?2:1);
-// dot silhouettes: each class outline sampled into the same number of points, matched by angle, so one shape can morph into the next
+
 const USIL=(()=>{const N=240,Wd=200,Hd=120,out=[];
   UCN.forEach(cl=>{const oc=document.createElement('canvas');oc.width=Wd;oc.height=Hd;const o=oc.getContext('2d'),cx=Wd/2,cy=Hd/2,w=cl.z*2.2;o.fillStyle='#000';o.strokeStyle='#000';o.lineCap='round';
     if(cl.sh==='wing'){const wt=Math.max(4,w*.06),fw=Math.max(5,w*.09),ny=cy-w*.24,ty=cy+w*.26,tl=w*.15;
@@ -662,7 +659,7 @@ const USIL=(()=>{const N=240,Wd=200,Hd=120,out=[];
     pts.sort((a,b)=>Math.atan2(a[1],a[0])-Math.atan2(b[1],b[0])||(a[0]*a[0]+a[1]*a[1])-(b[0]*b[0]+b[1]*b[1]));
     out.push(Array.from({length:N},(_,i)=>pts[Math.floor(i*pts.length/N)]));});
   return out;})();
-function drawSil(c,x0,y0,size,pos,alpha){ // pos: 0..4 (fractional = morphing between classes)
+function drawSil(c,x0,y0,size,pos,alpha){ 
   const i=Math.min(3,Math.floor(pos)),f=ease(clamp(pos-i)),A=USIL[i],B=USIL[Math.min(4,i+1)],x=c.cx,d=Math.max(1.4,size/90);
   x.save();x.globalAlpha=alpha;x.fillStyle=pos>3.5?css('--accent'):css('--ink2');
   for(let k=0;k<A.length;k++){const px=x0+size*lerp(A[k][0],B[k][0],f),py=y0+size*lerp(A[k][1],B[k][1],f);x.fillRect(px-d/2,py-d/2,d,d);}x.restore();}
@@ -670,11 +667,11 @@ function uGeom(c){const n=c.narrow;
   if(n){const x0=gutter(c),x1=c.W-gutter(c),y0=c.H*.46,rh=Math.min(40,c.H*.046);return {n,x0,x1,cw:x1-x0,y0,top:y0+52,rh,colX:()=>x0};}
   const x0=Math.max(c.W*.47,clamp(innerWidth*.06,16,96)+500),x1=c.W-92,gap=12,cw=(x1-x0-gap*4)/5,y0=c.H*.17,rh=Math.min(44,(c.H*.79-y0-74)/7.6);
   return {n,x0,x1,cw,gap,y0,top:y0+74,rh,colX:i=>x0+i*(cw+gap)};}
-const uRowY=(G,cl,j)=>G.top+j*G.rh;                                   // rows 0..5: the top six exporters
-const uTrY=(G,cl)=>cl.tr_rank<=6?uRowY(G,cl,cl.tr_rank-1):G.top+6*G.rh+16; // Türkiye's own row when outside the top six
+const uRowY=(G,cl,j)=>G.top+j*G.rh;                                   
+const uTrY=(G,cl)=>cl.tr_rank<=6?uRowY(G,cl,cl.tr_rank-1):G.top+6*G.rh+16; 
 const uCol=k=>k==='Turkiye'?css('--accent'):BIG3[k]?css(BIG3[k]):css('--ink3');
 function uFit(x,s,w){if(x.measureText(s).width<=w)return s;while(s.length>2&&x.measureText(s+'…').width>w)s=s.slice(0,-1);return s+'…';}
-function drawUCol(c,G,i,a,ox){ // one class column: header, six rows, Türkiye's row; a = alpha, ox = x origin
+function drawUCol(c,G,i,a,ox){ 
   const x=c.cx,cl=UC.cls[i],nm0=UCN[i],lead=cl.tr_rank===1,ink=css('--ink'),ink2=css('--ink2'),ink3=css('--ink3'),acc=css('--accent');
   const mkt='pazar '+(cl.world>=1000?nf(cl.world/1000,2)+' mlr $':nf(cl.world,0)+' mn $');
   x.save();x.globalAlpha=a;x.fillStyle=lead?acc:ink;x.font=`600 ${G.n?15:12.5}px ${css('--body')}`;x.fillText(uFit(x,nm0.n,G.cw),ox,G.y0+14);
@@ -694,7 +691,7 @@ function uDotY(G,cl,k){const j=cl.top.findIndex(q=>q.k===k);return j>=0?uRowY(G,
 function drawClasses(t,c,g,b){
   const op=layer(t);if(op<=0)return;const x=c.cx,G=uGeom(c);x.save();
   const ai=UST.reduce((m,s,i)=>t>=s?i:m,-1),u0=uProg(t,0);
-  // 1. on the globe: every drone exporter, area = 2024 exports of all unmanned aircraft
+  
   if(u0<1){const k=g.R*.037,ref=174,its=[];
     UC.all.top.forEach(q=>{const v=ULL[q.k];if(!v)return;const P=proj(v,g,b);if(P[2]<.02)return;its.push({q,P,r:Math.max(1.5,k*Math.sqrt(q.v/ref))});});
     const cl=UC.cls[0],X0=G.colX(0)+5,lab=[];
@@ -706,7 +703,7 @@ function drawClasses(t,c,g,b){
     labels(c,lab,op*(1-clamp(u0/.05)));
     if(u0<.05&&!c.narrow){x.globalAlpha=op*(1-clamp(u0/.05));x.fillStyle=css('--ink3');x.font=`11px ${css('--body')}`;
       const nt='daire alanı: insansız hava aracı ihracatı 2024, tüm sınıflar (gümrük 8806), mn $';x.fillText(nt,clamp(g.x-x.measureText(nt).width/2,12,c.W-12),Math.min(c.H-14,g.y+g.R+22));}}
-  // 2. columns: desktop all five side by side; phone the active one. Countries travel from the previous column
+  
   if(ai>=0){
     if(!G.n){for(let i=0;i<=ai;i++){const p=uProg(t,i);drawUCol(c,G,i,op*(i===0?ease(clamp((u0-.55)/.45)):p),G.colX(i));}}
     else{const p=uProg(t,ai);if(ai>0)drawUCol(c,G,ai-1,op*(1-ease(clamp(p/.5))),G.x0);drawUCol(c,G,ai,op*(ai===0?ease(clamp((u0-.55)/.45)):ease(clamp((p-.3)/.7))),G.x0);}
@@ -718,28 +715,28 @@ function drawClasses(t,c,g,b){
         if(py==null){uDot(c,X,y,r,q.k,op*p);return;}
         const m=ease(clamp(p/.85)),cx=lerp(px,X,m),cy=lerp(py,y,m)-Math.sin(Math.PI*m)*(G.n?0:18);uDot(c,cx,cy,r,q.k,op);});
     }
-    // phone: Türkiye's five ranks as a strip above the column
+    
     if(G.n){const sy=G.y0-44,cw=(G.cw-16)/5;x.font=`11px ${css('--body')}`;
       UC.cls.forEach((cl,i)=>{const X=G.x0+i*(cw+4),on=i===ai,seen=i<=ai;x.globalAlpha=op*(seen?(on?1:.6):.25);
         x.fillStyle=on?css('--accent'):css('--ink3');x.fillRect(X,sy+24,cw,on?3:1.5);x.fillStyle=cl.tr_rank===1&&seen?css('--accent'):css('--ink');
         x.font=`600 15px ${css('--body')}`;x.fillText(seen?`${cl.tr_rank}.`:'–',X,sy+16);x.fillStyle=css('--ink3');x.font=`10px ${css('--body')}`;x.fillText(['≤250 g','0,25–7 kg','7–25 kg','25–150 kg','>150 kg'][i],X,sy+38);});}
-    // the drone outline, morphing toy → military as the class steps
+    
     const pos=clamp(ai-1+uProg(t,ai),0,4);
     if(G.n){drawSil(c,G.x1-34,G.y0+12,64,pos,op*.9);}
     else{const cr=SC.find(s=>s.id==='classes').capEl.getBoundingClientRect(),ce=SC.find(s=>s.id==='classes').cntEl,kr=ce?ce.getBoundingClientRect():{top:c.H*.75};
       const top=cr.bottom+24,bot=kr.top-24,sz=Math.min(240,(bot-top)*1.6,G.x0-clamp(innerWidth*.06,16,96)-40);if(sz>90)drawSil(c,clamp(innerWidth*.06,16,96)+sz/2,(top+bot)/2,sz,pos,op*ease(clamp((u0-.4)/.6))*.9);}
-    // note
+    
     x.globalAlpha=op*clamp((u0-.6)/.4);x.fillStyle=css('--ink3');x.font=`11px ${css('--body')}`;
     const ny=G.top+(G.n?7.4:7.6)*G.rh+18,n1='gümrük faslı 8806 (HS 2022), 2024 ihracat payı, cari ABD doları',n2='sınıflar ağırlık aralığıdır; adlar yorum, siluetler şematiktir';
     x.fillText(n1,G.x0,ny);x.fillText(n2,G.x0,ny+15);}
   x.restore();
-  // counter: Türkiye's rank rolls with the class
-  const ci=UST.reduce((m,s0,i)=>uProg(t,i)>.5?i:m,-1); // the counter follows the class once its column is half built
+  
+  const ci=UST.reduce((m,s0,i)=>uProg(t,i)>.5?i:m,-1); 
   if(ci<0){setC('u-k',"tüm İHA'lar");roll('u-r',`${UC.all.tr_rank}.`);setC('u-s',uShare(100*UC.all.tr_v/UC.all.world));setC('u-w',nf(UC.all.world/1000,2));}
   else{const cl=UC.cls[ci];setC('u-k',UCN[ci].f+', '+UCN[ci].w);roll('u-r',`${cl.tr_rank}.`);setC('u-s',uShare(cl.tr_s));setC('u-w',nf(cl.world/1000,2));}
   $('u-r').classList.toggle('acc',ci===4);
 }
-/* ---- 10 new buyers ---- */
+
 function drawNewCust(t,c,g,b){
   const op=layer(t)*g.a;if(op<=0)return;const x=c.cx;x.save();const acc=css('--accent');
   const k=clamp((t-.14)/.74),pos=k*NC.length,wi=Math.min(NC.length-1,Math.floor(pos)),fr=pos-wi;let cum=DATA.newcustPre.length;
@@ -751,7 +748,7 @@ function drawNewCust(t,c,g,b){
   drawTR(c,g,b,false);labels(c,lab.slice(0,c.narrow?5:10),op*.95);x.restore();
   setC('n-w',NC[wi].lab);setC('n-n',nf(DATA.newcust[wi].names.length));setC('n-c',nf(cum));
 }
-/* ---- 11 rank ladder ---- */
+
 function drawRank(t,c){
   const op=sstep(.03,.18,t)*(1-sstep(.92,1,t));if(op<=0)return;const x=c.cx,n=c.narrow;
   const b=n?{x0:40,x1:c.W-104,y0:c.H*.42,y1:c.H*.9}:{x0:c.W*.52,x1:c.W*.82,y0:c.H*.18,y1:c.H*.86},maxR=32;
@@ -775,7 +772,7 @@ function drawRank(t,c){
   x.restore();
 }
 
-/* ============ captions and counters ============ */
+
 const CNT={
   world:`<div><div class="k">yıl</div><div class="v s" id="w-y">1995</div></div><div><div class="k">dünya askerî harcaması</div><div class="v s"><span id="w-v">0</span><span class="u">mlr $</span></div></div><div><div class="k">Türkiye'nin payı</div><div class="v s acc" id="w-s">%0</div></div>`,
   spend:`<div><div class="k" id="s-y">1995</div><div class="v"><span id="s-v">9,4</span><span class="u">mlr $</span></div><div class="n" id="s-r"></div></div>`,
@@ -790,7 +787,7 @@ SC.forEach((s,i)=>{const L1=L.caps[i];const d=document.createElement('div');d.cl
   d.innerHTML=`<div class="eyebrow">${esc(L1.eyebrow)}</div>`+(L1.h1?`<h1>${esc(L1.h1)}</h1>`:`<h2>${esc(L1.h)}</h2>`)+`<p>${esc(L1.p)}</p>`+(L1.extra||'');$('caps').appendChild(d);s.capEl=d;
   if(CNT[s.id]){const e=document.createElement('div');e.className='counter '+s.counter;e.innerHTML=CNT[s.id];$('counters').appendChild(e);s.cntEl=e;}});
 const lastC={};function setC(id,v){if(lastC[id]!==v){lastC[id]=v;const e=$(id);if(e)e.textContent=v;}}
-// rolling digits for a rank such as "22.": two digit slots roll to the new value; an empty tens slot folds away
+
 function roll(id,v){if(lastC[id]===v)return;lastC[id]=v;const e=$(id);if(!e)return;const m=/^(\d{1,2})(.*)$/.exec(v);if(!m){e.textContent=v;return;}
   if(!e.dataset.roll){e.dataset.roll='1';e.classList.add('roll');const st='<span class="st">'+'0123456789'.split('').map(d=>`<span>${d}</span>`).join('')+'<span>&nbsp;</span></span>';
     e.innerHTML=`<span class="sr"></span><span class="dg" aria-hidden="true">${st}</span><span class="dg" aria-hidden="true">${st}</span><span class="tl" aria-hidden="true"></span>`;}
@@ -798,20 +795,20 @@ function roll(id,v){if(lastC[id]===v)return;lastC[id]=v;const e=$(id);if(!e)retu
   e.querySelector('.tl').textContent=m[2];e.querySelector('.sr').textContent=v;}
 function fade(el,op,dy,center){el.style.opacity=op.toFixed(3);el.style.visibility=op<=0.001?'hidden':'visible';el.style.transform=(center?'translateX(-50%) ':'')+`translateY(${((1-op)*dy).toFixed(1)}px)`;}
 
-/* ============ chapters ============ */
+
 const track=$('track');
 const go=p=>scrollTo({top:track.offsetTop+p*(track.offsetHeight-innerHeight),behavior:reduce?'auto':'smooth'});
 L.chapters.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<span>${esc(t)}</span><i></i>`;b.setAttribute('aria-label',t);
   b.onclick=()=>{const s=SC[Math.min(i,SC.length-1)];go(s.a+(s.b-s.a)*(i===0?0:s.live?.6:.55));};$('chapters').appendChild(b);
   const sg=document.createElement('i');$('segs').appendChild(sg);});
 
-/* ============ stage loop ============ */
+
 let target=0,sp=0,dirty=true,exBusy=false;
 function readScroll(){const span=track.offsetHeight-innerHeight;target=clamp((scrollY-track.offsetTop)/span);
   $('bar').style.width=(clamp(scrollY/(document.documentElement.scrollHeight-innerHeight))*100)+'%';}
 function render(p){
   const c=stage;c.cx.clearRect(0,0,c.W,c.H);const g=cam(p,c);
-  const XS=SC[SC.length-1],tX=p>=XS.a?clamp((p-XS.a)/(XS.b-XS.a)):0,wX=sstep(.12,.3,tX); // the reader takes over the globe in the explorer
+  const XS=SC[SC.length-1],tX=p>=XS.a?clamp((p-XS.a)/(XS.b-XS.a)):0,wX=sstep(.12,.3,tX); 
   if(wX>0){g.lon=lerp(g.lon,EX.lon,wX);g.lat=lerp(g.lat,EX.lat,wX);}
   const live=tX>.25;if(live!==EXLIVE){EXLIVE=live;XS.capEl.classList.toggle('on',live);if(live)exHash();else{EX.hover=null;$('cv').style.cursor='';}}
   const b=basis(g.lon,g.lat);
@@ -830,13 +827,10 @@ function render(p){
 }
 function frame(now){const d=target-sp;if(reduce||Math.abs(d)<.0003)sp=target;else sp+=d*.14;
   if(exAnim){exAnim(now);dirty=true;}
-  if(exBusy&&scrollY<track.offsetTop+track.offsetHeight)dirty=true; // the explorer redraws only while something moves, and only on screen
+  if(exBusy&&scrollY<track.offsetTop+track.offsetHeight)dirty=true; 
   if(Math.abs(d)>.00001||dirty){render(sp);dirty=false;}requestAnimationFrame(frame);}
 
-/* ============ explorer: the last scene, driven by the reader ============
-   The controls are charts. Direction: two totals (sold / bought). Period: six bars of TIV per period, tapped or
-   dragged. Type: the weapon-mix bar, tapped by segment or name. With a country selected, bars and mix show that
-   country. The globe can be dragged (mouse) or tapped (touch, so the page still scrolls). Everything glides. */
+
 const EX={w:[5],dir:'out',cat:null,sel:null,lon:30,lat:28,hover:null};
 const SIDE=d=>d==='in'?{W:DATA.inW,C:DATA.inC}:{W:DATA.outW,C:DATA.outC};
 const keysOf=(d,k)=>k?[k]:Object.keys(SIDE(d).W).filter(q=>PV[q]);
@@ -854,7 +848,7 @@ function exBuild(){ROWS=exRows();EXV.forEach(e=>e.tgt=0);
   ROWS.forEach(r=>{const id=r.d+':'+r.k;let e=EXV.get(id);if(!e){e={r,cur:0,ps:Array.from({length:14},()=>rnd())};EXV.set(id,e);}e.r=r;e.tgt=r.v;});
   exMaxT=ROWS.length?ROWS[0].v:1;if(EX.sel)EX.sel=ROWS.find(r=>same(r,EX.sel))||null;
   exPanel();exUpdate();exHash();exFit();dirty=true;}
-// the three chart-controls, built once; exUpdate moves them
+
 function exControls(){
   $('exDir').innerHTML=[['out','sattı'],['in','aldı']].map(([d,l])=>`<button type="button" data-d="${d}" aria-pressed="false"><span class="k">${l}</span><span class="n"><span id="xd-${d}">0</span><small>TIV</small></span></button>`).join('');
   $('exDir').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(EX.dir===b.dataset.d)return;EX.dir=b.dataset.d;EX.sel=null;exBuild();});
@@ -875,7 +869,7 @@ function exUpdate(){
   const sel=EX.sel?EX.sel.k:null,who=sel?`<span class="who">${esc(nm(sel))}</span> `:'';
   countTo('xd-out',dirTot('out'));countTo('xd-in',dirTot('in'));
   $('exDir').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.d===EX.dir)));
-  // one bar per period, in one colour (the filter's type colour when a type is chosen); the mix bar below shows the chosen period's types
+  
   const vals=winVals(EX.dir,sel),H=Math.max(24,$('exPer').firstElementChild.clientHeight-34),mx=Math.max(1,...vals);
   [...$('exPer').children].forEach(b=>{const w=b.dataset.w,on=w==='all'?EX.w.length===6:EX.w.length===1&&EX.w[0]===+w;b.setAttribute('aria-pressed',String(on));
     if(w==='all')return;b.classList.toggle('lit',on||EX.w.length===6);
@@ -890,7 +884,7 @@ function exUpdate(){
   $('exMixL').innerHTML=EX.cat?`${who}${GNAME[EX.cat]} seçili: tekrar dokunun, filtre kalksın`:`${who}silah türü, ${exWL()}: çizgiler her ülkenin ana türünde`;
   exLayout();
 }
-// narrow screens: the globe fills what the text leaves, with its top clear of the last line
+
 function exLayout(snap){const c=stage;if(!c.narrow)return;const el=SC[SC.length-1].capEl,m=camM(c),top=el.offsetTop+el.offsetHeight+12,bot=c.H-10,R=clamp((bot-top)/2,40,c.W*.42);
   XN.ty=(top+bot)/2/c.H;XN.tR=R/m;if(snap||!XN.set||reduce){XN.y=XN.ty;XN.R=XN.tR;XN.set=true;}dirty=true;}
 function exPanel(){
@@ -914,7 +908,7 @@ function exFit(){if(EX.sel||!ROWS.length)return;const tops=ROWS.slice(0,stage.na
   const from={lon:EX.lon,lat:EX.lat},to={lon:from.lon+((((lon-from.lon)%360)+540)%360-180),lat};
   if(reduce){EX.lon=to.lon;EX.lat=to.lat;return;}const t0=performance.now();exAnim=now=>{const u=ease(clamp((now-t0)/900));EX.lon=lerp(from.lon,to.lon,u);EX.lat=lerp(from.lat,to.lat,u);if(u>=1)exAnim=null;};}
 function exSelect(r){EX.sel=r;exPanel();exUpdate();exFocus(r.k);exHash();dirty=true;}
-// totals count to their new value
+
 const CT={};function countTo(id,v){const e=$(id);if(!e)return;const from=CT[id]==null?v:CT[id];CT[id]=v;if(reduce||from===v){e.textContent=nf(Math.round(v));return;}
   const t0=performance.now();const step=now=>{const u=ease(clamp((now-t0)/600));e.textContent=nf(Math.round(lerp(from,v,u)));if(u<1&&CT[id]===v)requestAnimationFrame(step);};requestAnimationFrame(step);}
 function exHash(){if(!EXLIVE)return;try{history.replaceState(null,'',`#k=${EX.dir}.${EX.w.length===6?'all':EX.w[0]}.${EX.cat||'all'}${EX.sel?'.'+encodeURIComponent(EX.sel.k):''}`);}catch(e){}}
@@ -928,11 +922,11 @@ function drawExplore(t,c,g,b){
   EXI=[];EXV.forEach((e,id)=>{e.cur+=(e.tgt-e.cur)*k;if(Math.abs(e.tgt-e.cur)<.05)e.cur=e.tgt;else exBusy=true;if(e.tgt===0&&e.cur<.5){EXV.delete(id);return;}
     const tc=rgbOf(e.r.g);e.c=e.c?e.c.map((v,i)=>Math.abs(tc[i]-v)<.5?tc[i]:v+(tc[i]-v)*(reduce?1:.1)):tc.slice();if(e.c.some((v,i)=>v!==tc[i]))exBusy=true;e.col=`rgb(${e.c.map(Math.round).join(',')})`;EXI.push(e);});
   EXI.sort((a,z)=>z.cur-a.cur);
-  // quiet by default: only the partners in the list (or the one in focus) get a line, a colour and a name; the rest are small grey dots
+  
   const TOP=new Set(ROWS.slice(0,c.narrow?3:5)),grey=css('--ink3'),tz=proj(TRV,g,b)[2],edge=z=>clamp(z/.12);
   EXI.forEach(e=>{const lit=TOP.has(e.r)||same(focus,e.r),to=lit?1:0;e.l=e.l==null?to:e.l+(to-e.l)*k;if(Math.abs(to-e.l)<.004)e.l=to;else exBusy=true;});
-  if(focus&&EXLIVE&&!reduce)exBusy=true; // moving dots on the country in focus
-  EXI.forEach(e=>{const r=e.r,out=r.d==='out',hl=same(focus,r),z=proj(PV[r.k],g,b)[2];if(e.l<.01||z<=0)return; // no line to a country behind the globe
+  if(focus&&EXLIVE&&!reduce)exBusy=true; 
+  EXI.forEach(e=>{const r=e.r,out=r.d==='out',hl=same(focus,r),z=proj(PV[r.k],g,b)[2];if(e.l<.01||z<=0)return; 
     arcPath(c,g,b,out?TRV:PV[r.k],out?PV[r.k]:TRV,r.o,e.col,Math.max(1,Math.sqrt(e.cur/EXMAX)*5)*(hl?1.3:1),op*e.l*edge(z)*edge(tz)*(focus?(hl?.9:.14):.7));});
   if(focus)EXI.forEach(e=>{const r=e.r,out=r.d==='out';if(!same(focus,r)||proj(PV[r.k],g,b)[2]<=0)return;const n=Math.max(3,Math.min(14,Math.round(Math.sqrt(e.cur/EXMAX)*14)));
     for(let i=0;i<n;i++){const u=reduce?e.ps[i]:frac(tt*.35+e.ps[i]);particle(c,g,b,out?TRV:PV[r.k],out?PV[r.k]:TRV,r.o,ease(u),e.col,e.col,op*.9,1.6);}});
@@ -941,7 +935,7 @@ function drawExplore(t,c,g,b){
     if(e.l>.5)dots.push([P[0],P[1],rad]);if(e.tgt>0&&(TOP.has(r)||hl))lab.push([P[0],P[1],nm(r.k),hl,rad]);});
   drawTR(c,g,b,false);exLabels(c,lab,dots,op,proj(TRV,g,b));x.restore();
 }
-// names beside their dots: outward from Türkiye first, then the other sides; never over another name or a lit dot
+
 function exLabels(c,list,dots,alpha,T){
   const x=c.cx;x.font=`500 ${c.narrow?11:13}px ${css('--body')}`;x.lineJoin='round';const H=14,taken=[],bg=css('--bg');
   if(T[2]>0){x.save();x.font=`600 ${c.narrow?12:14}px ${css('--body')}`;const w=x.measureText('Türkiye').width;taken.push([T[0]+12,T[1]-24,w,18]);x.globalAlpha=alpha;x.strokeStyle=bg;x.lineWidth=3;x.strokeText('Türkiye',T[0]+12,T[1]-10);x.fillStyle=css('--ink');x.fillText('Türkiye',T[0]+12,T[1]-10);x.restore();}
@@ -963,22 +957,22 @@ function pick(px,py){let best=null,bd=16;EXI.forEach(e=>{if(!e._p||e.tgt===0)ret
   cv.addEventListener('pointerleave',()=>{if(!drag&&EX.hover){EX.hover=null;dirty=true;}});
   addEventListener('keydown',e=>{if(e.key==='Escape'&&EXLIVE&&EX.sel){EX.sel=null;exPanel();exUpdate();exHash();dirty=true;}});})();
 
-/* ============ theme ============ */
+
 function syncTheme(){const d=document.documentElement.dataset.theme==='dark';$('themeToggle').textContent=d?'☀':'☾';$('themeToggle').setAttribute('aria-label',d?'Açık temaya geç':'Koyu temaya geç');}
 $('themeToggle').onclick=()=>{const r=document.documentElement,t=r.dataset.theme==='dark'?'light':'dark';r.dataset.theme=t;try{localStorage.setItem('trr-theme',t);}catch(e){}
   CSS={};syncTheme();dirty=true;exPanel();exUpdate();};
 syncTheme();
 
-/* ============ static text ============ */
+
 $('limits').innerHTML=L.limits.map(s=>`<li>${esc(s)}</li>`).join('');
 $('src').textContent=L.src;
 
-/* ============ start ============ */
+
 function resizeAll(){const was=stage.narrow;stage.resize();dirty=true;if(!$('exMix').firstChild)return;if(was!==stage.narrow){exPanel();exFit();}exUpdate();exLayout(true);}
 addEventListener('scroll',readScroll,{passive:true});
 addEventListener('resize',()=>{resizeAll();readScroll();});
 resizeAll();
-// #k=dir.window.type[.country] opens the explorer in that state (written back as the reader changes it)
+
 const hk=/^#k=(out|in|both)\.(all|[0-5])\.(\w+)(?:\.(.+))?$/.exec(location.hash);
 if(hk){EX.dir=hk[1]==='in'?'in':'out';EX.w=hk[2]==='all'?ALLW:[+hk[2]];EX.cat=GROUPS.includes(hk[3])?hk[3]:null;}
 exControls();exBuild();
@@ -1017,7 +1011,7 @@ readScroll();sp=target;requestAnimationFrame(frame);
       <span>© 2026 İstanbul Politikalar Merkezi</span>
       <a href="/tr/kunye/">Künye</a><a href="/tr/gizlilik/">Gizlilik</a><a href="/tr/cerezler/">Çerezler</a>
       <button type="button" data-consent-open>Çerez ayarları</button>
-      <span class="ft-proto">Prototip, Kasım 2026</span>
+      <span class="ft-proto">Prototip</span>
     </div>
   </div>
 </footer>
@@ -1034,7 +1028,7 @@ readScroll();sp=target;requestAnimationFrame(frame);
       <button type="button" data-act="prefs" aria-expanded="false" aria-controls="consent-prefs">Tercihler</button>
     </div>
     <div class="prefs" id="consent-prefs">
-      <div class="row"><input type="checkbox" id="c-nec" name="necessary" checked disabled><label for="c-nec">Zorunlu</label><small>Tema ve dil tercihiniz, bir de çerez seçiminiz. Tema ve çerez kaydı yalnızca tıkladığınızda, dil kaydı bir panoyu açtığınızda yazılır.</small></div>
+      <div class="row"><input type="checkbox" id="c-nec" name="necessary" checked disabled><label for="c-nec">Zorunlu</label><small>Tema ve dil tercihiniz, bir de çerez seçiminiz. Tema ve çerez kaydı yalnızca tıkladığınızda, dil kaydı bir panoyu açtığınızda ya da dili değiştirdiğinizde yazılır.</small></div>
       <div class="row"><input type="checkbox" id="c-ana" name="analytics"><label for="c-ana">Analitik</label><small>Bu prototipte analiz aracı yüklenmez.</small></div>
       <div class="btns" style="margin-top:.6rem"><button type="button" data-act="save">Kaydedin</button></div>
     </div>

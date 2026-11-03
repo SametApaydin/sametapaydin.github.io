@@ -94,7 +94,7 @@ body.neighbor-flow{--bg:#fff}
 .step .card p{font-size:var(--t-body)!important;line-height:1.5!important;color:var(--text-primary)}
 /* phones and tablets: the dashboard's round icon again (line 42 set its label's size), level with the chart's title while the bar
    is away; when the bar returns, the chart moves down under it and the icon with it. The title's float keeps its words clear of the icon. */
-@media (max-width:1000px){
+@media (max-width:1180px){
   .top-controls .toc-toggle{font-size:0!important;line-height:1!important}
   .top-controls{transition:top .25s cubic-bezier(.65,0,.35,1)}
   body:has(.mra.sb.hide) .top-controls{top:8px!important}
@@ -103,7 +103,7 @@ body.neighbor-flow{--bg:#fff}
   #chartTitle::before{content:"";float:right;width:46px;height:42px}
   .step .card,.step .card.expanded{padding:1rem!important}
 }
-@media (max-width:1000px) and (max-height:500px) and (orientation:landscape){
+@media (max-width:1180px) and (max-height:500px) and (orientation:landscape){
   body:has(.mra.sb:not(.hide)) .sticky-pane{max-height:none}
 }
 
@@ -115,3 +115,11 @@ body.neighbor-flow{--bg:#fff}
   #detail,#top{padding:.75rem 1rem!important}
 }
 @media (max-height:640px){body:has(#gl){padding-top:var(--site-bar)}}
+
+/* map pages: everything below the site bar also clears the row under it (--map-row is measured in bar.njk) */
+@media (min-width:901px){body:has(.sb-row) .app{height:calc(100% - 48px - 34px - var(--map-row,0px))}}
+body:has(.sb-row) .app{margin-top:var(--map-row,0px)}
+#dir,#detail,#top{top:calc(68px + var(--map-row,0px))}
+#top{max-height:calc(100vh - 68px - 70px - var(--map-row,0px))}
+@media (max-width:1180px),(max-height:640px){#dir{top:calc(var(--site-bar) + var(--map-row,0px))}#detail,#top{top:auto}#top{max-height:none}}
+@media (max-height:640px){body:has(#gl){padding-top:calc(var(--site-bar) + var(--map-row,0px))}}

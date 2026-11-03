@@ -5,14 +5,14 @@
   function ls(k, v) { try { return v === undefined ? localStorage.getItem(k) : localStorage.setItem(k, v); } catch (e) { return null; } }
 
   /* theme: the shared key of the dashboards (trr-theme) */
-  function applyTheme(t) { if (t === 'dark' || t === 'light') root.setAttribute('data-theme', t); else root.removeAttribute('data-theme'); }
+  function applyTheme(t) { root.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light'); } // light unless the reader chose dark
   applyTheme(ls('trr-theme'));
   d.addEventListener('click', function (e) {
     var b = e.target.closest('[data-theme-toggle]'); if (!b) return;
     // on a dashboard its own button does the switch, so its charts redraw
     var own = d.getElementById('themeToggle') || d.getElementById('theme');
     if (own) { own.click(); return; }
-    var cur = root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var cur = root.getAttribute('data-theme') || 'light';
     var next = cur === 'dark' ? 'light' : 'dark';
     applyTheme(next); ls('trr-theme', next);
     d.querySelectorAll('[data-theme-toggle]').forEach(function (x) { x.setAttribute('aria-label', x.getAttribute(next === 'dark' ? 'data-l-light' : 'data-l-dark')); });
@@ -43,7 +43,7 @@
   var note = d.querySelector('[data-note]');
   if (note) {
     note.querySelector('[data-note-close]').addEventListener('click', function () { note.hidden = true; });
-    addEventListener('scroll', function () { if (scrollY > 200) note.hidden = true; }, { passive: true });
+    if (!note.closest('.sb-row')) addEventListener('scroll', function () { if (scrollY > 200) note.hidden = true; }, { passive: true });
   }
   /* the dashboard bar's panel closes on a click elsewhere */
   d.addEventListener('click', function (e) {

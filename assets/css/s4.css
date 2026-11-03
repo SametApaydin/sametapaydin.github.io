@@ -129,6 +129,10 @@ html.ps-early .pe:not(.is-on){visibility:hidden}
 
 .mra .form{gap:1.1rem}
 main:has(.s4-hero)+.ft{margin-top:0;padding-top:1.5rem}
+/* the space for the introductory video, below the first screen; the frame never grows taller than the screen */
+.s4-video{padding-top:clamp(2.5rem,6vh,4rem);padding-bottom:clamp(2.5rem,6vh,4rem)}
+.s4-video-frame{display:flex;align-items:center;justify-content:center;width:min(100%,calc((100svh - 8rem)*16/9));aspect-ratio:16/9;margin:0 auto;border-radius:var(--r);background:var(--tint)}
+.s4-video-frame h2{margin:0;font-size:1.5rem;font-weight:500;line-height:1.15;letter-spacing:-.024em}
 .mra .form label{font-size:1rem}
 .mra .form input[type=email],.mra .form input[type=text],.mra .form textarea{border:1px solid var(--ink2);border-radius:var(--r-sm);background:var(--bg);padding:.75rem .85rem;max-width:26rem}
 .mra .form textarea{max-width:none}
@@ -214,3 +218,5 @@ html:not(.s4-js) .s4-cv{display:none}
   html[lang="en"] .art-b td:nth-child(4)::before{content:"Party: ";color:var(--ink2)}
   html[lang="en"] .art-b td:nth-child(5)::before{content:"Legal basis: ";color:var(--ink2)}
 }
+
+.s4-404{padding-top:clamp(2.5rem,8vh,5rem);padding-bottom:clamp(2.5rem,8vh,5rem)}

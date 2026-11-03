@@ -6,31 +6,27 @@
 
 
 <!doctype html>
-<html lang="tr">
+<html data-theme="light" lang="tr">
 <head><script>try{localStorage.setItem('trr-lang','en')}catch(e){}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Türkiye’s foreign trade map · Macro Risk Academy</title>
 <meta name="description" content="What Türkiye sells and buys, from whom and how much, by partner and product group.">
 <script>
-  // theme before first paint, same key as the other tabs ("trr-theme"); light unless the reader chose dark
+  
   (function(){try{var t=localStorage.getItem("trr-theme");document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");}
     catch(e){document.documentElement.setAttribute("data-theme","light");}})();
 </script>
-<!-- Tab 4 map (October 23, 2026): the tilted low relief ("alçak kabartma"). The world (Equal Earth, so areas are true)
-     is laid flat and seen in perspective; every partner is extruded from its own outline, height = base + k·√value
-     (one scale for all years and both directions), colour carries the same value. three.js r128 + GSAP 3.12.5.
-     October 24, 2026: the sample switches (colour and elevation modes) removed after the visitor review
-     (Trade/plan-map-review.md, phase 0). -->
+
 <style>
-/* --ink3 darkened from #898781 (3.4:1 on --bg) to #6e6c66 (5.0:1), October 24, 2026 (review F12) */
+
 :root{color-scheme:light;--bg:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--ink3:#6e6c66;--rule:rgba(11,11,11,.12);--rule2:rgba(11,11,11,.3);
 --accent:#2a78d6;--accent2:#104281;--tr:#0b0b0b;--halo:249,249,247;--trhalo:249,249,247;--trglow:rgba(249,249,247,0);
 --bar:#cfcec8;--barh:#a9a8a2;--track:#dcdbd5;--fill:#9a9993;--panel-edge:0 1px 2px rgba(11,11,11,.06),0 6px 24px rgba(11,11,11,.08);
 --r:14px;--r-sm:9px;--tint:rgba(11,11,11,.045);
 --display:'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
 --body:system-ui,-apple-system,'Segoe UI',sans-serif;--ease:cubic-bezier(.65,0,.35,1)}
-/* dark: the values of the October 2026 dark sample; tokens follow the other tabs (defence page) */
+
 :root[data-theme="dark"]{color-scheme:dark;--bg:#050506;--surface:#0d0e10;--ink:#f5f5f2;--ink2:#b9b8b1;--ink3:#7d7c77;--rule:rgba(255,255,255,.12);--rule2:rgba(255,255,255,.3);
 --accent:#3987e5;--accent2:#86b6ef;--tr:#111214;--halo:5,5,6;--trhalo:244,241,234;--trglow:rgba(244,241,234,.7);
 --bar:#3d3c39;--barh:#5e5d59;--track:#2a2a28;--fill:#6a6964;--panel-edge:none;--tint:rgba(255,255,255,.07)}
@@ -43,7 +39,7 @@ a{color:inherit}
 #gl.hot{cursor:pointer}
 #gl.drag{cursor:grabbing}
 
-/* top strip */
+
 .top{position:fixed;top:0;left:0;right:0;height:44px;z-index:20;display:flex;align-items:center;gap:22px;
   padding:0 28px;background:var(--bg);border-bottom:1px solid var(--rule);font-size:13px;color:var(--ink2);white-space:nowrap}
 .top .brand{font-family:var(--display);font-weight:600;font-size:16px;color:var(--ink);text-decoration:none}
@@ -53,7 +49,7 @@ a{color:inherit}
 .theme-toggle:hover{color:var(--ink);border-color:var(--rule2)}
 .theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-/* direction totals: the headline and the switch */
+
 #dir{position:fixed;top:68px;left:32px;z-index:10;display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 40px}
 #dir > button{all:unset;cursor:pointer;display:flex;flex-direction:column;color:var(--ink3);padding-bottom:6px;
   border-bottom:2px solid transparent;transition:color .3s,border-color .4s}
@@ -64,8 +60,7 @@ a{color:inherit}
 #dir > button:hover{color:var(--ink2)}
 #dir > button[aria-pressed="true"]:hover{color:var(--ink)}
 #dir > button:focus-visible,#detail .x:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-/* product filter: a native select, on its own line under the totals in every state (the user asked for a dropdown,
-   October 23, 2026; under the totals, October 24, 2026) */
+
 #prodBox{display:flex;flex-direction:column;align-items:flex-start;flex-basis:100%;padding-bottom:8px;font-size:13px;color:var(--ink3)}
 #prod{min-width:220px}
 #prodBox label{letter-spacing:.02em}
@@ -77,27 +72,26 @@ a{color:inherit}
 #prod:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 #prod option{color:#0b0b0b;background:#fff}
 #prod.on{border-color:var(--pc,var(--accent));border-bottom-width:2px}
-/* the balance under the two totals (review T5/F11, October 24, 2026) */
-/* the two places in the display face, the group and year after them small (the user, October 25, 2026) */
+
+
 #scope{flex-basis:100%;margin:0 0 -2px;font-size:13px;font-weight:500;color:var(--ink2)}
 #scope .pl{font-family:var(--display);font-size:19px;font-weight:600;color:var(--ink);letter-spacing:-.005em}
-/* the two places are two elements with a rule between them, like the panel's ruled figures (audit C3, no middle dot) */
+
 #scope .pl + .pl{margin-left:.45em;padding-left:.45em;border-left:1px solid var(--rule2)}
-/* the balance centred under both totals, on a soft tone step (the user, October 25, 2026: more highlighted) */
+
 #bal{flex-basis:100%;justify-self:center;text-align:center;margin:2px 0 10px;padding:6px 14px;border-radius:var(--r-sm);
   background:var(--tint);font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums;text-shadow:none}
 #bal b{font-family:var(--display);font-size:18px;font-weight:600;color:var(--ink);margin-left:4px}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-/* the measure: value or Türkiye's share of the partner's trade (review F4, decision C, October 24, 2026); a line of text
-   buttons in the totals' manner, not a pill toolbar */
+
 #meas{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 18px;margin:-2px 0 10px;font-size:13px;color:var(--ink3)}
 #meas button,#meas a{all:unset;cursor:pointer;min-height:24px;display:inline-flex;align-items:center;border-bottom:1px solid transparent;color:var(--ink3)}
 #meas button[aria-pressed="true"]{color:var(--ink);font-weight:600;border-color:var(--accent)}
 #meas button:hover,#meas a:hover{color:var(--ink)}
 #meas a{text-decoration:underline;text-underline-offset:2px;color:var(--accent2)}
 #meas button:focus-visible,#meas a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-/* the hint and the link to the story (the takeaway sentence was dropped on October 24, 2026: the story carries it) */
-/* November 3, 2026 (audit, S3 item 12): the hint is the list card's last line, no longer a card of its own over Alaska and Canada */
+
+
 #lede{margin:10px 0 0;padding:8px 0 0;border-top:1px solid var(--rule);font-size:14px;color:var(--ink2);display:grid;gap:4px}
 #top.all #lede{display:none}
 #lede .hint{color:var(--ink3);font-size:13px}
@@ -106,16 +100,15 @@ a{color:inherit}
 #dir,#years .cap,#note{text-shadow:0 0 2px rgb(var(--halo)),0 1px 3px rgb(var(--halo)),0 0 1px rgb(var(--halo))}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:-1px}
 
-/* year strip */
+
 #years{position:fixed;left:32px;bottom:52px;z-index:10;width:372px}
 #years .cap{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--ink3);margin:0 0 8px}
 #years .cap b{margin-left:auto;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
-/* the bars are a picture for the pointer (tap or drag on the strip); keyboard and screen readers use the slider below,
-   which is the one control with a full-size target (October 24, 2026, review F3: 30 bar buttons of 10 px failed 24 × 24) */
+
 #ybars{display:grid;grid-template-columns:repeat(30,1fr);gap:2px;align-items:end;height:74px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer}
 #ybars .yb{display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;gap:5px;height:100%}
 #ybars i{display:block;position:relative;background:var(--bar);transition:height .7s var(--ease),background-color .25s}
-/* values on the first, last and highest bar, so the strip reads as a chart (review F5) */
+
 #ybars i b{font-style:normal;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:3px;font-size:10.5px;font-weight:500;line-height:1;
   color:var(--ink2);white-space:nowrap;font-variant-numeric:tabular-nums}
 #ybars .yb:first-child i b{left:0;transform:none}
@@ -128,7 +121,7 @@ a{color:inherit}
 #ybars .yb.end:last-child span{justify-content:flex-end;margin:0 0 0 auto}
 #ybars .yb.on span{color:var(--ink);font-weight:600}
 #ybars .yb.near span{visibility:hidden}
-/* a year that is not complete (TÜİK 2026, January–August) is hatched */
+
 #ybars .yb.part i{background:repeating-linear-gradient(135deg,var(--bar) 0 3px,transparent 3px 6px)}
 #ybars .yb.part:hover i{background:repeating-linear-gradient(135deg,var(--barh) 0 3px,transparent 3px 6px)}
 #ybars .yb.part.on i{background:repeating-linear-gradient(135deg,var(--accent) 0 3px,transparent 3px 6px)}
@@ -141,19 +134,17 @@ a{color:inherit}
 #yslide.drag .knob,#yslide.drag .fill{transition:none}
 #yslide:focus-visible .knob{outline:2px solid var(--accent);outline-offset:3px}
 
-/* fixed notes */
+
 #note{position:fixed;left:32px;bottom:18px;z-index:10;margin:0;font-size:12.5px;color:var(--ink2);max-width:calc(100vw - 64px)}
 #note b{font-weight:500;color:var(--ink)}
-/* the source switch is the source line itself (review F1/F13, October 24, 2026). October 25, 2026, after the re-test: the
-   active source in the accent underline, then one link to the other source with its years ("TÜİK'e geçin (2013–Ağustos
-   2026)"); the bare name link and its hover hint before it were a second link to the same page */
+
 #note .sw .on{font-weight:600;color:var(--ink);border-bottom:1px solid var(--accent);padding:2px 0 1px}
 #note .sw .on{margin-right:6px}
 #note a.go{color:var(--accent2);text-decoration:underline;text-underline-offset:2px;padding:2px 0}
 #note a.go:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 #note button{all:unset;cursor:pointer;color:var(--accent2);text-decoration:underline;text-underline-offset:2px;padding:2px 0;margin-left:6px}
 #note button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-/* "Kaynak ve yöntem": a short note on the two sources (review F13, plan 2.4, October 24, 2026) */
+
 #method{border:0;border-radius:var(--r);padding:24px 26px 22px;width:min(520px,calc(100vw - 32px));max-height:calc(100vh - 64px);overflow-y:auto;background:var(--surface);color:var(--ink2);
   box-shadow:var(--panel-edge);font-size:14px;line-height:1.5}
 #method::backdrop{background:rgba(11,11,11,.18)}
@@ -163,51 +154,46 @@ a{color:inherit}
 #method .x{position:absolute;top:18px;right:20px;background:none;border:0;padding:4px 2px;font-size:13px;color:var(--ink3);cursor:pointer}
 #method .x:hover{color:var(--ink)}
 
-/* labels on the relief */
+
 #labels{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden}
 #mapbox{display:block}
-/* each partner label is tied to its country by a dot on the anchor and a short leader (October 25, 2026, re-test: a
-   label beside a small country read as the neighbour's, e.g. "Almanya" over the North Sea) */
+
 #lks{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 #lks line{stroke:var(--ink);stroke-width:1;stroke-linecap:round}
 #lks circle{fill:var(--ink);stroke:rgb(var(--halo));stroke-width:1.5}
 #lks .h{stroke:rgb(var(--halo));stroke-width:3;opacity:.85}
-/* the map fades out under the year strip and the source line, so their text stays readable on bright land */
-/* November 3, 2026 (audit S2-9, S3 item 12): under the labels, so "Türkiye" is not washed out with the map; a stronger soft
-   patch behind the year strip, so its figures do not sit on South America; with a country selected only the patch stays,
-   so the fade does not whiten Türkiye */
+
+
 #fade{position:fixed;left:0;right:0;bottom:0;height:230px;z-index:4;pointer-events:none;background:linear-gradient(to top,rgba(var(--halo),.92) 0,rgba(var(--halo),.75) 45%,rgba(var(--halo),0) 100%)}
 #fade::before{content:"";position:absolute;left:0;bottom:0;width:640px;height:230px;background:linear-gradient(to right,rgb(var(--halo)) 0,rgba(var(--halo),.96) 64%,rgba(var(--halo),0) 100%);
   -webkit-mask-image:linear-gradient(to top,#000 76%,transparent);mask-image:linear-gradient(to top,#000 76%,transparent)}
 .has-sel #fade::before{height:206px;-webkit-mask-image:linear-gradient(to top,#000 88%,transparent);mask-image:linear-gradient(to top,#000 88%,transparent)}
 .has-sel #fade{background:linear-gradient(to top,rgba(var(--halo),.92) 0,rgba(var(--halo),.85) 40px,rgba(var(--halo),0) 70px)}
 @media (max-width:1180px),(max-height:640px){#fade{display:none}}
-/* a fuller halo and full-ink values, so a label stays readable on the darkest tops (October 24, 2026, review F12) */
+
 .lb{position:absolute;left:0;top:0;white-space:nowrap;text-align:center;will-change:transform;
   text-shadow:0 0 1px rgb(var(--halo)),0 0 2px rgb(var(--halo)),0 0 3px rgb(var(--halo)),0 0 5px rgb(var(--halo)),0 0 8px rgba(var(--halo),.8)}
 .lb b{display:block;font-family:var(--display);font-weight:600;font-size:15px;line-height:1.1;color:var(--ink)}
 .lb s{display:block;text-decoration:none;font-size:11.5px;font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:1px}
 .lb.tr b{color:var(--tr);font-size:14px;text-shadow:0 0 2px rgb(var(--trhalo)),0 1px 3px rgb(var(--trhalo)),0 0 10px var(--trglow)}
-/* November 3, 2026 (the user's open item): with a country selected the map lies flat and Türkiye is a large dark shape in
-   the light theme, so its name turns white on a dark halo; the dark theme's light shape keeps dark text on a light halo */
+
 :root[data-theme="light"] .has-sel .lb.tr b{color:#fff;text-shadow:0 0 1px #2c2925,0 0 2px #2c2925,0 0 3px #2c2925,0 0 5px #2c2925,0 0 8px rgba(44,41,37,.85)}
 .lb.sel b{font-size:19px}
 .lb.sel s{font-size:13px;color:var(--ink)}
 
-/* tooltip */
+
 #tip{position:fixed;left:0;top:0;z-index:30;pointer-events:none;background:var(--surface);border-radius:var(--r-sm);box-shadow:var(--panel-edge);padding:7px 11px 8px;
   font-size:13px;color:var(--ink2);opacity:0;transition:opacity .12s;font-variant-numeric:tabular-nums;white-space:nowrap}
 #tip b{display:block;font-family:var(--display);font-size:16px;font-weight:600;color:var(--ink)}
 #tip.on{opacity:1}
 
-/* detail */
+
 #detail{position:fixed;top:68px;right:28px;z-index:15;width:330px;background:var(--surface);border-radius:var(--r);box-shadow:var(--panel-edge);padding:22px 24px 22px;
   opacity:0;transform:translateX(16px);pointer-events:none;transition:opacity .35s,transform .5s var(--ease)}
 #detail.on{opacity:1;transform:none;pointer-events:auto}
 #detail .x{position:absolute;top:14px;right:16px;background:none;border:0;padding:4px 2px;font-size:13px;color:var(--ink3);cursor:pointer}
 #detail .x:hover{color:var(--ink)}
-/* the head (the user, October 24, 2026: flag, more air): flag and name, then the three figures in ruled columns. The
-   value, the other direction and the balance are the totals at the top left, which follow the selection */
+
 #detail .hd{display:flex;align-items:center;gap:12px;margin:0 56px 14px 0}
 #dFlag{flex:none;width:32px;height:24px;border-radius:2px;box-shadow:0 0 0 1px var(--rule);object-fit:cover}
 #detail h2{font-family:var(--display);font-weight:600;font-size:30px;line-height:1.05;margin:0;letter-spacing:-.01em}
@@ -216,7 +202,7 @@ a{color:inherit}
 #detail .stats div{display:flex;flex-direction:column-reverse;justify-content:flex-end;gap:2px;padding-left:14px;border-left:1px solid var(--rule)}
 #detail .stats div:first-child{padding-left:0;border-left:0}
 #detail .stats dt{font-size:12px;color:var(--ink3)}
-/* the frame line names, once, the total the three figures belong to (October 25, 2026, the user's request) */
+
 #detail .statcap{margin:0;padding:12px 0 0;border-top:1px solid var(--rule);font-size:12px;color:var(--ink2)}
 #detail .statcap + .stats{border-top:0;padding-top:8px}
 #detail .stats dd{margin:0;font-size:19px;font-weight:600;font-variant-numeric:tabular-nums}
@@ -227,9 +213,9 @@ a{color:inherit}
 #dQuick .q1{display:block}
 #dGap{margin:-8px 0 14px;font-size:12.5px;line-height:1.35;color:var(--ink2)}
 #dGap a{color:var(--accent2)}
-/* the country's share of Türkiye's total, 1995–2024; tap or drag it to set the year (review F5) */
+
 #dLine{position:relative;margin:0 0 16px}
-/* any year's share and rank under the pointer, without changing the map's year (October 25, 2026, re-test T2) */
+
 #dLh{position:absolute;left:0;top:0;transform:translateX(-50%);pointer-events:none;white-space:nowrap;background:var(--surface);color:var(--ink);
   border-radius:var(--r-sm);box-shadow:var(--panel-edge);padding:3px 8px 4px;font-size:12px;font-variant-numeric:tabular-nums;opacity:0;transition:opacity .12s}
 #dLh.on{opacity:1}
@@ -253,11 +239,10 @@ a{color:inherit}
 #dKey .gk.lo{color:var(--ink3)}
 #dKey .gk.lo b{font-weight:500;color:var(--ink3)}
 
-/* top ten: on the right, in the detail panel's place (October 24, 2026, the user); since the visitor review the same day it
-   shows in every state, not only with a product group, and opens to the full list with a search field (review F2, F3) */
+
 #top{position:fixed;top:68px;right:28px;z-index:14;width:330px;max-height:calc(100vh - 68px - 70px);overflow-y:auto;background:var(--surface);border-radius:var(--r);box-shadow:var(--panel-edge);padding:18px 22px 16px;
   opacity:0;transform:translateX(16px);pointer-events:none;transition:opacity .35s,transform .5s var(--ease)}
-#top h2{display:none}                         /* the subtitle and the dropdown name the group */
+#top h2{display:none}                         
 #top.on{opacity:1;transform:none;pointer-events:auto}
 .has-sel #top{opacity:0;pointer-events:none}
 #top .x{position:absolute;top:14px;right:16px;background:none;border:0;padding:4px 2px;font-size:13px;color:var(--ink3);cursor:pointer}
@@ -271,7 +256,7 @@ a{color:inherit}
 #top .of b{color:var(--ink);font-weight:600}
 #top .cap{font-size:12px;color:var(--ink3);margin:0 0 4px;display:flex;justify-content:space-between}
 #tList{list-style:none;margin:0;padding:0;font-size:13px;color:var(--ink2)}
-/* each row is a button inside the list item, so a screen reader says it opens the panel (October 25, 2026, re-test) */
+
 #tList li{border-top:1px solid var(--rule)}
 #tList .row{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:22px 1fr auto 56px;align-items:center;gap:0 8px;padding:3px 0 4px;cursor:pointer}
 #tList .row:hover span,#tList .row:focus-visible span{color:var(--ink)}
@@ -299,12 +284,12 @@ a{color:inherit}
 #top.all #tList{max-height:min(52vh,460px);overflow-y:auto}
 #top.sm #tList .row{grid-template-columns:22px 1fr auto 74px}
 #tList li.none{display:block;cursor:default;color:var(--ink3);padding:6px 0}
-/* partners with no shape on the map (TÜİK's confidential country, for one) are listed but cannot be opened */
+
 #tList li.ns .row{cursor:default}
 #tList li.ns span{white-space:normal;line-height:1.2}
 #tList li.ns small{display:block;font-size:11px;color:var(--ink3)}
 #top:not(.prod) .x,#top:not(.prod) #tVal,#top:not(.prod) #tOf{display:none}
-/* short laptop screens: a tighter box so more rows fit above the year strip */
+
 @media (min-width:1181px) and (min-height:641px) and (max-height:820px){
   #top{padding:14px 20px 12px}
   #top .big{font-size:28px}
@@ -313,7 +298,7 @@ a{color:inherit}
   #tLeg .nd{display:none}
   #tList .row{padding:2px 0 3px}
 }
-/* the group rows and the bar segments pick the product group, like the dropdown (October 24, 2026) */
+
 #dMix i{cursor:pointer}
 #dKey .gk{cursor:pointer;margin:0 -6px;padding:2px 6px;border-radius:2px;transition:background-color .15s}
 #dKey .gk:hover{background:var(--rule)}
@@ -327,11 +312,8 @@ a{color:inherit}
 #loading{position:fixed;inset:0;display:grid;place-items:center;z-index:4;color:var(--ink3);font-size:14px;pointer-events:none;transition:opacity .4s}
 #loading.off{opacity:0}
 
-/* Three layouts (November 3, 2026, audit S1-4 and 4-accessibility S2-5). The JavaScript tests the same two queries (NARROW, STACK):
-   - desktop, wider than 1180 px and taller than 640 px: cards float over the map;
-   - sheets, up to 1180 px wide (it was 700 px until today): a band of totals on top, the map, a sheet and the year strip below;
-   - stacked, up to 640 px high at any width (200 % zoom, phones on their side): everything static and in flow, the page scrolls. */
-/* sheets and stacked: the band of totals, sizes */
+
+
 @media (max-width:1180px),(max-height:640px){
   .top{gap:14px;padding:0 16px;font-size:12px}
   .top .name{display:none}
@@ -355,8 +337,7 @@ a{color:inherit}
   .lb b{font-size:13px}
   .lb s{font-size:10.5px}
   .lb.sel b{font-size:16px}
-  /* phones, review F10 (October 24, 2026): the map keeps at least 45 % of the screen in every state. The totals, the
-     dropdown and the measure sit in a solid band at the top (page background, one rule line), never over the map */
+  
   #dir{top:44px;left:0;right:0;padding:6px 16px 4px;gap:0 14px;background:var(--bg);border-bottom:1px solid var(--rule);text-shadow:none}
   #dir > button + button{margin-left:8px}
   #dir .k{font-size:12px}
@@ -379,19 +360,19 @@ a{color:inherit}
   #detail .bal{margin:0 0 8px}
   #dFlag{width:24px;height:18px}
 }
-/* sheets: the year strip at the bottom edge, the list or the panel as a sheet above it */
+
 @media (max-width:1180px) and (min-height:641px){
-  #years{left:0;right:0;width:auto;bottom:0;background:var(--bg);border-top:1px solid var(--rule);padding:8px 16px 44px}              /* the bottom padding follows the source line's height (fitNote) */
+  #years{left:0;right:0;width:auto;bottom:0;background:var(--bg);border-top:1px solid var(--rule);padding:8px 16px 44px}              
   #ybars{height:36px;gap:1px}
   #yslide{height:24px;margin-top:0}
-  #years .cap{margin-bottom:10px}             /* clear of the tallest bar's value (re-test) */
+  #years .cap{margin-bottom:10px}             
   #note{left:16px;right:16px;bottom:10px;font-size:11.5px;line-height:1.3;z-index:11;max-width:none}
   #top{top:auto;left:0;right:0;bottom:136px;width:auto;max-height:none;padding:8px 16px 6px;transform:translateY(18px);border-top:1px solid var(--rule);border-radius:var(--r) var(--r) 0 0}
-  /* a peek of three rows; "Tüm partnerler" opens the full list in the sheet */
+  
   #top:not(.all) #tList li:nth-child(n+4){display:none}
   #top.all{max-height:62vh;overflow-y:auto}
   #top.all #tList{max-height:none;overflow:visible}
-  /* the panel opens short so the map keeps its room (review F10); the rest opens on a tap */
+  
   #dMore{all:unset;box-sizing:border-box;display:block;width:100%;min-height:28px;padding:6px 0 0;border-top:1px solid var(--rule);font-size:13px;color:var(--accent2);cursor:pointer}
   #dMore::after{content:" ▾"}
   #detail.full #dMore::after{content:" ▴"}
@@ -400,26 +381,23 @@ a{color:inherit}
   #detail.full{max-height:70vh;overflow-y:auto}
   #detail{top:auto;left:0;right:0;bottom:136px;width:auto;padding:10px 16px 8px;transform:translateY(18px);border-top:1px solid var(--rule);border-radius:var(--r) var(--r) 0 0}
   .has-sel #bal,.has-sel #meas{display:none}
-  /* the list opens as a peek: the top three rows and the button; the legend and the heading come with the full list */
+  
   #top:not(.all) #tSub,#top:not(.all) #tLeg,#top:not(.all) #tVal,#top:not(.all) #tOf,#top:not(.all) .x{display:none}
   #tMore{margin-top:2px;padding:5px 0 0}
-  /* in the peek the button sits on the caption line, in place of the column heading */
+  
   #top{position:fixed}
   #top:not(.all) #tShareK{visibility:hidden}
   #top:not(.all) #tMore{position:absolute;top:6px;right:16px;width:auto;margin:0;padding:2px 0;border:0;font-size:12.5px}
-  /* the panel opens with the flag, the name and the share (the value is in the band at the top); the three figures come
-     with the rest */
+  
   #detail:not(.full) .stats,#detail:not(.full) .statcap,#detail:not(.full) .sub{display:none}
-  /* phones (October 25, 2026, re-test): the short sheet leads with Türkiye's side (share and rank) and the balance, which
-     the band at the top hides with a country selected; the partner-side share comes with the rest */
+  
   #detail #dQuick{display:block}
   #detail:not(.full) #dShr{display:none !important}
   #detail.full #dQuick .q1{display:none}
   #detail:not(.full) h2{font-size:22px}
   #detail:not(.full) #dGap{margin-bottom:4px}
 }
-/* tablets: the same sheets, with the width used: the band on fewer lines, the three rows side by side, the hint and the story
-   link on one line */
+
 @media (min-width:701px) and (max-width:1180px),(min-width:701px) and (max-height:640px){
   #dir{align-items:flex-end}
   #bal{flex-basis:auto;order:3;margin:0 0 4px auto}
@@ -433,7 +411,7 @@ a{color:inherit}
   #top.all #lede{display:none}
   #detail:not(.full) #dMore{width:auto}
 }
-/* stacked: the band, the map, the year strip, the source line, then the list or the panel, in the page's own flow and order */
+
 @media (max-height:640px){
   html,body{height:auto;overflow:auto}
   html{scroll-padding-top:56px}
@@ -455,12 +433,11 @@ a{color:inherit}
 }
 @media (min-width:1181px) and (min-height:641px){
   #meas .sh{display:none}
-  /* the totals and controls on a panel like the right-hand ones (the user, October 24, 2026: over light countries the
-     text could not be read) */
+  
   #dir{top:68px;left:28px;padding:16px 22px 6px;background:var(--surface);border-radius:var(--r);box-shadow:var(--panel-edge);text-shadow:none;
     display:grid;grid-template-columns:auto auto;justify-content:start;align-items:end}
   #scope,#bal,#meas,#prodBox{grid-column:1/-1}
-  /* short windows: the panel scrolls inside itself instead of running off the screen */
+  
   #detail{max-height:calc(100vh - 68px - 12px);overflow-y:auto}
 }
 @media (prefers-reduced-motion:reduce){
@@ -468,10 +445,10 @@ a{color:inherit}
 }
 </style>
 <meta name="robots" content="noindex">
-<link rel="canonical" href="https://www.makroriskakademi.com/en/dashboards/foreign-trade-map/">
-<link rel="alternate" hreflang="tr" href="https://www.makroriskakademi.com/tr/panolar/dis-ticaret-haritasi/">
-<link rel="alternate" hreflang="en" href="https://www.makroriskakademi.com/en/dashboards/foreign-trade-map/">
-<link rel="alternate" hreflang="x-default" href="https://www.makroriskakademi.com/tr/panolar/dis-ticaret-haritasi/">
+<link rel="canonical" href="https://sametapaydin.github.io/en/dashboards/foreign-trade-map/">
+<link rel="alternate" hreflang="tr" href="https://sametapaydin.github.io/tr/panolar/dis-ticaret-haritasi/">
+<link rel="alternate" hreflang="en" href="https://sametapaydin.github.io/en/dashboards/foreign-trade-map/">
+<link rel="alternate" hreflang="x-default" href="https://sametapaydin.github.io/tr/panolar/dis-ticaret-haritasi/">
 <link rel="stylesheet" href="/assets/css/shell.css">
 <link rel="stylesheet" href="/assets/css/dash.css">
 <link rel="icon" href="/assets/img/favicon-ipc.ico">
@@ -481,8 +458,7 @@ a{color:inherit}
 <header class="mra sb" lang="en" data-hd>
   <div class="sb-left">
     <a class="sb-brand" href="/en/">
-      <span class="sb-logo"><img src="/assets/img/logo-en.png" alt="Istanbul Policy Center" width="300" height="58"></span>
-      <span class="sb-rule" aria-hidden="true"></span>
+      <span class="mark"><img class="mk-l" src="/assets/img/logo-mark-en.png" alt="Istanbul Policy Center" width="92" height="58"><img class="mk-d" src="/assets/img/logo-mark-en-dark.png" alt="Istanbul Policy Center" width="92" height="58"></span>
       <span class="sb-name">Macro Risk Academy</span>
     </a>
     <span class="sb-pg"><span aria-hidden="true">/</span> Türkiye’s foreign trade map</span>
@@ -502,10 +478,13 @@ a{color:inherit}
     <div><a href="/en/imprint/">Imprint</a><a href="/en/privacy/">Privacy</a><a href="/en/cookies/">Cookies</a><button type="button" data-consent-open>Cookie settings</button></div>
   </div>
 </header>
+<div class="mra sb-row" lang="en"><p class="sb-row-name">Türkiye’s foreign trade map</p>
 <aside class="mra sb-note" lang="en" aria-label="In Turkish for now" data-note><p>This dashboard is in Turkish; the English version is in preparation.</p><button type="button" data-note-close aria-label="Close"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" fill="none"/></svg></button></aside>
+</div>
+<script>(function(){var r=document.querySelector('.sb-row'),s=document.documentElement.style,h=-1;function m(){var n=r.offsetHeight;if(n!==h){var f=h<0;h=n;s.setProperty('--map-row',n+'px');if(!f)dispatchEvent(new Event('resize'))}}m();if(window.ResizeObserver)new ResizeObserver(m).observe(r)})()</script>
 <script src="/assets/js/site.js" defer></script>
 
-<noscript><p class="mra sb-noscript" lang="en">This dashboard needs JavaScript. Turn it on in your browser, or see the list of dashboards and the method page.</p></noscript>
+<noscript><p class="mra sb-noscript" lang="en">This dashboard needs JavaScript. Turn it on in your browser, or see <a href="/en/dashboards/">the list of dashboards</a> and <a href="/en/dashboards/method/">the method page</a>.</p></noscript>
 
 <header class="top">
   <span class="brand">IPM&ensp;Ticaret</span>
@@ -514,7 +493,7 @@ a{color:inherit}
 </header>
 
 <main>
-<h1 class="sr">Türkiye'nin dış ticareti</h1>
+<h1 class="sr">Türkiye'nin dış ticaret haritası</h1>
 <div id="dir" role="group" aria-label="Yön">
   <p id="scope"></p>
   <button type="button" data-d="exp" aria-pressed="true"><span class="k">İhracat</span><span class="n" id="nExp">–</span></button>
@@ -568,7 +547,7 @@ a{color:inherit}
     ticaretini verdiği için bu ölçü yalnızca BACI sürümünde var.</p>
 </dialog>
 </main>
-<!-- "Hızlı tur" (the scroll-scrub sequence) comes back when it exists; hidden since October 24, 2026 (review F8) -->
+
 
 <aside id="detail" aria-label="Ülke ayrıntısı" inert>
   <button type="button" class="x" aria-label="Seçimi kaldır">Kapat</button>
@@ -623,7 +602,7 @@ a{color:inherit}
   const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const HOVER = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const dur = s => REDUCE ? 0 : s;
-  // the layouts' two tests, the same queries as the style sheet (November 3, 2026)
+  
   const NARROW = matchMedia('(max-width:1180px),(max-height:640px)'), STACK = matchMedia('(max-height:640px)');
   const narrow = () => NARROW.matches, stacked = () => STACK.matches, sheets = () => NARROW.matches && !STACK.matches;
 
@@ -633,30 +612,30 @@ a{color:inherit}
   const { features, data, fmt } = base;
   const years = data.years, LAST = years.length - 1;
 
-  // ---------- state ----------
+  
   const qs = new URLSearchParams(location.search);
   let dir = qs.get('d') === 'imp' ? 'imp' : 'exp';
-  const part = i => data.partial[years[i]];                   // months covered, when a year is not complete
-  const FULL = years.reduce((k, y, i) => part(i) ? k : i, 0);  // the last complete year opens the page
+  const part = i => data.partial[years[i]];                   
+  const FULL = years.reduce((k, y, i) => part(i) ? k : i, 0);  
   const yLab = (i = yi) => years[i] + (part(i) ? ' (' + part(i) + ')' : '');
   let yi = years.indexOf(+qs.get('y')); if (yi < 0) yi = FULL;
-  let sel = null, hover = null, hoverK = null;   // hoverK: the product group whose stack layer is under the mouse
-  let litK = null;                                // the product group lit on the stack and in the panel, from either side
-  // product filter (October 23, 2026): null = all products, else a product-group key; ?p=makine
+  let sel = null, hover = null, hoverK = null;   
+  let litK = null;                                
+  
   let prod = data.order.includes(qs.get('p')) ? qs.get('p') : null;
   const FI = k => data.order.indexOf(k);
-  // second measure (review F4, decision C, October 24, 2026): 'v' = value, 's' = Türkiye's share of the partner's trade
-  // (its imports for Türkiye's exports, its exports for Türkiye's imports); BACI only, ?m=s
+  
+  
   let meas = data.src === 'baci' && qs.get('m') === 's' ? 's' : 'v', SH = null;
-  // Türkiye's trade in one product group (partner × group cells add up to the yearly totals)
+  
   const PT = {};
   data.order.forEach(k => { PT[k] = {}; ['exp', 'imp'].forEach(d => { PT[k][d] = data.years.map((_, y) => d3.sum(Object.values(data.byId), c => c.m[d][FI(k)][y])); }); });
   const totOf = (d = dir, y = yi) => prod ? PT[prod][d][y] : data.tot[d][y];
 
-  // ---------- projection and geometry (projected units: world ~200 wide) ----------
+  
   const P = d3.geoEqualEarth().rotate([-11, 0]).fitExtent([[-100, -52], [100, 52]], { type: 'Sphere' });
-  const EPS = 0.04;           // Douglas–Peucker tolerance (~8 km)
-  const MIN_ISLE = 0.006;     // drop islands smaller than ~250 km² (the main ring is always kept)
+  const EPS = 0.04;           
+  const MIN_ISLE = 0.006;     
 
   function captureRings(f) {
     const rings = []; let cur = null;
@@ -702,7 +681,7 @@ a{color:inherit}
     }
     return m;
   }
-  // a point well inside the main ring (centroid if it is safely inside, else a coarse pole of inaccessibility)
+  
   function anchorOf(ring) {
     const c = d3.polygonCentroid(ring);
     const [x0, x1] = d3.extent(ring, p => p[0]), [y0, y1] = d3.extent(ring, p => p[1]);
@@ -718,66 +697,66 @@ a{color:inherit}
     return best;
   }
 
-  // ---------- scale ----------
+  
   let VMAX = 0;
   Object.values(data.byId).forEach(c => ['exp', 'imp'].forEach(s => c[s].forEach(v => { if (v > VMAX) VMAX = v; })));
-  const BASE = 0.32;                            // world units: the height of a country with no trade
-  // with a product chosen, heights and colours use that group's own maximum (all partners, years, both directions)
-  // per direction (the user, October 23, 2026: with one scale for both, imports squeezed every export partner into
-  // the pale end); fixed across years, so the year slider still shows change
+  const BASE = 0.32;                            
+  
+  
+  
   const VMAXP = {}, BRK = {};
-  // rounded class breaks: 1, 2, 2,5, 5 × 10^n
+  
   const nice = x => { const e = 10 ** Math.floor(Math.log10(x)), f = x / e; return (f < 1.5 ? 1 : f < 2.25 ? 2 : f < 3.5 ? 2.5 : f < 7.5 ? 5 : 10) * e; };
   data.order.forEach(k => {
     VMAXP[k] = {}; BRK[k] = {};
     ['exp', 'imp'].forEach(d => {
       let m = 0; Object.values(data.byId).forEach(c => c.m[d][FI(k)].forEach(v => { if (v > m) m = v; }));
       VMAXP[k][d] = m;
-      // five classes; the top one starts at about half the largest value ever seen, so it holds the few largest partners
+      
       BRK[k][d] = [...new Set([0.03, 0.1, 0.25, 0.5].map(f => nice(m * f)))];
     });
   });
-  // all products: five classes too, per direction (review F4, October 24, 2026: a continuous ramp cannot be read on a
-  // lit surface); heights keep the one scale for both directions
+  
+  
   BRK.all = {};
   ['exp', 'imp'].forEach(d => {
     let m = 0; Object.values(data.byId).forEach(c => c[d].forEach(v => { if (v > m) m = v; }));
     BRK.all[d] = [...new Set([0.03, 0.1, 0.25, 0.5].map(f => nice(m * f)))];
   });
-  // share: one fixed scale and fixed classes for every group, year and direction, so shares compare across them
-  // (2024: median partner about 1 %, top tenth above 7 %, Syria 56 %; tools/audit_share.do)
+  
+  
   const SMAX = 50, SBRK = [1, 2.5, 5, 10];
   const vmaxNow = (d = dir) => meas === 's' ? SMAX : prod ? VMAXP[prod][d] : VMAX;
   const brkNow = (d = dir) => meas === 's' ? SBRK : BRK[prod || 'all'][d];
   let VCUR = vmaxNow(), KG = 6 / Math.sqrt(VCUR);
-  // change the height scale (product or direction) without a jump: blocks keep their height, then the morph moves them
+  
   function rescale(d) {
     const kgOld = KG; VCUR = vmaxNow(d); KG = 6 / Math.sqrt(VCUR);
     partners.forEach(c => { c.v *= (kgOld / KG) ** 2; });
   }
-  // the low relief ("gentle", chosen October 23, 2026): height grows with the square root of the value
+  
   const topH = (c, v) => BASE + KG * Math.sqrt(Math.max(0, v));
-  // while a country is selected the map lies flat (flat.u → 1), so tall neighbours never hide it; the selection carries
-  // its stack of product-group layers (c.lift → 1, see "layers" below)
+  
+  
   const flat = { u: 0 };
   const blockH = c => topH(c, c.v) + (BASE - topH(c, c.v)) * flat.u;
   const shownH = c => blockH(c) + (stacks.has(c.id) ? stackTop(stacks.get(c.id)) * c.lift : 0);
-  let NEUTRAL, NONE;                            // set by the theme
+  let NEUTRAL, NONE;                            
   const tcol = new THREE.Color();
 
-  // ---------- themes (October 23, 2026): light is the default, dark keeps the first sample's look ----------
-  // Product groups use the UK Office for National Statistics standard category palette (ONS Service Manual,
-  // "Using colours in charts"), eight of its nine colours (night blue dropped: it merges with beetroot for
-  // red-blind readers) plus ochre for "Diğer ürünler" (a warm grey until October 24, 2026: it read as the selected
-  // country's lid and sat 3,8 ΔE from maden for red-green blind readers; ochre is the colour farthest from the other
-  // eight in both themes, searched in OKLCH by tools/pick_diger.py).
-  // Dark theme (October 24, 2026, the user: dark colours "look odd"): the same ONS hues with their OKLCH lightness
-  // re-stepped for a black ground (dark leaf green, beetroot and ocean blue were near-black there). Chosen by search
-  // within ±0.08 of each colour's own lightness and checked with the dataviz validator against #0d0e10, all pairs:
-  // colour-blind worst ΔE 7.1 (grey/coral), normal-vision worst 12.8 (ocean blue/lavender, the ONS palette's own
-  // weak pair), every colour ≥ 3:1 on the background; the light set scores 6.5 and 11.8.
-  // Lights are balanced so an upward face gets about 1.0
-  // (hemisphere + sun × 0.75), so a country's top shows the palette colour itself, not a brightened one.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   const PAL = {
     light: { gida: '#a8bd3a', maden: '#22d0b6', enerji: '#871a5b', kimya: '#746cb1', tekstil: '#f66068', metal: '#05341a', makine: '#206095', tasit: '#27a0cc', diger: '#93690d' },
     dark:  { gida: '#96aa1e', maden: '#3cdec4', enerji: '#a83b78', kimya: '#827ac4', tekstil: '#e44f59', metal: '#3f8e5c', makine: '#2a6ba3', tasit: '#3eb1de', diger: '#daac7f' }
@@ -792,17 +771,17 @@ a{color:inherit}
       tr: [0xcfcac0, 0x24221e], trLine: [0xffffff, 0.55], halo: true, arc: [0xcfccc3, 0.85], arcSel: 0xf5f5f2, hair: '#0e1012', mute: '#2c3038',
       hemi: [0xe4e9f2, 0x0b0b0d, 0.52], sun: 0.6, sunCol: 0xfff4e6, hover: 0x1c1c1c }
   };
-  // product colours are shown mixed toward the background (the user: "too sharp"); on the dark theme a mix toward the
-  // background darkens rather than softens, so it gets a lighter touch there (October 24, 2026)
+  
+  
   const SOFT = { light: 0.3, dark: 0.1 };
   let theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light', TH = THEMES[theme];
   function targetCol(id, d, y) {
-    // five classes (in the group's colour when a product is chosen), grey under 1 mn $; with a product and a country
-    // selected the rest go grey
+    
+    
     return tcol.set(val(id, d, y) < 1 || mv(id, d, y) < 0 ? NONE : prod && sel && id !== sel ? NEUTRAL : CLS[d3.bisectRight(brkNow(d), mv(id, d, y))]);
   }
 
-  // ---------- three.js ----------
+  
   const canvas = $('gl');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: /[?&]shot\b/.test(location.search) });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, narrow() ? 1.75 : 2));
@@ -817,7 +796,7 @@ a{color:inherit}
   const hemi = new THREE.HemisphereLight(0xe4e9f2, 0x0b0b0d, 0.52);
   scene.add(hemi);
   const sun = new THREE.DirectionalLight(0xfff4e6, 0.6);
-  sun.position.set(-70, 115, 75);             // high, from the south-west: lit faces toward the viewer, shadows fall north-east
+  sun.position.set(-70, 115, 75);             
   sun.castShadow = true;
   sun.shadow.mapSize.set(narrow() ? 1024 : 2048, narrow() ? 1024 : 2048);
   Object.assign(sun.shadow.camera, { left: -115, right: 115, top: 70, bottom: -70, near: 10, far: 400 });
@@ -844,7 +823,7 @@ a{color:inherit}
       const host = polys.find(p => d3.polygonContains(p.outer, x.r[0]) && d3.polygonContains(p.outer, x.r[Math.floor(x.r.length / 2)]));
       if (host) host.holes.push(x.r); else polys.push({ outer: x.r, holes: [] });
     });
-    // overseas parts (Canaries, Guiana, Hawaii…) stay at sea level instead of rising as needles
+    
     const main = polys[0].outer, an = anchorOf(main), mainA = Math.abs(d3.polygonArea(main));
     const ex = d3.extent(main, p => p[0]), ey = d3.extent(main, p => p[1]);
     const reach = Math.max(ex[1] - ex[0], ey[1] - ey[0]) * 0.75 + 4;
@@ -859,12 +838,12 @@ a{color:inherit}
     const build = list => {
       const shapes = list.map(p => { const s = new THREE.Shape(toV(p.outer)); p.holes.forEach(h => s.holes.push(new THREE.Path(toV(h)))); return s; });
       const geo = new THREE.ExtrudeGeometry(shapes, { depth: 1, bevelEnabled: false, steps: 1, curveSegments: 1 });
-      // groups come in pairs per shape (cap, sides): caps take material 0 (the bands), sides material 1
+      
       geo.groups.forEach((g, i) => { g.materialIndex = i % 2; });
       const mesh = new THREE.Mesh(geo, mat);
       mesh.rotation.x = -Math.PI / 2; mesh.castShadow = mesh.receiveShadow = true;
       mesh.scale.z = BASE;
-      // country outline on the top face, scaled with the block
+      
       const seg = [];
       list.forEach(p => [p.outer, ...p.holes].forEach(r => { for (let i = 0; i < r.length; i++) { const a = r[i], b = r[(i + 1) % r.length]; seg.push(a[0], -a[1], 1.002, b[0], -b[1], 1.002); } }));
       const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.Float32BufferAttribute(seg, 3));
@@ -875,7 +854,7 @@ a{color:inherit}
     };
     const { mesh, lines } = build(near);
     if (far.length) build(far);
-    // the camera frames every nearby part when the bands cover them all (all of Indonesia, not only Kalimantan)
+    
     ex[0] = d3.min(near, p => d3.min(p.outer, q => q[0])); ex[1] = d3.max(near, p => d3.max(p.outer, q => q[0]));
     ey[0] = d3.min(near, p => d3.min(p.outer, q => q[1])); ey[1] = d3.max(near, p => d3.max(p.outer, q => q[1]));
     C[f.id] = { id: f.id, tr: isTR, mesh, mat, lines, polys: near, ax: an[0], az: an[1], bb: [ex[0], ey[0], ex[1], ey[1]], size: Math.max(ex[1] - ex[0], ey[1] - ey[0]),
@@ -885,7 +864,7 @@ a{color:inherit}
   const TR = C['792'];
   TR.mesh.scale.z = BASE + 0.25;
   TR.lines.material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55 });
-  // a soft halo of light around Türkiye: a radial gradient lying on the map, added on top of what is below (dark theme only)
+  
   let halo;
   {
     const cv = document.createElement('canvas'); cv.width = cv.height = 128;
@@ -899,14 +878,14 @@ a{color:inherit}
     scene.add(halo);
   }
   const partners = Object.values(C).filter(c => !c.tr);
-  // wave weight: distance from Türkiye on the map (0 near, 1 far)
+  
   const dmax = d3.max(partners, c => Math.hypot(c.ax - TR.ax, c.az - TR.az));
   partners.forEach(c => { c.w = Math.hypot(c.ax - TR.ax, c.az - TR.az) / dmax; });
 
-  // ---------- data helpers ----------
+  
   const val = (id, d = dir, y = yi) => prod ? data.byId[id].m[d][FI(prod)][y] : data.byId[id][d][y];
   const valAll = (id, d = dir, y = yi) => data.byId[id][d][y];
-  // Türkiye's share of the partner's trade, %, or -1 where BACI has no figure; the measure shown is mv()
+  
   const WT = {};
   function shareOf(id, d = dir, y = yi) {
     const w = SH && SH.w[id]; if (!w) return -1;
@@ -915,10 +894,10 @@ a{color:inherit}
   }
   const mv = (id, d = dir, y = yi, m = meas) => m === 's' ? shareOf(id, d, y) : val(id, d, y);
   const spct = x => '%' + x.toLocaleString('tr-TR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-  // what a label, the tooltip and the keyboard read out for a partner
+  
   const mText = id => meas === 's' ? (mv(id) < 0 ? 'pay yok' : spct(mv(id))) : fmt(val(id));
   const rankCache = {};
-  // every partner in the data, for the list's and the panel's ranks; ranked() keeps the ones with a shape on the map
+  
   const others = Object.keys(data.byId).filter(id => id !== '792');
   function rankAll(d = dir, y = yi, m = meas) {
     const k = 'a' + d + y + (prod || '') + m;
@@ -930,8 +909,8 @@ a{color:inherit}
   }
   const pct = (x, digits = 1) => '%' + (x * 100).toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
   const unitSplit = s => { const m = s.match(/^(.*?) (mlr \$|mn \$|milyar \$|milyon \$)$/); return m ? `${m[1]}<small>${m[2]}</small>` : s; };
-  // the left block spells the units out (the user, October 25, 2026); lists and labels keep mlr/mn, and so do phones,
-  // where the longer words push the dropdown onto a row of its own and the map under 45 % of the screen
+  
+  
   const longUnit = s => NARROW.matches ? s : s.replace(/ mlr \$$/, ' milyar $').replace(/ mn \$$/, ' milyon $$');
 
   function applyCountry(c) {
@@ -939,26 +918,26 @@ a{color:inherit}
     const s = stacks.get(c.id); if (s) placeStack(s);
   }
 
-  // ---------- selection: a stack of product-group layers (October 24, 2026, review F6, decision D) ----------
-  // The selected country rises as a stack, one layer per product group, the largest at the bottom, each as high as the
-  // group's share of the country's trade with Türkiye. Every layer has the country's full outline, so no group reads as a
-  // region (the west-to-east bands did: Russia's energy sat in western Russia). The lid is plain; the panel's bar and
-  // rows name the layers. With a product group chosen only that group's layer stands on the country (the user,
-  // October 24, 2026: elevate the chosen colour, not the whole country).
-  const stacks = new Map();                    // country id -> stack; a deselected stack shrinks away, then goes
-  const stackS = c => THREE.MathUtils.clamp(c.size * 0.32, 1.6, 5);     // the full stack's height
-  const MINL = 0.3;                            // the chosen group's layer never gets thinner than this
+  
+  
+  
+  
+  
+  
+  const stacks = new Map();                    
+  const stackS = c => THREE.MathUtils.clamp(c.size * 0.32, 1.6, 5);     
+  const MINL = 0.3;                            
   const stackTop = s => d3.sum(s.layers, L => L.h);
   const lidMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
   const hairMat = new THREE.LineBasicMaterial({ color: 0xffffff });
-  const layerMat = {};                         // product group -> material, recoloured with the theme
+  const layerMat = {};                         
   function paintLayerMats() {
-    // a little self-light, so the shaded sides stay close to the panel's colours
+    
     data.order.forEach(k => { const m = layerMat[k] || (layerMat[k] = new THREE.MeshLambertMaterial()); m.color.set(data.families[k].c); m.emissive.set(data.families[k].c).multiplyScalar(0.22); });
     lidMat.color.set(TH.lid); hairMat.color.set(TH.hair);
     if (litK) layerMat[litK].emissive.set(data.families[litK].c).multiplyScalar(0.5);
   }
-  // each group's layer height in the current state
+  
   function layerTargets(id) {
     const mix = data.mixOf(id, dir, yi), S = stackS(C[id]), on = valAll(id) >= 1;
     return Object.fromEntries(data.order.map(k => [k, !on || !(mix[k] > 0) ? 0 : !prod ? mix[k] * S : k === prod ? Math.max(mix[k] * S, MINL) : 0]));
@@ -967,7 +946,7 @@ a{color:inherit}
   function buildStack(id) {
     const c = C[id], T = layerTargets(id), s = { id, layers: [] };
     data.order.forEach(k => {
-      // the country's own geometry and outline, scaled per layer (shared, never disposed with the stack)
+      
       const mesh = new THREE.Mesh(c.mesh.geometry, [lidMat, layerMat[k]]), line = new THREE.LineSegments(c.lines.geometry, hairMat);
       mesh.rotation.x = -Math.PI / 2; mesh.userData.id = id; mesh.userData.k = k; mesh.add(line);
       scene.add(mesh);
@@ -975,8 +954,8 @@ a{color:inherit}
     });
     s.layers.sort(byShare(id));
     stacks.set(id, s);
-    // place it now: new meshes are visible at full height until placed, and the lift tween starts late (delay 0.35 s),
-    // so every group's layer showed for a moment, the last one's colour (ochre "Diğer") on top (October 25, 2026, the user)
+    
+    
     placeStack(s); invalidate();
     return s;
   }
@@ -986,7 +965,7 @@ a{color:inherit}
     s.layers.forEach(L => { gsap.killTweensOf(L); scene.remove(L.mesh); });
     stacks.delete(id); invalidate();
   }
-  // layers sit one on another from the country's top; empty ones hide, so their lids never fight the visible one
+  
   function placeStack(s) {
     const c = C[s.id];
     let y = c.mesh.scale.z + 0.003, top = null;
@@ -995,12 +974,12 @@ a{color:inherit}
       L.mesh.visible = h > 0.004;
       if (!L.mesh.visible) return;
       L.mesh.position.y = y; L.mesh.scale.z = h; y += h; top = L;
-      // the chosen group's layer keeps its colour on top too; otherwise the lid is plain
+      
       L.mesh.material[0] = prod === L.k ? layerMat[L.k] : lidMat;
     });
     s.layers.forEach(L => { L.line.material = L === top ? lineSel : hairMat; });
   }
-  // move the selected country's layers to the current state; a new direction re-sorts them, largest at the bottom
+  
   function setStack(D, resort) {
     const s = sel && stacks.get(sel); if (!s) return;
     const c = C[sel], T = layerTargets(sel);
@@ -1010,17 +989,17 @@ a{color:inherit}
     if (!dur(D)) { applyCountry(c); invalidate(); }
   }
 
-  // ---------- arcs ----------
-  const arcs = new Map();      // id -> {mesh, p, sel}
+  
+  const arcs = new Map();      
   const arcMat = new THREE.MeshBasicMaterial({ color: 0xcfccc3, transparent: true, opacity: 0.85 });
   const arcSelMat = new THREE.MeshBasicMaterial({ color: 0xf5f5f2 });
   const TUBE = 64, RAD = 5;
-  function curveTo(c, h) {                     // h: the partner's height, if not the one shown now
+  function curveTo(c, h) {                     
     const a = new THREE.Vector3(TR.ax, TR.mesh.scale.z, TR.az);
     const hb = h != null ? h : shownH(c), b = new THREE.Vector3(c.ax, hb, c.az);
     const d = Math.hypot(b.x - a.x, b.z - a.z);
-    // leave Türkiye steeply (large neighbours such as Russia or Iraq start right at its border),
-    // travel above the tallest of the two blocks, land on the partner's top from Türkiye's side
+    
+    
     const lift = Math.max(a.y, hb) * 1.15 + 2 + d * 0.26;
     const p1 = new THREE.Vector3(a.x + (b.x - a.x) * 0.06, lift, a.z + (b.z - a.z) * 0.06);
     const p2 = new THREE.Vector3(a.x + (b.x - a.x) * 0.8, hb + (lift - hb) * 0.6, a.z + (b.z - a.z) * 0.8);
@@ -1036,7 +1015,7 @@ a{color:inherit}
       o.mesh.geometry = g; o.mesh.visible = o.p > 0.001;
     });
   }
-  // arcs keyed by a running number; live ones are found by country id
+  
   function setArcs(ids, d0) {
     const want = new Set(ids), live = new Set();
     arcs.forEach((o, k) => {
@@ -1055,13 +1034,13 @@ a{color:inherit}
     });
   }
 
-  // ---------- camera ----------
+  
   const cam = { tx: 0, tz: 0, dist: 150, az: 0, el: 0.75, ox: 0, oy: 0 };
   let W = canvas.clientWidth || innerWidth, H = canvas.clientHeight || innerHeight;
   const TANV = Math.tan(THREE.MathUtils.degToRad(FOV) / 2);
   function freeRect(withDetail) {
-    const panel = withDetail ? $('detail') : $('top');       // the list card shows in every state since October 24, 2026
-    if (stacked()) return { x: 0, y: 0, w: W, h: H };        // the canvas holds nothing but the map
+    const panel = withDetail ? $('detail') : $('top');       
+    if (stacked()) return { x: 0, y: 0, w: W, h: H };        
     if (narrow()) {
       const top = $('dir').getBoundingClientRect().bottom + 4, yt = $('years').getBoundingClientRect().top;
       $('detail').style.bottom = $('top').style.bottom = (H - yt) + 'px';
@@ -1069,12 +1048,12 @@ a{color:inherit}
       return { x: 0, y: top, w: W, h: Math.max(160, bottom - top) };
     }
     $('detail').style.bottom = $('top').style.bottom = '';
-    // the detail panel and the top ten both take the right side
+    
     const right = panel ? W - 330 - 28 - 12 : W;
-    // with a selection, keep the framed link clear of the headline block and the year strip
+    
     return withDetail ? { x: 0, y: 196, w: right, h: H - 196 - 90 } : { x: 0, y: 44, w: right, h: H - 44 };
   }
-  // distance that fits a ground span sx (across) and sz (depth) into a rect
+  
   function fitDist(sx, sz, rect, el) {
     const a = sx * H / (2 * rect.w * TANV), b = sz * Math.sin(el) * H / (2 * rect.h * TANV);
     return Math.max(a, b);
@@ -1082,23 +1061,23 @@ a{color:inherit}
   function defaultView() {
     const nr = narrow(), rect = freeRect(false);
     if (nr) {
-      // phone: Europe, the Middle East and the Caspian
+      
       const el = 1.0, L = P([-6, 40]), R = P([64, 40]), t = P([30, 42]);
       return { tx: t[0], tz: t[1], dist: fitDist((R[0] - L[0]) * 1.02, 55, rect, el), az: 0, el,
         ox: W / 2 - (rect.x + rect.w / 2), oy: H / 2 - (rect.y + rect.h / 2) + 46 };
     }
-    // desktop (review F9, October 24, 2026): Türkiye and the current top ten partners with their arcs, below the
-    // headline and clear of the list card, so China and the US are fully in view when they are among them; never closer
-    // than the eastern Mediterranean and the Caspian
+    
+    
+    
     const pts = [[TR.ax - 30, 0, TR.az - 12], [TR.ax + 30, 0, TR.az + 12]].map(p => new THREE.Vector3(...p));
     rankedOn().slice(0, 10).forEach(id => {
-      const c = C[id], h = topH(c, mv(id)), r = Math.min(c.size / 2, 22);      // most of the country, not all of Russia
+      const c = C[id], h = topH(c, mv(id)), r = Math.min(c.size / 2, 22);      
       pts.push(new THREE.Vector3(c.ax - r, h, c.az), new THREE.Vector3(c.ax + r, h, c.az), curveTo(c, h).getPoint(0.5));
     });
-    // Türkiye and the top three must also stay clear of the left cards: if one lands under them, the frame narrows from
-    // the left and is fitted again (October 25, 2026, re-test: in the share view Suriye, No. 1, sat under the cards)
+    
+    
     const key = [new THREE.Vector3(TR.ax, 0, TR.az), ...rankedOn().slice(0, 3).map(id => new THREE.Vector3(C[id].ax, topH(C[id], mv(id)), C[id].az))];
-    // (read by layout, not opacity: the cards may still be fading in on load)
+    
     const cards = ['dir'].map(k => $(k)).filter(e => e.getClientRects().length).map(e => e.getBoundingClientRect());
     let R = { x: rect.x, y: 150, w: rect.w, h: H - 150 - 60 }, v;
     for (let k = 0; k < 5; k++) {
@@ -1115,8 +1094,8 @@ a{color:inherit}
     }
     return v;
   }
-  // Frame a set of 3D points inside a screen rect: binary-search the distance, then re-centre the
-  // points with the view offset (a pure 2D shift), and repeat so the two settle together.
+  
+  
   const fitCam = new THREE.PerspectiveCamera(FOV, 1, 0.5, 4000), fv = new THREE.Vector3();
   function placeCam(c, v) {
     const ce = Math.cos(v.el);
@@ -1153,9 +1132,9 @@ a{color:inherit}
     }
     return v;
   }
-  // the free rectangles for a selected country (desktop; November 3, 2026, audit S2-9). The cards leave an L: the column
-  // between the left card and the panel, and the band under the left card above the year strip. Whichever holds the framed
-  // points at the larger size is used, so the country, its stack and the whole arc clear every card
+  
+  
+  
   function freeRects() {
     const d = $('dir').getBoundingClientRect(), y = $('years').getBoundingClientRect(), n = $('note').getBoundingClientRect();
     const pr = W - $('detail').offsetWidth - 28 - 12, cx = Math.max(d.right, y.right) + 12, by = d.bottom + 10;
@@ -1168,19 +1147,19 @@ a{color:inherit}
   }
   function viewFor(id) {
     const c = C[id], nr = narrow();
-    const h = BASE + stackS(c), [x0, z0, x1, z1] = c.bb;      // the map is flat while a country is selected
+    const h = BASE + stackS(c), [x0, z0, x1, z1] = c.bb;      
     const curve = curveTo(c, h);
     const box = ([a, b, e, f], y) => [[a, y, b], [e, y, b], [a, y, f], [e, y, f]];
-    // the country at sea level and at the top of its stack, all of Türkiye, and the arc from end to end
+    
     const pts = [...box(c.bb, 0), ...box(c.bb, h), [c.ax, h + 5, c.az], ...box(TR.bb, 0)].map(p => new THREE.Vector3(...p));
     d3.range(0, 1.001, 0.1).forEach(t => pts.push(curve.getPoint(t)));
     const dx = c.ax - TR.ax;
     if (c.size < 0.2 * Math.hypot(c.ax - TR.ax, c.az - TR.az)) {
-      // small and far from Türkiye (the Netherlands, Belgium): frame the country alone; the arc leaves toward Türkiye
+      
       const S = Math.max(c.size * 2.2, 5) / 2, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
       const near = [[cx - S, 0, cz - S * 0.7], [cx + S, 0, cz - S * 0.7], [cx - S, 0, cz + S * 0.7], [cx + S, 0, cz + S * 0.7], [c.ax, h + 3, c.az],
         ...box(c.bb, h)].map(p => new THREE.Vector3(...p));
-      // seen from straight south, low enough that the layers' sides show (the map is flat, so nothing hides them)
+      
       return fitBest(near, 1.0, 0, nr ? 18 : 40);
     }
     return fitBest(pts, nr ? 1.0 : 0.84, THREE.MathUtils.clamp(-dx / 400, -0.14, 0.14), nr ? 18 : 20);
@@ -1197,12 +1176,12 @@ a{color:inherit}
     camTween = gsap.to(cam, { ...v, duration: dur(d), ease: 'power3.inOut', onUpdate: invalidate });
   }
 
-  // ---------- rendering on demand ----------
+  
   let dirty = true, layoutNow = narrow() + '' + stacked();
   function invalidate() { dirty = true; }
   function resize() {
     W = canvas.clientWidth || innerWidth; H = canvas.clientHeight || innerHeight;
-    // zooming or turning the screen can change the layout: units, the source line and the labels follow it
+    
     if (layoutNow !== narrow() + '' + stacked()) { layoutNow = narrow() + '' + stacked(); LB.forEach(o => { o.key = ''; }); $('years').style.paddingBottom = ''; updateUI(); }
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
@@ -1220,33 +1199,33 @@ a{color:inherit}
     placeLabels();
   }
 
-  // ---------- labels ----------
+  
   const LB = new Map();
   const lbRoot = $('labels');
   const v3 = new THREE.Vector3();
   function labelIds() {
     if (sel) return [sel, '792'];
-    // fewer labels without the room (audit S1-4): three partners on phones, four up to 1180 px
+    
     return ['792', ...rankedOn().slice(0, innerWidth <= 700 ? 3 : narrow() ? 4 : 7)];
   }
-  // Labels are placed strictly in rank order, each trying several positions; from the fourth partner on a label may drop
-  // its value (the list has it) before it is dropped itself (October 24, 2026, review F2: the UK, No. 2, lost to Germany)
+  
+  
   function placeLabels() {
     const ids = labelIds(), keep = new Set(ids);
-    // the fixed UI counts as already-placed labels
-    // (fixed elements have no offsetParent, so visibility is read from their boxes)
-    // (stacked, the canvas holds nothing else, and a label's own box is measured from the canvas)
+    
+    
+    
     const yMin = stacked() ? 4 : 50;
     const placed = (stacked() ? [] : ['dir', 'years', 'note', 'detail', 'top'].map(k => $(k))).filter(e => e.getClientRects().length && getComputedStyle(e).opacity !== '0')
       .map(e => { const q = e.getBoundingClientRect(); return { x: q.left, y: q.top, w: q.width, h: q.height }; });
     v3.set(TR.ax, 0, TR.az).project(camera);
     const trX = (v3.x + 1) / 2 * W;
     LB.forEach((o, id) => { if (!keep.has(id)) o.el.style.display = 'none'; });
-    // every labelled country's anchor on screen: a label avoids covering another one's anchor, so Germany's label does not
-    // take the place the UK's needs (relaxed only when nothing else fits)
+    
+    
     const anchors = ids.map(id => { const c = C[id]; v3.set(c.ax, (c.tr ? c.mesh.scale.z : shownH(c)) + 0.3, c.az).project(camera); return { id, x: (v3.x + 1) / 2 * W, y: (1 - v3.y) / 2 * H }; });
-    // the arcs on screen as points every few pixels: a label first tries the places no arc runs through
-    // (October 25, 2026, re-test: arcs struck through the UK, Germany and Italy labels)
+    
+    
     const arcPts = [], av = new THREE.Vector3();
     arcs.forEach(o => {
       if (o.out || o.p < 0.3 || !C[o.id]) return;
@@ -1278,10 +1257,10 @@ a{color:inherit}
       }
       v3.set(c.ax, (c.tr ? c.mesh.scale.z : shownH(c)) + 0.3, c.az).project(camera);
       const sx = (v3.x + 1) / 2 * W, sy = (1 - v3.y) / 2 * H;
-      // partner labels prefer the side away from Türkiye, so the arc never runs through them; then above, the other
-      // side, below, and the sides shifted up or down
+      
+      
       const pref = c.tr ? 0 : sx < trX - 40 ? -1 : sx > trX + 40 ? 1 : 0, p = pref || 1;
-      // Türkiye's name stays on screen when its anchor nears the edge; below the anchor, else above it
+      
       const at = (sd, dy, w, h) => c.tr ? { x: Math.min(W - w - 6, Math.max(6, sx - w / 2)), y: dy < 0 ? sy - h - 8 : sy + 8, w, h, sd }
         : sd < 0 ? { x: sx - w - 14, y: sy - h * 0.55 + dy * h, w, h, sd }
         : sd > 0 ? { x: sx + 14, y: sy - h * 0.55 + dy * h, w, h, sd }
@@ -1292,8 +1271,8 @@ a{color:inherit}
         !placed.some(q => r.x < q.x + q.w + 6 && r.x + r.w + 6 > q.x && r.y < q.y + q.h + 2 && r.y + r.h + 2 > q.y);
       const clear = r => !anchors.some(a => a.id !== id && a.x > r.x - 4 && a.x < r.x + r.w + 4 && a.y > r.y - 4 && a.y < r.y + r.h + 4);
       const okC = r => ok(r) && clear(r);
-      // in order: clear of anchors and arcs; clear of anchors; then the same with the value dropped (from the fifth
-      // label on); then anywhere free
+      
+      
       const okA = r => okC(r) && noArc(r), cp = !c.tr && id !== sel && li >= 4 && o.wc;
       let r = null, compact = false;
       for (const [test, small] of [[okA, false], [okC, false], [okA, true], [okC, true], [ok, false], [ok, true]]) {
@@ -1309,7 +1288,7 @@ a{color:inherit}
       placed.push(r);
       if (!c.tr) marks.push({ sx, sy, r });
     });
-    // dot on the anchor, leader to the nearest edge of the label
+    
     const cl = (v, a, b) => Math.min(b, Math.max(a, v));
     $('lks').innerHTML = marks.map(({ sx, sy, r }) => {
       const px = cl(sx, r.x, r.x + r.w), py = cl(sy, r.y + 2, r.y + r.h - 2), d = Math.hypot(px - sx, py - sy);
@@ -1319,7 +1298,7 @@ a{color:inherit}
     }).join('');
   }
 
-  // ---------- morph: heights and tints move from the old state to the new one ----------
+  
   const morph = { u: 1 };
   let spread = 0.3;
   const easeIO = gsap.parseEase('power2.inOut');
@@ -1349,22 +1328,22 @@ a{color:inherit}
     updateUI();
   }
 
-  // locative of a product group, for the balance line ("Makine ve elektrikte dış ticaret açığı …")
+  
   const LOC = { gida: 'Gıda ve tarımda', maden: 'Maden, taş ve camda', enerji: 'Enerjide', kimya: 'Kimya ve plastikte',
     tekstil: 'Tekstil, giyim ve deride', metal: 'Metallerde', makine: 'Makine ve elektrikte', tasit: 'Taşıtlarda', diger: 'Diğer ürünlerde' };
-  // partners with trade in the current state, largest first
+  
   const rankedOn = () => ranked().filter(id => val(id) > 0 && mv(id) >= 0);
   const listedOn = () => rankAll().filter(id => val(id) > 0 && mv(id) >= 0);
 
-  // ---------- UI ----------
+  
   const nExp = $('nExp'), nImp = $('nImp');
   const shown = { exp: totOf('exp'), imp: totOf('imp') };
   function paintTotals() { nExp.innerHTML = unitSplit(longUnit(fmt(shown.exp))); nImp.innerHTML = unitSplit(longUnit(fmt(shown.imp))); }
   const TOTMAX = Math.max(d3.max(data.tot.exp), d3.max(data.tot.imp));
   const ybars = $('ybars'), yslide = $('yslide');
-  ybars.setAttribute('aria-hidden', 'true');      // the slider below carries the year for keyboard and screen readers
+  ybars.setAttribute('aria-hidden', 'true');      
   ybars.style.gridTemplateColumns = `repeat(${years.length},1fr)`;
-  const FEW = years.length <= 5;                  // TÜİK's three years: every bar gets its year and value
+  const FEW = years.length <= 5;                  
   years.forEach((y, i) => {
     const b = document.createElement('div');
     b.dataset.i = i;
@@ -1373,7 +1352,7 @@ a{color:inherit}
     ybars.appendChild(b);
   });
   function updateUI() {
-    paintMeas();                                  // first: its line sets where the hint below the totals goes
+    paintMeas();                                  
     document.querySelectorAll('#dir > button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.d === dir)));
     paintHead();
     $('yCap').textContent = (prod ? "Türkiye'nin " + low(data.families[prod].n) + (dir === 'exp' ? ' ihracatı' : ' ithalatı')
@@ -1383,15 +1362,15 @@ a{color:inherit}
     yslide.querySelector('.knob').style.left = at; yslide.querySelector('.fill').style.width = at;
     yslide.setAttribute('aria-valuemin', years[0]); yslide.setAttribute('aria-valuemax', years[LAST]);
     yslide.setAttribute('aria-valuenow', years[yi]); yslide.setAttribute('aria-valuetext', yLab());
-    // with a product chosen the bars show that group, on its own scale; values on the first, last and highest bar
+    
     const tm = prod ? Math.max(d3.max(PT[prod].exp), d3.max(PT[prod].imp)) : TOTMAX;
     const tv = years.map((_, i) => totOf(dir, i)), imax = d3.maxIndex(tv);
     ybars.querySelectorAll('.yb').forEach((b, i) => {
       b.classList.toggle('on', i === yi);
       const bar = b.querySelector('i');
-      bar.style.height = (tv[i] / tm * 100 * (narrow() ? 0.45 : FEW ? 0.62 : 0.78)).toFixed(1) + '%';   // three bars all carry a value above
-      // the last complete year carries the end value; a partial year after it (TÜİK 2026) stays unlabelled, its lower
-      // bar would put the label over its neighbour
+      bar.style.height = (tv[i] / tm * 100 * (narrow() ? 0.45 : FEW ? 0.62 : 0.78)).toFixed(1) + '%';   
+      
+      
       const lab = FEW || i === 0 || i === FULL || (i === imax && imax > 3 && FULL - imax > 4);
       bar.innerHTML = lab ? `<b>${fmt(tv[i])}</b>` : '';
     });
@@ -1399,8 +1378,8 @@ a{color:inherit}
     if (sel) fillDetail();
     fillTop();
   }
-  // the totals at the top left: Türkiye with the world, or with the selected country (the user, October 24, 2026: numbers
-  // that stay put on a click are confusing); the line above them names which, and the panel no longer repeats them
+  
+  
   function balHTML() {
     const hv = d => sel ? val(sel, d) : totOf(d);
     const bal = hv('exp') - hv('imp'), where = prod ? LOC[prod] + (sel ? ' ticaret' : ' dış ticaret') : sel ? 'Ticaret' : 'Dış ticaret';
@@ -1414,17 +1393,17 @@ a{color:inherit}
       + (prod ? ', ' + low(data.families[prod].n) : '') + ', ' + yLab();
     $('bal').innerHTML = balHTML();
   }
-  // the measure line; in the TÜİK version the share opens the BACI version, since TÜİK has no partner totals
+  
   function paintMeas() {
-    // phones show the short label; the long one stays for screen readers through aria-label
+    
     const ll = `Partnerin ${dir === 'exp' ? 'ithalatındaki' : 'ihracatındaki'} payı`, sl = `<span class="lg">${ll}</span><span class="sh">Türkiye'nin payı</span>`;
     $('meas').innerHTML = `<button type="button" data-m="v" aria-pressed="${meas === 'v'}">Değer</button>` +
       (data.src === 'baci' ? `<button type="button" data-m="s" aria-pressed="${meas === 's'}" aria-label="${ll}">${sl}</button>`
         : `<a href="${srcHref('baci', { m: 's' })}" aria-label="${ll}, BACI sürümünde">${sl}&nbsp;(BACI)</a>`);
   }
-  // the source line is also the switch between the two versions (review F1/F13, October 24, 2026). The other source
-  // opens as its own page, keeping direction, product, partner and year (a year it lacks falls back to its default);
-  // nothing from one source is shown inside the other
+  
+  
+  
   const SRCN = { baci: 'BACI', tuik: 'TÜİK' };
   function srcHref(k, o = {}) {
     const q = new URLSearchParams();
@@ -1438,14 +1417,14 @@ a{color:inherit}
     return location.pathname + '?' + q;
   }
   function paintNote() {
-    // the active source, then one link to the other with its years, so a visitor sees it is a switch (October 25, 2026)
+    
     const other = data.src === 'tuik' ? 'baci' : 'tuik';
     const sw = `Kaynak: <span class="sw"><span class="on">${SRCN[data.src]}</span> ` +
       `<a class="go" href="${srcHref(other)}">${other === 'tuik' ? "TÜİK'e geçin" : "BACI'ye geçin"}</a> ` +
       `(${other === 'tuik' ? '2013–Ağustos 2026' : '1995–2024'})</span>. `;
     const en = !prod || prod === 'enerji', part2 = Object.entries(data.partial).map(([y, m]) => `; ${y} ${m}`).join('');
-    // the line keeps the switch, what HS 71 leaves out and the warnings; the source versions sit in the method note
-    // (October 25, 2026, the user's request)
+    
+    
     let t = 'HS 71 (altın ve diğer kıymetliler) hariç';
     if (data.src === 'tuik') {
       const g = data.byId.t999 ? val('t999', 'imp') : 0, hid = dir === 'imp' && en && g > 0;
@@ -1458,21 +1437,21 @@ a{color:inherit}
     $('note').innerHTML = sw + t + ` <button type="button" id="mOpen" aria-haspopup="dialog" aria-label="Kaynak ve yöntem">${narrow() ? 'Yöntem' : 'Kaynak ve yöntem'}</button>`;
     fitNote();
   }
-  // phones: the year strip makes room for however many lines the source line takes
+  
   function fitNote() {
-    // desktop: a source line on two lines (the energy warning, narrow windows) lifts the year strip, it does not run into it
+    
     $('years').style.bottom = narrow() ? '' : ($('note').offsetHeight + 30) + 'px';
     $('years').style.paddingBottom = sheets() ? ($('note').offsetHeight + 16) + 'px' : '';
-    // and the sheets above the strip follow it
+    
     if (sheets()) $('detail').style.bottom = $('top').style.bottom = (innerHeight - $('years').getBoundingClientRect().top) + 'px';
   }
-  // review decision B: where BACI is known to miss a partner's energy imports (TÜİK chapter 27 by partner against BACI,
-  // 2013–2024: more than 1 mlr $ apart and BACI under three quarters of TÜİK; Stata check in tools/audit_map.do), the BACI
-  // panel says so, with no TÜİK figure in it, and links to the same partner and year in the TÜİK version (2013–2026)
+  
+  
+  
   const GAP = { '643': [2013, 2024], '364': [2013, 2019] };
-  // "Makine ve elektrik" -> "makine ve elektrik" (Turkish lower case of the first letter)
+  
   const low = s => s.charAt(0).toLocaleLowerCase('tr-TR') + s.slice(1);
-  // the list card, in every state (review F2, F3): the top ten, or every partner with a search field ("Tüm partnerler")
+  
   let tAll = false;
   const fold = s => s.toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ı/g, 'i');
   function fillTop() {
@@ -1488,7 +1467,7 @@ a{color:inherit}
       $('tVal').innerHTML = unitSplit(fmt(tot));
       $('tOf').innerHTML = `Türkiye'nin toplam ${dir === 'exp' ? 'ihracatının' : 'ithalatının'} <b>${pct(tot / all)}</b>'${pctSfx(tot / all)}`;
     }
-    // legend: the five classes with their rounded breaks; class breaks are round numbers, so it drops the ",0"
+    
     const br = brkNow(), n = br.length + 1, short = v => meas === 's' ? spct(v).replace(',0', '') : fmt(v).replace(' $', '').replace(',0 ', ' ');
     $('tLeg').innerHTML = (meas === 's' ? "Renk: Türkiye'nin payı"
       : `Renk: ${prod ? low(f.n) : 'toplam'} ${dir === 'exp' ? 'ihracat' : 'ithalat'}${prod ? 'ı' : ''}, $`) +
@@ -1497,7 +1476,7 @@ a{color:inherit}
       `<span class="nd"><i style="background:${NONE}"></i>&lt;&nbsp;1 mn $</span>`;
     $('tShareK').textContent = meas === 's' ? 'Değer' : prod ? 'Grup içindeki payı' : 'Toplamdaki payı';
     const list = listedOn(), mx = list.length ? mv(list[0]) : 1, q = fold($('tQ').value.trim());
-    // share: the share is the figure, the value the small one beside it
+    
     const cells = id => meas === 's' ? `<b>${mText(id)}</b><s>${fmt(val(id))}</s>`
       : `<b>${fmt(val(id))}</b><s>${val(id) / tot < 0.0005 ? '%0,1 altı' : pct(val(id) / tot)}</s>`;
     const rows = tAll ? list.map((id, i) => [id, i]).filter(([id]) => !q || fold(data.byId[id].n).split(/[\s,.()\-]+/).some(w => w.startsWith(q))) : list.slice(0, 10).map((id, i) => [id, i]);
@@ -1509,7 +1488,7 @@ a{color:inherit}
     $('tMore').setAttribute('aria-expanded', String(tAll));
     fitTop(rows.length);
   }
-  // desktop: keep only the rows that fit above the source line (at least three); phones show three by CSS
+  
   function fitTop(nRows) {
     const lis = [...$('tList').children];
     lis.forEach(li => { li.style.display = ''; });
@@ -1517,31 +1496,31 @@ a{color:inherit}
     if (tAll) { $('tCap').textContent = $('tQ').value.trim() ? `${nRows} partner` : 'Bütün partnerler'; return; }
     if (!narrow()) {
       const lim = $('note').getBoundingClientRect().top - 12;
-      // the box is capped by max-height, so an overflow inside it counts too
+      
       const over = () => $('top').getBoundingClientRect().bottom > lim || $('top').scrollHeight > $('top').clientHeight + 1;
       while (n > 3 && over()) lis[--n].style.display = 'none';
     }
     $('tCap').textContent = `${meas === 's' ? 'Payı en yüksek' : 'En büyük'} ${sheets() ? Math.min(3, n) : n} partner`;
   }
-  // suffix after a percentage as pct() writes it (one decimal), by the last word read aloud: %12,3'ü, %40,6'sı, %8,0'ı
+  
   function pctSfx(x) {
     const d = +pct(x).slice(-1);
-    return ['ı', 'i', 'si', 'ü', 'ü', 'i', 'sı', 'si', 'i', 'u'][d];      // 0 is "sıfır"
+    return ['ı', 'i', 'si', 'ü', 'ü', 'i', 'sı', 'si', 'i', 'u'][d];      
   }
   function fillDetail() {
     const id = sel, c = data.byId[id], v = val(id), tot = totOf();
     $('dName').textContent = c.n;
-    // the flag from flag-icons (MIT) on jsDelivr, by ISO alpha-2 (iso2.js); none for TÜİK's special codes, Cyprus and
-    // Taiwan (left to the user's decision), or when it fails to load
+    
+    
     const a2 = (window.MAPISO2 || {})[id], fl = $('dFlag');
     fl.hidden = !a2; fl.onerror = () => { fl.hidden = true; };
     if (a2) fl.src = '/assets/vendor/flags/' + a2 + '.svg';
     const nt = c.note && c.note.match(/^(\d{4})–(\d{4}): (.*)$/);
-    // a predecessor's years (Belgium with Luxembourg, …) keep their note
+    
     $('dSub').hidden = !(nt && years[yi] >= +nt[1] && years[yi] <= +nt[2]);
     if (!$('dSub').hidden) $('dSub').textContent = nt[3];
     $('dShare').textContent = pct(v / tot);
-    // Türkiye's share of the partner's own trade, from BACI (shown once the share file is in)
+    
     const sh = shareOf(id);
     $('dShr').hidden = sh < 0;
     if (sh >= 0) $('dShr').innerHTML = `Partnerin ${prod ? low(data.families[prod].n) + ' ' : ''}${dir === 'exp' ? 'ithalatında' : 'ihracatında'} Türkiye'nin payı <b>${spct(sh)}</b>`;
@@ -1562,11 +1541,11 @@ a{color:inherit}
     const mix = Object.entries(data.mixOf(id, dir, yi)).sort((a, b) => b[1] - a[1]);
     $('dMixCap').textContent = dir === 'exp' ? 'Bu ülkeye ihracatın ürün grupları' : 'Bu ülkeden ithalatın ürün grupları';
     $('dMix').innerHTML = mix.filter(m => m[1] > 0.002).map(([k, s]) => `<i data-k="${k}" style="flex:${s.toFixed(4)} 1 0;background:${data.families[k].c}" title="${data.families[k].n}"></i>`).join('');
-    // every product group, largest first; groups under %0,5 show as "%0,5 altı" instead of a misleading %0
+    
     $('dKey').innerHTML = mix.map(([k, s]) => `<div data-k="${k}" tabindex="0" role="button" aria-pressed="${k === prod}" class="gk${s < 0.005 ? ' lo' : ''}${k === prod ? ' pk' : ''}"><i style="background:${data.families[k].c}"></i><span>${data.families[k].n}</span><b>${s <= 0 ? '–' : s < 0.005 ? '%0,5 altı' : pct(s)}</b></div>`).join('');
     if (litK) $('dKey').querySelector(`[data-k="${litK}"]`)?.classList.add('hv');
   }
-  // the selected country's share of Türkiye's total (or of the group), 1995–2024, with the year marked (review F5)
+  
   let lineAt = null;
   function lineHover(i) {
     const svg = $('dSvg'), hl = svg.querySelector('.hvl'), hd = svg.querySelector('.hvd'), t = $('dLh');
@@ -1596,23 +1575,23 @@ a{color:inherit}
     $('dLineSr').textContent = years.map((_, i) => `${yl(i)}: ${pct(sh[i])}, ${rk(i)}`).join('; ');
     $('dLineCap').textContent = 'Payı ve sırası, ' + years[0] + '–' + years[LAST];
     $('dL0').innerHTML = `${years[0]}: ${pct(sh[0])}<i>${rk(0)}</i>`;
-    // a partial last year (TÜİK 2026) says so: "2026 (Oca–Ağu)"
+    
     $('dL1').innerHTML = `${years[LAST]}${part(LAST) ? ' (' + part(LAST).replace(/(\p{L}{3})\p{L}*/gu, '$1') + ')' : ''}: ${pct(sh[LAST])}<i>${rk(LAST)}</i>`;
   }
-  // Turkish dative after a year, by its last spoken word: 2016'ya, 2019'a, 2020'ye, 2023'e
+  
   function sfx(y) {
     const ones = ['', 'e', 'ye', 'e', 'e', 'e', 'ya', 'ye', 'e', 'a'], tens = ['e', 'a', 'ye', 'a', 'a', 'ye', 'a', 'e', 'e', 'a'];
     return "'" + (y % 10 ? ones[y % 10] : tens[(y / 10 | 0) % 10]);
   }
 
-  // the flat map casts no shadows: at close range the world-sized shadow map only paints soft smudges
+  
   let shadowsOn = true;
   function flatShadows() {
     const on = flat.u < 0.6;
     if (on === shadowsOn) return;
     shadowsOn = on; meshes.forEach(m => { if (m.userData.id !== '792') m.castShadow = on; });
   }
-  // tints only, heights stay: the product classes fade out on the other countries while one is selected
+  
   const tint = { u: 1 };
   function retint(D) {
     partners.forEach(c => { c.t0 = c.mat.color.clone(); c.c1 = targetCol(c.id, dir, yi).clone(); });
@@ -1627,8 +1606,8 @@ a{color:inherit}
     if (prev) {
     }
     sel = id;
-    // flatten the map (or raise it again) and lift the selection
-    // the old stack sinks and goes; the new one grows once the map has started to flatten
+    
+    
     if (prev) gsap.to(C[prev], { lift: 0, duration: dur(0.6), ease: 'power2.inOut', overwrite: true, onUpdate: () => { applyCountry(C[prev]); invalidate(); },
       onComplete: () => { if (prev !== sel) dropStack(prev); } });
     if (sel) {
@@ -1640,57 +1619,57 @@ a{color:inherit}
     if (prod) retint(0.6);
     $('detail').classList.toggle('on', !!sel);
     document.body.classList.toggle('has-sel', !!sel);
-    // the panel that is off leaves the tab order and the accessibility tree (October 25, 2026, re-test)
-    // focus follows: from the list into the panel, and back to the partner's row (or the map) when the panel closes
+    
+    
     const ae = document.activeElement, fromTop = $('top').contains(ae), fromDetail = $('detail').contains(ae);
     $('detail').inert = !sel; $('top').inert = $('lede').inert = !!sel;
     if (sel && fromTop) $('dName').focus({ preventScroll: true });
     if (!sel && fromDetail) ($('tList').querySelector(`li[data-id="${prev}"] .row`) || canvas).focus({ preventScroll: true });
     if (sel) {
       fillDetail();
-      // stacked, the list is below the map: bring the map back into view
+      
       if (stacked()) $('mapbox').scrollIntoView({ block: 'start', behavior: REDUCE ? 'auto' : 'smooth' });
       say(`${data.byId[sel].n}: ${$('dStatCap').textContent} payı ${$('dShare').textContent}, sırası ${$('dRank').textContent}`);
     }
     paintHead();
-    paintNote();                                 // the switch keeps the partner
+    paintNote();                                 
     setArcs(sel ? [sel] : rankedOn().slice(0, 10), sel ? 0.35 : 0.1);
     userMoved = false;
-    // the sheet must be laid out before the camera can frame around it
+    
     requestAnimationFrame(() => glide(sel ? viewFor(sel) : defaultView(), opts.d != null ? opts.d : 1.5));
     LB.forEach(o => { o.key = ''; });
     invalidate();
   }
 
-  // product filter
+  
   const psel = $('prod');
   psel.innerHTML = '<option value="">Tüm ürünler</option>' + data.order.map(k => `<option value="${k}">${data.families[k].n}</option>`).join('');
-  // the five class colours of the chosen group: light to dark in its hue (light theme), dark to bright (dark theme)
+  
   let CLS = [];
-  // WCAG contrast ratio of two colours
+  
   const lum = c => { const k = d3.rgb(c); return [k.r, k.g, k.b].map(v => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4).reduce((s, v, i) => s + v * [0.2126, 0.7152, 0.0722][i], 0); };
-  // OKLab lightness (Björn Ottosson's matrices), the scale the dataviz validator uses
+  
   const okL = c => { const k = d3.rgb(c), [r, g, b] = [k.r, k.g, k.b].map(v => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
     return 0.2104542553 * Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b) + 0.793617785 * Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
       - 0.0040720468 * Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b); };
   const wcag = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
   function classCols() {
     const n = brkNow().length + 1;
-    // all products and the share: the theme's five classes, even OKLab lightness steps checked with the dataviz
-    // validator (October 24, 2026, review F14: adjacent ΔL >= 0.06, the light end >= 2:1 on the page)
+    
+    
     if (!prod) return n === TH.cls.length ? TH.cls.slice() : d3.quantize(d3.interpolateLab(TH.cls[0], TH.cls[TH.cls.length - 1]), n);
     const pc = d3.color(PAL[theme][prod]), bg = '#' + new THREE.Color(TH.bg).getHexString();
-    // the lightest class keeps a clear tint, so it never reads as the grey of "no trade"
+    
     const lo = theme === 'dark' ? d3.interpolateRgb(pc.formatHex(), bg)(0.6) : d3.interpolateRgb(pc.formatHex(), '#ffffff')(0.66);
-    // the dark theme's top class is capped in lightness and chroma (audit, November 3, 2026: brightened as it was, maden
-    // came out as a near-neon mint, #48ffea); adjacent steps stay at least 0,06 apart in OKLab lightness (Trade/progress.md)
+    
+    
     const capTop = c => { const k = d3.lch(c); k.l = Math.min(k.l, 74); k.c = Math.min(k.c, 44); return k.formatHex(); };
     let hi = theme === 'dark' ? capTop(pc) : pc.darker(1.1).formatHex();
-    // the light end is moved toward the dark one until it stands 2:1 off the page, so the smallest partners never fade
-    // into the "< 1 mn $" grey (review F14, October 24, 2026, dataviz validator: the pale ends were 1,2–1,9:1)
+    
+    
     let lo2 = lo;
     for (let t = 0; t <= 1 && wcag(lo2, bg) < 2; t += 0.02) lo2 = d3.interpolateLab(lo, hi)(t);
-    // and the far end moves out until every step is at least 0,06 apart in OKLab lightness (the validator's floor)
+    
     for (let i = 0; i < 30 && Math.abs(okL(lo2) - okL(hi)) < 0.065 * (BRK[prod][dir].length); i++)
       hi = (theme === 'dark' ? d3.color(hi).brighter(0.06) : d3.color(hi).darker(0.06)).formatHex();
     return d3.range(n).map(i => d3.interpolateLab(lo2, hi)(n === 1 ? 1 : i / (n - 1)));
@@ -1699,7 +1678,7 @@ a{color:inherit}
   function setProduct(k) {
     k = k || null;
     if (k === prod) return;
-    // keep every block at its current height while the scale changes, then let the morph carry it to the new value
+    
     prod = k; rescale(dir);
     rampNow();
     psel.value = prod || ''; psel.classList.toggle('on', !!prod);
@@ -1710,7 +1689,7 @@ a{color:inherit}
     if (!sel && !userMoved) requestAnimationFrame(() => glide(defaultView(), 1.1));
   }
   psel.addEventListener('change', () => setProduct(psel.value));
-  // the share file (BACI partner totals) loads on its own, after the map, or at once when the share is asked for
+  
   let shareP = null;
   const loadShare = () => shareP || (shareP = new Promise((ok, fail) => {
     const sc = document.createElement('script');
@@ -1731,7 +1710,7 @@ a{color:inherit}
   $('meas').addEventListener('click', e => { const b = e.target.closest('button[data-m]'); if (b) setMeasure(b.dataset.m); });
   $('top').querySelector('.x').addEventListener('click', () => setProduct(null));
   $('tList').addEventListener('click', e => { const li = e.target.closest('li[data-id]'); if (li) select(li.dataset.id); });
-  // "Tüm partnerler": the full list with the search field; back to the top ten
+  
   $('tMore').addEventListener('click', () => {
     tAll = !tAll;
     if (!tAll) $('tQ').value = '';
@@ -1744,17 +1723,17 @@ a{color:inherit}
     if (e.key === 'Enter') { const li = $('tList').querySelector('li[data-id]'); if (li) { select(li.dataset.id); e.preventDefault(); } }
     if (e.key === 'Escape') { e.stopPropagation(); $('tQ').value = ''; fillTop(); }
   });
-  // the share line in the country panel sets the year, like the year strip
+  
   let lDrag = false;
   const lineYear = x => { const r = $('dSvg').getBoundingClientRect(); return THREE.MathUtils.clamp(Math.round((x - r.left) / r.width * LAST), 0, LAST); };
   $('dSvg').addEventListener('pointerdown', e => { lDrag = true; $('dSvg').setPointerCapture(e.pointerId); toYear(lineYear(e.clientX), false); e.preventDefault(); });
   $('dSvg').addEventListener('pointermove', e => { lineHover(lineYear(e.clientX)); if (lDrag) toYear(lineYear(e.clientX), true); });
   $('dSvg').addEventListener('pointerleave', () => { if (!lDrag) lineHover(null); });
   ['pointerup', 'pointercancel'].forEach(t => $('dSvg').addEventListener(t, e => { lDrag = false; if (e.pointerType !== 'mouse') lineHover(null); }));
-  // in the country panel, a product group's row or bar segment chooses that group; the chosen one again clears it
+  
   const pickGroup = k => { setProduct(k === prod ? null : k); const li = $('dKey').querySelector(`[data-k="${k}"]`); if (li && document.activeElement && document.activeElement.closest('#dKey')) li.focus(); };
   ['dKey', 'dMix'].forEach(n => $(n).addEventListener('click', e => { const t = e.target.closest('[data-k]'); if (t) pickGroup(t.dataset.k); }));
-  // the panel's rows and bar light their layer on the stack too (the user, October 24, 2026: both ways, not only map to panel)
+  
   const rowK = e => { const t = e.target.closest && e.target.closest('[data-k]'); return t ? t.dataset.k : null; };
   ['dKey', 'dMix'].forEach(n => {
     $(n).addEventListener('pointerover', e => lightLayer(rowK(e)));
@@ -1764,21 +1743,21 @@ a{color:inherit}
   $('dKey').addEventListener('focusout', () => lightLayer(hoverK));
   $('dKey').addEventListener('keydown', e => { const li = e.target.closest('[data-k]'); if (li && (e.key === 'Enter' || e.key === ' ')) { pickGroup(li.dataset.k); e.preventDefault(); } });
 
-  // direction
+  
   document.querySelectorAll('#dir > button').forEach(b => b.addEventListener('click', () => {
     if (b.dataset.d === dir) return;
-    rescale(b.dataset.d); dir = b.dataset.d; rampNow();       // the classes follow the direction
+    rescale(b.dataset.d); dir = b.dataset.d; rampNow();       
     setData(b.dataset.d, yi, { d: 0.9, spread: 0.32 });
-    if (!sel && !userMoved) requestAnimationFrame(() => glide(defaultView(), 1.1));      // the other direction's top ten
+    if (!sel && !userMoved) requestAnimationFrame(() => glide(defaultView(), 1.1));      
   }));
-  // year strip: tap or drag
+  
   let yDrag = false;
   const yAt = x => { const r = ybars.getBoundingClientRect(); return THREE.MathUtils.clamp(Math.floor((x - r.left) / r.width * years.length), 0, LAST); };
   const toYear = (i, fast) => { if (i !== yi) setData(dir, i, { d: fast ? 0.45 : 0.7, spread: fast ? 0.12 : 0.22, arcDelay: fast ? 0.05 : 0.2 }); };
   ybars.addEventListener('pointerdown', e => { yDrag = true; ybars.setPointerCapture(e.pointerId); toYear(yAt(e.clientX), false); e.preventDefault(); });
   ybars.addEventListener('pointermove', e => { if (yDrag) toYear(yAt(e.clientX), true); });
   ['pointerup', 'pointercancel'].forEach(t => ybars.addEventListener(t, () => { yDrag = false; }));
-  // slider under the strip: same year per column, so the knob sits under the chosen bar
+  
   yslide.addEventListener('pointerdown', e => { yDrag = true; yslide.setPointerCapture(e.pointerId); yslide.classList.add('drag'); toYear(yAt(e.clientX), false); e.preventDefault(); yslide.focus(); });
   yslide.addEventListener('pointermove', e => { if (yDrag) toYear(yAt(e.clientX), true); });
   ['pointerup', 'pointercancel'].forEach(t => yslide.addEventListener(t, () => { yDrag = false; yslide.classList.remove('drag'); }));
@@ -1788,9 +1767,9 @@ a{color:inherit}
     if (i != null) { toYear(THREE.MathUtils.clamp(i, 0, LAST)); e.preventDefault(); }
   });
 
-  // detail close, escape
+  
   $('detail').querySelector('.x').addEventListener('click', () => select(null));
-  // phones: open or close the rest of the panel, then frame the country again in the room left
+  
   $('dMore').addEventListener('click', () => {
     const on = $('detail').classList.toggle('full');
     $('dMore').setAttribute('aria-expanded', String(on));
@@ -1798,13 +1777,13 @@ a{color:inherit}
     if (sel) { fillDetail(); requestAnimationFrame(() => glide(viewFor(sel), 0.6)); }
   });
   addEventListener('keydown', e => { if (e.key === 'Escape' && !$('method').open) select(null); });
-  // the method note: a native dialog (focus stays inside, Esc closes it); the button is rebuilt with the source line
+  
   $('note').addEventListener('click', e => { if (e.target.id === 'mOpen') $('method').showModal(); });
   $('method').querySelector('.x').addEventListener('click', () => $('method').close());
-  $('method').addEventListener('click', e => { if (e.target === $('method')) $('method').close(); });   // a click on the backdrop
+  $('method').addEventListener('click', e => { if (e.target === $('method')) $('method').close(); });   
 
-  // keyboard on the map (review F3): arrows step through the partners largest first, Enter opens the panel; with a panel
-  // open, the arrows move the selection itself. The highlighted country and its tooltip are the focus mark.
+  
+  
   let kf = null;
   const say = t => { $('kbd').textContent = t; };
   const kfShow = id => {
@@ -1832,10 +1811,10 @@ a{color:inherit}
   canvas.addEventListener('blur', () => { if (kf && hover === kf) setHover(null); });
 
 
-  // ---------- picking, hover, drag to pan, wheel to zoom ----------
+  
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
   function pickHit(x, y) {
-    const q = canvas.getBoundingClientRect();      // the canvas scrolls with the page in the stacked layout
+    const q = canvas.getBoundingClientRect();      
     ndc.set((x - q.left) / W * 2 - 1, -((y - q.top) / H) * 2 + 1);
     ray.setFromCamera(ndc, camera);
     const objs = meshes.slice();
@@ -1843,11 +1822,11 @@ a{color:inherit}
     return ray.intersectObjects(objs, false)[0] || null;
   }
   const pick = (x, y) => { const h = pickHit(x, y); return h ? h.object.userData.id : null; };
-  // a stack layer's side names its product group (the user, October 24, 2026: hover the stripes, not only the panel
-  // rows); a plain lid names the country, a coloured one (product mode) its group
+  
+  
   const layerOf = h => { const k = h && h.object.userData.k; return k && (h.face.materialIndex === 1 || k === prod) ? k : null; };
   const tip = $('tip');
-  // light one group's layer on the stack and its row in the panel; the mouse on a layer or on a panel row both call it
+  
   function lightLayer(k) {
     if (litK === k) return;
     if (litK) layerMat[litK].emissive.set(data.families[litK].c).multiplyScalar(0.22);
@@ -1908,12 +1887,12 @@ a{color:inherit}
   canvas.addEventListener('pointercancel', () => { down = null; canvas.classList.remove('drag'); });
   canvas.addEventListener('pointerleave', () => { if (!down) setHover(null); });
   canvas.addEventListener('wheel', e => {
-    if (stacked()) return;                          // the page scrolls there; the wheel must not stop on the map
+    if (stacked()) return;                          
     e.preventDefault();
     if (camTween) camTween.kill();
-    // zooming out stops a little beyond the opening view, where the map still fills the screen (October 24, 2026,
-    // the user: at the old limit of 420 the world floated small in the fog and looked "not oriented"); a framed view
-    // that is already farther out can still zoom in, but not further out
+    
+    
+    
     let d = cam.dist * Math.exp(e.deltaY * 0.0012);
     if (d > cam.dist) d = Math.min(d, Math.max(cam.dist, defaultView().dist * 1.6));
     cam.dist = Math.max(22, d);
@@ -1921,13 +1900,13 @@ a{color:inherit}
   }, { passive: false });
   addEventListener('resize', resize);
 
-  // ---------- theme: recolour the scene and the page ----------
+  
   function applyTheme(t) {
     theme = t; TH = THEMES[t];
     document.documentElement.setAttribute('data-theme', t);
     rampNow(); NEUTRAL = TH.neutral; NONE = TH.none;
-    // shown a little see-through: each ONS colour mixed toward the background by SOFT (the user: "too sharp"),
-    // the same on the map and in the panel
+    
+    
     const bgHex = '#' + new THREE.Color(TH.bg).getHexString();
     for (const k in data.families) data.families[k].c = d3.color(d3.interpolateRgb(PAL[t][k], bgHex)(SOFT[t])).formatHex();
     renderer.setClearColor(TH.bg, 1); scene.fog.color.setHex(TH.bg); sea.material.color.setHex(TH.sea);
@@ -1955,20 +1934,20 @@ a{color:inherit}
 
   $('dMore').textContent = `Ürün grupları ve ${years[0]}–${years[LAST]} seyri`;
   if (meas === 's') { try { await loadShare(); } catch (e) { meas = 'v'; rescale(dir); rampNow(); } }
-  // ---------- start: the relief rises from the flat map ----------
+  
   Object.assign(cam, defaultView());
   resize();
-  // once the left cards have their final size (totals filled), frame again so the start view keeps clear of them
+  
   requestAnimationFrame(() => requestAnimationFrame(() => { if (!sel && !userMoved) resize(); }));
   gsap.ticker.lagSmoothing(0);
   gsap.ticker.add(frame);
-  // watchdog: if requestAnimationFrame stalls (headless capture, some throttled webviews), tick by hand
-  // (only when no animation frame at all arrived in the last 250 ms, so a slow laptop never gets extra work)
+  
+  
   let rafSeen = true;
   (function seen() { rafSeen = true; requestAnimationFrame(seen); })();
   setInterval(() => { if (!rafSeen && !document.hidden) gsap.ticker.tick(); rafSeen = false; }, 250);
   $('loading').classList.add('off');
-  // for headless checks: screen point on a country's top face
+  
   window.__relief = { cam, camera, P, C, scene, renderer, invalidate, cls: () => CLS.slice(), fam: () => data.order.map(k => data.families[k].c), screenOf(id) { const c = C[id]; v3.set(c.ax, shownH(c), c.az + 0.6).project(camera); return [(v3.x + 1) / 2 * W, (1 - v3.y) / 2 * H]; } };
   setData(dir, yi, { d: 1.6, spread: 0.4, arcDelay: 0.9 });
   if (data.src === 'baci') setTimeout(() => loadShare().then(() => { if (sel) fillDetail(); }).catch(() => {}), REDUCE ? 0 : 1200);
@@ -1989,7 +1968,7 @@ a{color:inherit}
       <button type="button" data-act="prefs" aria-expanded="false" aria-controls="consent-prefs">Preferences</button>
     </div>
     <div class="prefs" id="consent-prefs">
-      <div class="row"><input type="checkbox" id="c-nec" name="necessary" checked disabled><label for="c-nec">Necessary</label><small>Your theme and language choice, and your cookie decision. Theme and cookie records are written only when you click; the language record when you open a dashboard.</small></div>
+      <div class="row"><input type="checkbox" id="c-nec" name="necessary" checked disabled><label for="c-nec">Necessary</label><small>Your theme and language choice, and your cookie decision. Theme and cookie records are written only when you click; the language record when you open a dashboard or switch language.</small></div>
       <div class="row"><input type="checkbox" id="c-ana" name="analytics"><label for="c-ana">Analytics</label><small>No analytics tool is loaded in this prototype.</small></div>
       <div class="btns" style="margin-top:.6rem"><button type="button" data-act="save">Save</button></div>
     </div>
