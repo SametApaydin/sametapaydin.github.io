@@ -214,7 +214,7 @@ summary{cursor:pointer;color:var(--ink);font-family:var(--display);font-size:18p
   </div>
   <nav class="sb-nav" aria-label="Site">
     <span class="nav-pill" aria-hidden="true"></span>
-    <a href="/en/">Home</a><a href="/en/dashboards/" aria-current="page">Dashboards</a><a href="/en/academy/">Academy</a><a href="/en/programme/">Programme</a><a href="/en/who-we-are/">Who we are</a><a href="/en/contact/">Contact</a>
+    <a href="/en/">Home</a><a href="/en/dashboards/" aria-current="page">Data dashboards</a><a href="/en/academy/">Academy</a><a href="/en/programme/">Programme</a><a href="/en/who-we-are/">Who we are</a><a href="/en/contact/">Contact</a>
   </nav>
   <div class="sb-utils">
     <span class="sb-notice">In Turkish for now</span>
@@ -223,7 +223,7 @@ summary{cursor:pointer;color:var(--ink);font-family:var(--display);font-size:18p
     <button class="sb-btn" type="button" data-menu aria-controls="sb-more" aria-expanded="false" aria-label="Menu"><svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path d="M2.5 6h13M2.5 12h13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
   </div>
   <div class="sb-more" id="sb-more">
-    <div class="sb-more-nav"><a href="/en/">Home</a><a href="/en/dashboards/">Dashboards</a><a href="/en/academy/">Academy</a><a href="/en/programme/">Programme</a><a href="/en/who-we-are/">Who we are</a><a href="/en/contact/">Contact</a></div>
+    <div class="sb-more-nav"><a href="/en/">Home</a><a href="/en/dashboards/">Data dashboards</a><a href="/en/academy/">Academy</a><a href="/en/programme/">Programme</a><a href="/en/who-we-are/">Who we are</a><a href="/en/contact/">Contact</a></div>
     <div><a href="/en/imprint/">Imprint</a><a href="/en/privacy/">Privacy</a><a href="/en/cookies/">Cookies</a><button type="button" data-consent-open>Cookie settings</button></div>
   </div>
 </header>
@@ -235,7 +235,7 @@ summary{cursor:pointer;color:var(--ink);font-family:var(--display);font-size:18p
 <noscript><p class="mra sb-noscript" lang="en">This dashboard needs JavaScript. Turn it on in your browser, or see <a href="/en/dashboards/">the list of dashboards</a> and <a href="/en/dashboards/method/">the method page</a>.</p></noscript>
 
 <div id="bar"></div><div id="segs"></div>
-<div class="top"><span class="brand">IPM, Savunma</span><button class="theme-toggle" id="themeToggle" type="button" aria-label="Temayı değiştir">◐</button></div>
+<div class="top"><span class="brand">IPM, Savunma</span><button class="theme-toggle" id="themeToggle" type="button" aria-label="Temayı değiştirin">◐</button></div>
 
 <main>
 <div id="track">
@@ -287,7 +287,7 @@ function lastWord(str){const d=String(str).replace(/[^0-9,]/g,'');const [ip,dp]=
 function sfx(str,kind){const [v,endV,hard]=lastWord(str),back='aıou'.includes(v);let x;
   if(kind==='loc')x=(hard?'t':'d')+(back?'a':'e');else if(kind==='abl')x=(hard?'t':'d')+(back?'a':'e')+'n';
   else if(kind==='dat')x=(endV?'y':'')+(back?'a':'e');else x=(endV?'s':'')+({a:'ı',ı:'ı',e:'i',i:'i',o:'u',u:'u',ö:'ü',ü:'ü'}[v]);
-  return str+"'"+x;}
+  return str+"’"+x;}
 let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
 
 
@@ -340,33 +340,33 @@ const NC=DATA.newcust.map(w=>({lab:`${w.from}–${w.to}`,names:w.names.filter(k=
 const g0=TRD.g[0],g1=TRD.g[TRD.g.length-1];
 const S1=share(1995),S2=share(2025);
 const L={
-  chapters:['Giriş','Dünya','Harcama','Tedarikçiler','Dönüşüm','Ne alıp ne satıyor','Gümrük','İHA','İHA sınıfları','Yeni alıcılar','Sıralama','Keşfet'],
+  chapters:['Giriş','Dünya','Harcama','Tedarikçiler','Dönüşüm','Ne alıp ne satıyor','Gümrük','İHA','İHA sınıfları','Yeni alıcılar','Sıralama','Keşfedin'],
   caps:[
-    {cls:'center',eyebrow:'Türkiye\'nin savunma ticareti, 1995–2025',h1:'Alıcıdan satıcıya',p:'Otuz yılda silah alan bir ülkeden silah satan bir ülkeye, SIPRI verileriyle. Kaydırdıkça sahne ilerler, geri kaydırınca geri sarar.'},
-    {eyebrow:'Dünya içindeki yeri',h:`Dünya askerî harcamasının ${sfx(pct(S2.m),'poss')}`,p:`2025'te dünya ${nf(S2.wm/1000,0)}\u00a0mlr\u00a0$ harcadı (sabit 2024 ABD doları). Silah ticaretinde ise Türkiye'nin payı yer değiştirdi: ithalattaki payı düştü, ihracattaki payı yükseldi.`},
-    {eyebrow:'Askerî harcama',h:`1995'ten bu yana ${nf(TRD.m[30]/TRD.m[0],1)} katına çıktı`,p:`Sabit 2024 ABD doları. Bütçe büyüdü, dilim küçüldü: GSYH içindeki pay ${sfx('%'+nf(g0,1),'abl')} ${sfx('%'+nf(g1,1),'dat')} indi.`},
-    {eyebrow:'Tedarikçiler, 1996–2000',h:`Dünyanın en büyük ${RK.im[0]}. silah ithalatçısı`,p:`1990'ların sonunda Türkiye'ye gelen büyük silahların ${sfx(pct(IN0[0][1]/IN0T),'poss')} ${nm(IN0[0][0])}, ${sfx(pct(IN0[1][1]/IN0T),'poss')} ${nm(IN0[1][0])} kaynaklıydı. Her ışık, teslim edilen silah hacminden bir parça.`},
-    {eyebrow:'Gelen ve giden',h:`${sfx(String(CROSS),'loc')} ihracat ithalatı geçti`,p:'Gri çizgiler Türkiye\'ye gelen, mavi çizgiler Türkiye\'den giden silahlar. Kalınlık, beş yıllık dönemde teslim edilen SIPRI TIV toplamı.'},
-    {eyebrow:'Ne alıyor, ne satıyor: 1996–2025',h:`${cap1(GNAME[topG(CIN)])} aldı, ${GNAME[topG(COUT)]} sattı`,p:'Her kare 25 TIV. Türler, SIPRI kaydındaki silah tanımlarından anahtar kelimeyle ayrıldı; yaklaşık bir dağılımdır.'},
-    {eyebrow:'Gümrük kayıtları',h:`Gümrükte ${DATA.customs93.rank[0]}. sıradan ${DATA.customs93.rank[DATA.customs93.rank.length-1]}. sıraya`,p:'Gümrük fasıl 93 (silah ve mühimmat) ihracatı, cari ABD doları, CEPII BACI. SIPRI\'den farklı bir kaynak: büyük platformları değil, hafif silah ve mühimmatı sayar.'},
-    {eyebrow:'İnsansız hava araçları',h:`${DY1-DY0+1} yılda ${DB} ülkeye ${nf(DU)} İHA`,p:'Her ışık noktası teslim edilmiş bir araç: silahlı ve keşif İHA\'ları ile dolanan mühimmat. SIPRI silah transferleri kaydı.'},
-    {eyebrow:'Gümrük kayıtları: İHA sınıfları, 2024',h:'Sınıf değişince liderlik el değiştirir',p:`İnsansız hava aracı ihracatının tamamında Türkiye ${DATA.uavc.all.tr_rank}. sırada; küçük sınıflarda Çin önde. 150 kg üzerindeki askerî sınıfta ise dünya ihracatının ${sfx('%'+nf(DATA.uavc.cls[4].tr_s,0),'poss')} Türkiye'den.`},
-    {eyebrow:'Yeni alıcılar',h:'Her beş yılda daha çok yeni alıcı',p:`Türkiye'den ilk kez büyük silah alan ülkeler: ${NC[0].lab} döneminde ${DATA.newcust[0].names.length}, ${NC[NC.length-1].lab} döneminde ${DATA.newcust[DATA.newcust.length-1].names.length}.`},
-    {eyebrow:'Silah ihracatında sıralama',h:`${RK.ex[0]}. sıradan ${RK.ex[5]}. sıraya`,p:`Beş yıllık dönemlerde teslim edilen silahların SIPRI TIV toplamına göre, devletler arasında. Aynı dönemde ithalatçılar arasında ${RK.im[0]}. sıradan ${RK.im[5]}. sıraya indi.`},
-    {cls:'live',eyebrow:'Keşfet',h:'Kendiniz keşfedin',p:'Bir sayıya, bir çubuğa, bir renge ya da bir ülkeye dokunun.',
-     extra:`<div class="exwrap"><div class="exa"><div class="exdir" id="exDir" role="group" aria-label="yön"></div><div class="exlab" id="exPerL"></div><div class="exper" id="exPer" role="group" aria-label="dönem"></div></div><div class="exb"><div class="exlab" id="exMixL"></div><div class="exmix" id="exMix" role="group" aria-label="silah türü"></div><div class="exkey" id="exKey"></div><div id="exList" aria-live="polite"></div><div class="ex-note">TIV: SIPRI'nin silah hacmi endeksi; satış fiyatı değildir<span class="wide">, ABD doları olarak okunmamalı</span>.</div></div></div>`}
+    {cls:'center',eyebrow:'Türkiye’nin savunma ticareti, 1995–2025',h1:'Alıcıdan satıcıya',p:'Otuz yılda silah alan bir ülkeden silah satan bir ülkeye, SIPRI verileriyle. Kaydırdıkça sahne ilerler, geri kaydırınca geri sarar.'},
+    {eyebrow:'Dünyadaki yeri',h:`Türkiye, dünya askerî harcamasının ${sfx(pct(S2.m),'poss')}ni yapıyor`,p:`2025’te dünya ${nf(S2.wm/1000,0)}\u00a0milyar\u00a0dolar harcadı (sabit 2024 ABD doları). Silah ticaretinde ise tablo tersine döndü: Türkiye’nin ithalattaki payı düştü, ihracattaki payı yükseldi.`},
+    {eyebrow:'Askerî harcama',h:`Askerî harcama 1995’ten bu yana ${nf(TRD.m[30]/TRD.m[0],1)} katına çıktı`,p:`Sabit 2024 ABD doları. Bütçe büyüdü, ekonomideki payı küçüldü: GSYH içindeki pay ${sfx('%'+nf(g0,1),'abl')} ${sfx('%'+nf(g1,1),'dat')} indi.`},
+    {eyebrow:'Tedarikçiler, 1996–2000',h:`Dünyanın en büyük ${RK.im[0]}. silah ithalatçısı`,p:`1990’ların sonunda Türkiye’ye gelen büyük konvansiyonel silahların ${sfx(pct(IN0[0][1]/IN0T),'poss')} ${nm(IN0[0][0])}, ${sfx(pct(IN0[1][1]/IN0T),'poss')} ${nm(IN0[1][0])} kaynaklıydı. Her ışık noktası, teslim edilen silah hacminden bir parçayı gösteriyor.`},
+    {eyebrow:'Gelen ve giden',h:`${sfx(String(CROSS),'loc')} ihracat ithalatı geçti`,p:'Gri çizgiler Türkiye’ye gelen, mavi çizgiler Türkiye’den giden silahlar. Çizgi kalınlığı, beş yıllık dönemde teslim edilen SIPRI TIV toplamını gösteriyor.'},
+    {eyebrow:'Ne alıyor, ne satıyor: 1996–2025',h:`Türkiye en çok ${GNAME[topG(CIN)]} aldı, en çok ${GNAME[topG(COUT)]} sattı`,p:'Her kare 25 TIV. Türler, SIPRI kaydındaki silah tanımlarından anahtar kelimeyle ayrıldı; yaklaşık bir dağılımdır.'},
+    {eyebrow:'Gümrük kayıtları',h:`Silah ve mühimmat ihracatında ${DATA.customs93.rank[0]}. sıradan ${DATA.customs93.rank[DATA.customs93.rank.length-1]}. sıraya`,p:'Gümrükte 93. fasıl (silah ve mühimmat) ihracatı, cari ABD doları, CEPII BACI. SIPRI’den farklı bir kaynak: büyük platformları değil, hafif silah ve mühimmatı kapsar.'},
+    {eyebrow:'İnsansız hava araçları',h:`Türkiye ${DY1-DY0+1} yılda ${DB} ülkeye ${nf(DU)} İHA teslim etti`,p:'Her ışık noktası teslim edilmiş bir araç: silahlı ve keşif İHA’ları ile dolanan mühimmat. SIPRI silah transferleri kaydı.'},
+    {eyebrow:'Gümrük kayıtları: İHA sınıfları, 2024',h:'İHA sınıfına göre lider ülke değişiyor',p:`İnsansız hava aracı ihracatının tamamında Türkiye ${DATA.uavc.all.tr_rank}. sırada; küçük sınıflarda Çin önde. 150 kg üzerindeki en ağır sınıfta ise dünya ihracatının ${sfx('%'+nf(DATA.uavc.cls[4].tr_s,0),'poss')} Türkiye’den. Bu sınıfı askerî kullanımla ilişkilendiren yorum bize ait; gümrük kaydı yalnızca ağırlığa göre ayırır.`},
+    {eyebrow:'Yeni alıcılar',h:'Her dönemde daha çok yeni alıcı',p:`Türkiye’den ilk kez büyük konvansiyonel silah alan ülkeler: ${NC[0].lab} döneminde ${DATA.newcust[0].names.length}, ${NC[NC.length-1].lab} döneminde ${DATA.newcust[DATA.newcust.length-1].names.length}.`},
+    {eyebrow:'Silah ihracatında sıralama',h:`Silah ihracatında ${RK.ex[0]}. sıradan ${RK.ex[5]}. sıraya`,p:`Beş yıllık dönemlerde teslim edilen silahların SIPRI TIV toplamına göre, devletler arasında. Aynı dönemde ithalatçılar arasında ${RK.im[0]}. sıradan ${RK.im[5]}. sıraya indi.`},
+    {cls:'live',eyebrow:'Keşfedin',h:'Kendiniz keşfedin',p:'Bir sayıya, çubuğa, renge ya da ülkeye tıklayın.',
+     extra:`<div class="exwrap"><div class="exa"><div class="exdir" id="exDir" role="group" aria-label="yön"></div><div class="exlab" id="exPerL"></div><div class="exper" id="exPer" role="group" aria-label="dönem"></div></div><div class="exb"><div class="exlab" id="exMixL"></div><div class="exmix" id="exMix" role="group" aria-label="silah türü"></div><div class="exkey" id="exKey"></div><div id="exList" aria-live="polite"></div><div class="ex-note">TIV: SIPRI’nin ortak silah hacmi birimi; satış fiyatı<span class="wide"> ya da ABD doları</span> değildir.</div></div></div>`}
   ],
   limits:[
-    'SIPRI TIV (eğilim göstergesi değeri) bir hacim endeksidir, satış fiyatı değildir; ABD doları olarak okunmamalı.',
-    'SIPRI yalnızca büyük konvansiyonel silahları sayar; hafif silah, mühimmat, yedek parça ve hizmetler dışarıda kalır. Gümrük sahnesi bu boşluğun bir kısmını gösterir.',
+    'TIV (SIPRI’nin eğilim göstergesi değeri): teslim edilen silah hacmini karşılaştırmak için kullanılan ortak birim. Satış fiyatı ya da ABD doları değildir.',
+    'SIPRI yalnızca büyük konvansiyonel silahları kapsar; hafif silah, mühimmat, yedek parça ve hizmetler dışarıda kalır. Gümrük sahnesi bu boşluğun bir kısmını gösterir.',
     'Kayıttaki teslimatlar birden çok yıla yayıldığında yıllara eşit bölündü; dönem toplamları bu nedenle yaklaşıktır.',
-    'Silah türleri, kayıttaki tanımlardan anahtar kelimeyle ayrıldı; sınır durumlar yanlış sınıfta olabilir.',
-    `İHA sınıfları gümrük ağırlık aralıklarıdır (faslı 8806, HS 2022; bu ayrım yalnızca 2022–2024 için var); sınıf adları yorumdur. Askerî sınıf küçük bir pazardır (2024'te ${nf(DATA.uavc.cls[4].world/1000,2)} mlr $) ve Türkiye'nin payı birkaç sözleşmeye dayanır: ${DATA.uavc.b5yrs.map(q=>`${q.y}'${q.y===2022?'de':'te'} ${q.r}. (%${nf(q.s,1)})`).join(', ')}.`,
-    'Uçuş çizgileri yalnızca tedarikçi ve alıcıyı gösterir; gerçek sevkiyat rotası değildir.',
+    'Silah türleri, kayıttaki tanımlardan anahtar kelimeyle ayrıldı; sınırda kalan kayıtlar yanlış sınıfta olabilir.',
+    `İHA sınıfları gümrük ağırlık aralıklarıdır (HS 8806 pozisyonu, HS 2022; bu ayrım yalnızca 2022–2024 için var); sınıf adları yorumdur. En ağır sınıf küçük bir pazardır (2024’te ${nf(DATA.uavc.cls[4].world/1000,2)} milyar dolar) ve Türkiye’nin payı birkaç sözleşmeye dayanır: ${DATA.uavc.b5yrs.map(q=>`${q.y}’${q.y===2022?'de':'te'} ${q.r}. (%${nf(q.s,1)})`).join(', ')}.`,
+    'Uçuş çizgileri yalnızca tedarikçi ve alıcıyı gösterir; gerçek sevkiyat rotasını göstermez.',
     'Sıralamalar devletler arasındadır; devlet dışı alıcılar ve uluslararası kuruluşlar hariç.',
-    '2025 askerî harcaması SIPRI\'nin ön tahmini olabilir; dünya ticaret payları beş yıllık kayan toplamlarla hesaplandı.'
+    '2025 askerî harcaması SIPRI’nin ön tahmini olabilir; dünya ticaret payları beş yıllık hareketli toplamlarla hesaplandı.'
   ],
-  src:`Kaynak: SIPRI Military Expenditure Database 1949–2025 v1.2; SIPRI Arms Transfers Database (11 Eylül 2026'da üretilen tablolar ve kayıt); CEPII BACI (gümrük fasıl 93, HS92; İHA faslı 8806, HS22). Derleme ${DATA.built}.`
+  src:`Kaynak: SIPRI Military Expenditure Database 1949–2025 v1.2; SIPRI Arms Transfers Database (11 Eylül 2026’da üretilen tablolar ve kayıt); CEPII BACI (gümrükte 93. fasıl, HS92; İHA’da HS 8806 pozisyonu, HS22). Derleme ${DATA.built}.`
 };
 
 
@@ -527,7 +527,7 @@ function drawWorld(t,c,g,b){
     x.fillStyle=col==='--inflow'?`rgb(${css('--inflow')})`:css(col);x.globalAlpha=op*(col==='--inflow'?.8:1);
     x.fillRect(bx.x0,yy,Math.max(2,X(v)-bx.x0),16);x.globalAlpha=op;
     x.fillStyle=css('--ink2');x.font=`500 13px ${css('--body')}`;x.fillText(`${lab}: %${nf(v*100,1)}`,bx.x0,yy-5);});
-  x.fillStyle=css('--ink3');x.font=`11px ${css('--body')}`;x.fillText('dünya toplamındaki pay; ticarette beş yıllık kayan toplam, SIPRI TIV',bx.x0,bx.y0+rows.length*40+22);
+  x.fillStyle=css('--ink3');x.font=`11px ${css('--body')}`;x.fillText('dünya toplamındaki pay; ticarette beş yıllık hareketli toplam, SIPRI TIV',bx.x0,bx.y0+rows.length*40+22);
   x.restore();
   drawBubbles(c,g,b,k*30,op,{nLab:n?3:5,note:n?'':`daire alanı ve sayı: askerî harcama, mlr $ (sabit 2024 fiyatlarıyla), ${y}`});
   setC('w-y',String(y));setC('w-v',nf(s.wm/1000,0));setC('w-s','%'+nf(s.m*100,2));
@@ -618,7 +618,7 @@ function drawCustoms(t,c,g,gb){
   const Lp=pts[pts.length-1];x.fillStyle=css('--accent');x.beginPath();x.arc(Lp[0],Lp[1],4,0,Math.PI*2);x.fill();
   [max/2,max].forEach(v=>axisLab(x,money(v),b.x0,Y(v)-4,op));x.restore();
   drawBubbles(c,g,gb,fy,op,{set:C93S,ref:300,rank:true,nLab:c.narrow?3:5,tLab:v=>`Türkiye ${nf(v,0)} mn $`,lab:i=>`${i.q.tr} ${nf(i.yv,0)}`,
-    note:c.narrow?'':`daire alanı ve sayı: gümrük fasıl 93 ihracatı, mn $ (cari fiyatlarla), ${C93.years[Math.min(N-1,Math.round(fy))]}`});
+    note:c.narrow?'':`daire alanı ve sayı: gümrükte 93. fasıl ihracatı, mn $ (cari fiyatlarla), ${C93.years[Math.min(N-1,Math.round(fy))]}`});
   const yi=Math.min(N-1,Math.round(fy));
   setC('g-y',String(C93.years[yi]));setC('g-r',`${C93.rank[yi]}.`);setC('g-v',money(C93.tr[yi]));
 }
@@ -639,9 +639,9 @@ function drawDrones(t,c,g,b){
 }
 
 const UC=DATA.uavc;
-const UCN=[{n:'Mini ve oyuncak',f:'mini ve oyuncak dronlar',w:"250 g'a kadar",sh:'quad',z:26},{n:'Tüketici',f:'tüketici dronları',w:'250 g – 7 kg',sh:'quad',z:40},
-  {n:'Profesyonel',f:'profesyonel dronlar',w:'7–25 kg',sh:'hexa',z:50},{n:'Tarım ve endüstri',f:'tarım ve endüstri dronları',w:'25–150 kg',sh:'hexa',z:62},
-  {n:'Askerî sınıf',f:'askerî sınıf İHA',w:'150 kg üzeri',sh:'wing',z:80}];
+const UCN=[{n:'Mini ve oyuncak',f:'mini ve oyuncak İHA’lar',w:"250 g’a kadar",sh:'quad',z:26},{n:'Tüketici',f:'tüketici İHA’ları',w:'250 g – 7 kg',sh:'quad',z:40},
+  {n:'Profesyonel',f:'profesyonel İHA’lar',w:'7–25 kg',sh:'hexa',z:50},{n:'Tarım ve endüstri',f:'tarım ve endüstri İHA’ları',w:'25–150 kg',sh:'hexa',z:62},
+  {n:'En ağır sınıf',f:'en ağır sınıf İHA',w:'150 kg üzeri',sh:'wing',z:80}];
 const UST=[.3,.42,.51,.6,.69],UDUR=[.1,.08,.08,.08,.09]; 
 const uProg=(t,i)=>ease(clamp((t-UST[i])/UDUR[i]));
 const ULL={};[UC.all,...UC.cls].forEach(b=>b.top.forEach(q=>{if(q.ll)ULL[q.k]=vec(...q.ll);}));
@@ -702,7 +702,7 @@ function drawClasses(t,c,g,b){
       if(u0<.05&&lab.length<(c.narrow?3:6))lab.push([X+r-6,Y,`${UC.all.top.indexOf(it.q)+1}. ${it.q.tr}${T?' '+nf(it.q.v,0)+' mn $':''}`,T]);});
     labels(c,lab,op*(1-clamp(u0/.05)));
     if(u0<.05&&!c.narrow){x.globalAlpha=op*(1-clamp(u0/.05));x.fillStyle=css('--ink3');x.font=`11px ${css('--body')}`;
-      const nt='daire alanı: insansız hava aracı ihracatı 2024, tüm sınıflar (gümrük 8806), mn $';x.fillText(nt,clamp(g.x-x.measureText(nt).width/2,12,c.W-12),Math.min(c.H-14,g.y+g.R+22));}}
+      const nt='daire alanı: insansız hava aracı ihracatı 2024, tüm sınıflar (HS 8806), mn $';x.fillText(nt,clamp(g.x-x.measureText(nt).width/2,12,c.W-12),Math.min(c.H-14,g.y+g.R+22));}}
   
   if(ai>=0){
     if(!G.n){for(let i=0;i<=ai;i++){const p=uProg(t,i);drawUCol(c,G,i,op*(i===0?ease(clamp((u0-.55)/.45)):p),G.colX(i));}}
@@ -727,12 +727,12 @@ function drawClasses(t,c,g,b){
       const top=cr.bottom+24,bot=kr.top-24,sz=Math.min(240,(bot-top)*1.6,G.x0-clamp(innerWidth*.06,16,96)-40);if(sz>90)drawSil(c,clamp(innerWidth*.06,16,96)+sz/2,(top+bot)/2,sz,pos,op*ease(clamp((u0-.4)/.6))*.9);}
     
     x.globalAlpha=op*clamp((u0-.6)/.4);x.fillStyle=css('--ink3');x.font=`11px ${css('--body')}`;
-    const ny=G.top+(G.n?7.4:7.6)*G.rh+18,n1='gümrük faslı 8806 (HS 2022), 2024 ihracat payı, cari ABD doları',n2='sınıflar ağırlık aralığıdır; adlar yorum, siluetler şematiktir';
+    const ny=G.top+(G.n?7.4:7.6)*G.rh+18,n1='HS 8806 pozisyonu (HS 2022), 2024 ihracat payı, cari ABD doları',n2='sınıflar ağırlık aralığıdır; adlar yorum, siluetler şematiktir';
     x.fillText(n1,G.x0,ny);x.fillText(n2,G.x0,ny+15);}
   x.restore();
   
   const ci=UST.reduce((m,s0,i)=>uProg(t,i)>.5?i:m,-1); 
-  if(ci<0){setC('u-k',"tüm İHA'lar");roll('u-r',`${UC.all.tr_rank}.`);setC('u-s',uShare(100*UC.all.tr_v/UC.all.world));setC('u-w',nf(UC.all.world/1000,2));}
+  if(ci<0){setC('u-k',"tüm İHA’lar");roll('u-r',`${UC.all.tr_rank}.`);setC('u-s',uShare(100*UC.all.tr_v/UC.all.world));setC('u-w',nf(UC.all.world/1000,2));}
   else{const cl=UC.cls[ci];setC('u-k',UCN[ci].f+', '+UCN[ci].w);roll('u-r',`${cl.tr_rank}.`);setC('u-s',uShare(cl.tr_s));setC('u-w',nf(cl.world/1000,2));}
   $('u-r').classList.toggle('acc',ci===4);
 }
@@ -774,13 +774,13 @@ function drawRank(t,c){
 
 
 const CNT={
-  world:`<div><div class="k">yıl</div><div class="v s" id="w-y">1995</div></div><div><div class="k">dünya askerî harcaması</div><div class="v s"><span id="w-v">0</span><span class="u">mlr $</span></div></div><div><div class="k">Türkiye'nin payı</div><div class="v s acc" id="w-s">%0</div></div>`,
+  world:`<div><div class="k">yıl</div><div class="v s" id="w-y">1995</div></div><div><div class="k">dünya askerî harcaması</div><div class="v s"><span id="w-v">0</span><span class="u">mlr $</span></div></div><div><div class="k">Türkiye’nin payı</div><div class="v s acc" id="w-s">%0</div></div>`,
   spend:`<div><div class="k" id="s-y">1995</div><div class="v"><span id="s-v">9,4</span><span class="u">mlr $</span></div><div class="n" id="s-r"></div></div>`,
-  suppliers:`<div><div class="k">dönem</div><div class="v s">${WINS[0]}</div></div><div><div class="k">ithalatta dünya sırası</div><div class="v s" id="p-r">3.</div></div><div><div class="k">tedarikçi ülke</div><div class="v s" id="p-n">0</div></div><div><div class="k">teslim edilen silah hacmi (SIPRI TIV)</div><div class="v s" id="p-v">0</div></div><div class="note">TIV: SIPRI\'nin silah hacmi endeksi; satış fiyatı değildir, ABD doları olarak okunmamalı.</div>`,
-  reversal:`<div><div class="k">yıl</div><div class="v s" id="r-y">1996</div></div><div><div class="k">ithalat hacmi (SIPRI TIV)</div><div class="v s" id="r-i">0</div></div><div><div class="k">ihracat hacmi (SIPRI TIV)</div><div class="v s" id="r-e">0</div></div><div class="note">TIV: SIPRI\'nin silah hacmi endeksi; satış fiyatı değildir, ABD doları olarak okunmamalı.</div>`,
+  suppliers:`<div><div class="k">dönem</div><div class="v s">${WINS[0]}</div></div><div><div class="k">ithalatta dünya sırası</div><div class="v s" id="p-r">3.</div></div><div><div class="k">tedarikçi ülke</div><div class="v s" id="p-n">0</div></div><div><div class="k">teslim edilen silah hacmi (SIPRI TIV)</div><div class="v s" id="p-v">0</div></div><div class="note">TIV: SIPRI’nin ortak silah hacmi birimi; satış fiyatı ya da ABD doları değildir.</div>`,
+  reversal:`<div><div class="k">yıl</div><div class="v s" id="r-y">1996</div></div><div><div class="k">ithalat hacmi (SIPRI TIV)</div><div class="v s" id="r-i">0</div></div><div><div class="k">ihracat hacmi (SIPRI TIV)</div><div class="v s" id="r-e">0</div></div><div class="note">TIV: SIPRI’nin ortak silah hacmi birimi; satış fiyatı ya da ABD doları değildir.</div>`,
   customs:`<div><div class="k" id="g-y">1995</div><div class="v"><span id="g-r">30.</span><span class="u">sıra</span></div><div class="n" id="g-v"></div></div>`,
   drones:`<div><div class="k">yıl</div><div class="v s" id="d-y">2019</div></div><div><div class="k">teslim edilen</div><div class="v s" id="d-u">0</div></div><div><div class="k">alıcı ülke</div><div class="v s" id="d-b">0</div></div>`,
-  classes:`<div><div class="k" id="u-k">tüm İHA'lar</div><div class="v"><span id="u-r">6.</span><span class="u">sıra</span></div></div><div><div class="k">Türkiye'nin dünya payı</div><div class="v s" id="u-s">%3,8</div></div><div><div class="k">dünya pazarı</div><div class="v s"><span id="u-w">0</span><span class="u">mlr $</span></div></div>`,
+  classes:`<div><div class="k" id="u-k">tüm İHA’lar</div><div class="v"><span id="u-r">6.</span><span class="u">sıra</span></div></div><div><div class="k">Türkiye’nin dünya payı</div><div class="v s" id="u-s">%3,8</div></div><div><div class="k">dünya pazarı</div><div class="v s"><span id="u-w">0</span><span class="u">mlr $</span></div></div>`,
   newcust:`<div><div class="k">dönem</div><div class="v s" id="n-w">1990–1994</div></div><div><div class="k">yeni alıcı</div><div class="v s acc" id="n-n">1</div></div><div><div class="k">toplam alıcı</div><div class="v s" id="n-c">0</div></div>`
 };
 SC.forEach((s,i)=>{const L1=L.caps[i];const d=document.createElement('div');d.className='cap'+(L1.cls?' '+L1.cls:'');
@@ -876,12 +876,12 @@ function exUpdate(){
     const bar=b.querySelector('.bar');bar.style.height=Math.max(vals[+w]>0?2:0,vals[+w]/mx*H).toFixed(1)+'px';bar.style.background=EX.cat?`var(--c-${EX.cat})`:'';
     b.title=`${WINS[+w]}: ${nf(Math.round(vals[+w]))} TIV${EX.cat?' · '+GNAME[EX.cat]:''}`;});
   const selTot=EX.w.reduce((s,i)=>s+vals[i],0);
-  $('exPerL').innerHTML=`${who}${EX.dir==='out'?'satış':'alım'}, dönemlere göre, ${exWL()}: ${nf(Math.round(selTot))} TIV${EX.cat?', '+GNAME[EX.cat]:''}`;
+  $('exPerL').innerHTML=`${who}${(s=>who?s:cap1(s))(EX.dir==='out'?'satış':'alım')}, ${exWL()}: ${nf(Math.round(selTot))} TIV${EX.cat?', '+GNAME[EX.cat]:''}`;
   const m=mixVals(EX.dir,sel),sum=Object.values(m).reduce((a,b)=>a+b,0)||1,mixW=$('exMix').clientWidth;
   $('exMix').classList.toggle('f',!!EX.cat);$('exKey').classList.toggle('f',!!EX.cat);
   $('exMix').querySelectorAll('button').forEach(b=>{const p=m[b.dataset.g]/sum;b.style.width=(p*100).toFixed(2)+'%';b.style.display=p<.002?'none':'';b.disabled=p*mixW<24;b.setAttribute('aria-pressed',String(EX.cat===b.dataset.g));});
   $('exKey').querySelectorAll('button').forEach(b=>{const p=m[b.dataset.g]/sum;b.style.display=p<.005&&EX.cat!==b.dataset.g?'none':'';b.querySelector('b').textContent='%'+nf(p*100,0);b.setAttribute('aria-pressed',String(EX.cat===b.dataset.g));});
-  $('exMixL').innerHTML=EX.cat?`${who}${GNAME[EX.cat]} seçili: tekrar dokunun, filtre kalksın`:`${who}silah türü, ${exWL()}: çizgiler her ülkenin ana türünde`;
+  $('exMixL').innerHTML=EX.cat?`${who}${who?GNAME[EX.cat]:cap1(GNAME[EX.cat])} seçili. Filtreyi kaldırmak için yeniden tıklayın.`:`${who}${who?'silah türü':'Silah türü'}, ${exWL()}. Çizgi rengi, her ülkeyle ticarette en büyük silah türünü gösterir.`;
   exLayout();
 }
 
@@ -891,7 +891,7 @@ function exPanel(){
   const box=$('exList');if(!box)return;const old={};box.querySelectorAll('[data-id]').forEach(el=>old[el.dataset.id]=el.getBoundingClientRect().top);
   if(EX.sel){const r=EX.sel,first=r.d==='out'&&DATA.first[r.k]?`, ilk teslimat ${DATA.first[r.k]}`:'';
     box.innerHTML=`<button class="back" type="button" id="exBack">← liste</button>
-      <div class="ex-name">${esc(nm(r.k))}</div><div class="ex-sub">${r.d==='in'?'Türkiye\'ye sattı':'Türkiye\'den aldı'}, ${exWL()}, ${esc(EX.cat?GNAME[EX.cat]:'tüm türler')}${first}</div>
+      <div class="ex-name">${esc(nm(r.k))}</div><div class="ex-sub">${r.d==='in'?'Türkiye’ye sattı':'Türkiye’den aldı'}, ${exWL()}, ${esc(EX.cat?GNAME[EX.cat]:'tüm türler')}${first}</div>
       <div class="ex-big">${nf(Math.round(r.v))}<small>TIV</small></div>`;
     $('exBack').onclick=()=>{EX.sel=null;exPanel();exUpdate();exHash();dirty=true;};return;}
   const n=stage.narrow?3:5,vmax=ROWS.length?ROWS[0].v:1;
@@ -958,7 +958,7 @@ function pick(px,py){let best=null,bd=16;EXI.forEach(e=>{if(!e._p||e.tgt===0)ret
   addEventListener('keydown',e=>{if(e.key==='Escape'&&EXLIVE&&EX.sel){EX.sel=null;exPanel();exUpdate();exHash();dirty=true;}});})();
 
 
-function syncTheme(){const d=document.documentElement.dataset.theme==='dark';$('themeToggle').textContent=d?'☀':'☾';$('themeToggle').setAttribute('aria-label',d?'Açık temaya geç':'Koyu temaya geç');}
+function syncTheme(){const d=document.documentElement.dataset.theme==='dark';$('themeToggle').textContent=d?'☀':'☾';$('themeToggle').setAttribute('aria-label',d?'Açık temaya geçin':'Koyu temaya geçin');}
 $('themeToggle').onclick=()=>{const r=document.documentElement,t=r.dataset.theme==='dark'?'light':'dark';r.dataset.theme=t;try{localStorage.setItem('trr-theme',t);}catch(e){}
   CSS={};syncTheme();dirty=true;exPanel();exUpdate();};
 syncTheme();
@@ -991,12 +991,12 @@ readScroll();sp=target;requestAnimationFrame(frame);
     <div class="ft-in">
       <div class="ft-brand">
         <p class="ft-name">Macro Risk Academy</p>
-        <p class="ft-credit">A programme of the Istanbul Policy Center.</p>
+        <p class="ft-credit">A programme of the Geoeconomics Unit of the Istanbul Policy Center.</p>
         <span class="ft-logo"><img src="/assets/img/sabanci-universitesi.png" alt="Sabancı Üniversitesi" width="341" height="143" loading="lazy"></span>
       </div>
       <div>
         <h2>Site</h2>
-        <ul><li><a href="/en/dashboards/">Dashboards</a></li><li><a href="/en/academy/">Academy</a></li><li><a href="/en/programme/">Programme</a></li><li><a href="/en/who-we-are/">Who we are</a></li><li><a href="/en/contact/">Contact</a></li></ul>
+        <ul><li><a href="/en/dashboards/">Data dashboards</a></li><li><a href="/en/academy/">Academy</a></li><li><a href="/en/programme/">Programme</a></li><li><a href="/en/who-we-are/">Who we are</a></li><li><a href="/en/contact/">Contact</a></li></ul>
       </div>
       <div>
         <h2>Follow IPC</h2>

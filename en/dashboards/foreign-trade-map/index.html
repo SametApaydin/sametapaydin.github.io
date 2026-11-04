@@ -11,7 +11,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Türkiye’s foreign trade map · Macro Risk Academy</title>
-<meta name="description" content="What Türkiye sells and buys, from whom and how much, by partner and product group.">
+<meta name="description" content="What Türkiye sells to whom and buys from whom, by partner and product group.">
 <script>
   
   (function(){try{var t=localStorage.getItem("trr-theme");document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");}
@@ -465,7 +465,7 @@ a{color:inherit}
   </div>
   <nav class="sb-nav" aria-label="Site">
     <span class="nav-pill" aria-hidden="true"></span>
-    <a href="/en/">Home</a><a href="/en/dashboards/" aria-current="page">Dashboards</a><a href="/en/academy/">Academy</a><a href="/en/programme/">Programme</a><a href="/en/who-we-are/">Who we are</a><a href="/en/contact/">Contact</a>
+    <a href="/en/">Home</a><a href="/en/dashboards/" aria-current="page">Data dashboards</a><a href="/en/academy/">Academy</a><a href="/en/programme/">Programme</a><a href="/en/who-we-are/">Who we are</a><a href="/en/contact/">Contact</a>
   </nav>
   <div class="sb-utils">
     <span class="sb-notice">In Turkish for now</span>
@@ -474,7 +474,7 @@ a{color:inherit}
     <button class="sb-btn" type="button" data-menu aria-controls="sb-more" aria-expanded="false" aria-label="Menu"><svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path d="M2.5 6h13M2.5 12h13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
   </div>
   <div class="sb-more" id="sb-more">
-    <div class="sb-more-nav"><a href="/en/">Home</a><a href="/en/dashboards/">Dashboards</a><a href="/en/academy/">Academy</a><a href="/en/programme/">Programme</a><a href="/en/who-we-are/">Who we are</a><a href="/en/contact/">Contact</a></div>
+    <div class="sb-more-nav"><a href="/en/">Home</a><a href="/en/dashboards/">Data dashboards</a><a href="/en/academy/">Academy</a><a href="/en/programme/">Programme</a><a href="/en/who-we-are/">Who we are</a><a href="/en/contact/">Contact</a></div>
     <div><a href="/en/imprint/">Imprint</a><a href="/en/privacy/">Privacy</a><a href="/en/cookies/">Cookies</a><button type="button" data-consent-open>Cookie settings</button></div>
   </div>
 </header>
@@ -488,12 +488,12 @@ a{color:inherit}
 
 <header class="top">
   <span class="brand">IPM&ensp;Ticaret</span>
-  <span class="name">Türkiye'nin dış ticareti</span>
-  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Temayı değiştir">◐</button>
+  <span class="name">Türkiye’nin dış ticareti</span>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Temayı değiştirin">◐</button>
 </header>
 
 <main>
-<h1 class="sr">Türkiye'nin dış ticaret haritası</h1>
+<h1 class="sr">Türkiye’nin dış ticaret haritası</h1>
 <div id="dir" role="group" aria-label="Yön">
   <p id="scope"></p>
   <button type="button" data-d="exp" aria-pressed="true"><span class="k">İhracat</span><span class="n" id="nExp">–</span></button>
@@ -503,7 +503,7 @@ a{color:inherit}
   <div id="prodBox"><label for="prod">Ürün grubu</label><select id="prod"></select></div>
 </div>
 <div id="mapbox">
-<canvas id="gl" tabindex="0" aria-label="Türkiye'nin ticaret partnerleri haritası. Ok tuşları partnerler arasında büyükten küçüğe gezer, Enter ayrıntıyı açar. Aynı bilgiler partner listesinde de var" aria-describedby="kbd"></canvas>
+<canvas id="gl" tabindex="0" aria-label="Türkiye’nin ticaret partnerleri haritası. Ok tuşları partnerler arasında büyükten küçüğe gezer, Enter ayrıntıyı açar. Aynı bilgiler partner listesinde de var" aria-describedby="kbd"></canvas>
 <p id="kbd" class="sr" aria-live="polite"></p>
 <div id="labels" aria-hidden="true"><svg id="lks"></svg></div>
 <div id="fade" aria-hidden="true"></div>
@@ -511,52 +511,52 @@ a{color:inherit}
 </div>
 
 <section id="years" aria-label="Yıl">
-  <p class="cap"><span id="yCap" class="vh">Türkiye'nin toplam ihracatı, 1995–2024</span><b id="yNow">2024</b></p>
+  <p class="cap"><span id="yCap" class="vh">Türkiye’nin toplam ihracatı, 1995–2024</span><b id="yNow">2024</b></p>
   <div id="ybars"></div>
   <div id="yslide" role="slider" tabindex="0" aria-label="Yıl" aria-valuemin="1995" aria-valuemax="2024" aria-valuenow="2024"><span class="fill"></span><span class="knob"></span></div>
 </section>
 
 <p id="note"></p>
 <dialog id="method" aria-labelledby="mTitle">
-  <button type="button" class="x" aria-label="Notu kapat">Kapat</button>
+  <button type="button" class="x" aria-label="Notu kapatın">Kapatın</button>
   <h2 id="mTitle">Kaynak ve yöntem</h2>
   <h3>İki kaynak, ayrı ayrı</h3>
-  <p>BACI (CEPII; HS92 sınıflaması, V202601 sürümü), ülkelerin birbiri hakkında bildirdiği ticareti uzlaştırır ve 1995–2024'ü kapsar. TÜİK, Türkiye'nin kendi
-    gümrük kayıtlarıdır (genel ticaret sistemi); haritada 2013–2025 ve 2026'nın ilk sekiz ayı var. Kaynak satırındaki adla
-    biri ötekine geçilir. Hiçbir görünümde iki kaynak birbirine karıştırılmaz.</p>
+  <p>BACI (CEPII; HS92 sınıflandırması, V202601 sürümü), ülkelerin birbiri hakkında bildirdiği ticareti uzlaştırır ve 1995–2024’ü kapsar. TÜİK, Türkiye’nin kendi
+    gümrük kayıtlarıdır (genel ticaret sistemi); haritada 2013–2025 ve 2026’nın ilk sekiz ayı var. Kaynak satırındaki bağlantıyla
+    iki kaynak arasında geçebilirsiniz. Hiçbir görünümde iki kaynak birbirine karıştırılmaz.</p>
   <h3>Rakamlar neden farklı</h3>
-  <p>BACI, karşı ülkenin bildirimini de hesaba katar. Bu yüzden Almanya ve Birleşik Krallık gibi pazarlar BACI'de TÜİK'tekinden
+  <p>BACI, karşı ülkenin bildirimini de hesaba katar. Bu yüzden Almanya ve Birleşik Krallık gibi pazarlar BACI’de TÜİK’tekinden
     büyük görünür ve sıralar yer yer değişir. Partner ülke ticaretini bildirmiyorsa (Libya, Irak gibi)
-    BACI'de yalnızca Türkiye'nin kaydı kalır ve iki kaynak çoğu yıl aynı rakamı gösterir. OEC gibi siteler altını da sayar
-    ve daha yeni bir sınıflama (HS17) kullanır; bu yüzden onların rakamları da farklıdır: 2024'te Almanya'ya ihracat OEC'de
+    BACI’de yalnızca Türkiye’nin kaydı kalır ve iki kaynak çoğu yıl aynı rakamı gösterir. OEC gibi siteler altını da dâhil eder
+    ve daha yeni bir sınıflandırma (HS17) kullanır; bu yüzden onların rakamları da farklıdır: 2024’te Almanya’ya ihracat OEC’de
     21,4, burada 23,2 mlr $.</p>
   <h3>Altın hariç</h3>
   <p>Altın, gümüş, platin, mücevher ve kıymetli taşlar (HS 71) iki kaynakta da çıkarıldı: bu ticaret büyük ölçüde yatırım ve birikim amaçlıdır ve
     yıldan yıla sert dalgalanır.</p>
   <h3>Enerji</h3>
-  <p>BACI, Türkiye'nin enerji ithalatının yaklaşık yarısını kapsamıyor; en büyük eksik Rusya'da, 2013–2019 arasında İran'da
+  <p>BACI, Türkiye’nin enerji ithalatının yaklaşık yarısını kapsamıyor; en büyük eksik Rusya’da, 2013–2019 arasında İran’da
     da. TÜİK ise enerji ithalatının bir bölümünün ülkesini gizli tutuyor: 2013–2025 arasında yılda 6,7–34,5 mlr $ (listede “Gizli ülke”). Azerbaycan ve
-    Kazakistan gibi bazı tedarikçiler BACI'de TÜİK'tekinden büyük görünür.</p>
+    Kazakistan gibi bazı tedarikçiler BACI’de TÜİK’tekinden büyük görünür.</p>
   <h3>Kabartma ve renk</h3>
   <p>Yükseklik, değerin kareköküyle artar: büyük partnerler öne çıkar, küçükler de görünür kalır. Renk aynı değeri beş
     sınıfta gösterir. Seçilen ülkenin üstündeki katmanlar ürün gruplarıdır: en büyüğü altta, her katmanın yüksekliği grubun
     o ülkeyle ticaretteki payı kadar.</p>
-  <h3>Türkiye'nin payı</h3>
-  <p>İhracatta, Türkiye'nin bir ülkeye satışının o ülkenin dünyadan toplam ithalatına oranı; ithalatta, Türkiye'nin bir
-    ülkeden alımının o ülkenin toplam ihracatına oranı. İkisi de BACI'den, altın hariç hesaplanır. TÜİK yalnızca Türkiye'nin
+  <h3>Türkiye’nin payı</h3>
+  <p>İhracatta, Türkiye’nin bir ülkeye satışının o ülkenin dünyadan toplam ithalatına oranı; ithalatta, Türkiye’nin bir
+    ülkeden alımının o ülkenin toplam ihracatına oranı. İkisi de BACI’den, altın hariç hesaplanır. TÜİK yalnızca Türkiye’nin
     ticaretini verdiği için bu ölçü yalnızca BACI sürümünde var.</p>
 </dialog>
 </main>
 
 
 <aside id="detail" aria-label="Ülke ayrıntısı" inert>
-  <button type="button" class="x" aria-label="Seçimi kaldır">Kapat</button>
+  <button type="button" class="x" aria-label="Seçimi kaldırın">Kapatın</button>
   <div class="hd"><img id="dFlag" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEAAAAALAAAAAABAAEAAAIBAAA=" alt="" width="32" height="24" referrerpolicy="no-referrer" hidden><h2 id="dName" tabindex="-1">Ülke</h2></div>
   <p class="sub" id="dSub" hidden></p>
   <p class="bal" id="dShr" hidden></p>
   <p class="bal" id="dQuick"></p>
   <p id="dGap" hidden></p>
-  <p class="statcap" id="dStatCap">Türkiye'nin ihracatında</p>
+  <p class="statcap" id="dStatCap">Türkiye’nin ihracatında</p>
   <dl class="stats">
     <div><dt>Payı</dt><dd id="dShare"></dd></div>
     <div><dt>Sırası</dt><dd id="dRank"></dd></div>
@@ -574,18 +574,18 @@ a{color:inherit}
   <button type="button" id="dMore" aria-expanded="false">Ürün grupları ve 1995–2024 seyri</button>
 </aside>
 <aside id="top" aria-label="En büyük partnerler">
-  <button type="button" class="x" aria-label="Ürün seçimini kaldır">Kapat</button>
+  <button type="button" class="x" aria-label="Ürün seçimini kaldırın">Kapatın</button>
   <h2 id="tName">En büyük partnerler</h2>
   <p class="sub" id="tSub"></p>
   <p class="big" id="tVal"></p>
   <p class="of" id="tOf"></p>
   <div id="tLeg"></div>
-  <div id="tFind"><label for="tQ">Ülke ara</label><input id="tQ" type="search" autocomplete="off" spellcheck="false" placeholder="ör. Irak"></div>
+  <div id="tFind"><label for="tQ">Ülke arayın</label><input id="tQ" type="search" autocomplete="off" spellcheck="false" placeholder="ör. Irak"></div>
   <p class="cap"><span id="tCap">En büyük 10 partner</span><span id="tShareK">Grup içindeki payı</span></p>
   <ol id="tList"></ol>
   <button type="button" id="tMore" aria-expanded="false"></button>
   <p id="lede"><span class="hint">Bir ülkeyi seçin, ayrıntısı açılsın</span>
-    <a id="story" href="/en/dashboards/trade-risk/">Türkiye'nin ticaret riski: Doğu'dan alıyor, Batı'ya satıyor</a></p>
+    <a id="story" href="/en/dashboards/trade-risk/">Türkiye’nin ticaret riski: Doğu’dan alıyor, Batı’ya satıyor</a></p>
 </aside>
 <div id="tip"></div>
 
@@ -911,7 +911,7 @@ a{color:inherit}
   const unitSplit = s => { const m = s.match(/^(.*?) (mlr \$|mn \$|milyar \$|milyon \$)$/); return m ? `${m[1]}<small>${m[2]}</small>` : s; };
   
   
-  const longUnit = s => NARROW.matches ? s : s.replace(/ mlr \$$/, ' milyar $').replace(/ mn \$$/, ' milyon $$');
+  const longUnit = s => s;
 
   function applyCountry(c) {
     c.mesh.scale.z = blockH(c);
@@ -1355,8 +1355,8 @@ a{color:inherit}
     paintMeas();                                  
     document.querySelectorAll('#dir > button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.d === dir)));
     paintHead();
-    $('yCap').textContent = (prod ? "Türkiye'nin " + low(data.families[prod].n) + (dir === 'exp' ? ' ihracatı' : ' ithalatı')
-      : dir === 'exp' ? "Türkiye'nin toplam ihracatı" : "Türkiye'nin toplam ithalatı") + ', ' + years[0] + '–' + years[LAST];
+    $('yCap').textContent = (prod ? "Türkiye’nin " + cmp(data.families[prod].n) + (dir === 'exp' ? ' ihracatı' : ' ithalatı')
+      : dir === 'exp' ? "Türkiye’nin toplam ihracatı" : "Türkiye’nin toplam ithalatı") + ', ' + years[0] + '–' + years[LAST];
     $('yNow').textContent = yLab();
     const at = ((yi + 0.5) / years.length * 100).toFixed(3) + '%';
     yslide.querySelector('.knob').style.left = at; yslide.querySelector('.fill').style.width = at;
@@ -1396,9 +1396,9 @@ a{color:inherit}
   
   function paintMeas() {
     
-    const ll = `Partnerin ${dir === 'exp' ? 'ithalatındaki' : 'ihracatındaki'} payı`, sl = `<span class="lg">${ll}</span><span class="sh">Türkiye'nin payı</span>`;
+    const ll = `Partnerin ${dir === 'exp' ? 'ithalatındaki' : 'ihracatındaki'} payı`, sl = `<span class="lg">${ll}</span><span class="sh">Türkiye’nin payı</span>`;
     $('meas').innerHTML = `<button type="button" data-m="v" aria-pressed="${meas === 'v'}">Değer</button>` +
-      (data.src === 'baci' ? `<button type="button" data-m="s" aria-pressed="${meas === 's'}" aria-label="Türkiye'nin payı: ${ll.toLocaleLowerCase('tr')}">${sl}</button>`
+      (data.src === 'baci' ? `<button type="button" data-m="s" aria-pressed="${meas === 's'}" aria-label="Türkiye’nin payı: ${ll.toLocaleLowerCase('tr')}">${sl}</button>`
         : `<a href="${srcHref('baci', { m: 's' })}" aria-label="${ll}, BACI sürümünde">${sl}&nbsp;(BACI)</a>`);
   }
   
@@ -1420,7 +1420,7 @@ a{color:inherit}
     
     const other = data.src === 'tuik' ? 'baci' : 'tuik';
     const sw = `Kaynak: <span class="sw"><span class="on">${SRCN[data.src]}</span> ` +
-      `<a class="go" href="${srcHref(other)}">${other === 'tuik' ? "TÜİK'e geçin" : "BACI'ye geçin"}</a> ` +
+      `<a class="go" href="${srcHref(other)}">${other === 'tuik' ? "TÜİK’e geçin" : "BACI’ye geçin"}</a> ` +
       `(${other === 'tuik' ? '2013–Ağustos 2026' : '1995–2024'})</span>. `;
     const en = !prod || prod === 'enerji', part2 = Object.entries(data.partial).map(([y, m]) => `; ${y} ${m}`).join('');
     
@@ -1432,7 +1432,7 @@ a{color:inherit}
         : `. <b>TÜİK, ${fmt(g)} enerji ithalatının ülkesini gizli tutuyor</b> (listede “Gizli ülke”)`);
     } else if (dir === 'imp' && en) {
       t += narrow() ? '. <b>Enerji ithalatının yaklaşık yarısı eksik</b>'
-        : '. <b>BACI, enerji ithalatının yaklaşık yarısını kapsamıyor</b>: en büyük eksik Rusya\'da';
+        : '. <b>BACI, enerji ithalatının yaklaşık yarısını kapsamıyor</b>: en büyük eksik Rusya’da';
     }
     $('note').innerHTML = sw + t + ` <button type="button" id="mOpen" aria-haspopup="dialog" aria-label="Kaynak ve yöntem">${narrow() ? 'Yöntem' : 'Kaynak ve yöntem'}</button>`;
     fitNote();
@@ -1452,6 +1452,8 @@ a{color:inherit}
   
   const low = s => s.charAt(0).toLocaleLowerCase('tr-TR') + s.slice(1);
   
+  const cmp = s => ({ 'metaller': 'metal', 'taşıtlar': 'taşıt', 'diğer ürünler': 'diğer ürün' })[low(s)] || low(s);
+  
   let tAll = false;
   const fold = s => s.toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ı/g, 'i');
   function fillTop() {
@@ -1460,17 +1462,17 @@ a{color:inherit}
     box.classList.add('on'); box.classList.toggle('prod', !!prod); box.classList.toggle('all', tAll); box.classList.toggle('sm', meas === 's');
     box.style.setProperty('--pc', prod ? f.c : 'var(--accent)');
     $('tName').textContent = prod ? f.n : 'En büyük partnerler';
-    $('tSub').textContent = meas === 's' ? `Türkiye'nin partnerin ${prod ? low(f.n) + ' ' : ''}${dir === 'exp' ? 'ithalatındaki' : 'ihracatındaki'} payı, ` + yLab()
-      : prod ? "Türkiye'nin " + low(f.n) + (dir === 'exp' ? ' ihracatı, ' : ' ithalatı, ') + yLab()
-      : (dir === 'exp' ? "Türkiye'nin ihracat pazarları, " : "Türkiye'nin tedarikçileri, ") + yLab();
+    $('tSub').textContent = meas === 's' ? `Partnerin ${prod ? cmp(f.n) + ' ' : ''}${dir === 'exp' ? 'ithalatında' : 'ihracatında'} Türkiye’nin payı, ` + yLab()
+      : prod ? "Türkiye’nin " + cmp(f.n) + (dir === 'exp' ? ' ihracatı, ' : ' ithalatı, ') + yLab()
+      : (dir === 'exp' ? "Türkiye’nin ihracat pazarları, " : "Türkiye’nin tedarikçileri, ") + yLab();
     if (prod) {
       $('tVal').innerHTML = unitSplit(fmt(tot));
-      $('tOf').innerHTML = `Türkiye'nin toplam ${dir === 'exp' ? 'ihracatının' : 'ithalatının'} <b>${pct(tot / all)}</b>'${pctSfx(tot / all)}`;
+      $('tOf').innerHTML = `Türkiye’nin toplam ${dir === 'exp' ? 'ihracatının' : 'ithalatının'} <b>${pct(tot / all)}</b>'${pctSfx(tot / all)}`;
     }
     
     const br = brkNow(), n = br.length + 1, short = v => meas === 's' ? spct(v).replace(',0', '') : fmt(v).replace(' $', '').replace(',0 ', ' ');
-    $('tLeg').innerHTML = (meas === 's' ? "Renk: Türkiye'nin payı"
-      : `Renk: ${prod ? low(f.n) : 'toplam'} ${dir === 'exp' ? 'ihracat' : 'ithalat'}${prod ? 'ı' : ''}, $`) +
+    $('tLeg').innerHTML = (meas === 's' ? "Renk: Türkiye’nin payı"
+      : `Renk: ${prod ? cmp(f.n) : 'toplam'} ${dir === 'exp' ? 'ihracat' : 'ithalat'}${prod ? 'ı' : ''}, $`) +
       `<div class="sw">${CLS.map(c => `<i style="background:${c}"></i>`).join('')}</div>` +
       `<div class="tk">${br.map((b, i) => `<span style="left:${((i + 1) / n * 100).toFixed(2)}%">${short(b)}</span>`).join('')}</div>` +
       `<span class="nd"><i style="background:${NONE}"></i>&lt;&nbsp;1 mn $</span>`;
@@ -1484,7 +1486,7 @@ a{color:inherit}
       : `<li class="ns" data-id="${id}" title="${data.byId[id].info || 'Haritada yok'}"><div class="row"><em>`;
     $('tList').innerHTML = rows.length ? rows.map(([id, i]) => `${row(id)}${i + 1}</em><span>${data.byId[id].n}${C[id] ? '' : '<small>haritada yok</small>'}</span>${cells(id)}<i><u style="width:${(mv(id) / mx * 100).toFixed(1)}%"></u></i>${C[id] ? '</button>' : '</div>'}</li>`).join('')
       : '<li class="none">Bu adla bir partner yok</li>';
-    $('tMore').textContent = tAll ? "İlk 10'a dön" : `Tüm partnerler (${list.length})`;
+    $('tMore').textContent = tAll ? "İlk 10’a dönün" : `Tüm partnerler (${list.length})`;
     $('tMore').setAttribute('aria-expanded', String(tAll));
     fitTop(rows.length);
   }
@@ -1519,12 +1521,12 @@ a{color:inherit}
     
     $('dSub').hidden = !(nt && years[yi] >= +nt[1] && years[yi] <= +nt[2]);
     if (!$('dSub').hidden) $('dSub').textContent = nt[3];
-    $('dShare').textContent = pct(v / tot);
+    $('dShare').textContent = v > 0 && v / tot < 0.0005 ? '%0,1’in altında' : pct(v / tot);
     
     const sh = shareOf(id);
     $('dShr').hidden = sh < 0;
-    if (sh >= 0) $('dShr').innerHTML = `Partnerin ${prod ? low(data.families[prod].n) + ' ' : ''}${dir === 'exp' ? 'ithalatında' : 'ihracatında'} Türkiye'nin payı <b>${spct(sh)}</b>`;
-    $('dStatCap').textContent = `Türkiye'nin ${prod ? low(data.families[prod].n) + ' ' : ''}${dir === 'exp' ? 'ihracatında' : 'ithalatında'}`;
+    if (sh >= 0) $('dShr').innerHTML = `Partnerin ${prod ? cmp(data.families[prod].n) + ' ' : ''}${dir === 'exp' ? 'ithalatında' : 'ihracatında'} Türkiye’nin payı <b>${spct(sh)}</b>`;
+    $('dStatCap').textContent = `Türkiye’nin ${prod ? cmp(data.families[prod].n) + ' ' : ''}${dir === 'exp' ? 'ihracatında' : 'ithalatında'}`;
     const gp = data.src === 'baci' && dir === 'imp' && (!prod || prod === 'enerji') && GAP[id];
     $('dGap').hidden = !(gp && years[yi] >= gp[0] && years[yi] <= gp[1]);
     if (!$('dGap').hidden) $('dGap').innerHTML = 'BACI bu ülkeden enerji ithalatını eksik gösteriyor' +
@@ -1581,7 +1583,7 @@ a{color:inherit}
   
   function sfx(y) {
     const ones = ['', 'e', 'ye', 'e', 'e', 'e', 'ya', 'ye', 'e', 'a'], tens = ['e', 'a', 'ye', 'a', 'a', 'ye', 'a', 'e', 'e', 'a'];
-    return "'" + (y % 10 ? ones[y % 10] : tens[(y / 10 | 0) % 10]);
+    return "’" + (y % 10 ? ones[y % 10] : tens[(y / 10 | 0) % 10]);
   }
 
   
@@ -1773,7 +1775,7 @@ a{color:inherit}
   $('dMore').addEventListener('click', () => {
     const on = $('detail').classList.toggle('full');
     $('dMore').setAttribute('aria-expanded', String(on));
-    $('dMore').textContent = on ? 'Daha az göster' : `Ürün grupları ve ${years[0]}–${years[LAST]} seyri`;
+    $('dMore').textContent = on ? 'Daha az gösterin' : `Ürün grupları ve ${years[0]}–${years[LAST]} seyri`;
     if (sel) { fillDetail(); requestAnimationFrame(() => glide(viewFor(sel), 0.6)); }
   });
   addEventListener('keydown', e => { if (e.key === 'Escape' && !$('method').open) select(null); });

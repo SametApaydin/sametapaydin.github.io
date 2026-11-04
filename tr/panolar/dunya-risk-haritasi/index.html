@@ -241,7 +241,7 @@ svg text{font-family:var(--body)}
   </div>
   <nav class="sb-nav" aria-label="Site">
     <span class="nav-pill" aria-hidden="true"></span>
-    <a href="/tr/">Ana sayfa</a><a href="/tr/panolar/" aria-current="page">Panolar</a><a href="/tr/akademi/">Akademi</a><a href="/tr/program/">Program</a><a href="/tr/biz-kimiz/">Biz kimiz</a><a href="/tr/iletisim/">İletişim</a>
+    <a href="/tr/">Ana sayfa</a><a href="/tr/panolar/" aria-current="page">Veri panoları</a><a href="/tr/akademi/">Akademi</a><a href="/tr/program/">Program</a><a href="/tr/biz-kimiz/">Biz kimiz</a><a href="/tr/iletisim/">İletişim</a>
   </nav>
   <div class="sb-utils">
     
@@ -250,7 +250,7 @@ svg text{font-family:var(--body)}
     <button class="sb-btn" type="button" data-menu aria-controls="sb-more" aria-expanded="false" aria-label="Menü"><svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><path d="M2.5 6h13M2.5 12h13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
   </div>
   <div class="sb-more" id="sb-more">
-    <div class="sb-more-nav"><a href="/tr/">Ana sayfa</a><a href="/tr/panolar/">Panolar</a><a href="/tr/akademi/">Akademi</a><a href="/tr/program/">Program</a><a href="/tr/biz-kimiz/">Biz kimiz</a><a href="/tr/iletisim/">İletişim</a></div>
+    <div class="sb-more-nav"><a href="/tr/">Ana sayfa</a><a href="/tr/panolar/">Veri panoları</a><a href="/tr/akademi/">Akademi</a><a href="/tr/program/">Program</a><a href="/tr/biz-kimiz/">Biz kimiz</a><a href="/tr/iletisim/">İletişim</a></div>
     <div><a href="/tr/kunye/">Künye</a><a href="/tr/gizlilik/">Gizlilik</a><a href="/tr/cerezler/">Çerezler</a><button type="button" data-consent-open>Çerez ayarları</button></div>
   </div>
 </header>
@@ -265,7 +265,7 @@ svg text{font-family:var(--body)}
 <header class="top">
   <a class="brand" href="./">IPM · Risk endeksi</a>
   <span class="name">87 ekonominin ithalat ve ihracat riski, 1995–2024</span>
-  <button class="theme-toggle" id="theme" type="button" aria-label="Koyu temaya geç">
+  <button class="theme-toggle" id="theme" type="button" aria-label="Koyu temaya geçin">
     <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7 1a6 6 0 0 1 0 12z" fill="currentColor"/></svg>
   </button>
 </header>
@@ -298,7 +298,7 @@ svg text{font-family:var(--body)}
 </main>
 <footer class="foot">
   <span>Kaynak: CEPII BACI HS92 (V202601), 1995–2024, HS 71 (altın ve diğer kıymetliler) hariç</span>
-  <a href="/tr/panolar/ticaret-riski/#act-iv-title" data-local="/tr/panolar/ticaret-riski/#act-iv-title">Türkiye'nin ticaret riski: Parçalanan dünya</a>
+  <a href="/tr/panolar/ticaret-riski/#act-iv-title" data-local="/tr/panolar/ticaret-riski/#act-iv-title">Türkiye’nin ticaret riski: Parçalanan dünya</a>
 </footer>
 <div class="tip" id="tip" aria-hidden="true"></div>
 <div class="sr" id="live" aria-live="polite"></div>
@@ -341,7 +341,7 @@ svg text{font-family:var(--body)}
   const fbn = v => v >= 1 ? f0(v) + ' mlr $' : f0(v * 1000) + ' mn $';
   const short = n => n.replace(/ \[.*\]/, '');
   const POSS = { 0: 'ı', 1: 'i', 2: 'si', 3: 'ü', 4: 'ü', 5: 'i', 6: 'sı', 7: 'si', 8: 'i', 9: 'u' };
-  const fpctPoss = v => { const t = fpct(v); return `${t}'${POSS[t.slice(-1)]}`; };
+  const fpctPoss = v => { const t = fpct(v); return `${t}’${POSS[t.slice(-1)]}`; };
   
   
   const f2 = L.format(',.2f');
@@ -380,15 +380,15 @@ svg text{font-family:var(--body)}
       def: 'Yüksek değer: tedarikçisi az, yerine konması zor ithalat' },
     exp: { k: 'exp', tab: 'İhracat', label: 'İhracat riski', breaks: [100, 150, 200, 300, 400], fmt: f0, dom: [45, 720], log: true,
       def: 'Yüksek değer: az sayıda alıcıya bağlı ihracat' },
-    cn: { k: 'cn', tab: 'Partner payı', label: "Çin'in risk payı", who: 'Çin', own: "Çin'in kendi ithalatı", breaks: [10, 20, 30, 40, 50], fmt: fpct, dom: [0, 100], log: false, pct: true,
-      def: "İthalat riskinin Çin'den gelen payı" },
-    us: { k: 'us', tab: 'Partner payı', label: "ABD'nin risk payı", who: 'ABD', own: "ABD'nin kendi ithalatı", breaks: [10, 20, 30, 40, 50], fmt: fpct, dom: [0, 100], log: false, pct: true,
-      def: "İthalat riskinin ABD'den gelen payı" },
+    cn: { k: 'cn', tab: 'Partner payı', label: "Çin’in risk payı", who: 'Çin', own: "Çin’in kendi ithalatı", breaks: [10, 20, 30, 40, 50], fmt: fpct, dom: [0, 100], log: false, pct: true,
+      def: "İthalat riskinin Çin’den gelen payı" },
+    us: { k: 'us', tab: 'Partner payı', label: "ABD’nin risk payı", who: 'ABD', own: "ABD’nin kendi ithalatı", breaks: [10, 20, 30, 40, 50], fmt: fpct, dom: [0, 100], log: false, pct: true,
+      def: "İthalat riskinin ABD’den gelen payı" },
     
-    cni: { k: 'cni', tab: 'Partner payı', label: "Çin'in ticaret payı", who: 'Çin', breaks: [10, 20, 30, 40, 50], fmt: fpct, dom: [0, 100], log: false, pct: true,
-      def: "İthalatın Çin'den gelen payı" },
-    usi: { k: 'usi', tab: 'Partner payı', label: "ABD'nin ticaret payı", who: 'ABD', breaks: [10, 20, 30, 40, 50], fmt: fpct, dom: [0, 100], log: false, pct: true,
-      def: "İthalatın ABD'den gelen payı" },
+    cni: { k: 'cni', tab: 'Partner payı', label: "Çin’in ticaret payı", who: 'Çin', breaks: [10, 20, 30, 40, 50], fmt: fpct, dom: [0, 100], log: false, pct: true,
+      def: "İthalatın Çin’den gelen payı" },
+    usi: { k: 'usi', tab: 'Partner payı', label: "ABD’nin ticaret payı", who: 'ABD', breaks: [10, 20, 30, 40, 50], fmt: fpct, dom: [0, 100], log: false, pct: true,
+      def: "İthalatın ABD’den gelen payı" },
     cu: { k: 'cud', tab: 'Partner payı', label: 'Çin ve ABD', duo: true, fmt: v => fduo(v), dom: [-100, 100], log: false, def: '' },
     cux: { k: 'xcud', tab: 'Partner payı', label: 'Çin ve ABD, ihracat', duo: true, fmt: v => fduo(v), dom: [-100, 100], log: false, def: '' },
     orb: { k: 'tp', tab: 'Ana partner', label: 'Ana partner', cat: true, fmt: fpct, dom: [0, 100], log: false, pct: true,
@@ -567,7 +567,7 @@ svg text{font-family:var(--body)}
       
       
       const vs = D.eco.filter(visible).map(e => val(e)).filter(v => v != null), nC = vs.filter(v => v > 0).length, nU = vs.filter(v => v < 0).length, nE = vs.length - nC - nU;
-      row += `<span class="sw cat"><i style="background:${orbCol('c')}"></i>Çin'in payı daha yüksek: ${nC}</span><span class="sw cat"><i style="background:${orbCol('u')}"></i>ABD'nin payı daha yüksek: ${nU}</span>`
+      row += `<span class="sw cat"><i style="background:${orbCol('c')}"></i>Çin’in payı daha yüksek: ${nC}</span><span class="sw cat"><i style="background:${orbCol('u')}"></i>ABD’nin payı daha yüksek: ${nU}</span>`
         + (nE ? `<span class="sw cat"><i style="background:${orbCol('o')}"></i>eşit: ${nE}</span>` : '')
         + `<span class="sw cat"><i style="background:var(--nodata)"></i>Çin ve ABD (kendi payı yok)</span>`;
     }
@@ -611,13 +611,13 @@ svg text{font-family:var(--body)}
     if (!st.sel) { card.hidden = true; return; }
     card.hidden = false;
     const e = byCode.get(st.sel), y = st.yi, v = val(e), rk = rankOf(e.c), cat = M[st.m].cat, k = cat ? 'tp' : M[st.m].k;
-    let h = `<button class="x" type="button" aria-label="Kapat">×</button><h2 id="cardName" tabindex="-1">${short(e.n)}</h2>`;
+    let h = `<button class="x" type="button" aria-label="Kapatın">×</button><h2 id="cardName" tabindex="-1">${short(e.n)}</h2>`;
     
     
     if (isPart()) {
       h += `<p class="sub">Çin ve ABD: ${st.m === 'cux' ? 'İhracat' : 'İthalat'}, ${YEARS[y]}</p>`;
       h += `<div class="ptab">${bothTables(k => e[k][y], k => e[k + 'i'][y], k => !naK(e, k))}</div>`;
-      h += `<div class="sec"><div class="bk one">${[['c', 'Çin', sideK().cn], ['u', 'ABD', sideK().us]].filter(d => !naK(e, d[2])).map(([o, n]) => `<span><svg width="18" height="6" aria-hidden="true"><line x1="1" x2="17" y1="3" y2="3" stroke="${orbCol(o)}" stroke-width="2.25" stroke-linecap="round"/></svg>${n}</span>`).join('')}</div><svg class="pch" width="100%" height="${chartH()}" role="img" aria-label="${short(e.n)}: Çin'in ve ABD'nin ${sideK().w} riskindeki payı, 1995–2024"></svg></div>`;
+      h += `<div class="sec"><div class="bk one">${[['c', 'Çin', sideK().cn], ['u', 'ABD', sideK().us]].filter(d => !naK(e, d[2])).map(([o, n]) => `<span><svg width="18" height="6" aria-hidden="true"><line x1="1" x2="17" y1="3" y2="3" stroke="${orbCol(o)}" stroke-width="2.25" stroke-linecap="round"/></svg>${n}</span>`).join('')}</div><svg class="pch" width="100%" height="${chartH()}" role="img" aria-label="${short(e.n)}: Çin’in ve ABD’nin ${sideK().w} riskindeki payı, 1995–2024"></svg></div>`;
     } else {
       h += `<p class="sub">${M[st.m].label}, ${YEARS[y]}</p>`;
       if (v == null) h += na(e) ? '' : `<div class="big">veri yok</div>`;
@@ -630,7 +630,7 @@ svg text{font-family:var(--body)}
         if (sn.length) h += `<p class="snote">${sn.join(', ')}</p>`; }
       if (!cat && v != null) {
         const cell = (yy, l) => { const a = e[k][YEARS.indexOf(yy)]; return a != null && YEARS[y] > yy ? `<div><span class="l">${l}</span><span class="v num">${fsign(v - a)}${M[st.m].pct ? '<small> puan</small>' : ''}</span></div>` : ''; };
-        const cs = cell(1995, "1995'ten beri") + cell(2019, "2019'dan beri");
+        const cs = cell(1995, "1995’ten beri") + cell(2019, "2019’dan beri");
         if (cs) h += `<div class="cells">${cs}</div>`;
       }
       if (!na(e)) {
@@ -659,8 +659,8 @@ svg text{font-family:var(--body)}
     }
     const notes = [];
     if (e.sig === 'common') notes.push('İkame esneklikleri bu ekonomi için ülkeye özgü değil, ortak (medyan) değerlerden');
-    if (e.bl && YEARS[y] < 1999) notes.push("1995–1998: BACI'nin Belçika–Lüksemburg birimi, endekste olduğu gibi");
-    if (e.small) notes.push(`Küçük ekonomi: 2024 ithalatı ${D.smallBn} mlr $'ın altında`);
+    if (e.bl && YEARS[y] < 1999) notes.push("1995–1998: BACI, Belçika ve Lüksemburg’u tek birim sayar; endekste de böyle gösterilir.");
+    if (e.small) notes.push(`Küçük ekonomi: 2024 ithalatı ${D.smallBn} mlr $’ın altında`);
     if (/\[/.test(e.n)) notes.push('Ad için karar bekleniyor');
     if (notes.length) h += `<p class="note">${notes.join('<br>')}</p>`;
     card.innerHTML = h;
@@ -822,7 +822,7 @@ svg text{font-family:var(--body)}
       for (const [o, kk, n] of [['c', K.cn, 'Çin'], ['u', K.us, 'ABD']]) {
         gB.append('path').attr('d', mLine(D.med[kk])).attr('fill', 'none').attr('stroke', orbCol(o)).attr('stroke-width', 2.5).attr('stroke-linecap', 'round');
         band.lines.push({ s: D.med[kk], col: orbCol(o), n });
-        key.push(`<span><i class="sw" style="background:${orbCol(o)}"></i>${n}'${n === 'Çin' ? 'in' : 'nin'} payı</span>`);
+        key.push(`<span><i class="sw" style="background:${orbCol(o)}"></i>${n}’${n === 'Çin' ? 'in' : 'nin'} payı</span>`);
       }
       $('#bandT').textContent = `Dünya medyanı, ${K.w} riski, 1995–2024`;
     }
@@ -1105,9 +1105,9 @@ svg text{font-family:var(--body)}
       const ticks = M[m].duo ? [-100, -50, 0, 50, 100] : M[m].pct ? [0, 25, 50, 75, 100] : [...new Set([M[m].dom[0], ...M[m].breaks, M[m].dom[1]])];
       ticks.forEach(t => { g.append('line').attr('x1', x(t)).attr('x2', x(t)).attr('y1', yb).attr('y2', yb + 4);
         g.append('text').attr('x', x(t)).attr('y', yb + 16).attr('text-anchor', 'middle').text(M[m].duo ? Math.abs(t) : M[m].pct ? '%' + t : Math.round(t)); });
-      g.append('text').attr('x', xr).attr('y', hy).attr('text-anchor', 'end').text(cat ? 'en büyük partnerin ithalat riskindeki payı →' : M[m].duo ? "Çin'in payı daha yüksek (puan) →" : 'daha yüksek risk →');
+      g.append('text').attr('x', xr).attr('y', hy).attr('text-anchor', 'end').text(cat ? 'en büyük partnerin ithalat riskindeki payı →' : M[m].duo ? "Çin’in payı daha yüksek (puan) →" : 'daha yüksek risk →');
       
-      if (M[m].duo) g.append('text').attr('x', xl).attr('y', yb - (w < 600 ? 20 : 6)).text("← ABD'nin payı daha yüksek (puan)");
+      if (M[m].duo) g.append('text').attr('x', xl).attr('y', yb - (w < 600 ? 20 : 6)).text("← ABD’nin payı daha yüksek (puan)");
       
       
       if (M[m].log) g.append('text').attr('x', xl).attr('y', hy).text(w < 760 ? 'logaritmik ölçek' : 'logaritmik ölçek, en yüksek olası değer 1000 (her ürün tek alıcıya)');
@@ -1307,8 +1307,8 @@ svg text{font-family:var(--body)}
     } else if (M[st.m].duo) {
       const k = innerWidth > 900 && innerHeight < 980 ? 2 : 3, cn = r.filter(e => val(e) > 0).slice(0, k), us = r.filter(e => val(e) < 0).reverse().slice(0, k);
       const rows = a => a.map(e => ({ col: colour(e), name: go(e), cells: [f1(Math.abs(val(e)))] }));
-      groups = [{ title: "Çin'in payı en çok önde", on: true, cols: [['fark', 'puan']], rows: rows(cn) },
-        { title: "ABD'nin payı en çok önde", on: true, cols: [['fark', 'puan']], rows: rows(us) }].filter(g => g.rows.length);
+      groups = [{ title: "Çin’in payı en çok önde", on: true, cols: [['fark', 'puan']], rows: rows(cn) },
+        { title: "ABD’nin payı en çok önde", on: true, cols: [['fark', 'puan']], rows: rows(us) }].filter(g => g.rows.length);
     } else {
       const k = phone ? 3 : 5, rows = (a, i0) => a.map((e, i) => ({ col: colour(e), name: go(e), cells: [M[st.m].fmt(val(e)), f0(i0 + i + 1) + '.'] }));
       groups = [{ title: `En yüksek ${word[k]}`, on: true, cols: [[M[st.m].label.toLocaleLowerCase('tr')], ['sıra']], rows: rows(r.slice(0, k), 0) },
@@ -1368,7 +1368,7 @@ svg text{font-family:var(--body)}
   $('.side').addEventListener('scroll', sideCue, { passive: true }); addEventListener('resize', sideCue);
 
   
-  function setThemeLabel() { $('#theme').setAttribute('aria-label', theme === 'dark' ? 'Açık temaya geç' : 'Koyu temaya geç'); }
+  function setThemeLabel() { $('#theme').setAttribute('aria-label', theme === 'dark' ? 'Açık temaya geçin' : 'Koyu temaya geçin'); }
   setThemeLabel();
   $('#theme').onclick = () => {
     theme = theme === 'dark' ? 'light' : 'dark';

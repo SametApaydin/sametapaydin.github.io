@@ -13,7 +13,7 @@
   var G = JSON.parse(dataEl.textContent);
   var root = document.documentElement;
   var ground = hero.querySelector('.s4-ground'), cv = hero.querySelector('.s4-cv'), cx2 = cv.getContext('2d');
-  var col = hero.querySelector('.s4-col'), panel = hero.querySelector('.s4-panel');
+  var col = hero.querySelector('.s4-col'), panel = hero.querySelector('.s4-panel'), flow = hero.querySelector('.s4-flow'), arcEl = hero.querySelector('.s4-arc'), arc = null;
   var caps = [].slice.call(hero.querySelectorAll('.s4-cap'));
 
   /* ---------- maths ---------- */
@@ -130,10 +130,49 @@
     }
     return { cam: first, z: .5 };
   }
+  // Browsers have no Turkish hyphenation, and justified lines need it, so mark the syllable breaks: a break falls before the
+  // consonant that precedes a vowel. Names and the part after an apostrophe are left whole.
+  function shyTr() {
+    if (document.documentElement.lang !== 'tr') return;
+    var V = 'aeıioöuüâîûAEIİOÖUÜ', KEEP = /^(Caldara|Iacoviello)$/;
+    function word(w) {
+      if (w.length < 6 || KEEP.test(w)) return w;
+      var o = '', i;
+      for (i = 0; i < w.length; i++) {
+        var brk = i >= 2 && i <= w.length - 3 && V.indexOf(w[i]) < 0 && V.indexOf(w[i + 1]) >= 0 && /[aeıioöuüâîûAEIİOÖUÜ]/.test(o);
+        o += (brk ? '\u00ad' : '') + w[i];
+      }
+      return o;
+    }
+    flow.querySelectorAll('.s4-h1,.s4-defs p').forEach(function (el) {
+      var tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), n;
+      while ((n = tw.nextNode())) n.nodeValue = n.nodeValue.replace(/[A-Za-zÇĞİÖŞÜçğıöşüâîû]+(?=(’|')?)/g, function (w, _a, at, s) { return at && (s[at - 1] === '’' || s[at - 1] === "'") ? w : word(w); });
+    });
+  }
+  shyTr();
+  // one arc shared by the text and the globe's fade, so the words follow the curve of the land. The wrapped text can make
+  // the hero taller, and the hero's height sets the arc, so this settles on a height that fits the text it produces.
+  function setArc() {
+    if (narrow) { arc = null; arcEl.style.shapeOutside = ''; arcEl.style.height = ''; return; }
+    var cs = getComputedStyle(col), pb = parseFloat(cs.paddingBottom), min = parseFloat(getComputedStyle(hero).minHeight) || 0;
+    var defs = flow.querySelector('.s4-defs'), hh = min, g, f, need, i;
+    for (i = 0; i < 5; i++) {
+      g = ground.getBoundingClientRect(); f = flow.getBoundingClientRect();
+      var rad = .68 * hh;
+      arc = { cc: col.getBoundingClientRect().right - g.left - 44 + rad, rad: rad };
+      arcEl.style.height = Math.max(0, hh - (f.top - g.top) - pb) + 'px';
+      arcEl.style.shapeOutside = 'circle(' + rad.toFixed(1) + 'px at ' + (arc.cc - (f.left - g.left)).toFixed(1) + 'px ' + (.5 * hh - (f.top - g.top)).toFixed(1) + 'px)';
+      need = Math.max(min, Math.ceil(defs.getBoundingClientRect().bottom - g.top + pb));
+      if (Math.abs(need - hh) < 2) break;
+      hh = need;
+    }
+  }
+  function arcEdge(py) { var dy = Math.min(arc.rad, Math.abs(py - cy)); return arc.cc - Math.sqrt(arc.rad * arc.rad - dy * dy); }
   function layout() {
+    narrow = matchMedia('(max-width: 1099px)').matches;
+    setArc();
     var r = ground.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1);
     W = r.width; H = r.height;
-    narrow = matchMedia('(max-width: 1099px)').matches;
     cv.width = Math.round(W * d); cv.height = Math.round(H * d);
     cx2.setTransform(d, 0, 0, d, 0, 0);
     baseCv.width = cv.width; baseCv.height = cv.height; basex.setTransform(d, 0, 0, d, 0, 0); baseKey = null;
@@ -174,8 +213,9 @@
         var X = pts[i], Y = pts[i + 1], Z_ = pts[i + 2];
         var dz = X * c[0] + Y * c[1] + Z_ * c[2]; if (dz < 0) continue;
         var u = X * e[0] + Y * e[1] + Z_ * e[2];
-        var f = sstep(xt, xt + fw, u); if (f <= 0) continue;
         var px = cx + Rz * u, py = cy - Rz * (X * n[0] + Y * n[1] + Z_ * n[2]);
+        var ex = arc ? (arcEdge(py) - cx) / Rz : xt;
+        var f = sstep(ex, ex + fw, u); if (f <= 0) continue;
         if (px < -4 || px > W + 4 || py < -4 || py > H + 4) continue;
         k = Math.min(BUCKETS - 1, Math.round((base + slope * dz) * f / top * (BUCKETS - 1))); if (k === 0) continue;
         groups[k].push(px - s / 2, py - s / 2);

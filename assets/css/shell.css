@@ -171,7 +171,7 @@ body>.top{visibility:hidden}
 .ft .sky img{display:block;width:100%;height:auto;filter:brightness(0);opacity:.28}
 .ft-in{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,2fr) minmax(0,2fr) minmax(0,3fr);gap:2rem 2rem;padding:clamp(1.75rem,3vw,2.5rem) 0 clamp(1.75rem,3vw,2.5rem)}
 .ft-name{margin:0 0 .3rem;font-size:1rem;font-weight:600;letter-spacing:-.012em;color:var(--ink)}
-.ft-credit{margin:0 0 1.1rem;max-width:24em}
+.ft-credit{text-wrap:balance;margin:0 0 1.1rem;max-width:24em}
 .ft-logo{display:inline-block;line-height:0}
 .ft-logo img{display:block;height:36px;width:auto}
 .ft h2{margin:0 0 .6rem;font:500 .875rem var(--body);letter-spacing:-.005em;color:var(--ink)}

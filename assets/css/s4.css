@@ -40,6 +40,12 @@ main .num,.s4-fig{font-variant-numeric:tabular-nums lining-nums}
 
 .s4-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s4-gap);min-height:var(--s4-hh)}
 .s4-col{grid-column:1/6;position:relative;z-index:1;padding:clamp(2rem,6vh,3.75rem) 0 clamp(2rem,6vh,3.5rem)}
+/* the text flows around the globe: left edge straight, right edge follows the arc set in s4.js. The column keeps its width (the globe's camera reads it); only the text inside runs wider */
+.s4-flow{width:calc(100% + 11rem)}
+.s4-arc{display:none}
+.s4-js .s4-arc{display:block;float:right;width:100%;shape-margin:1.5rem}
+.s4-js .s4-col{padding-bottom:1rem}
+.s4-js .s4-flow .s4-h1,.s4-js .s4-flow .s4-defs p{max-width:none;text-wrap:wrap;text-align:justify;text-align-last:left;hyphens:auto}  /* every line runs to the curve, so the edge reads as the globe's outline */
 .s4-h1{font-size:clamp(1.5rem,1.05rem + 1vw,1.75rem);font-weight:500;line-height:1.18;letter-spacing:-.024em;margin:0;max-width:24em;text-wrap:pretty}
 
 /* what the terms mean, in the text column */
@@ -170,7 +176,9 @@ main:has(.s4-hero)+.ft{margin-top:0;padding-top:1.5rem}
 @media (max-width:1099px){
   :root{--s4-hh:auto}
   .s4-hero{display:flex;flex-direction:column;min-height:0;padding-bottom:2.5rem}
-  .s4-grid,.s4-col,.s4-panel{display:contents}
+  .s4-grid,.s4-col,.s4-flow,.s4-panel{display:contents}
+  .s4-js .s4-flow .s4-h1,.s4-js .s4-flow .s4-defs p{text-align:left;hyphens:none}
+  .s4-js .s4-arc{display:none}
   .s4-h1,.s4-caps,.s4-defs{padding-left:var(--gutter);padding-right:var(--gutter)}
   .s4-h1{order:1;padding-top:1.5rem;font-size:1.375rem;max-width:none}
   .s4-ground{order:2;position:relative;bottom:auto;height:min(86vw,540px);margin:.75rem 0 .25rem}
