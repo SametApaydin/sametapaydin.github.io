@@ -228,3 +228,28 @@ html:not(.s4-js) .s4-cv{display:none}
 }
 
 .s4-404{padding-top:clamp(2.5rem,8vh,5rem);padding-bottom:clamp(2.5rem,8vh,5rem)}
+
+/* team (Biz kimiz / Who we are): IPC's Kişiler cards. Grey portrait, name and role on an IPC-navy fade, e-mail below; each card opens the person's IPC profile. Photos are cropped so every head starts and ends on the same lines; the caption hangs from a fixed line (not the bottom), so every name starts on one line whatever the title's length */
+.art-b .team{list-style:none;padding:0;margin:1.25rem 0 0;max-width:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(12.5rem,1fr));gap:1.75rem 1.25rem}
+.team li{min-width:0}
+.team-pic{position:relative;display:block;aspect-ratio:480/689;overflow:hidden;border-radius:var(--r);background:#1b2150;color:#fff!important;text-decoration:none!important}
+.team-pic img{display:block;width:100%;height:100%;object-fit:cover;transition:transform calc(var(--t)*.4) var(--ease)}
+.team-pic::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(20,26,72,.96) 0%,rgba(20,26,72,.88) 30%,rgba(20,26,72,.5) 42%,rgba(20,26,72,0) 60%);pointer-events:none}
+.team-cap{position:absolute;left:0;right:0;top:68%;z-index:1;padding:0 .9rem}
+.team-cap b{display:block;font-size:1rem;font-weight:600;line-height:1.2;letter-spacing:-.01em;color:#fff}
+.team-cap span{display:block;margin-top:.3rem;font-size:.8125rem;line-height:1.35;color:rgba(255,255,255,.82)}
+.team-pic:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+@media (hover:hover) and (pointer:fine){.team-pic:hover img{transform:scale(1.035)}}
+@media (prefers-reduced-motion:reduce){.team-pic img{transition:none}}
+.team-mail{display:flex;align-items:flex-start;gap:.4rem;margin-top:.6rem;font-size:.8125rem;color:var(--ink2)!important;text-decoration:none!important;min-width:0}
+.team-mail span{min-width:0;line-height:1.35;overflow-wrap:anywhere}
+.team-mail svg{flex:0 0 auto;margin-top:.1rem}
+.team-mail:hover span{text-decoration:underline;text-underline-offset:.2em}
+@media (max-width:600px){
+  .art-b .team{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem .9rem}
+  .team-cap{top:62%;padding:0 .7rem}
+  .team-cap b{font-size:.875rem}
+  .team-cap span{font-size:.75rem}
+  .team-mail{font-size:.75rem}
+}
+@media (max-width:340px){.art-b .team{grid-template-columns:minmax(0,1fr)}.team-cap{top:66%}}
