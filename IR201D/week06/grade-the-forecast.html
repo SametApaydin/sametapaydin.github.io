@@ -1,7 +1,13 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="../favicon.svg" type="image/svg+xml"><style>body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
-<title>Grade the Forecast</title>
+<title>One War, Two Theories</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <script>document.documentElement.dataset.skin = "b";</script>
+<!-- IR 201 Week 6 section page (Friday, November 6, 2026). Hand-written, no build step.
+     First half: Mitchell 2018, "Read the strait" (vote on each move: coercion, outside option, agenda setting,
+     institution, bargaining). Then Mitchell's data and selection bias (Bueno de Mesquita ch. 1).
+     Second half: Mearsheimer 2014, "Grade the forecast" (Hit / Miss / Can't tell tallies, what happened, tests).
+     Content lives in the EVENTS and CLAIMS arrays. Page numbers: Mearsheimer, Foreign Affairs 93(5), pp. 77-89.
+     Built November 6, 2026. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Public+Sans:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap">
@@ -600,6 +606,16 @@ html[data-skin="b"] .m-annex{fill:#871a5b!important}
 .nbtn:hover{background:#174b75}
 
 
+/* ====== Tab bar: a soft tray with one rounded box per tab, the open tab filled ====== */
+html[data-skin] .bar{border-bottom:0;padding-bottom:0;align-items:baseline}
+html[data-skin] .reset{margin-left:auto}
+html[data-skin] .steps{order:3;flex:1 0 100%;margin:6px 0 0;padding:6px;gap:6px;background:var(--faint);border-radius:16px}
+html[data-skin] .steps button{flex:1 1 auto;border:0;border-radius:11px;padding:10px 14px;background:#fff;color:var(--ink2);font-size:15px;font-weight:600;white-space:nowrap;box-shadow:0 0 0 1px var(--hair);transition:background .2s,color .2s}
+html[data-skin] .steps button:hover{background:var(--accent-soft)}
+html[data-skin] .steps button[aria-current="step"]{background:var(--accent);color:#fff;font-weight:700;box-shadow:none}
+html[data-skin] .steps .n{font-size:12px;opacity:.65;margin-right:6px}
+@media (max-width:560px){html[data-skin] .steps button{font-size:14px;padding:8px 10px}}
+
 /* ====== Text system for the teaching screens: four roles, one spacing scale ====== */
 :root{--fs-q:clamp(30px,4.2vh,42px);--fs-lead:clamp(20px,2.5vh,24px);--fs-body:18px;--fs-small:14px;--sp-1:8px;--sp-2:16px;--sp-3:28px;--sp-4:52px}
 /* Question */
@@ -624,6 +640,15 @@ html[data-skin="b"] .m-annex{fill:#871a5b!important}
 .beat details.lm summary{font-size:var(--fs-small)}
 
 /* ====== Scroll story (Mearsheimer: three claims) ====== */
+.story{cursor:pointer}
+/* Text roles inside the story tabs: label (bold, blue), date (bold), quoted words (italic), citation (small, grey), key term (bold) */
+.story .s-lb{font-weight:700;color:var(--accent)}
+.story .s-dt{font-weight:700}
+.story .s-qt{font-style:italic}
+.story .s-ct{font-size:.74em;color:var(--mute)}
+.story .s-tm{font-weight:700}
+.story .bigq.isq{border-left:3px solid var(--accent);padding-left:14px}
+.story .bigq span .s-dt{color:var(--ink)}
 .story .sgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(24px,4vw,64px)}
 .story .sstage{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center}
 .story .sinner{transition:opacity .26s cubic-bezier(.4,0,.2,1),transform .26s cubic-bezier(.4,0,.2,1)}
@@ -688,31 +713,42 @@ html[data-skin="b"] .m-annex{fill:#871a5b!important}
 .gtab tbody tr.on{opacity:1}
 .beat .sinner .bars{margin-top:var(--sp-2)}
 .gtab.all tbody tr{opacity:1}
-/* ====== Closing round: three quick rounds ====== */
-.fprog{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,2vw,28px);margin-bottom:var(--sp-3)}
-.fseg{display:grid;gap:8px;padding-top:10px;border-top:3px solid var(--hair);color:var(--mute);font-size:var(--fs-small);font-weight:600}
-.fseg.on{border-top-color:var(--accent);color:var(--ink)}
-.fsl b{color:var(--accent);margin-left:4px}
-.fdots{display:flex;gap:6px;flex-wrap:wrap}
-.fdot{width:12px;height:12px;border-radius:50%;border:0;padding:0;background:var(--hair);cursor:pointer}
-.fdot.ok{background:var(--accent)}
-.fdot.no{background:#c43c45}
-.fdot[aria-current="true"]{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ink)}
-.fpicks{display:flex;flex-wrap:wrap;gap:10px;margin-top:var(--sp-3)}
-.fpick{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;background:var(--faint);color:var(--ink);font:inherit;font-size:var(--fs-lead);font-weight:600;padding:12px 22px 12px 12px;cursor:pointer;transition:background .2s,color .2s,opacity .2s}
-.fpick:hover{background:#dbe7f1}
-.fk{display:inline-grid;place-items:center;width:1.6em;height:1.6em;border-radius:50%;background:#fff;color:var(--ink2);font-size:.75em}
-.fpick.right{background:var(--accent);color:#fff}
-.fpick.wrong{background:#c43c45;color:#fff}
-.fpick.ans{box-shadow:inset 0 0 0 2.5px var(--accent);background:#fff}
-.fpick.dim{opacity:.45}
-.fans{min-height:9em}
-.fans .answer.verdict{margin-top:var(--sp-3)}
-.verdict.okv,.vd.okv{color:var(--accent)}
-.final .sboard{margin-top:var(--sp-3)}
-.final .sbn{font-size:1.1em}
-.final .sbr.fr{grid-template-columns:minmax(0,1fr) auto}
-@media (max-width:640px){.fprog{gap:8px}.fseg{font-size:12px}.fdot{width:9px;height:9px}.fpick{font-size:var(--fs-body)}}
+/* ====== Which theory? (tab 6): one screen. Question cards sit in the middle, a click sends a card to its theory ====== */
+.whogrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) minmax(0,1fr);gap:clamp(18px,3vw,44px);margin-top:var(--sp-3);align-items:start}
+.whocol{min-width:0}
+.whocol svg{display:block;height:60px;width:auto}
+.whocol .mvh{margin-top:var(--sp-1)}
+.whocol .setup{margin-top:2px}
+.whoslot{display:grid;gap:10px;margin-top:var(--sp-2)}
+.whocol.d .whoslot{margin-top:0}
+.whocol.g,.whocol.m{min-height:25em}
+.qcard{border:0;border-radius:14px;background:var(--faint);color:var(--ink);font:inherit;text-align:left;padding:14px 18px;cursor:pointer;display:grid;gap:6px;transition:background .2s}
+.qcard:hover{background:#dbe7f1}
+.qcard b{font-size:var(--fs-lead);font-weight:600;line-height:1.25}
+.qcard span{font-size:var(--fs-body);color:var(--ink2);line-height:1.4}
+.qcard.on.g,.qcard.on.m{background:var(--accent-soft)}
+.qcard.on.n{background:none;box-shadow:inset 0 0 0 1.5px var(--hair)}
+.qcard.on.n b{color:var(--mute)}
+.who .dotg circle{fill:#cfd4d7}
+.who .dotg circle.f{fill:var(--accent)}
+/* ====== Why both? (tab 7): the two theories as columns, the three I's as rows, one row per click ====== */
+.why{cursor:pointer}
+.whygrid{display:grid;grid-template-columns:minmax(0,.6fr) minmax(0,1fr) minmax(0,1fr);column-gap:clamp(18px,3vw,44px);margin-top:var(--sp-3)}
+.whygrid > div{padding:14px 0;border-bottom:1px solid var(--hair);min-width:0}
+.whygrid > .whyh{border-bottom:1.5px solid var(--ink);padding-top:0}
+.whyh svg{display:block;height:48px;width:auto}
+.whyh .nm{display:block;font-size:var(--fs-body);color:var(--ink2);margin-top:var(--sp-1)}
+.whyh b{display:block;font-size:var(--fs-lead);font-weight:700;color:var(--ink)}
+.whyh .lim{display:block;font-size:var(--fs-body);color:var(--ink2)}
+.whyr b{display:block;font-size:var(--fs-lead);font-weight:700;color:var(--accent)}
+.whyr span{display:block;font-size:var(--fs-body);color:var(--ink2)}
+.whyc{font-size:var(--fs-lead);line-height:1.35}
+.why .off{visibility:hidden}
+.why .s-dt{font-weight:700}.why .s-qt{font-style:italic}.why .s-ct{font-size:.74em;color:var(--mute)}
+.why .answer b{font-weight:700;color:var(--accent)}
+.why .dotg circle{fill:#cfd4d7}.why .dotg circle.f{fill:var(--accent)}
+@media (max-width:900px){.whygrid{grid-template-columns:minmax(0,1fr)}.whygrid > div:empty,.why .off{display:none}.whygrid > .whyc{padding-left:14px}}
+@media (max-width:900px){.whogrid{grid-template-columns:minmax(0,1fr)}.whocol.d{order:-1}.whocol.g,.whocol.m{min-height:0}}
 .rends{display:flex;justify-content:space-between;font-size:var(--fs-small);color:var(--ink2);margin-top:4px}
 @media (max-width:900px){
   .story .sgrid{grid-template-columns:minmax(0,1fr);gap:0}
@@ -731,7 +767,7 @@ html[data-skin="b"] .m-annex{fill:#871a5b!important}
 
 <div class="wrap">
   <header class="bar">
-    <p class="brand">Grade the forecast</p>
+    <p class="brand">One war, two theories</p>
     <span class="course">IR 201, Week 6, November 6, 2026</span>
     <nav class="steps" id="steps" aria-label="Steps"></nav>
     <button class="reset" id="reset" type="button">New class</button>
@@ -764,8 +800,9 @@ const STEPS = [
   {id:"data", label:"Mitchell: the data"},
   {id:"strait", label:"Mitchell: the strait"},
   {id:"claims", label:"Mearsheimer: three claims"},
-  {id:"realism", label:"After the miss"},
-  {id:"debrief", label:"Closing round"}
+  {id:"realism", label:"After a wrong prediction"},
+  {id:"debrief", label:"Which theory?"},
+  {id:"why", label:"Why both?"}
 ];
 
 /* ICOW Data 1.1 (public release, Americas and Western Europe), 143 maritime claim-dyads, 1900 to 2001.
@@ -1457,17 +1494,17 @@ const quote = (q, src) => `<p class="bigq">${q}${src ? `<span>${src}</span>` : "
 
 /* Tab 5 verdicts: our reading. Quotes from resources/W06_primary_sources.md (Kremlin texts read in full) and the reading, p. 85 */
 const VERD = [
-  {v:"miss", lab:"Miss", happened:[`July 12, 2021, Putin's essay: “true sovereignty of Ukraine is possible only in partnership with Russia”.`,
+  {v:"miss", lab:"False", happened:[`July 12, 2021, Putin's essay: “true sovereignty of Ukraine is possible only in partnership with Russia”.`,
       `February 21, 2022, Putin's address: “Ukraine actually never had stable traditions of real statehood.”`,
       `December 17, 2021, Russia's draft agreement with NATO members: “refrain from any further enlargement of NATO, including the accession of Ukraine”.`,
       `February 24, 2022: full-scale invasion. September 30, 2022: Russia claims four Ukrainian regions.`],
-   say:[`A miss by his own test: signs of wider aims did appear, and Russia went for land far beyond Crimea.`,
+   say:[`False by his own test: signs of wider aims did appear, and Russia went for land far beyond Crimea.`,
       `But NATO stayed at the centre of Moscow's stated demands, as his theory expects.`]},
-  {v:"split", lab:"Split", happened:[`Russian forces failed to take Kyiv and pulled back from the north by early April 2022.`,
+  {v:"split", lab:"Partly true", happened:[`Russian forces failed to take Kyiv and pulled back from the north by early April 2022.`,
       `In autumn 2022 Ukraine retook much of the Kharkiv region and the city of Kherson.`,
       `Russia has held large parts of the east and south since 2022.`],
-   say:[`Hit on “easily”: conquest was not easy.`,
-      `Miss on what he expected next: “trying to subdue Ukraine would be like swallowing a porcupine” (p.&nbsp;85), so Putin would not try. He tried.`]},
+   say:[`True on “easily”: conquest was not easy.`,
+      `False on what he expected next: “trying to subdue Ukraine would be like swallowing a porcupine” (p.&nbsp;85), so Putin would not try. He tried.`]},
   {v:"cant", lab:"Can't tell", happened:[`GDP, population, military spending and nuclear weapons tell different stories (the Week 2 dashboard).`],
    say:[`Can't tell. With no measure and no date, no event can grade it.`]}
 ];
@@ -1477,7 +1514,7 @@ function boardHTML(){
 
 const STORIES = {
   claims:{
-    next:`Next: After the miss`,
+    next:`Next: After a wrong prediction`,
     scenes:() => [{q:`Why did the 2014 crisis happen, according to Mearsheimer?`, ev:quote(`“Why the Ukraine Crisis Is the West's Fault”`, `Mearsheimer, Foreign Affairs, 2014`),
         cards:[ul([`Great powers fear rival alliances near their borders.`, `NATO and EU enlargement and Western democracy promotion threatened a core Russian interest in Ukraine.`, `So Russia's response in 2014 was predictable: “Putin and his compatriots have been thinking and acting according to realist dictates” (p.&nbsp;84).`]) +
           `<p class="answer">We judge the explanation, not the blame: what did he expect to happen?</p>`]}]
@@ -1490,15 +1527,15 @@ const STORIES = {
     }
   },
   realism:{
-    next:`Next: Closing round`,
-    scenes:() => CORE.map((x, i) => ({q:`With 2022 eyes: hit or miss?`, ev:quote(`“${esc(CLAIMS[x].q)}”`, `Mearsheimer, ${esc(CLAIMS[x].page)}`),
+    next:`Next: Which theory?`,
+    scenes:() => CORE.map((x, i) => ({q:`With 2022 eyes: true or false?`, ev:quote(`“${esc(CLAIMS[x].q)}”`, `Mearsheimer, ${esc(CLAIMS[x].page)}`),
         cards:[ul(VERD[i].happened), `<p class="answer verdict ${VERD[i].v}">${VERD[i].lab}</p>` + ul(VERD[i].say)]}))
       .concat([
-        {q:`He missed. What did he do next?`,
+        {q:`He was wrong. What did he do next?`,
          ev:quote(`“there is virtually no evidence that he was bent on taking Crimea, much less any other territory in Ukraine”`, `Mearsheimer, 2014, p. 85`) +
             quote(`“I believe Putin was not interested in conquering all of Ukraine and making it part of a greater Russia.”`, `Mearsheimer, interview, Oxford Political Review, January 12, 2023`),
          cards:[ul([`The line moved: in 2014, no plan to take land. In 2023, no plan to take all of Ukraine.`,
-                    `He does not call it a miss: “Today it is quite clear that realism is alive and well” (Der Spiegel, March 7, 2025).`])]},
+                    `He does not say he was wrong: “Today it is quite clear that realism is alive and well” (Der Spiegel, March 7, 2025).`])]},
         {q:`What exactly did he change?`,
          ev:quote(`“None of this is to deny that his aims have clearly expanded since the war began, but that is hardly unusual as wars unfold and circumstances change.”`, `Mearsheimer and Rosato, UnHerd, September 14, 2023`) +
             quote(`“the Western response to the events of 2014 was to double down on the existing strategy and draw Ukraine even closer to NATO.”`, `Mearsheimer, lecture at the European University Institute, June 16, 2022`),
@@ -1518,7 +1555,7 @@ const STORIES = {
                     `And NATO enlargement was at the centre of what Moscow demanded before the war.`])]},
         {q:`So when would we drop realism?`,
          ev:quote(`“don't let go of what you are holding on to unless you have something better to hold on to.”`, `Bueno de Mesquita, 2013, ch. 1, the first principle of wing walking`),
-         cards:[ul([`Not after one miss. Theories “are judged to be false only if the body of contradictory evidence grows large enough.”`,
+         cards:[ul([`Not after one wrong prediction. Theories “are judged to be false only if the body of contradictory evidence grows large enough.”`,
                     `Only when something better explains more.`,
                     `One candidate: narrower theories that answer smaller questions well. That is Mitchell.`])]}
       ]),
@@ -1531,8 +1568,27 @@ const STORIES = {
   }
 };
 
+/* One text hierarchy for the story tabs, applied to every card and quote so no line is styled by hand. */
+const MON = "(?:January|February|March|April|May|June|July|August|September|October|November|December)";
+const DATE_RE = new RegExp(`${MON} \\d{1,2}, (?:19|20)\\d\\d|${MON} (?:19|20)\\d\\d|${MON} \\d{1,2}\\b|\\b(?:19|20)\\d\\d\\b`, "g");
+const CITE_RE = /\((?:[^()]*?)(?:p\.(?:&nbsp;|\s)?\d+|(?:19|20)\d\d|Week \d)[^()]*\)/g;
+const TERM_RE = /auxiliary assumptions|hard core|degenerate|balancing against a threat|wing walking/g;
+function fmtText(t, label){
+  const keep = [];
+  t = t.replace(CITE_RE, m => { keep.push(`<span class="s-ct">${m}</span>`); return `\u0001${String.fromCharCode(97 + keep.length - 1)}\u0001`; });
+  if(label) t = t.replace(/^([^<]{2,64}?):(\s)/, (m, a, b) => a.includes(". ") ? m : `<b class="s-lb">${a}:</b>${b}`);
+  t = t.replace(/“[^”]*”/g, m => `<i class="s-qt">${m}</i>`);
+  t = t.replace(DATE_RE, m => `<b class="s-dt">${m}</b>`);
+  t = t.replace(TERM_RE, m => `<b class="s-tm">${m}</b>`);
+  return t.replace(/\u0001([a-z])\u0001/g, (m, c) => keep[c.charCodeAt(0) - 97]);
+}
+function styleScene(x){
+  const ev = x.ev.replace(/<p class="bigq">(.*?)(?:<span>(.*?)<\/span>)?<\/p>/gs, (m, main, src) =>
+    `<p class="bigq${main.startsWith("“") ? " isq" : ""}">${fmtText(main, true)}${src ? `<span>${src.replace(DATE_RE, d => `<b class="s-dt">${d}</b>`)}</span>` : ""}</p>`);
+  return {q:x.q, ev, cards:x.cards.map(c => c.replace(/<li>(.*?)<\/li>/gs, (m, t) => `<li>${fmtText(t, true)}</li>`))};
+}
 function screenStory(id){
-  const st = STORIES[id], sc = st.scenes();
+  const st = STORIES[id], sc = st.scenes().map(styleScene);
   const steps = sc.map((x, i) => `<div class="sstep run" data-sx="${i}" data-k="0"></div>` + x.cards.map((c, j) => `<div class="sstep" data-sx="${i}" data-k="${j + 1}">${c}</div>`).join("")).join("");
   return `<section class="enter beat story">
     <div class="sgrid">
@@ -1595,104 +1651,108 @@ function storyFrame(){
 window.addEventListener("scroll", () => { if(storyRaf === null && document.querySelector("#main .story")) storyRaf = requestAnimationFrame(storyFrame); }, {passive:true});
 window.addEventListener("resize", () => { if(storyRaf === null && document.querySelector("#main .story")) storyRaf = requestAnimationFrame(storyFrame); });
 function mountStory(id){
-  storyId = id; storyCur = -1; storyAct = -1; storyScenes = STORIES[id].scenes();
+  storyId = id; storyCur = -1; storyAct = -1; storyGoal = -1; storyScenes = STORIES[id].scenes().map(styleScene);
   clearTimeout(sceneT); sceneT = null;
   const stg = document.querySelector("#main .sstage"); if(stg) stg.classList.remove("swapping");
   storyShow(document.querySelector("#main .sstep[data-sx]"));
   storyFrame();
 }
+let storyGoal = -1, storyGoalT = 0;
 function storyMove(dir){
   const steps = [...document.querySelectorAll("#main .sstep")];
   const line = storyLine();
   let cur = -1; steps.forEach((s, j) => { if(s.getBoundingClientRect().top <= line + 2) cur = j; });
+  /* a second click while the page is still gliding counts from the card it is gliding to */
+  if(storyGoal >= 0 && Date.now() - storyGoalT < 900) cur = storyGoal;
   const nx = cur + dir;
   if(nx < 0){ go(S.step - 1); return; }
-  if(nx >= steps.length){ if(S.step < STEPS.length - 1) go(S.step + 1); return; }
+  if(nx >= steps.length || (dir > 0 && steps[nx].classList.contains("send"))){ if(S.step < STEPS.length - 1) go(S.step + 1); return; }
+  storyGoal = nx; storyGoalT = Date.now();
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const wide = window.matchMedia("(min-width:901px)").matches;
   steps[nx].scrollIntoView({block: wide ? "start" : "center", behavior: reduce ? "auto" : "smooth"});
 }
 
-/* ---------- Closing round (tab 6): three quick rounds, one item per screen. The room calls the answer, the teacher taps it,
-   the page shows right or wrong and why. Round 1 tests O1, round 2 O2, round 3 O3, each on new material.
-   Rubric (got it / partly / not yet) lives in the week's plan file W06_plan.md. ---------- */
-const ROUNDS = [
-  {t:`What kind of claim is this?`, short:`Kind of claim`, opts:[`Probabilistic`, `Conditional: if X, then Y`, `Not testable as written`]},
-  {t:`Did Mearsheimer's realism see this coming?`, short:`Hit or miss`, opts:[`Expected`, `Not expected`]},
-  {t:`Who can answer this question?`, short:`Who can answer`, opts:[`Grand theory`, `Mid-range theory`, `Neither`]}
+/* ---------- Which theory? (tab 6): one screen. The room says which theory can answer the question, the teacher clicks
+   the card, and it moves to that theory with one line of reason (or stays in the middle: neither).
+   Arrow right reveals the next card in order, arrow left takes the last one back. ---------- */
+const WHO = [
+  {q:`Why did Russia want Crimea?`, to:"g", why:`One great power's aims and fears.`},
+  {q:`Do sea disputes that also involve land turn violent more often?`, to:"m", why:`38% against 24% in the data, counting the disputes that stayed peaceful.`},
+  {q:`Will Russia and Ukraine clash in the Kerch Strait next year?`, to:"n", why:`Both theories give risks and tendencies, not dates.`},
+  {q:`Why did Ukraine's alliances matter so much to Moscow?`, to:"g", why:`Great powers fear rival alliances near their borders.`},
+  {q:`Are disputes with a history of force more likely to turn violent again?`, to:"m", why:`Part of Mitchell's mechanism, checked across hundreds of claims.`},
+  {q:`Who is most to blame for the crisis?`, to:"n", why:`A question about blame. No event can settle it.`}
 ];
-const FINAL = [
-  {r:0, ev:() => quote(`“${esc(CLAIMS[2].q)}”`, `Mearsheimer, 2014, p. 86, on sanctions`), ans:`Probabilistic`,
-   say:[`“Probably”: one case cannot settle it.`, `Proved wrong by: many great powers under harsh sanctions over a core interest, most of them changing course.`]},
-  {r:0, ev:() => quote(`“${esc(CLAIMS[4].q)}”`, `Mearsheimer, 2014, p. 89`), ans:`Conditional: if X, then Y`,
-   say:[`“Current U.S. policy” is the X: if Washington keeps it, Moscow and Beijing grow closer (Y).`, `Proved wrong by: the policy continues and the two drift apart, or grow closer for reasons that have nothing to do with U.S. policy.`]},
-  {r:0, ev:() => quote(`“${esc(CLAIMS[5].q)}”`, `Mearsheimer, 2014, p. 89, on the West's choices`), ans:`Conditional: if X, then Y`,
-   say:[`If the West keeps its policy (X), hostility grows and Ukraine is devastated (Y).`, `Proved wrong by: X happens and Y does not.`]},
-  {r:1, ev:() => quote(`Finland and Sweden join NATO`, `April 4, 2023 and March 7, 2024`), ans:`Expected`,
-   say:[`A realist (Walt) would expect it: balancing against a threat (Week 3).`, `Mearsheimer himself does not read it that way. He says Europe overrates the threat from Russia.`]},
-  {r:1, ev:() => quote(`Russia and China declare a friendship with “no limits”`, `February 4, 2022`), ans:`Expected`,
-   say:[`He wrote that U.S. policy “is only driving Moscow and Beijing closer together” (p.&nbsp;89).`]},
-  {r:1, ev:() => quote(`Russia launches a full-scale invasion of Ukraine`, `February 24, 2022`), ans:`Not expected`,
-   say:[`He saw no sign that Putin wanted more land, and wrote that subduing Ukraine “would be like swallowing a porcupine” (p.&nbsp;85).`]},
-  {r:1, ev:() => quote(`Harsh Western sanctions, and much of Russia's central bank reserves abroad frozen`, `From February 2022`), ans:`Not expected`,
-   say:[`“Harsh sanctions are likely off the table anyway” (p.&nbsp;86).`]},
-  {r:2, ev:() => quote(`Why did Russia want Crimea?`, ``), ans:`Grand theory`,
-   say:[`A question about one great power's aims and fears: Mearsheimer's kind of question.`]},
-  {r:2, ev:() => quote(`Do sea disputes that also involve land turn violent more often?`, ``), ans:`Mid-range theory`,
-   say:[`Mitchell's question: 38% against 24%, counting the disputes that stayed peaceful.`]},
-  {r:2, ev:() => quote(`Are disputes with a history of force more likely to turn violent again?`, ``), ans:`Mid-range theory`,
-   say:[`Part of Mitchell's mechanism, and testable across hundreds of claims.`]},
-  {r:2, ev:() => quote(`Will Russia and Ukraine clash in the Kerch Strait next year?`, ``), ans:`Neither`,
-   say:[`Both theories give risks and tendencies, not dated forecasts.`]},
-  /* index 11, shown in round 1 (see FSEQ); appended so stored taps keep their indices */
-  {r:0, ev:() => quote(`“the United States and its European allies share most of the responsibility for the crisis.”`, `Mearsheimer, 2014, p. 77`), ans:`Not testable as written`,
-   say:[`A claim about blame: no event can show who is “most” responsible.`, `What can be tested is the cause inside it: did NATO enlargement drive Russia's moves? That is the explanation we graded earlier: judge the explanation, not the blame.`]}
-];
-/* Beat order: round 1 items, round 2 items, round 2 verdict (two beats), round 3 items, the table */
-const FSEQ = [0, 1, 11, 2, 3, 4, 5, 6, "rec", "rec2", 7, 8, 9, 10, "table"];
-BEATS.debrief = FSEQ.length;
-function fpick(i){ return (S.fp || {})[i]; }
-function roundOf(x){ return typeof x === "number" ? FINAL[x].r : x === "table" ? 2 : 1; }
-function finalProgress(b){
-  const cur = roundOf(FSEQ[b]);
-  return `<nav class="fprog" aria-label="Rounds">${ROUNDS.map((R, r) => {
-    const items = FINAL.map((f, i) => [f, i]).filter(([f]) => f.r === r);
-    const done = items.filter(([, i]) => fpick(i) !== undefined), right = done.filter(([f, i]) => fpick(i) === f.ans).length;
-    const dots = FSEQ.map((x, j) => [x, j]).filter(([x]) => roundOf(x) === r).map(([x, j]) => {
-      const st = typeof x === "number" && fpick(x) !== undefined ? (fpick(x) === FINAL[x].ans ? "ok" : "no") : "";
-      return `<button type="button" class="fdot ${st}" data-beatto="${j}" aria-current="${j === b}" aria-label="${esc(R.short)}, screen ${j + 1}"></button>`; }).join("");
-    return `<div class="fseg ${r === cur ? "on" : ""}"><span class="fsl">${esc(R.short)}${done.length === items.length ? ` <b>${right}/${items.length}</b>` : ""}</span><span class="fdots">${dots}</span></div>`;
-  }).join("")}</nav>`;
+BEATS.debrief = 1;
+let whoAnim = false;
+function whoCard(i){
+  const w = WHO[i], on = (S.wh || []).includes(i);
+  return `<button type="button" class="qcard ${on ? "on " + w.to : ""}" data-wh="${i}" aria-pressed="${on}"><b>${esc(w.q)}</b>${on ? `<span>${w.to === "n" ? "Neither theory. " : ""}${esc(w.why)}</span>` : ""}</button>`;
 }
-function finalNav(b){
-  const n = FSEQ.length;
-  return `<div class="bnav"><div></div><div class="bbtns">${b > 0 ? `<button type="button" class="tbtn" data-beat="prev">← Back</button>` : ""}${b < n - 1 ? `<button type="button" class="nbtn" data-beat="next">Next →</button>` : ""}</div></div>`;
+function whoToggle(i){
+  const first = {}; document.querySelectorAll("#main .qcard").forEach(c => { first[c.dataset.wh] = c.getBoundingClientRect(); });
+  S.wh = S.wh || []; const k = S.wh.indexOf(i); if(k >= 0) S.wh.splice(k, 1); else S.wh.push(i);
+  save(); whoAnim = true; render(); whoAnim = false;
+  if(reduceMotion()) return;
+  document.querySelectorAll("#main .qcard").forEach(c => { const a = first[c.dataset.wh], b = c.getBoundingClientRect(); if(!a || !c.animate) return;
+    const dx = a.left - b.left, dy = a.top - b.top; if(Math.abs(dx) + Math.abs(dy) < 1) return;
+    c.animate([{transform:`translate(${dx}px,${dy}px)`}, {transform:"none"}], {duration:480, easing:"cubic-bezier(.2,.7,.2,1)"}); });
 }
 function screenDebrief(){
-  const b = Math.min(beatOf("debrief"), FSEQ.length - 1), x = FSEQ[b];
-  let body = "";
-  if(typeof x === "number"){
-    const f = FINAL[x], R = ROUNDS[f.r], p = fpick(x);
-    const opts = R.opts.map((o, k) => {
-      const cls = p === undefined ? "" : o === f.ans ? (p === o ? "right" : "ans") : p === o ? "wrong" : "dim";
-      return `<button type="button" class="fpick ${cls}" data-fp="${x}|${k}"><span class="fk">${k + 1}</span>${esc(o)}</button>`; }).join("");
-    body = `<h2 class="q">${R.t}</h2>${f.ev()}
-      <div class="fpicks">${opts}</div>
-      <div class="fans">${p !== undefined ? `<p class="answer verdict ${p === f.ans ? "okv" : "miss"}">${p === f.ans ? "Right" : "Not quite"}: ${esc(f.ans)}</p>${ul(f.say)}` : ""}</div>`;
-  } else if(x === "rec" || x === "rec2"){
-    const rows = FINAL.map((f, i) => [f, i]).filter(([f]) => f.r === 1).map(([f, i]) => {
-      const t = f.ev().match(/<p class="bigq">(.*?)<span>/)[1];
-      return `<div class="sbr fr"><span>${t}</span><b class="vd on ${f.ans === "Expected" ? "okv" : "miss"}">${f.ans === "Expected" ? "Hit" : "Miss"}</b></div>`; }).join("");
-    body = `<h2 class="q">Two hits, two misses. Keep realism?</h2>
-      <div class="sboard">${rows}</div>
-      ${x === "rec2" ? ul([`Keep the core: it still explains the balancing and the Moscow and Beijing turn.`,
-          `Adjust a side assumption, as Mearsheimer did on Putin's aims, if the change predicts something new we can check.`,
-          `Drop it only when something better explains more (wing walking).`]) : ""}`;
-  } else {
-    body = `<h2 class="q">Grand and mid-range theory</h2>${compareTable().replace(`class="gtab"`, `class="gtab all"`)}
-      <p class="answer">Next week: if both sides prefer a deal to a war, why do wars happen? (Lake 2010)</p>`;
-  }
-  return `<section class="enter beat final">${finalProgress(b)}${body}${finalNav(b)}</section>`;
+  const wh = S.wh || [];
+  const col = k => wh.filter(i => WHO[i].to === k).map(whoCard).join("");
+  const deck = WHO.map((w, i) => i).filter(i => !wh.includes(i) || WHO[i].to === "n").map(whoCard).join("");
+  let dots = ""; for(let r = 0; r < 4; r++) for(let c = 0; c < 9; c++) dots += `<circle cx="${7 + c * 15}" cy="${7 + r * 15}" r="5" class="${(r * 9 + c) % 3 === 0 ? "f" : ""}"/>`;
+  return `<section class="${whoAnim ? "" : "enter "}beat who">
+    <h2 class="q">Which theory can answer this?</h2>
+    <div class="whogrid">
+      <div class="whocol g"><svg viewBox="0 0 134 60" aria-hidden="true"><circle cx="30" cy="30" r="29" fill="var(--accent)"/></svg>
+        <p class="mvh">Grand theory</p><p class="setup">Mearsheimer: one explanation for all great powers</p><div class="whoslot">${col("g")}</div></div>
+      <div class="whocol d"><div class="whoslot">${deck}</div></div>
+      <div class="whocol m"><svg class="dotg" viewBox="0 0 134 60" aria-hidden="true">${dots}</svg>
+        <p class="mvh">Mid-range theory</p><p class="setup">Mitchell: a narrower question, checked on many disputes</p><div class="whoslot">${col("m")}</div></div>
+    </div>
+    <details class="lm"><summary>Compare the two theories</summary>${compareTable().replace(`class="gtab"`, `class="gtab all"`)}</details>
+  </section>`;
+}
+
+/* ---------- Why both? (tab 7): what each kind of theory is for, and how interests, interactions and institutions
+   (FLS ch. 2, lecture 6) run through both. A click on the page, or arrow right, shows the next row. Cell texts reuse
+   lines already checked against the readings (reviews/W06_factcheck_C_readings.md, rows M10, M13, M14, 13). ---------- */
+const WHY = [
+  {k:`Interests`, sub:`What do the actors want?`,
+   g:`Russia: security, a buffer state. The West: democracy and the rule of law.`,
+   m:`Both claim the same sea and land. Russia also speaks for Russians in Ukraine.`},
+  {k:`Interactions`, sub:`How do their choices meet?`,
+   g:`The West moves east and Russia pushes back: “Putin is playing hardball” (p.&nbsp;82).`,
+   m:`Force was used in 2005, 2008 and 2018. Past force makes new force more likely.`},
+  {k:`Institutions`, sub:`Which rules shape them?`,
+   g:`NATO and the EU, read in Moscow as threats, not as neutral rules.`,
+   m:`A 1997 treaty set the borders, but left the line in the Sea of Azov open.`}
+];
+BEATS.why = WHY.length + 2;
+let whyLast = -1;
+function screenWhy(){
+  const b = Math.min(beatOf("why"), BEATS.why - 1), fresh = whyLast < 0, isNew = n => (!fresh && b === n && whyLast < n ? " enter" : "");
+  whyLast = b;
+  let dots = ""; for(let r = 0; r < 4; r++) for(let c = 0; c < 9; c++) dots += `<circle cx="${5 + c * 12}" cy="${6 + r * 12}" r="4" class="${(r * 9 + c) % 3 === 0 ? "f" : ""}"/>`;
+  const rows = WHY.map((w, i) => { const cls = (b > i ? "" : " off") + isNew(i + 1);
+    return `<div class="whyr${cls}"><b>${esc(w.k)}</b><span>${esc(w.sub)}</span></div><div class="whyc${cls}">${fmtText(w.g, false)}</div><div class="whyc${cls}">${fmtText(w.m, false)}</div>`; }).join("");
+  const end = BEATS.why - 1;
+  return `<section class="${fresh ? "enter " : ""}beat why">
+    <h2 class="q">Why do we need both?</h2>
+    <div class="whygrid">
+      <div class="whyh"></div>
+      <div class="whyh"><svg viewBox="0 0 108 48" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="var(--accent)"/></svg>
+        <span class="nm">Grand theory, Mearsheimer</span><b>Shows where to look</b><span class="lim">Too broad to test on its own</span></div>
+      <div class="whyh"><svg class="dotg" viewBox="0 0 108 48" aria-hidden="true">${dots}</svg>
+        <span class="nm">Mid-range theory, Mitchell</span><b>Shows if we are right</b><span class="lim">Too narrow to explain the big why</span></div>
+      ${rows}
+    </div>
+    <p class="answer${b >= end ? "" : " off"}${isNew(end)}"><b>Interests, interactions and institutions</b> are the questions every theory has to answer. Grand theory answers them with one big story. Mid-range theory answers them for one kind of dispute, then tests the answer.</p>
+    <p class="note${b >= end ? "" : " off"}">Frieden, Lake and Schultz, ch. 2. Lake (2013).</p>
+  </section>`;
 }
 
 /* ---------- Comparison table (closing round) ---------- */
@@ -1705,7 +1765,8 @@ function compareTable(){
 function render(){
   nav();
   const id = STEPS[S.step].id;
-  const html = id === "start" ? screenStart() : id === "data" ? screenData() : id === "strait" ? screenStrait() : id === "claims" ? screenClaims() : id === "realism" ? screenRealism() : screenDebrief();
+  const html = id === "start" ? screenStart() : id === "data" ? screenData() : id === "strait" ? screenStrait() : id === "claims" ? screenClaims() : id === "realism" ? screenRealism() : id === "why" ? screenWhy() : screenDebrief();
+  if(id !== "why") whyLast = -1;
   if(storyObs){ storyObs.disconnect(); storyObs = null; }
   $("#main").innerHTML = html;
   if(id === "claims" || id === "realism") mountStory(id);
@@ -1719,6 +1780,8 @@ function render(){
 
 /* ---------- Events ---------- */
 $("#main").addEventListener("click", e => {
+  if(e.target.closest(".story") && !e.target.closest("button, a, summary")){ if(!String(window.getSelection())) storyMove(1); return; }
+  if(e.target.closest(".why") && !e.target.closest("button, a, summary")){ const b = beatOf("why"); if(b < BEATS.why - 1 && !String(window.getSelection())){ S.bt.why = b + 1; save(); render(); } return; }
   const t = e.target.closest("button");
   if(!t) return;
   const d = t.dataset;
@@ -1729,7 +1792,7 @@ $("#main").addEventListener("click", e => {
     if(d.beat === "next"){ if(b < n - 1) S.bt[id] = b + 1; else { save(); go(S.step + 1); return; } } else S.bt[id] = Math.max(0, b - 1);
     save(); render(); window.scrollTo({top:0}); return; }
   if(d.goto){ go(S.step + 1); return; }
-  if(d.fp){ const [i, k] = d.fp.split("|").map(Number); const o = ROUNDS[FINAL[i].r].opts[k]; S.fp = S.fp || {}; S.fp[i] = S.fp[i] === o ? undefined : o; save(); render(); return; }
+  if(d.wh !== undefined){ whoToggle(+d.wh); return; }
   if(d.beatto !== undefined){ S.bt = S.bt || {}; S.bt[STEPS[S.step].id] = +d.beatto; save(); render(); return; }
   if(d.mv !== undefined){ S.mv = +d.mv; save(); render(); return; }
   if(d.pickv){ const [k, v] = d.pickv.split("|"); S.r = S.r || {}; S.r[k] = S.r[k] === v ? null : v; save(); render(); return; }
@@ -1765,10 +1828,12 @@ document.addEventListener("keydown", e => {
   if(e.altKey || e.ctrlKey || e.metaKey) return;
   if(e.target.closest && e.target.closest("input, textarea, select")) return;
   const id = STEPS[S.step].id;
-  if(id === "debrief" && /^[1-4]$/.test(e.key)){ const x = FSEQ[Math.min(beatOf("debrief"), FSEQ.length - 1)];
-    if(typeof x === "number" && +e.key <= ROUNDS[FINAL[x].r].opts.length){ S.fp = S.fp || {}; S.fp[x] = ROUNDS[FINAL[x].r].opts[+e.key - 1]; save(); render(); } return; }
+  if(id === "debrief"){ const wh = S.wh || [];
+    if(e.key === "ArrowRight" || e.key === "PageDown" || (e.key === " " && !e.target.closest("button"))){ e.preventDefault(); const nx = WHO.findIndex((w, i) => !wh.includes(i)); if(nx >= 0) whoToggle(nx); else go(S.step + 1); return; }
+    if(e.key === "ArrowLeft" || e.key === "PageUp"){ e.preventDefault(); if(wh.length) whoToggle(wh[wh.length - 1]); else go(S.step - 1); return; }
+  }
   if(id === "claims" || id === "realism"){
-    if(e.key === "ArrowRight" || e.key === "PageDown" || e.key === "ArrowDown"){ e.preventDefault(); storyMove(1); return; }
+    if(e.key === "ArrowRight" || e.key === "PageDown" || e.key === "ArrowDown" || (e.key === " " && !e.target.closest("button"))){ e.preventDefault(); storyMove(1); return; }
     if(e.key === "ArrowLeft" || e.key === "PageUp" || e.key === "ArrowUp"){ e.preventDefault(); storyMove(-1); return; }
   }
   const nb = BEATS[id] || 1, cb = (S.bt && S.bt[id]) || 0;

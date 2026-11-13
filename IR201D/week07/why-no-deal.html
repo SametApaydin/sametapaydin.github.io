@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Iraq 2003: Why No Deal?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --paper:#ffffff; --ink:#222222; --ink2:#414042; --mute:#707071; --hair:#d0d2d3; --faint:#f0f1f2;
+  --accent:#206095; --accent-soft:#e8f1f8; --us:#206095; --iraq:#a05a2c; --war:#f66068; --ok:#118c7b; --bad:#d0353f;
+  --font:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --fs-q:clamp(30px,4.4vh,44px); --fs-lead:clamp(20px,2.6vh,25px); --fs-body:18px; --fs-small:14px;
+  --sp-1:8px; --sp-2:16px; --sp-3:28px; --sp-4:52px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--paper)}
+body{margin:0;color:var(--ink);font-family:var(--font);font-size:var(--fs-body);line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.wrap{max-width:84rem;margin:0 auto;padding:14px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px));min-height:100vh;display:flex;flex-direction:column}
+
+/* Header */
+.bar{display:flex;align-items:baseline;gap:8px 28px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:clamp(20px,2.6vh,26px);letter-spacing:-.01em;margin:0}
+.steps{order:3;flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0;padding:6px;background:var(--faint);border-radius:16px}
+.steps button{flex:1 1 auto;border:0;border-radius:11px;padding:10px 14px;background:#fff;color:var(--ink2);cursor:pointer;font-size:15px;font-weight:600;white-space:nowrap;box-shadow:0 0 0 1px var(--hair);transition:background .2s,color .2s}
+.steps button:hover{background:var(--accent-soft)}
+.steps button[aria-current="step"]{background:var(--accent);color:#fff;font-weight:700;box-shadow:none}
+.steps .n{font-size:12px;opacity:.65;margin-right:6px}
+.reset{border:0;background:none;cursor:pointer;font-size:13px;color:var(--mute);text-decoration:underline;text-underline-offset:3px;margin-left:auto}
+@media (max-width:560px){.steps button{font-size:14px;padding:8px 10px}}
+
+main{flex:1;padding-top:clamp(14px,3vh,30px)}
+.screen{display:none}
+.screen.cur{display:block;animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:.001;transform:translateY(8px)}to{opacity:1;transform:none}}
+[data-b]{opacity:0;transition:opacity .45s ease}
+[data-b].on{opacity:1}
+[data-only]{display:none}
+[data-only].on{display:block;animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Text system */
+p{margin:0}
+.q{font-size:var(--fs-q);font-weight:700;line-height:1.12;letter-spacing:-.02em;margin:0}
+.q2{margin-top:var(--sp-4)}
+.ev{font-size:var(--fs-lead);font-weight:600;line-height:1.3;margin-top:var(--sp-3);background:#f5f2ed;box-shadow:inset 5px 0 0 #b8ab97;border-radius:12px;padding:14px 20px 14px 24px}
+.ev span{display:block;font-size:var(--fs-small);font-weight:400;color:var(--ink2);margin-top:6px}
+.answer{font-size:var(--fs-lead);font-weight:400;line-height:1.4;margin-top:var(--sp-3);background:var(--accent-soft);box-shadow:inset 5px 0 0 var(--accent);border-radius:12px;padding:14px 20px 14px 24px}
+.answer:empty{background:none;box-shadow:none;padding:0}
+.answer b{font-weight:700}
+.note{font-size:var(--fs-small);color:var(--ink2);margin-top:var(--sp-2)}
+.term{display:inline-block;font-size:var(--fs-small);color:var(--ink2);margin-top:var(--sp-1)}
+
+/* Footer nav */
+.nav{display:flex;align-items:center;gap:14px;justify-content:flex-end;margin-top:var(--sp-3);border-top:1px solid var(--hair);padding-top:12px}
+.dots{display:flex;gap:6px;margin-right:auto}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--hair)}
+.dot.on{background:var(--accent)}
+.nbtn{border:0;border-radius:999px;background:var(--accent);color:#fff;font-weight:600;padding:10px 20px;cursor:pointer}
+.nbtn:hover{background:#174b75}
+.pbtn{border:0;background:none;color:var(--mute);cursor:pointer;padding:10px 6px}
+
+/* Charts */
+svg text{font-family:var(--font)}
+.fig{margin-top:var(--sp-3)}
+.fig svg{display:block;width:100%;height:auto}
+.lab{font-size:16px;fill:var(--ink2)}
+.lab.b{font-weight:700;fill:var(--ink)}
+.lab.s{font-size:14px}
+.lab.us{fill:var(--us)} .lab.iq{fill:var(--iraq)} .lab.w{fill:#c0323a}
+.axis{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.band{fill:#e3f3f0;stroke:var(--ok);stroke-width:1.5}
+.lab.deal{fill:#0d7366}
+.brk{fill:none;stroke-width:2.5}
+.brk.us{stroke:var(--us)} .brk.iq{stroke:var(--iraq)}
+.wtick{stroke:var(--war);stroke-width:3}
+.wdot{fill:var(--war)}
+.side circle.iq{fill:var(--iraq)} .side circle.us{fill:var(--us)}
+.side text{fill:#fff;font-weight:700}
+.share{transform-box:fill-box;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.share.us{fill:var(--us);transform-origin:left center} .share.iq{fill:var(--iraq);transform-origin:right center}
+.band.gone{fill:none;stroke:var(--mute);stroke-dasharray:7 6}
+.sl{font-weight:600;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.ghost{stroke:var(--mute);stroke-width:2;stroke-dasharray:5 5}
+.mv{transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+
+/* Screen 1: the bill */
+.bill{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--sp-3);margin-top:var(--sp-3)}
+.money .row{display:grid;grid-template-columns:12rem minmax(0,1fr);gap:14px;align-items:center;margin-top:12px}
+.money .k{font-weight:600}
+.money .k span{display:block;font-weight:400;font-size:var(--fs-small);color:var(--ink2)}
+.track{height:34px;position:relative}
+.fill{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--us);width:0;transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.fill.exp{background:var(--mute)}
+.fill + .val{position:absolute;top:50%;transform:translateY(-50%);font-weight:700;font-size:var(--fs-lead);white-space:nowrap}
+.dead{display:grid;grid-template-columns:12rem minmax(0,1fr);gap:14px;align-items:start}
+.dead .k{font-weight:600}
+.dead .k span{display:block;font-weight:400;font-size:var(--fs-small);color:var(--ink2)}
+.icons{display:flex;flex-wrap:wrap;gap:3px}
+.icons i{width:10px;height:10px;border-radius:50%;background:var(--iraq)}
+.icons i.lt{background:none;box-shadow:inset 0 0 0 1.5px var(--iraq);opacity:.7}
+.icons i.us{background:var(--us)}
+.icons i.half{background:linear-gradient(90deg,var(--us) 50%,transparent 50%);box-shadow:inset 0 0 0 1.5px var(--us)}
+.key{font-size:var(--fs-small);color:var(--ink2);margin-top:6px}
+
+/* The idea: parts that slide when a reason is picked */
+.imv{transition:opacity .45s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.unsure{stroke-dasharray:7 6}
+
+/* Slider */
+.slide{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;margin:var(--sp-2) auto 0;max-width:44rem}
+.slide span{font-weight:600}
+input[type=range]{width:100%;accent-color:var(--accent);height:28px}
+
+/* Two columns */
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,4vw,64px);margin-top:var(--sp-3)}
+.col h3{font-size:var(--fs-lead);font-weight:700;margin:0 0 var(--sp-2)}
+.col.us h3{color:var(--us)} .col.iq h3{color:var(--iraq)}
+.sig{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:center;margin-top:12px;font-size:var(--fs-lead)}
+.sig svg{width:44px;height:44px}
+
+/* Missing cheer: four tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:var(--sp-3)}
+.tile{border:0;border-radius:14px;background:var(--faint);padding:14px 16px;text-align:left;cursor:pointer;display:grid;gap:6px;align-content:start}
+.tile svg{width:46px;height:46px}
+.tile b{font-size:var(--fs-lead);line-height:1.2}
+.tile[aria-current="true"]{background:var(--ink);color:#fff}
+.tile[aria-current="true"] svg *{stroke:#fff}
+.tile.seen:not([aria-current="true"]){box-shadow:inset 0 0 0 2px var(--hair)}
+.panel{margin-top:var(--sp-3)}
+
+/* Audiences hub */
+.hub{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:center}
+.pills{display:flex;flex-wrap:wrap;gap:10px}
+.pill{border:0;border-radius:999px;background:var(--faint);padding:12px 22px;font-weight:700;font-size:var(--fs-lead);cursor:pointer;box-shadow:inset 0 0 0 2px var(--hair)}
+.pill:hover{background:#e6e8ea}
+.pill[aria-pressed="true"]{background:var(--ink);color:#fff;box-shadow:none}
+.pill.right{background:var(--ok);color:#fff;box-shadow:none}
+.pill.wrong{background:var(--bad);color:#fff;box-shadow:none}
+.pill.correct{box-shadow:inset 0 0 0 3px var(--ok)}
+.pill .n{font-weight:500;opacity:.6;margin-right:6px}
+.aud circle.nd{fill:var(--faint);stroke:var(--hair);stroke-width:2;transition:fill .3s,stroke .3s}
+.aud .nd.ok{fill:#e3f3f0;stroke:var(--ok)}
+.aud .nd.bad{fill:#fde6e7;stroke:var(--bad)}
+.aud line{stroke:var(--hair);stroke-width:3}
+.aud .mk{font-size:30px;font-weight:700}
+.aud .mk.ok{fill:var(--ok)} .aud .mk.bad{fill:var(--bad)}
+
+/* Timeline */
+.tl .war{fill:var(--war)} .tl .peace{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+
+/* Mirrors */
+.mirror{border-radius:14px;background:var(--faint);padding:20px 22px}
+.mirror .who{font-weight:700;font-size:var(--fs-small);color:var(--ink2);text-transform:none}
+.mirror .ev{margin-top:8px;background:none;box-shadow:none;padding:0;border-radius:0}
+
+/* Ruler */
+.ruler{display:grid;grid-template-columns:calc(75% - 3px) minmax(0,1fr);gap:12px;margin-top:calc(-1 * var(--sp-2))}
+.ruler > div{border-top:5px solid var(--accent);padding-top:10px}
+.ruler > div.sev{border-top-color:var(--war)}
+.ruler b{font-size:var(--fs-lead)}
+
+/* Closing round */
+.round{display:flex;gap:6px;margin-top:var(--sp-2)}
+.round i{width:12px;height:12px;border-radius:50%;background:var(--hair)}
+.round i.cur{box-shadow:0 0 0 2px var(--ink) inset;background:#fff}
+.round i.ok{background:var(--ok)} .round i.bad{background:var(--bad)}
+.item .ev{font-size:clamp(24px,3.4vh,32px);min-height:2.6em;background:none;box-shadow:none;padding:0;border-radius:0}
+.item .pills{margin-top:var(--sp-3)}
+.verdict{margin-top:var(--sp-3);font-size:var(--fs-lead);min-height:2.8em}
+.verdict b.ok{color:var(--ok)} .verdict b.bad{color:var(--bad)}
+.score{font-size:clamp(60px,12vh,120px);font-weight:700;letter-spacing:-.03em;margin-top:var(--sp-3)}
+
+/* Cheers */
+.cheers{display:flex;gap:clamp(16px,4vw,48px);margin-top:var(--sp-4)}
+.cheers svg{width:clamp(90px,14vw,160px);height:auto}
+
+@media (max-width:860px){
+  .two,.hub{grid-template-columns:minmax(0,1fr)}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .money .row,.dead{grid-template-columns:minmax(0,1fr)}
+  .ruler{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <p class="brand">Iraq 2003: why no deal?</p>
+    <nav class="steps" id="steps" aria-label="Screens"></nav>
+    <button class="reset" id="reset" type="button">New class</button>
+  </header>
+
+  <main>
+    <!-- 1. The idea (added November 13, 2026): bargaining theory in plain questions. Layout follows FLS ch. 3, pp. 102 to 105 (A's share is the part of the line left of the dividing mark), as in the lecture slides -->
+    <section class="screen" data-name="The idea" data-beats="5">
+      <h1 class="q">
+        <span data-only="0">Two states want the same thing. Who gets what?</span>
+        <span data-only="1">If they fight, who wins?</span>
+        <span data-only="2">What does fighting cost them?</span>
+        <span data-only="3">So is there a deal both prefer to war?</span>
+        <span data-only="4">Then why do wars happen?</span>
+      </h1>
+      <div class="fig">
+        <svg viewBox="0 90 1000 184" role="img" aria-label="Bargaining line between state A and state B: the war outcome, each side's cost of fighting, and the range of deals both prefer to war">
+          <g id="ideaGhost" opacity="0" style="transition:opacity .4s">
+            <line class="ghost" x1="600" y1="124" x2="600" y2="184"/>
+            <text class="lab s" x="600" y="112" text-anchor="middle">War outcome today</text>
+          </g>
+          <g data-b="3" class="imv">
+            <rect class="band" id="ideaBand" x="450" y="156" width="300" height="28" rx="4"/>
+            <text class="lab b deal" id="ideaBandL" x="600" y="112" text-anchor="middle">Bargaining range</text>
+          </g>
+          <g data-b="2" class="imv">
+            <path class="brk us" d="M450 228 v10 h150 v-10"/>
+            <text class="lab us" x="525" y="262" text-anchor="middle">A's cost of war</text>
+            <path class="brk iq" id="ideaBrkB" d="M600 228 v10 h150 v-10"/>
+            <text class="lab iq" id="ideaLabB" x="675" y="262" text-anchor="middle">B's cost of war</text>
+          </g>
+          <line class="axis" x1="80" y1="170" x2="920" y2="170"/>
+          <g class="side"><circle class="us" cx="44" cy="170" r="30"/><text x="44" y="180" text-anchor="middle" font-size="28">A</text></g>
+          <g class="side"><circle class="iq" cx="956" cy="170" r="30"/><text x="956" y="180" text-anchor="middle" font-size="28">B</text></g>
+          <g>
+            <rect class="share us" id="shareA" x="80" y="165" width="520" height="10"/>
+            <rect class="share iq" id="shareB" x="600" y="165" width="320" height="10"/>
+            <text class="lab us sl" id="shareAL" x="340" y="204" text-anchor="middle">A's share</text>
+            <text class="lab iq sl" id="shareBL" x="760" y="204" text-anchor="middle">B's share</text>
+          </g>
+          <g id="ideaDeal" style="transition:opacity .4s">
+            <line x1="500" y1="146" x2="500" y2="194" stroke="var(--ink)" stroke-width="2.5" stroke-dasharray="4 4"/>
+            <text class="lab b" x="500" y="134" text-anchor="middle">One possible deal</text>
+          </g>
+          <g data-b="1" class="imv">
+            <line class="wtick" x1="600" y1="150" x2="600" y2="186"/>
+            <circle class="wdot" cx="600" cy="170" r="8"/>
+            <text class="lab b w" x="600" y="138" text-anchor="middle">War outcome</text>
+          </g>
+        </svg>
+      </div>
+      <div data-b="4">
+        <div class="pills" id="ideaPills" style="justify-content:center;margin-top:var(--sp-2)">
+          <button class="pill" type="button" data-why="info">Incomplete information</button>
+          <button class="pill" type="button" data-why="tomorrow">Commitment problem</button>
+          <button class="pill" type="button" data-why="indiv">Issue indivisibility</button>
+        </div>
+        <p class="answer" id="ideaOut" style="text-align:center;margin-top:var(--sp-2);min-height:3.6em"></p>
+        <p class="ev" style="margin-top:var(--sp-2)">“Because war is costly, there must exist a negotiated outcome that will leave both sides better off than if they actually fight.”<span>Lake 2010, p. 10.</span></p>
+      </div>
+    </section>
+
+    <!-- 2. The bill -->
+    <section class="screen" data-name="The bill" data-beats="3">
+      <h1 class="q">Iraq, 2003: what did the war cost?</h1>
+      <div class="bill">
+        <div class="money">
+          <div class="row">
+            <div class="k">Expected <span>Bush administration, before the war</span></div>
+            <div class="track"><div class="fill exp" id="fExp"></div><div class="val" id="vExp" style="left:calc(2% + 10px)">$50 to 60 billion</div></div>
+          </div>
+          <div class="row" data-b="1">
+            <div class="k">Eventual <span>Stiglitz and Bilmes</span></div>
+            <div class="track"><div class="fill" id="fAct"></div><div class="val" id="vAct" style="left:10px;color:#fff;opacity:0;transition:opacity .4s 1.2s">More than $3 trillion</div></div>
+          </div>
+        </div>
+        <div data-b="2">
+          <div class="dead">
+            <div class="k">US and coalition dead <span>by 2010</span></div>
+            <div><div class="icons" id="icUS"></div></div>
+          </div>
+          <div class="dead" style="margin-top:14px">
+            <div class="k">Iraqi dead <span>estimates</span></div>
+            <div><div class="icons" id="icIQ"></div><p class="key">One dot = 1,000 deaths. Filled: lowest estimate (100,000). Open: up to the highest (600,000).</p></div>
+          </div>
+        </div>
+      </div>
+      <p class="note">Lake 2010, pp. 7, 15 to 16.</p>
+    </section>
+
+    <!-- 3. The deal -->
+    <section class="screen" data-name="The deal" data-beats="4">
+      <h1 class="q">If war burns value, why not split the difference?</h1>
+      <div class="fig">
+        <svg viewBox="0 90 1000 184" role="img" aria-label="Bargaining line: war outcome near the US end, the costs of war open a range of deals both sides prefer">
+          <g data-b="1">
+            <rect class="band" x="640" y="156" width="280" height="28" rx="4"/>
+            <text class="lab b deal" x="780" y="112" text-anchor="middle">Bargaining range</text>
+            <g>
+              <path class="brk us" d="M640 228 v10 h200 v-10"/>
+              <text class="lab us" x="740" y="262" text-anchor="middle">US cost of war</text>
+              <path class="brk iq" d="M840 228 v10 h80"/>
+              <path class="brk iq" d="M920 238 l12 0 m-6 -6 l6 6 l-6 6"/>
+              <text class="lab iq" x="900" y="262" text-anchor="middle">Iraq's cost</text>
+            </g>
+          </g>
+          <line class="axis" x1="80" y1="170" x2="920" y2="170"/>
+          <g class="side"><circle class="us" cx="44" cy="170" r="30"/><text x="44" y="177" text-anchor="middle" font-size="20">US</text></g>
+          <g class="side"><circle class="iq" cx="956" cy="170" r="30"/><text x="956" y="176" text-anchor="middle" font-size="17">Iraq</text></g>
+          <line class="wtick" x1="840" y1="150" x2="840" y2="186"/>
+          <circle class="wdot" cx="840" cy="170" r="8"/>
+          <text class="lab b w" x="840" y="138" text-anchor="middle">War outcome</text>
+        </svg>
+      </div>
+      <div data-b="2">
+        <div class="pills" id="dealPills" style="justify-content:center;margin-top:var(--sp-2)">
+          <button class="pill" type="button" data-opt="exile">Exile for Saddam</button>
+          <button class="pill" type="button" data-opt="contain">Containment</button>
+          <button class="pill" type="button" data-opt="inspect">Forcible inspections</button>
+          <button class="pill" type="button" data-opt="coup">A coup</button>
+        </div>
+        <p class="answer" id="dealOut" style="text-align:center;margin-top:var(--sp-2);min-height:3.6em"></p>
+      </div>
+      <p class="ev" data-b="3" style="margin-top:var(--sp-2)">“That such a bargain was not reached is the central puzzle of this or any war.”<span>Lake 2010, p. 17. Also Fearon 1995, p. 380, and FLS ch. 3, p. 103 (the bargaining range).</span></p>
+    </section>
+
+    <!-- 4. Tomorrow (remade November 13, 2026): two promises Iraq could not make, one about future power (WMD, Lake pp. 23 to 25, Figures 3a and 3b) and one about Saddam's future intentions (exile, Lake p. 25, n. 53) -->
+    <section class="screen" data-name="Tomorrow" data-beats="5">
+      <div data-until="2">
+        <h1 class="q">Why fight in 2003, not later?</h1>
+        <div class="fig">
+          <svg viewBox="0 84 1000 160" role="img" aria-label="If Iraq gets weapons, the war outcome and the least the US would accept both move toward the US, and the US loses part of what it could demand today">
+            <line class="ghost" id="tGhost" x1="640" y1="120" x2="640" y2="218" opacity="0"/>
+            <text class="lab s" id="tGhostL" x="640" y="236" text-anchor="middle" opacity="0">Least the US accepts today</text>
+            <rect class="band" id="tBand" x="640" y="156" width="280" height="28" rx="4"/>
+            <rect id="tLost" x="640" y="156" width="0" height="28" fill="#fde6e7" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="5 4" opacity="0"/>
+            <line class="axis" x1="80" y1="170" x2="920" y2="170"/>
+            <text class="lab b" id="tLostL" x="640" y="146" text-anchor="middle" fill="var(--bad)" opacity="0" style="fill:var(--bad)">US gives this up</text>
+            <g class="side"><circle class="us" cx="44" cy="170" r="30"/><text x="44" y="177" text-anchor="middle" font-size="20">US</text></g>
+            <g class="side"><circle class="iq" cx="956" cy="170" r="30"/><text x="956" y="176" text-anchor="middle" font-size="17">Iraq</text></g>
+            <g id="tEdge"><line x1="640" y1="120" x2="640" y2="196" stroke="var(--us)" stroke-width="3"/><text class="lab b us" x="640" y="108" text-anchor="middle">Least the US accepts</text></g>
+            <g id="tWar"><line class="wtick" x1="840" y1="150" x2="840" y2="186"/><circle class="wdot" cx="840" cy="170" r="8"/><text class="lab b w" x="840" y="138" text-anchor="middle">War outcome</text></g>
+          </svg>
+        </div>
+        <div class="slide"><span>Iraq today</span><input type="range" id="wmd" min="0" max="100" value="0" aria-label="Iraq's weapons: today to a few years from now"><span>Iraq with WMD</span></div>
+        <p class="answer" data-b="1"><b>With WMD, Iraq could reopen any deal, and it cannot promise today that it won't.</b> So the US fights now, while the odds are best.<br><span class="term">Commitment problem: preventive war. Lake 2010, pp. 23 to 25. FLS ch. 3, pp. 120 to 126. Fearon 1995, pp. 381, 405 to 409.</span></p>
+        <p class="ev" data-b="2">“…it is going to be cheaper and less costly to do now than it will be to wait a year or two years or three years…”<span>Vice President Cheney, quoted in Lake 2010, p. 24.</span></p>
+      </div>
+      <div data-b="3">
+        <h1 class="q">Why not pay Saddam to leave?</h1>
+        <div class="fig">
+          <svg viewBox="0 0 1000 150" role="img" aria-label="Exile: Saddam takes the money and leaves, keeps money and allies, and could return">
+            <line x1="120" y1="60" x2="880" y2="60" stroke="var(--hair)" stroke-width="4"/>
+            <path d="M300 60h40M680 60h40" stroke="var(--ink2)" stroke-width="2.5"/>
+            <path d="M332 52l8 8-8 8M712 52l8 8-8 8" fill="none" stroke="var(--ink2)" stroke-width="2.5"/>
+            <circle cx="120" cy="60" r="14" fill="var(--iraq)"/>
+            <circle cx="500" cy="60" r="14" fill="var(--iraq)" opacity=".55"/>
+            <circle cx="880" cy="60" r="16" fill="#fff" stroke="var(--bad)" stroke-width="3"/>
+            <text x="880" y="67" text-anchor="middle" font-size="20" font-weight="700" fill="var(--bad)">?</text>
+            <text class="lab b" x="120" y="28" text-anchor="middle">2003</text>
+            <text class="lab b" x="500" y="28" text-anchor="middle">In exile</text>
+            <text class="lab b" x="880" y="28" text-anchor="middle">Later</text>
+            <text class="lab" x="120" y="108" text-anchor="middle">Takes the money</text>
+            <text class="lab" x="120" y="130" text-anchor="middle">and leaves</text>
+            <text class="lab" x="500" y="108" text-anchor="middle">Keeps money and</text>
+            <text class="lab" x="500" y="130" text-anchor="middle">friends in Iraq</text>
+            <text class="lab b w" x="880" y="108" text-anchor="middle">Comes back?</text>
+          </svg>
+        </div>
+        <div data-b="4">
+          <p class="answer"><b>He could not promise to stay away.</b> The bigger the payment, the easier the return.</p>
+          <p class="ev">“…imagine if the United States gave him $25 billion to leave—a bargain for both sides…”<span>Lake 2010, p. 25, n. 53.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. The bluff -->
+    <section class="screen" data-name="The bluff" data-beats="3">
+      <h1 class="q">Who was bluffing?</h1>
+      <div class="two">
+        <div class="col us">
+          <h3>What Washington showed</h3>
+          <div class="sig"><svg viewBox="0 0 44 44"><path d="M8 34h28M10 34V20M18 34V20M26 34V20M34 34V20M6 18l16-10 16 10z" fill="none" stroke="var(--us)" stroke-width="2.5" stroke-linejoin="round"/></svg>Congress votes for force</div>
+          <div class="sig"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="14" fill="none" stroke="var(--us)" stroke-width="2.5"/><path d="M8 22h28M22 8c-6 8-6 20 0 28M22 8c6 8 6 20 0 28" fill="none" stroke="var(--us)" stroke-width="2"/></svg>A UN resolution</div>
+          <div class="sig"><svg viewBox="0 0 44 44"><path d="M6 30h32l-4 6H10zM14 30V22h14l4 8M18 22v-6h6" fill="none" stroke="var(--us)" stroke-width="2.5" stroke-linejoin="round"/></svg>Troops in the Gulf</div>
+        </div>
+        <div class="col iq" data-b="1">
+          <h3>What Saddam saw</h3>
+          <div class="sig"><svg viewBox="0 0 44 44"><path d="M30 12 14 22l16 10" fill="none" stroke="var(--iraq)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>Lebanon, 1984: they left</div>
+          <div class="sig"><svg viewBox="0 0 44 44"><path d="M30 12 14 22l16 10" fill="none" stroke="var(--iraq)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>Somalia, 1993: they left</div>
+          <div class="sig"><svg viewBox="0 0 44 44"><path d="M30 12 14 22l16 10" fill="none" stroke="var(--iraq)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>1991: they stopped short</div>
+        </div>
+      </div>
+      <p class="ev" data-b="1">“No Iraqi leaders had believed coalition forces would ever reach Baghdad.”<span>Iraq's army chief of staff, quoted in Lake 2010, p. 31.</span></p>
+      <p class="answer" data-b="2"><b>Nobody was bluffing.</b> The signal was open, and Saddam misread it.<br><span class="term">The theory expects hidden information and an incentive to bluff. Fearon 1995, p. 381. FLS ch. 3, p. 110.</span></p>
+    </section>
+
+    <!-- 6. The missing cheer -->
+    <section class="screen" data-name="Missing cheer" data-beats="6" id="sMiss">
+      <h1 class="q">Two cheers, not three: what does the theory leave out?</h1>
+      <div class="tiles" id="tiles">
+        <button class="tile" type="button" data-go="1"><svg viewBox="0 0 46 46" fill="none" stroke="var(--ink)" stroke-width="2.5"><circle cx="15" cy="16" r="6"/><circle cx="31" cy="16" r="6"/><circle cx="23" cy="31" r="6"/><path d="M9 42h28"/></svg><b>One voice?</b></button>
+        <button class="tile" type="button" data-go="2"><svg viewBox="0 0 46 46" fill="none" stroke="var(--ink)" stroke-width="2.5"><circle cx="23" cy="23" r="6"/><circle cx="7" cy="9" r="4"/><circle cx="39" cy="9" r="4"/><circle cx="23" cy="41" r="4"/><path d="M18 19 10 12M28 19l8-7M23 29v8"/></svg><b>Two players?</b></button>
+        <button class="tile" type="button" data-go="3"><svg viewBox="0 0 46 46" fill="none" stroke="var(--ink)" stroke-width="2.5"><path d="M4 23h38"/><path d="M4 16v14"/><path d="M12 16v14" stroke-width="5" stroke="var(--war)"/><path d="M42 16v14"/></svg><b>Over at victory?</b></button>
+        <button class="tile" type="button" data-go="4"><svg viewBox="0 0 46 46" fill="none" stroke="var(--ink)" stroke-width="2.5"><rect x="9" y="5" width="28" height="36" rx="14"/><path d="M17 17c3-3 9-3 12 0"/></svg><b>Rational?</b></button>
+      </div>
+
+      <div class="panel">
+        <div data-only="0">
+          <p class="answer">Bargaining theory assumes each of these. Iraq breaks all four.</p>
+          <p class="note">Lake 2010, pp. 8 to 9.</p>
+        </div>
+
+        <div data-only="1">
+          <h2 class="q">No blood for oil?</h2>
+          <div class="fig">
+            <svg viewBox="0 80 1000 170" role="img" aria-label="Special interests move the US minimum toward the US end, but deals remain">
+              <line class="ghost" x1="640" y1="146" x2="640" y2="218"/>
+              <text class="lab s" x="640" y="240" text-anchor="middle">Without the lobbies</text>
+              <rect class="band" id="iBand" x="640" y="156" width="280" height="28" rx="4"/>
+              <line class="axis" x1="80" y1="170" x2="920" y2="170"/>
+              <g class="side"><circle class="us" cx="44" cy="170" r="30"/><text x="44" y="177" text-anchor="middle" font-size="20">US</text></g>
+              <g class="side"><circle class="iq" cx="956" cy="170" r="30"/><text x="956" y="176" text-anchor="middle" font-size="17">Iraq</text></g>
+              <g id="iEdge"><line x1="640" y1="130" x2="640" y2="196" stroke="var(--us)" stroke-width="3"/><text class="lab b us" x="640" y="122" text-anchor="middle">With oil and defence interests</text></g>
+              <g><line class="wtick" x1="840" y1="150" x2="840" y2="186"/><circle class="wdot" cx="840" cy="170" r="8"/></g>
+            </svg>
+          </div>
+          <p class="answer"><b>A harder bargain, not the cause.</b> Some deal was still left.</p>
+          <p class="note">Lake 2010, pp. 40 to 43. Markets in 2002 to 2003: each 10-point rise in the chance of war added about $1 to a barrel of oil and took about 1.5 percent off the S&amp;P 500 (Wolfers and Zitzewitz, in Lake, n. 128).</p>
+        </div>
+
+        <div data-only="2">
+          <div class="hub">
+            <svg class="aud" viewBox="0 0 560 340" role="img" aria-label="Saddam's one signal reaches three audiences">
+              <line x1="280" y1="170" x2="96" y2="68"/><line x1="280" y1="170" x2="464" y2="68"/><line x1="280" y1="170" x2="280" y2="290"/>
+              <circle cx="280" cy="170" r="46" fill="var(--iraq)"/>
+              <text x="280" y="176" text-anchor="middle" font-weight="700" font-size="18" fill="#fff">Saddam</text>
+              <circle class="nd" id="nUS" cx="96" cy="68" r="62"/><text x="96" y="74" text-anchor="middle" font-weight="700" font-size="17">Washington</text>
+              <circle class="nd" id="nIR" cx="464" cy="68" r="62"/><text x="464" y="74" text-anchor="middle" font-weight="700" font-size="17">Tehran</text>
+              <circle class="nd" id="nIN" cx="280" cy="290" r="44"/><text x="280" y="286" text-anchor="middle" font-weight="700" font-size="15">Rivals</text><text x="280" y="304" text-anchor="middle" font-weight="700" font-size="15">at home</text>
+              <text class="mk" id="mUS" x="160" y="30"></text><text class="mk" id="mIR" x="380" y="30"></text><text class="mk" id="mIN" x="332" y="276"></text>
+            </svg>
+            <div>
+              <h2 class="q">One signal, three audiences</h2>
+              <div class="pills" style="margin-top:var(--sp-3)" id="audPills">
+                <button class="pill" type="button" data-sig="prove">Prove: no weapons</button>
+                <button class="pill" type="button" data-sig="vague">Stay vague</button>
+              </div>
+              <p class="answer" id="audOut" style="min-height:3em"></p>
+            </div>
+          </div>
+          <p class="note">Lake 2010, pp. 29 to 31: Saddam’s “political strategy was to keep Tehran in check by maintaining some measure of ambiguity over Iraq’s WMD” (Gordon and Trainor, quoted on p. 30).</p>
+        </div>
+
+        <div data-only="3">
+          <h2 class="q">The war took six weeks. The peace took eight years.</h2>
+          <div class="fig tl">
+            <svg viewBox="0 20 1000 130" role="img" aria-label="Timeline from March 2003 to December 2011: the invasion is a thin slice at the start">
+              <rect class="peace" x="91" y="60" width="849" height="40" rx="4"/>
+              <rect class="war" x="80" y="60" width="11" height="40" rx="2"/>
+              <text class="lab b w" x="80" y="44">Invasion, March 2003</text>
+              <text class="lab" x="100" y="134">May 1, 2003: “Mission accomplished”</text>
+              <line x1="91" y1="100" x2="91" y2="138" stroke="var(--ink2)" stroke-width="1.5"/>
+              <text class="lab b" x="520" y="86" text-anchor="middle" fill="var(--accent)">Occupation, insurgency, rebuilding</text>
+              <text class="lab" x="940" y="134" text-anchor="end">December 2011: last US troops leave</text>
+            </svg>
+          </div>
+          <p class="ev">“There was no Plan B.”<span>George Packer, quoted in Lake 2010, p. 39.</span></p>
+          <p class="answer"><b>Price the peace, and a deal looks better.</b></p>
+          <p class="note">Lake 2010, pp. 35 to 40, 43 to 44. Dates: CRS reports RS22452 (2015) and RL32492 (2020).</p>
+        </div>
+
+        <div data-only="4">
+          <h2 class="q">Who fooled them?</h2>
+          <div class="two">
+            <div class="mirror"><p class="who" style="color:var(--us)">Washington</p><p class="ev">“We will be greeted as liberators.”<span>Vice President Cheney, quoted in Lake 2010, p. 36.</span></p></div>
+            <div class="mirror"><p class="who" style="color:var(--iraq)">Baghdad</p><p class="ev">“No one risked telling Saddam what he did not want to hear.”<span>Lake 2010, p. 33.</span></p></div>
+          </div>
+          <p class="answer"><b>Not the enemy's lies. Their own.</b></p>
+          <p class="note">Lake 2010, pp. 33 to 34, 45 to 48.</p>
+        </div>
+
+        <div data-only="5">
+          <div class="ruler">
+            <div><b>Fix the theory</b></div>
+            <div class="sev"><b>A severe challenge</b></div>
+          </div>
+          <p class="answer">Lake's answer: <b>a behavioral theory of war.</b></p>
+          <p class="note">Lake 2010, pp. 43 to 48.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Which problem? -->
+    <section class="screen" data-name="Which problem?" data-beats="7" id="sRound">
+      <h1 class="q">Which problem is this?</h1>
+      <div class="round" id="roundDots"></div>
+      <div class="item" id="item">
+        <p class="ev" id="itemText"></p>
+        <div class="pills" id="itemPills"></div>
+        <p class="verdict" id="itemVerdict"></p>
+        <p class="note" id="itemSrc"></p>
+      </div>
+      <div id="roundEnd" hidden>
+        <p class="score" id="scoreBig"></p>
+      </div>
+    </section>
+
+    <!-- 8. Two or three? -->
+    <section class="screen" data-name="Two or three?" data-beats="2">
+      <h1 class="q">Two cheers or three?</h1>
+      <div class="cheers" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="var(--accent)"/><path d="M38 62l15 15 30-34" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="var(--accent)"/><path d="M38 62l15 15 30-34" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--mute)" stroke-width="4" stroke-dasharray="10 9"/><text x="60" y="78" text-anchor="middle" font-size="54" font-weight="700" fill="var(--mute)">?</text></svg>
+      </div>
+      <p class="ev" data-b="1">“War is always a failure.”<span>Lake 2010, p. 51.</span></p>
+      <p class="note" data-b="1">Next week: one voice? Domestic politics and war.</p>
+    </section>
+  </main>
+
+  <div class="nav">
+    <div class="dots" id="beatDots"></div>
+    <button class="pbtn" id="prev" type="button">←</button>
+    <button class="nbtn" id="next" type="button">Continue →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var screens = Array.prototype.slice.call(document.querySelectorAll(".screen"));
+  var steps = document.getElementById("steps");
+  var nextBtn = document.getElementById("next");
+  var prevBtn = document.getElementById("prev");
+  var beatDots = document.getElementById("beatDots");
+  var S = 0, B = 0;
+  var KEY = "ir201-w07-deal-v1";
+
+  function store(){ try { localStorage.setItem(KEY, JSON.stringify({ans: ANS})); } catch (e) {} }
+  function load(){ try { var v = JSON.parse(localStorage.getItem(KEY) || "{}"); return v.ans || {}; } catch (e) { return {}; } }
+
+  screens.forEach(function(sc, i){
+    var b = document.createElement("button");
+    b.type = "button"; b.innerHTML = "<span class=\"n\">" + (i + 1) + "</span>" + sc.dataset.name;
+    b.addEventListener("click", function(){ go(i, 0); });
+    steps.appendChild(b);
+  });
+
+  function beats(i){ return parseInt(screens[i].dataset.beats || "1", 10); }
+
+  function render(){
+    screens.forEach(function(sc, i){ sc.classList.toggle("cur", i === S); });
+    Array.prototype.forEach.call(steps.children, function(b, i){ if (i === S) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current"); });
+    var sc = screens[S];
+    sc.querySelectorAll("[data-b]").forEach(function(el){ el.classList.toggle("on", parseInt(el.dataset.b, 10) <= B); });
+    sc.querySelectorAll("[data-until]").forEach(function(el){ el.hidden = B > parseInt(el.dataset.until, 10); });
+    sc.querySelectorAll("[data-only]").forEach(function(el){ el.classList.toggle("on", parseInt(el.dataset.only, 10) === B); });
+    beatDots.innerHTML = "";
+    var n = beats(S);
+    if (n > 1) for (var k = 0; k < n; k++){ var d = document.createElement("span"); d.className = "dot" + (k <= B ? " on" : ""); beatDots.appendChild(d); }
+    if (B < n - 1) nextBtn.textContent = "Continue →";
+    else if (S < screens.length - 1) nextBtn.textContent = "Next: " + screens[S + 1].dataset.name + " →";
+    else nextBtn.textContent = "End";
+    prevBtn.disabled = (S === 0 && B === 0);
+    hooks(S, B);
+    try { history.replaceState(null, "", "#s=" + (S + 1) + "&b=" + B); } catch (e) {}
+  }
+
+  function go(s, b){ S = Math.max(0, Math.min(screens.length - 1, s)); B = Math.max(0, Math.min(beats(S) - 1, b)); render(); window.scrollTo(0, 0); }
+  function next(){ if (B < beats(S) - 1) { B++; render(); } else if (S < screens.length - 1) go(S + 1, 0); }
+  function prev(){ if (B > 0) { B--; render(); } else if (S > 0) go(S - 1, beats(S - 1) - 1); }
+  nextBtn.addEventListener("click", next);
+  prevBtn.addEventListener("click", prev);
+  /* A click on any empty place moves one step on, like the arrow key (not on buttons, the slider, or while selecting text) */
+  document.addEventListener("click", function(e){
+    if (e.target.closest("button, input, a, label, select, textarea")) return;
+    var sel = window.getSelection ? String(window.getSelection()) : "";
+    if (sel) return;
+    next();
+  });
+
+  document.addEventListener("keydown", function(e){
+    if (e.target && e.target.tagName === "INPUT") { if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return; if (e.target.type === "range") return; }
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); next(); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); prev(); }
+    else if (/^[1-5]$/.test(e.key) && screens[S].id === "sRound" && B < ITEMS.length) { pick(B, parseInt(e.key, 10) - 1); }
+  });
+
+  /* Screen 1: dots for the dead */
+  (function(){
+    var us = document.getElementById("icUS"), iq = document.getElementById("icIQ"), h = "";
+    for (var i = 0; i < 4; i++) h += "<i class=\"us\"></i>";
+    us.innerHTML = h + "<i class=\"half\"></i>";
+    h = "";
+    for (var j = 0; j < 600; j++) h += (j < 100 ? "<i></i>" : "<i class=\"lt\"></i>");
+    iq.innerHTML = h;
+  })();
+
+  /* Screen 3: the slider */
+  var wmd = document.getElementById("wmd");
+  function lerp(a, b, t){ return a + (b - a) * t; }
+  function setWMD(){
+    var t = wmd.value / 100;
+    var war = lerp(840, 700, t), edge = lerp(640, 440, t);
+    document.getElementById("tWar").setAttribute("transform", "translate(" + (war - 840) + " 0)");
+    document.getElementById("tEdge").setAttribute("transform", "translate(" + (edge - 640) + " 0)");
+    var band = document.getElementById("tBand");
+    band.setAttribute("x", edge); band.setAttribute("width", 920 - edge);
+    var show = t > 0.05 ? 1 : 0;
+    document.getElementById("tGhost").setAttribute("opacity", show);
+    document.getElementById("tGhostL").setAttribute("opacity", show);
+    var lost = document.getElementById("tLost");
+    lost.setAttribute("x", edge); lost.setAttribute("width", 640 - edge); lost.setAttribute("opacity", show);
+    var ll = document.getElementById("tLostL");
+    ll.setAttribute("x", (edge + 640) / 2); ll.setAttribute("opacity", 640 - edge > 150 ? 1 : 0);
+  }
+  wmd.addEventListener("input", setWMD);
+
+  /* The idea: the dividing mark, the shares, and the three reasons (FLS ch. 3 and the lecture) */
+  var WHY = {
+    info: "<b>A does not know how strong B is, or how much B will pay to fight.</b> Each side may bluff to get a better deal.<span class=\"term\" style=\"display:block\">FLS ch. 3, pp. 107 to 110. Lake 2010, p. 12.</span>",
+    tomorrow: "<b>B is growing stronger.</b> Tomorrow it will demand more, and it cannot promise today that it will not. So A may fight now.<span class=\"term\" style=\"display:block\">Preventive war. FLS ch. 3, pp. 120 to 123. Lake 2010, pp. 11 to 12.</span>",
+    indiv: "<b>The good cannot be split,</b> so there is no deal in the middle. It is all or nothing.<span class=\"term\" style=\"display:block\">FLS ch. 3, p. 132. Lake sets it aside for Iraq: no indivisible issue there (Lake 2010, p. 11, n. 10).</span>"
+  };
+  var whyNow = null, ideaB = 0;
+  function setSplit(x){
+    document.getElementById("shareA").style.transform = "scaleX(" + ((x - 80) / 520) + ")";
+    document.getElementById("shareB").style.transform = "scaleX(" + ((920 - x) / 320) + ")";
+    document.getElementById("shareAL").style.transform = "translateX(" + ((x - 600) / 2) + "px)";
+    document.getElementById("shareBL").style.transform = "translateX(" + ((x - 600) / 2) + "px)";
+  }
+  function ideaDraw(){
+    var shift = whyNow === "tomorrow" ? -150 : 0;
+    document.querySelectorAll(".imv").forEach(function(g){ g.style.transform = "translateX(" + shift + "px)"; });
+    document.getElementById("ideaGhost").setAttribute("opacity", whyNow === "tomorrow" ? 1 : 0);
+    document.getElementById("ideaDeal").style.opacity = ideaB === 0 ? 1 : 0;
+    setSplit(ideaB === 0 ? 500 : 600 + shift);
+    document.getElementById("shareAL").textContent = ideaB === 0 ? "A's share" : "A's share after war";
+    document.getElementById("shareBL").textContent = ideaB === 0 ? "B's share" : "B's share after war";
+    var un = whyNow === "info", gone = whyNow === "indiv";
+    document.getElementById("ideaBrkB").classList.toggle("unsure", un);
+    document.getElementById("ideaBand").classList.toggle("unsure", un);
+    document.getElementById("ideaBand").classList.toggle("gone", gone);
+    document.getElementById("ideaLabB").textContent = un ? "B's cost: how much?" : "B's cost of war";
+    document.getElementById("ideaBandL").textContent = gone ? "No deal can split it" : "Bargaining range";
+    document.querySelectorAll("#ideaPills .pill").forEach(function(p){ p.setAttribute("aria-pressed", p.dataset.why === whyNow ? "true" : "false"); });
+    document.getElementById("ideaOut").innerHTML = whyNow ? WHY[whyNow] : "";
+  }
+  function setWhy(k){ whyNow = k; ideaDraw(); }
+  document.querySelectorAll("#ideaPills .pill").forEach(function(p){ p.addEventListener("click", function(){ setWhy(whyNow === p.dataset.why ? null : p.dataset.why); }); });
+
+  /* The deal: four options short of war */
+  var DEAL = {
+    exile: "<b>Saddam leaves Iraq and is paid to go.</b> The price: likely far less than $50 billion.<span class=\"term\" style=\"display:block\">Lake 2010, p. 17.</span>",
+    contain: "<b>Sanctions, inspections and deterrence,</b> as in the 1990s.<span class=\"term\" style=\"display:block\">Lake 2010, pp. 20 to 21.</span>",
+    inspect: "<b>Inspections on demand, backed by an international force.</b> Lake calls it “containment plus”.<span class=\"term\" style=\"display:block\">Lake 2010, p. 21.</span>",
+    coup: "<b>Iraqis remove Saddam from inside.</b> Washington had tried before: the 1991 uprising, a failed coup attempt in 1995.<span class=\"term\" style=\"display:block\">Lake 2010, pp. 21 to 22.</span>"
+  };
+  var dealNow = null;
+  function setDeal(k){
+    dealNow = k;
+    document.querySelectorAll("#dealPills .pill").forEach(function(p){ p.setAttribute("aria-pressed", p.dataset.opt === k ? "true" : "false"); });
+    document.getElementById("dealOut").innerHTML = k ? DEAL[k] : "";
+  }
+  document.querySelectorAll("#dealPills .pill").forEach(function(p){ p.addEventListener("click", function(){ setDeal(dealNow === p.dataset.opt ? null : p.dataset.opt); }); });
+
+  /* Screen 5: tiles and the audiences */
+  var tiles = Array.prototype.slice.call(document.querySelectorAll("#tiles .tile"));
+  tiles.forEach(function(t){ t.addEventListener("click", function(){ go(S, parseInt(t.dataset.go, 10)); }); });
+  var AUD = {
+    prove: {US: 1, IR: 0, IN: 0, txt: "<b>Washington is reassured.</b> Tehran and his rivals see a weak Iraq."},
+    vague: {US: 0, IR: 1, IN: 1, txt: "<b>Iran and his rivals are kept guessing.</b> Washington sees weapons."}
+  };
+  function setAud(k){
+    document.querySelectorAll("#audPills .pill").forEach(function(p){ p.setAttribute("aria-pressed", p.dataset.sig === k ? "true" : "false"); });
+    var o = AUD[k];
+    ["US", "IR", "IN"].forEach(function(n){
+      var ok = o ? o[n] === 1 : null;
+      var c = document.getElementById("n" + n), m = document.getElementById("m" + n);
+      c.setAttribute("class", "nd" + (ok === null ? "" : (ok ? " ok" : " bad")));
+      m.setAttribute("class", "mk" + (ok === null ? "" : (ok ? " ok" : " bad")));
+      m.textContent = ok === null ? "" : (ok ? "✓" : "✗");
+    });
+    document.getElementById("audOut").innerHTML = o ? o.txt : "";
+  }
+  document.querySelectorAll("#audPills .pill").forEach(function(p){ p.addEventListener("click", function(){ setAud(p.dataset.sig); }); });
+
+  /* Screen 6: closing round */
+  var OPTS = ["Commitment problem", "Incomplete information", "Many audiences", "Cost of the peace", "Self-delusion"];
+  var ITEMS = [
+    {t: "Exile for Saddam? He could always come back.", s: "Lake 2010, p. 25, n. 53", a: 0, w: "A promise that cannot be enforced later: a commitment problem."},
+    {t: "Saddam would not show he had no weapons, so that Iran stayed unsure.", s: "Lake 2010, pp. 29 to 30", a: 2, w: "One signal, read by several audiences at once."},
+    {t: "The US team sent to restart Iraq's ministries arrived with $25,000 in cash.", s: "Lake 2010, p. 38, n. 113", a: 3, w: "No one priced governing Iraq after the victory."},
+    {t: "1991: the US hid its “left hook” plan, so Iraq expected the attack in the wrong place.", s: "FLS ch. 3, p. 113", a: 1, w: "Private information about strength, with a reason to keep it secret."},
+    {t: "Libya gave up its weapons programmes in 2003. Its leader was overthrown in 2011. Others took note.", s: "FLS ch. 3, pp. 122 to 123. Lake 2010, p. 23, n. 47", a: 0, w: "Can a strong state promise not to attack one that has disarmed?"},
+    {t: "Washington planned on $50 to 60 billion and shouted down a higher troop estimate.", s: "Lake 2010, pp. 16, 33", a: 4, w: "The error was about its own costs, of its own making."}
+  ];
+  var ANS = load();
+  var roundDots = document.getElementById("roundDots"), pillsBox = document.getElementById("itemPills");
+  function drawRound(){
+    var i = B;
+    roundDots.innerHTML = "";
+    ITEMS.forEach(function(it, k){
+      var d = document.createElement("i");
+      if (ANS[k] !== undefined) d.className = (ANS[k] === it.a ? "ok" : "bad");
+      if (k === i) d.className += " cur";
+      roundDots.appendChild(d);
+    });
+    var end = i >= ITEMS.length;
+    document.getElementById("item").hidden = end;
+    document.getElementById("roundEnd").hidden = !end;
+    if (end){
+      var right = 0; ITEMS.forEach(function(it, k){ if (ANS[k] === it.a) right++; });
+      document.getElementById("scoreBig").textContent = right + " / " + ITEMS.length;
+      return;
+    }
+    var it = ITEMS[i];
+    document.getElementById("itemText").textContent = it.t;
+    document.getElementById("itemSrc").textContent = it.s;
+    pillsBox.innerHTML = "";
+    OPTS.forEach(function(o, k){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "pill";
+      b.innerHTML = "<span class=\"n\">" + (k + 1) + "</span>" + o;
+      if (ANS[i] !== undefined){
+        if (k === ANS[i]) b.className += (k === it.a ? " right" : " wrong");
+        else if (k === it.a) b.className += " correct";
+      }
+      b.addEventListener("click", function(){ pick(i, k); });
+      pillsBox.appendChild(b);
+    });
+    var v = document.getElementById("itemVerdict");
+    if (ANS[i] === undefined) v.innerHTML = "";
+    else v.innerHTML = (ANS[i] === it.a ? "<b class=\"ok\">Right.</b> " : "<b class=\"bad\">" + OPTS[it.a] + ".</b> ") + it.w;
+  }
+  function pick(i, k){ ANS[i] = k; store(); drawRound(); }
+
+  document.getElementById("reset").addEventListener("click", function(){
+    ANS = {}; store(); wmd.value = 0; setWMD(); setAud(null); setWhy(null); setDeal(null); go(0, 0);
+  });
+
+  /* Screen 5, beat 1: the US minimum slides right, the band shrinks but stays open */
+  var edgeNow = 640, edgeTimer = null, edgeRaf = null;
+  function drawEdge(x){
+    document.getElementById("iEdge").setAttribute("transform", "translate(" + (x - 640) + " 0)");
+    var band = document.getElementById("iBand"); band.setAttribute("x", x); band.setAttribute("width", 920 - x);
+  }
+  function tweenEdge(to, delay){
+    clearTimeout(edgeTimer); cancelAnimationFrame(edgeRaf);
+    if (to === 640 || matchMedia("(prefers-reduced-motion: reduce)").matches){ edgeNow = to; drawEdge(to); return; }
+    edgeTimer = setTimeout(function(){
+      var from = edgeNow, t0 = performance.now();
+      (function step(now){
+        var k = Math.min(1, (now - t0) / 900), e = 1 - Math.pow(1 - k, 3);
+        edgeNow = from + (to - from) * e; drawEdge(edgeNow);
+        if (k < 1) edgeRaf = requestAnimationFrame(step);
+      })(t0);
+    }, delay);
+  }
+
+  /* Per-screen hooks */
+  function hooks(s, b){
+    var id = screens[s].dataset.name;
+    if (id === "The idea"){ ideaB = b; if (b < 4) whyNow = null; ideaDraw(); }
+    if (id === "The deal" && b < 2 && dealNow) setDeal(null);
+    if (id === "The bill"){
+      document.getElementById("fExp").style.width = "2%";
+      document.getElementById("fAct").style.width = b >= 1 ? "100%" : "0";
+      document.getElementById("vAct").style.opacity = b >= 1 ? "1" : "0";
+    }
+    if (id === "Missing cheer"){
+      tiles.forEach(function(t){
+        var g = parseInt(t.dataset.go, 10);
+        if (g === b) t.setAttribute("aria-current", "true"); else t.removeAttribute("aria-current");
+        if (g <= b) t.classList.add("seen"); else t.classList.remove("seen");
+      });
+      tweenEdge(b === 1 ? 750 : 640, b === 1 ? 500 : 0);
+    }
+    if (id === "Which problem?") drawRound();
+  }
+
+  /* Start: #s=3&b=1 jumps to a screen */
+  var m = /s=(\d+)(?:&b=(\d+))?/.exec(location.hash || "");
+  go(m ? parseInt(m[1], 10) - 1 : 0, m && m[2] ? parseInt(m[2], 10) : 0);
+  setWMD();
+})();
+</script>
+</body>
+</html>
