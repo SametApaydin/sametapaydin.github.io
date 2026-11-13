@@ -232,7 +232,10 @@ html:not(.s4-js) .s4-cv{display:none}
 /* team (Biz kimiz / Who we are): IPC's Kişiler cards, five in one row across the full page width (the page's <!-- team --> marker; article.njk).
    Grey portrait, name and role on an IPC-navy fade, e-mail below; each card opens the person's IPC profile. Photos are cropped so every head
    starts and ends on the same lines; the caption hangs from a fixed line (not the bottom), so every name starts on one line whatever the title */
-.art:has(.art-wide) .art-h{position:static}   /* a sticky heading would slide over the full-width row */
+/* with a full-width row the page reads as one column: title, lead, text, then the row, all on the same left edge */
+.art:has(.art-wide){display:block}
+.art:has(.art-wide) .art-h{position:static;margin-bottom:1.5rem}
+.art:has(.art-wide) .art-lead{max-width:36em;margin-bottom:0}
 .art-wide{grid-column:1/13;min-width:0;margin-top:2.75rem}
 .art-wide h2{font-size:1.5rem;font-weight:500;line-height:1.15;letter-spacing:-.024em;margin:0 0 1.25rem}
 .art-b2{padding-top:2.75rem}
