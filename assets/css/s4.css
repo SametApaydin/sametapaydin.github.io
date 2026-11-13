@@ -229,8 +229,14 @@ html:not(.s4-js) .s4-cv{display:none}
 
 .s4-404{padding-top:clamp(2.5rem,8vh,5rem);padding-bottom:clamp(2.5rem,8vh,5rem)}
 
-/* team (Biz kimiz / Who we are): IPC's Kişiler cards. Grey portrait, name and role on an IPC-navy fade, e-mail below; each card opens the person's IPC profile. Photos are cropped so every head starts and ends on the same lines; the caption hangs from a fixed line (not the bottom), so every name starts on one line whatever the title's length */
-.art-b .team{list-style:none;padding:0;margin:1.25rem 0 0;max-width:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(12.5rem,1fr));gap:1.75rem 1.25rem}
+/* team (Biz kimiz / Who we are): IPC's Kişiler cards, five in one row across the full page width (the page's <!-- team --> marker; article.njk).
+   Grey portrait, name and role on an IPC-navy fade, e-mail below; each card opens the person's IPC profile. Photos are cropped so every head
+   starts and ends on the same lines; the caption hangs from a fixed line (not the bottom), so every name starts on one line whatever the title */
+.art:has(.art-wide) .art-h{position:static}   /* a sticky heading would slide over the full-width row */
+.art-wide{grid-column:1/13;min-width:0;margin-top:2.75rem}
+.art-wide h2{font-size:1.5rem;font-weight:500;line-height:1.15;letter-spacing:-.024em;margin:0 0 1.25rem}
+.art-b2{padding-top:2.75rem}
+.team{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2rem 1rem}
 .team li{min-width:0}
 .team-pic{position:relative;display:block;aspect-ratio:480/689;overflow:hidden;border-radius:var(--r);background:#1b2150;color:#fff!important;text-decoration:none!important}
 .team-pic img{display:block;width:100%;height:100%;object-fit:cover;transition:transform calc(var(--t)*.4) var(--ease)}
@@ -241,15 +247,16 @@ html:not(.s4-js) .s4-cv{display:none}
 .team-pic:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
 @media (hover:hover) and (pointer:fine){.team-pic:hover img{transform:scale(1.035)}}
 @media (prefers-reduced-motion:reduce){.team-pic img{transition:none}}
-.team-mail{display:flex;align-items:flex-start;gap:.4rem;margin-top:.6rem;font-size:.8125rem;color:var(--ink2)!important;text-decoration:none!important;min-width:0}
+.team-mail{display:flex;align-items:flex-start;gap:.35rem;margin-top:.6rem;font-size:.75rem;color:var(--ink2)!important;text-decoration:none!important;min-width:0}
 .team-mail span{min-width:0;line-height:1.35;overflow-wrap:anywhere}
 .team-mail svg{flex:0 0 auto;margin-top:.1rem}
 .team-mail:hover span{text-decoration:underline;text-underline-offset:.2em}
+@media (max-width:1199px){.team{grid-template-columns:repeat(3,minmax(0,1fr));gap:1.75rem 1.25rem}}
+@media (max-width:899px){.art-wide{margin-top:2.25rem}}
 @media (max-width:600px){
-  .art-b .team{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem .9rem}
+  .team{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem .9rem}
   .team-cap{top:62%;padding:0 .7rem}
   .team-cap b{font-size:.875rem}
   .team-cap span{font-size:.75rem}
-  .team-mail{font-size:.75rem}
 }
-@media (max-width:340px){.art-b .team{grid-template-columns:minmax(0,1fr)}.team-cap{top:66%}}
+@media (max-width:340px){.team{grid-template-columns:minmax(0,1fr)}.team-cap{top:66%}}
