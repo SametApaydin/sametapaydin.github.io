@@ -1,0 +1,146 @@
+/* The training programmes page. Loaded after s4.css, whose ground, ink and type it keeps: Instrument Sans only, white ground,
+   no boxes. Motion lives in prog.js; without JavaScript the page is two plain sections with every module's text in view. */
+.pg{padding-top:clamp(2.5rem,6vh,4rem)}
+.pg h1,.pg h2,.pg h3,.pg h4{font-family:var(--body)}
+
+/* ---------- first screen: the text on the left, noise and signal on the right ---------- */
+.pg-hero{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s4-gap);align-items:stretch}
+.pg-hero-t{grid-column:1/7;min-width:0}
+.pg-hero h1{font-size:clamp(2rem,1.5rem + 1.4vw,2.75rem);font-weight:500;line-height:1.05;letter-spacing:-.032em;margin:0 0 1.1rem}
+.pg-lead{font-size:1.25rem;line-height:1.35;letter-spacing:-.014em;margin:0 0 1.4rem;max-width:27em}
+.pg-hero-t p:not(.pg-lead){color:var(--ink2);margin:0 0 .9rem;max-width:36em}
+.pg-hero-t p:last-child{margin-bottom:0}
+.pg-hero-f{grid-column:7/13;position:relative;min-height:19rem;min-width:0}
+.pg-hero-f canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+html:not(.pg-js) .pg-hero-f{display:none}
+html:not(.pg-js) .pg-hero-t{grid-column:1/10}
+
+/* ---------- the two programmes: a word and a pair of tabs ---------- */
+.pg-pick{display:flex;flex-wrap:wrap;align-items:center;gap:.7rem 1.25rem;margin-top:clamp(3rem,8vh,5rem)}
+html:not(.pg-js) .pg-pick{display:none}
+.pg-pick h2{font-size:1rem;font-weight:500;line-height:1.3;letter-spacing:-.008em;margin:0}
+.pg-tabs{position:relative;display:inline-flex;max-width:100%;box-sizing:border-box;gap:.1rem;padding:.25rem;border-radius:999px;background:var(--tint);overflow-x:auto;scrollbar-width:none}
+.pg-tabs::-webkit-scrollbar{display:none}
+.mra .pg-tabs button{position:relative;z-index:1;flex:0 0 auto;padding:.5rem 1.1rem;border-radius:999px;font-size:.9375rem;font-weight:500;line-height:1.2;letter-spacing:-.005em;white-space:nowrap;color:var(--ink2);transition:color calc(var(--t)*.2) var(--ease)}
+.mra .pg-tabs button:hover,.mra .pg-tabs button[aria-selected="true"]{color:var(--ink)}
+.mra .pg-tabs button:focus-visible{outline:2px solid var(--ink);outline-offset:1px;border-radius:999px}
+.pg-tabs-pill{position:absolute;left:0;top:.25rem;bottom:.25rem;width:0;border-radius:999px;background:var(--bg);box-shadow:0 1px 2px rgba(11,11,11,.12);opacity:0;transition:transform calc(var(--t)*.32) var(--ease),width calc(var(--t)*.32) var(--ease)}
+
+/* ---------- one programme ---------- */
+.pg-track{padding-top:clamp(1.75rem,4vh,2.5rem);scroll-margin-top:5rem}
+.pg-js .pg-track:not(.is-on){display:none}
+html:not(.pg-js) .pg-track{padding-top:clamp(3rem,8vh,5rem)}
+.pg-intro{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s4-gap);row-gap:2rem;align-items:start}
+.pg-intro-t{grid-column:1/7;min-width:0}
+.pg-th{font-size:clamp(1.5rem,1.2rem + .9vw,2rem);font-weight:500;line-height:1.1;letter-spacing:-.028em;margin:0 0 1rem}
+.pg-intro-t p{margin:0 0 .9rem;max-width:36em}
+.pg-intro-t p:last-child{margin-bottom:0}
+.pg-intro-n{grid-column:8/13;min-width:0}
+.pg-counts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem 1.25rem}
+.pg-counts li{display:flex;flex-direction:column;gap:.45rem;min-width:0}
+.pg-num{display:block;font-size:clamp(2.75rem,2rem + 2.4vw,4rem);font-weight:500;line-height:.86;letter-spacing:-.05em;font-variant-numeric:tabular-nums lining-nums}
+.pg-counts span{font-size:.9375rem;line-height:1.3;color:var(--ink2)}
+.pg-facts{display:grid;grid-template-columns:8.5rem minmax(0,1fr);gap:.6rem 1.25rem;margin:2.25rem 0 0;font-size:.9375rem;line-height:1.4}
+.pg-facts dt{color:var(--ink2)}
+.pg-facts dd{margin:0;font-weight:500}
+
+/* the three stages (institutions): a line that draws itself, a mark at the start of each stage */
+.pg-stages{position:relative;list-style:none;margin:clamp(2.25rem,5vh,3.25rem) 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:var(--s4-gap)}
+.pg-stages::before,.pg-stages::after{content:"";position:absolute;left:0;right:0;top:4px;height:1px;background:var(--rule2)}
+.pg-stages::after{background:var(--ink);transform-origin:0 50%}
+.pg-stages li{position:relative;padding:1.45rem 0 0;min-width:0}
+.pg-stages li::before{content:"";position:absolute;z-index:1;left:0;top:0;width:9px;height:9px;background:var(--ink)}
+.pg-stage-k{display:block;font-size:.875rem;line-height:1.3;color:var(--ink2);margin:0 0 .25rem}
+.pg-stage-t{display:block;font-size:1.0625rem;font-weight:500;line-height:1.3;letter-spacing:-.012em;max-width:19em;padding-right:1rem}
+
+/* ---------- the modules: the list on the left, its figure and text on the right ---------- */
+.pg-mods{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s4-gap);align-items:start;margin-top:clamp(2.75rem,7vh,4.5rem)}
+.pg-mods-l{grid-column:1/7;min-width:0}
+.pg-mods h3{font-size:1.5rem;font-weight:500;line-height:1.15;letter-spacing:-.024em;margin:0 0 .35rem}
+.pg-cue{font-size:.9375rem;line-height:1.4;color:var(--ink2);margin:0 0 1rem}
+html:not(.pg-js) .pg-cue{display:none}
+.pg-list-w{position:relative;margin:0 -.9rem}
+.pg-list{position:relative;list-style:none;margin:0;padding:0}
+.pgm-h{margin:0;font:inherit;letter-spacing:inherit}
+.mra .pgm-b{display:grid;grid-template-columns:2.1rem minmax(0,1fr);align-items:baseline;width:100%;padding:.7rem .9rem;border-radius:12px;text-align:left;font-size:1.0625rem;font-weight:500;line-height:1.3;letter-spacing:-.012em;color:var(--ink);cursor:default}
+.pgm-n{font-size:.875rem;font-weight:400;letter-spacing:0;color:var(--ink2);font-variant-numeric:tabular-nums lining-nums}
+.pgm-d{padding:0 .9rem .9rem 3rem}
+.pgm-intro{margin:0 0 .7rem;line-height:1.5;max-width:34em}
+.pgm-who{display:grid;gap:.05rem;margin:0;font-size:.9375rem;line-height:1.4}
+.pgm-who b{font-weight:600}
+.pgm-who-k,.pgm-who-a{font-size:.875rem;color:var(--ink2)}
+.pg-list-pill{position:absolute;left:0;right:0;top:0;height:0;border-radius:12px;background:var(--tint);opacity:0;pointer-events:none;transition:transform calc(var(--t)*.28) var(--ease),height calc(var(--t)*.28) var(--ease),opacity calc(var(--t)*.2) var(--ease)}
+.pg-draft{font-size:.875rem;line-height:1.4;color:var(--ink2);margin:1.1rem 0 0}
+.pg-slot{grid-column:7/13;min-width:0}
+html:not(.pg-js) .pg-slot{display:none}
+html:not(.pg-js) .pg-mods-l{grid-column:1/10}
+.pg-fig{display:block;width:100%}
+.pg-det{margin-top:1.1rem;transition:opacity calc(var(--t)*.16) var(--ease)}
+.pg-det.is-out{opacity:0}
+.pg-det .pgm-d{padding:0}
+.pg-det .pgm-intro{font-size:1.0625rem;margin-bottom:1rem}
+
+/* with JavaScript the rows answer the hand */
+.pg-js .pgm-b{cursor:pointer;color:var(--ink2);transition:color calc(var(--t)*.2) var(--ease)}
+.pg-js .pgm.is-on .pgm-b,.pg-js .pgm-b:hover{color:var(--ink)}
+.mra .pgm-b:focus-visible{outline:2px solid var(--ink);outline-offset:-2px;border-radius:12px}
+@media (min-width:900px){
+  .pg-js .pgm-x{display:none}
+  .pg-slot{position:sticky;top:5.25rem}
+  .pg-det{min-height:9.5rem}
+}
+
+/* ---------- application ---------- */
+.pg-apply{margin-top:clamp(3rem,8vh,5rem)}
+.pg-apply h2{font-size:1.5rem;font-weight:500;line-height:1.15;letter-spacing:-.024em;margin:0 0 .6rem}
+.pg-apply p{margin:0 0 .9rem;max-width:36em}
+.pg-apply p:last-child{margin:1.4rem 0 0}
+
+/* ---------- motion that CSS carries: the stages' line, the panel's arrival ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .pg-js .pg-stages::after{transform:scaleX(0);transition:transform calc(var(--t)*1.1) var(--ease)}
+  .pg-js .pg-stages li::before{transform:scale(0);transition:transform calc(var(--t)*.3) var(--ease)}
+  .pg-js .pg-stages li>span{opacity:0;transition:opacity calc(var(--t)*.4) var(--ease)}
+  .pg-js .pg-stages.is-in::after{transform:none}
+  .pg-js .pg-stages.is-in li::before{transform:none}
+  .pg-js .pg-stages.is-in li>span{opacity:1}
+  .pg-js .pg-stages.is-in li:nth-child(2)::before,.pg-js .pg-stages.is-in li:nth-child(2)>span{transition-delay:calc(var(--t)*.36)}
+  .pg-js .pg-stages.is-in li:nth-child(3)::before,.pg-js .pg-stages.is-in li:nth-child(3)>span{transition-delay:calc(var(--t)*.72)}
+  .pg-track.pg-enter{animation:pg-in calc(var(--t)*.3) var(--ease) both}
+}
+@keyframes pg-in{from{opacity:0}to{opacity:1}}
+
+/* ---------- tablet and phone: one column; the modules open in place ---------- */
+@media (max-width:899px){
+  .pg-hero,.pg-intro,.pg-mods{display:block}
+  .pg-hero-f{min-height:0;height:11rem;margin-top:1.75rem}
+  .pg-intro-n{margin-top:2rem}
+  .pg-counts{max-width:30rem}
+  .pg-stages{grid-template-columns:minmax(0,1fr);row-gap:1.4rem}
+  .pg-stages::before,.pg-stages::after{left:4px;right:auto;top:4px;bottom:1.4rem;width:1px;height:auto}
+  .pg-stages::after{transform-origin:50% 0}
+  .pg-stages li{padding:0 0 0 1.6rem}
+  .pg-stages li::before{top:.3rem}
+  .pg-stage-t{max-width:none;padding-right:0}
+  .pg-slot,.pg-list-pill{display:none}
+  .pg-js .pgm{border-top:1px solid var(--rule)}
+  .pg-js .pgm:last-child{border-bottom:1px solid var(--rule)}
+  .pg-js .pgm-b{grid-template-columns:2.1rem minmax(0,1fr) 1rem;padding:.85rem .9rem;border-radius:0}
+  .pg-js .pgm-b::after{content:"";justify-self:end;align-self:center;width:.45rem;height:.45rem;margin-top:-.2rem;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform calc(var(--t)*.25) var(--ease)}
+  .pg-js .pgm.is-on .pgm-b::after{transform:translateY(.2rem) rotate(225deg)}
+  .pg-js .pgm-x{display:grid;grid-template-rows:0fr;transition:grid-template-rows calc(var(--t)*.32) var(--ease)}
+  .pg-js .pgm.is-on .pgm-x{grid-template-rows:1fr}
+  .pg-js .pgm-xi{min-height:0;overflow:hidden;visibility:hidden;transition:visibility 0s calc(var(--t)*.32)}
+  .pg-js .pgm.is-on .pgm-xi{visibility:visible;transition-delay:0s}
+  .pg-js .pgm-d{padding:.25rem .9rem 1.1rem}
+  .pg-stage{padding:.25rem .9rem .6rem}
+  .pg-det{display:none}
+}
+@media (max-width:480px){
+  .mra .pg-tabs button{padding:.45rem .8rem;font-size:.875rem}
+  .pg-facts{grid-template-columns:7rem minmax(0,1fr);gap:.6rem 1rem}
+  .pg-counts{gap:1rem .9rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .pg-tabs-pill,.pg-list-pill,.pg-det,.pg-js .pgm-x,.pg-js .pgm-b::after{transition:none}
+}

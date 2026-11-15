@@ -70,9 +70,6 @@
 :root[data-theme="dark"] .mark .mk-l{display:none}
 :root[data-theme="dark"] .mark .mk-d{display:block}
 .slim-name{font-family:var(--body);font-weight:600;font-size:.9375rem;letter-spacing:-.015em;white-space:nowrap}
-.mra-logo{--cap:18px;display:block;flex:0 0 auto;height:var(--cap);width:calc(var(--cap)*3.2387);line-height:0}
-.mra-logo svg{display:block;width:100%;height:calc(var(--cap)*1.26);fill:currentColor;overflow:visible}
-.ft-mark{--cap:30px;margin:0 0 1.15rem;color:var(--ink)}
 @media (max-width:420px){.slim-brand{gap:.55rem}.mra.sb a.sb-brand{gap:.5rem}}
 .hd.slim .nav{position:relative;display:flex;align-items:center;gap:.15rem;min-height:0}
 .hd.slim .nav>a{position:relative;z-index:1;padding:.42rem .8rem;margin:0;font-size:.875rem;font-weight:500;letter-spacing:-.005em;color:var(--ink2);border:0;border-radius:999px;transition:color calc(var(--t)*.2) var(--ease)}
@@ -169,15 +166,13 @@ body>.top{visibility:hidden}
 .top-controls{top:calc(var(--site-bar) + 10px)!important}
 
 /* footer: the page's own ground, small quiet type, sentence-case headings, links without underlines; IPC's skyline is the
-   only line across the top; the Sabancı logo in its plain form, white-framed on dark grounds (Kılavuz 2025) */
+   only line across the top */
 .ft{position:relative;z-index:8000;margin-top:clamp(3rem,6vw,5rem);background:var(--bg);color:var(--ink2);font-size:.875rem;line-height:1.5}
 .ft-wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gutter)}
 .ft .sky img{display:block;width:100%;height:auto;filter:brightness(0);opacity:.28}
 .ft-in{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,2fr) minmax(0,2fr) minmax(0,3fr);gap:2rem 2rem;padding:clamp(1.75rem,3vw,2.5rem) 0 clamp(1.75rem,3vw,2.5rem)}
 .ft-name{margin:0 0 .3rem;font-size:1rem;font-weight:600;letter-spacing:-.012em;color:var(--ink)}
-.ft-credit{text-wrap:balance;margin:0 0 1.1rem;max-width:24em}
-.ft-logo{display:inline-block;line-height:0}
-.ft-logo img{display:block;height:45.0px;width:auto}
+.ft-credit{text-wrap:balance;margin:0;max-width:24em}
 .ft h2{margin:0 0 .6rem;font:500 .875rem var(--body);letter-spacing:-.005em;color:var(--ink)}
 .ft ul{list-style:none;margin:0;padding:0}
 .ft li{margin:0 0 .3rem}
@@ -188,10 +183,8 @@ body>.top{visibility:hidden}
 .ft-proto{margin-left:auto}
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]) .ft .sky img{filter:brightness(0) invert(1);opacity:.32}
-  :root:not([data-theme="light"]) .ft-logo{background:#fff;padding:5px}
 }
 :root[data-theme="dark"] .ft .sky img{filter:brightness(0) invert(1);opacity:.32}
-:root[data-theme="dark"] .ft-logo{background:#fff;padding:5px}
 @media (max-width:760px){
   .ft-in{grid-template-columns:1fr 1fr;gap:1.75rem 1.5rem}
   .ft-brand,.ft-contact{grid-column:1/-1}
