@@ -1,9 +1,3 @@
-/* ==========================================================
-   Samet Apaydın — academic site
-   Light: Cool White & Steel Blue  ·  Dark: Graphite & Ice Blue
-   Theme follows system preference; header toggle overrides it
-   (stored in localStorage, applied as data-theme on <html>).
-   ========================================================== */
 
 :root {
   --bg: #fafbfd;
@@ -31,7 +25,6 @@
   --header-bg: rgba(16, 18, 22, 0.92);
 }
 
-/* System preference decides when the visitor has not used the toggle */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #101216;
@@ -69,7 +62,6 @@ body {
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-/* ---------- layout ---------- */
 
 .container {
   max-width: 840px;
@@ -82,7 +74,6 @@ main {
   padding: 3.5rem 0 4rem;
 }
 
-/* ---------- header / nav ---------- */
 
 .site-header {
   border-bottom: 1px solid var(--border);
@@ -159,7 +150,6 @@ main {
   color: var(--accent);
 }
 
-/* ---------- typography ---------- */
 
 h1 {
   font-family: var(--serif);
@@ -210,7 +200,6 @@ em {
   color: var(--muted);
 }
 
-/* ---------- home / intro ---------- */
 
 .intro {
   margin-bottom: 3.5rem;
@@ -302,7 +291,6 @@ em {
   padding: 0.15rem 0.75rem;
 }
 
-/* ---------- entry lists (education, positions, teaching…) ---------- */
 
 .entry-list {
   list-style: none;
@@ -339,7 +327,6 @@ em {
   padding-top: 0.15rem;
 }
 
-/* ---------- publications ---------- */
 
 .pub-list {
   list-style: none;
@@ -394,7 +381,6 @@ em {
   margin-top: 0.35rem;
 }
 
-/* ---------- research project cards ---------- */
 
 .project {
   background: var(--surface);
@@ -436,7 +422,6 @@ em {
   max-width: none;
 }
 
-/* ---------- footer ---------- */
 
 .site-footer {
   border-top: 1px solid var(--border);
@@ -460,7 +445,6 @@ em {
   color: var(--accent-soft);
 }
 
-/* ---------- responsive ---------- */
 
 @media (max-width: 560px) {
   h1 {

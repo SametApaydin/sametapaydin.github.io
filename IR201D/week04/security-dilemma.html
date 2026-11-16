@@ -1,9 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="../favicon.svg" type="image/svg+xml"><style>body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
 <title>Arden and Belmar</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <style>
-/* Layout: one column. Header, the two states side by side with the tension gauge between, the intelligence report,
-   five choices, the year log. The end panel replaces the choices and reveals Belmar's side. */
 :root{
   color-scheme:light;
   --bg:#f6f5f1; --surface:#fdfcf9; --ink:#121210; --ink2:#4b4a45; --ink3:#6d6b64; --rule:rgba(18,18,16,.14); --grid:rgba(18,18,16,.07);
@@ -88,7 +85,6 @@ h1{font-family:var(--display);font-weight:600;font-size:clamp(38px,6vw,68px);lin
 .end .verdict.peace{color:var(--ok)}
 .end .verdict.armed{color:var(--warn)}
 .end.war{border:2px solid var(--war)}.end.peace{border:2px solid var(--ok)}.end.armed{border:2px solid var(--warn)}
-/* Result card: fills the screen when the game ends. Red war, green peace, amber armed peace. */
 #overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px));background:rgba(10,12,18,.55);backdrop-filter:blur(3px)}
 #overlay .card{width:min(48rem,100%);border-radius:22px;padding:clamp(24px,6vh,56px) clamp(20px,4vw,48px);text-align:center;color:#fff;box-shadow:0 24px 70px rgba(0,0,0,.4);display:grid;gap:clamp(10px,2vh,18px);justify-items:center;animation:pop .35s ease-out}
 #overlay.war .card{background:#b3322a}#overlay.peace .card{background:#2e7a45}#overlay.armed .card{background:#a8690f}
@@ -147,7 +143,6 @@ details.teacher select{font:inherit;padding:4px 8px;border-radius:8px;border:1px
   .choice{min-height:0}
 }
 @media (min-width:1500px){.wrap{max-width:86rem}}
-/* Projector fit: on wide screens the whole game (header to choices) fits one screen, sizes follow screen height */
 @media (min-width:861px){
   .wrap{padding-block:12px 60px;gap:clamp(8px,1.6vh,16px)}
   .top{margin-bottom:-4px}
@@ -230,7 +225,6 @@ details.teacher select{font:inherit;padding:4px 8px;border-radius:8px;border:1px
 </div>
 
 <script>
-/* ENGINE START */
 const YEARS = 8;
 const CHOICES = {
   missiles: {t: "Build missiles", d: "Welfare −2"},
@@ -244,16 +238,12 @@ function newGame(type) {
   return {year: 1, a: 3, d: 2, w: 16, b: 3, bd: 2, bw: 16, F: 40, type, over: false, outcome: null, hist: [], lastB: null};
 }
 function security(s) { return clamp(50 + 7 * (s.a + s.d - s.b), 0, 100); }
-// Chance (in %) that a border clash turns into war this year: none below tension 60, 18% at 100
 function accidentRisk(T) { return T >= 60 ? (T - 55) / 2.5 : 0; }
 function tension(s, armA, armB) { return clamp(Math.round(20 + 5 * (s.a + s.b - 6) + 14 * armA + 14 * armB), 0, 100); }
-// Attacker: its missiles, plus 50% for surprise. Defender: its missiles plus its air defences.
-// In an accident nobody gets surprise, so both sides count missiles plus air defences.
 function warResult(s, attacker) {
   const A = attacker === "Arden" ? s.a * 1.5 : s.a + s.d, B = attacker === "Belmar" ? s.b * 1.5 : s.b + s.bd;
   return {result: A > B ? "won" : A < B ? "lost" : "draw", A: Math.round(A * 10) / 10, B: Math.round(B * 10) / 10};
 }
-// One year: Arden chooses, Belmar's intelligence sees it, Belmar reacts, then a chance of an accident.
 function step(s, choice, rng) {
   const rec = {year: s.year, choice, seen: "", bMove: "", Fbefore: s.F, accident: false, tension: 0};
   let armA = 0, armB = 0, inspAccepted = false;
@@ -274,9 +264,8 @@ function step(s, choice, rng) {
     if (s.type === "peaceful" && s.F < 65) { inspAccepted = true; s.F -= 15; s.w += 1; }
     else if (s.type === "peaceful") { s.F -= 3; }
   }
-  s.F += 3 * Math.max(0, s.a - s.b);           // a stronger Arden is a worry in itself
+  s.F += 3 * Math.max(0, s.a - s.b);
   s.F = clamp(s.F, 0, 100);
-  // Belmar's move (Belmar pays for weapons the same way: 1 welfare per unit built, +1 in a year it builds nothing)
   const b0 = s.b, bd0 = s.bd;
   if (s.type === "peaceful") {
     if (choice === "inspect") rec.inspect = inspAccepted ? "yes" : "no";
@@ -314,7 +303,6 @@ function step(s, choice, rng) {
   }
   return rec;
 }
-/* ENGINE END */
 
 (() => {
 const $ = id => document.getElementById(id);
@@ -354,7 +342,7 @@ function render() {
   icons($("b-mis"), s.b, MIS, "var(--belmar)"); icons($("b-def"), s.bd, DEF, "var(--belmar)");
   $("a-w").style.width = Math.min(100, Math.max(0, s.w) / 24 * 100) + "%";
   $("b-w").style.width = Math.min(100, Math.max(0, s.bw) / 24 * 100) + "%";
-  $("b-wq").hidden = s.over; $("b-wm").hidden = !s.over;  // Belmar's budget is secret until the end
+  $("b-wq").hidden = s.over; $("b-wm").hidden = !s.over;
   $("a-s").style.width = security(s) + "%";
   const T = last ? last.tension : tension(s, 0, 0);
   const fill = $("g-fill"); fill.style.background = "var(--war)"; fill.style.opacity = (0.35 + 0.65 * T / 100).toFixed(2);
@@ -363,7 +351,6 @@ function render() {
   $("g-v").textContent = T;
   const R = Math.round(accidentRisk(T)), gr = $("g-risk"); gr.hidden = !R || s.over; gr.innerHTML = `Accident risk <b>${R}%</b>`;
   $("g-yr").textContent = s.over ? "Game over" : `Year ${s.year} of ${YEARS}`;
-  // intelligence report
   const items = [];
   if (!last) items.push("Belmar is as strong as you.");
   else {
@@ -373,7 +360,6 @@ function render() {
   }
   $("report").innerHTML = `<p class="eyebrow">${s.over ? "Final report" : `Year ${s.year} · intelligence report`}</p><ul>${items.map(x => `<li>${x}</li>`).join("")}</ul>` +
     `<p class="said">"${SAID}"<span>Belmar, every year</span></p>`;
-  // choices
   $("prompt").innerHTML = `<b>Year ${s.year}.</b> What does Arden do?`;
   $("choices").innerHTML = Object.entries(CHOICES).map(([k, c], i) => {
     const f = FX[k];
@@ -382,7 +368,6 @@ function render() {
   }).join("");
   $("choices").querySelectorAll("button").forEach(b => b.onclick = () => play(b.dataset.k));
   $("play").hidden = s.over;
-  // log
   $("log").innerHTML = s.hist.map(r => `<li><b>Year ${r.year}</b><span>Arden: ${esc(CHOICES[r.choice].t.toLowerCase())}. Belmar ${esc(r.bMove)}.${r.accident ? " A border clash spiralled into war." : ""}</span></li>`).join("") || "<li><b>Year 1</b><span>Nothing yet.</span></li>";
   if (s.over) showEnd();
 }
@@ -462,7 +447,7 @@ function drawChart() {
   const h = G.hist; let a = 3, b = 3;
   const A = [3].concat(h.map(r => (a = r.a ?? a))), B = [3].concat(h.map(r => (b = r.b ?? b)));
   const top = Math.max(10, Math.ceil(Math.max(...A, ...B) / 5) * 5), tk = []; for (let v = 0; v <= top; v += 5) tk.push(v);
-  const same = A.map((v, i) => v === B[i]);  // where both sides are equal, draw two parallel lines
+  const same = A.map((v, i) => v === B[i]);
   lineChart("chart-m", [{vals: A, col: "arden", label: "Arden", dy: same.map(q => q ? -2.5 : 0)}, {vals: B, col: "belmar", label: "Belmar", dy: same.map(q => q ? 2.5 : 0)}], top, tk);
   let wa = 16, wb = 16;
   const WA = [16].concat(h.map(r => (wa = r.w ?? wa))), WB = [16].concat(h.map(r => (wb = r.bw ?? wb)));

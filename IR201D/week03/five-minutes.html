@@ -1,7 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="../favicon.svg" type="image/svg+xml"><style>body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
 <title>Five Minutes</title>
 <style>
-/* Layout: caption and live counter on the left, one chart canvas on the right; stacked on phones. */
 :root{
   color-scheme:light;
   --bg:#f8f8f6; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#4f4e4a; --ink3:#6c6a65; --rule:rgba(11,11,11,.13); --grid:rgba(11,11,11,.08);
@@ -121,7 +120,6 @@ button{font:inherit}
   #board .rule{display:none}
 }
 
-/* Week 3 additions: one ink per author, veto colours, the five-minute clock */
 :root{--walt:#255a8c;--sjo:#9a3366;--m1:#b4462f;--m2:#255a8c;--m3:#4f8a55;--m4:#b97a12;--m5:#7b5aa6}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--walt:#80b2e3;--sjo:#e389b6;--m1:#ec8a73;--m2:#80b2e3;--m3:#8cc591;--m4:#e2b252;--m5:#b9a0e0}}
 :root[data-theme="dark"]{--walt:#80b2e3;--sjo:#e389b6;--m1:#ec8a73;--m2:#80b2e3;--m3:#8cc591;--m4:#e2b252;--m5:#b9a0e0}
@@ -142,7 +140,6 @@ button{font:inherit}
 #clock.up .t{color:var(--sjo)}#clock.up .bar i{background:var(--sjo)}
 @media (max-width:760px){body.clocking .brand{visibility:hidden}#clock .lab{display:none}#clock{top:calc(14px + env(safe-area-inset-top,0px))}}
 @media (prefers-reduced-motion: reduce){#clock{transition:none}}
-/* Player bar: play a scene, pause, replay, skip to its end, previous and next scene */
 #player{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:45;display:flex;align-items:center;gap:4px;padding:6px 8px;border-radius:999px;background:var(--surface);border:1px solid var(--rule);box-shadow:0 6px 24px rgba(0,0,0,.14);transition:opacity .3s}
 #player button{all:unset;box-sizing:border-box;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--ink)}
 #player button:hover{background:var(--band)}
@@ -229,7 +226,6 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const f1=v=>(Math.round(v*10)/10).toFixed(1);
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* ============ theme ============ */
 const root=document.documentElement;
 try{const t=localStorage.getItem('ir201-theme');if(t==='light'||t==='dark')root.setAttribute('data-theme',t);}catch(e){}
 let C={};
@@ -239,16 +235,14 @@ $('theme').onclick=()=>{const dark=root.getAttribute('data-theme')==='dark'||(!r
   const t=dark?'light':'dark';root.setAttribute('data-theme',t);try{localStorage.setItem('ir201-theme',t);}catch(e){}readTokens();dirty=true;};
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{readTokens();dirty=true;});
 
-/* ============ entities ============ */
 const ENT={US:{n:'US',c:'us'},CN:{n:'China',c:'cn'},EU:{n:'EU',c:'eu'},RU:{n:'Russia',c:'ru'},IN:{n:'India',c:'in'},JP:{n:'Japan',c:'jp'},SU:{n:'USSR',c:'su'}};
 const at=(arr,y)=>{for(const p of arr)if(p[0]===y)return p[1];return null;};
 const lastOf=arr=>arr[arr.length-1];
 
-/* ============ canvas ============ */
 const cv=$('cv'),cx=cv.getContext('2d');let W=0,H=0,narrow=false;
 function resize(){const d=Math.min(2,devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;narrow=innerWidth<=760;
   cv.width=Math.round(W*d);cv.height=Math.round(H*d);cx.setTransform(d,0,0,d,0,0);}
-function box(){ // plot rectangle; labels sit to its right
+function box(){
   if(narrow)return {x0:44,x1:W-74,y0:H*.56,y1:H*.9};
   const left=Math.max(W*.47,Math.min(W*.06,96)+30*16+40);
   return {x0:left+40,x1:W-170,y0:H*.16,y1:H*.84};}
@@ -264,7 +258,6 @@ function axes(b,X0,X1,Y1,op,unit){
   for(let yr=Math.ceil(X0/ys)*ys;yr<=X1;yr+=ys){const x=lerp(b.x0,b.x1,(yr-X0)/span);if(x<b.x0-1)continue;cx.fillStyle=C.ink3;cx.fillText(yr,x,b.y1+8);}
   cx.restore();}
 
-// draw one series up to year `upto` (fractional); pre<year drawn dashed and muted
 function line(b,X0,X1,Y1,arr,col,upto,op,o={}){
   const px=(yr)=>lerp(b.x0,b.x1,(yr-X0)/(X1-X0)),py=v=>lerp(b.y1,b.y0,v/Y1);
   const pts=[];for(let i=0;i<arr.length;i++){const [yr,v]=arr[i];if(yr<=upto)pts.push([px(yr),py(v),yr]);
@@ -282,7 +275,6 @@ function line(b,X0,X1,Y1,arr,col,upto,op,o={}){
   cx.save();cx.globalAlpha=op*(o.alpha??1);cx.fillStyle=col;cx.beginPath();cx.arc(e[0],e[1],3.6,0,7);cx.fill();cx.restore();
   return {x:e[0],y:e[1]};}
 
-// end labels with collision avoidance (groups centred on their points)
 function labels(list,op){
   const gap=narrow?14:17;const L=list.filter(Boolean).sort((a,b)=>a.y-b.y);if(!L.length)return;
   const groups=[];let cur=[L[0]];for(let i=1;i<L.length;i++){if(L[i].y-cur[cur.length-1].y<gap)cur.push(L[i]);else{groups.push(cur);cur=[L[i]];}}groups.push(cur);
@@ -294,21 +286,17 @@ function labels(list,op){
 function sourceNote(b,txt,op){if(narrow){const i=txt.indexOf('. ');if(i>0)txt=txt.slice(0,i+1);}cx.save();cx.globalAlpha=op;cx.font=font(narrow?10:12);cx.fillStyle=C.ink3;cx.textAlign='left';cx.textBaseline='top';
   cx.fillText(txt,b.x0,b.y1+(narrow?24:30));cx.restore();}
 
-/* ============ counters ============ */
 function cnt(items){return items.map(([k,id,sw])=>`<div><div class="k">${sw?`<span class="sw" style="background:var(--${sw})"></span>`:''}${esc(k)}</div><div class="v" id="${id}">&nbsp;</div></div>`).join('');}
 const lastC={};function setC(id,html){if(lastC[id]!==html){lastC[id]=html;const e=$(id);if(e)e.innerHTML=html;}}
 const pct=v=>v==null?'&nbsp;':`${f1(v)}<small>%</small>`;
 const pctOr=(v,alt)=>v==null?`<small>${alt}</small>`:pct(v);
 const num=v=>v==null?'&nbsp;':String(v);
-// circle and label at a crossing point, same style as the PPP marker
 function crossMark(b,X0,X1,Y1,cy,v,op,label){const x=lerp(b.x0,b.x1,(cy-X0)/(X1-X0)),y=lerp(b.y1,b.y0,v/Y1);
   cx.save();cx.globalAlpha=op;cx.strokeStyle=C.ink;cx.lineWidth=1.5;cx.beginPath();cx.arc(x,y,9,0,7);cx.stroke();
   cx.setLineDash([3,4]);cx.strokeStyle=C.ink3;cx.beginPath();cx.moveTo(x,y-12);cx.lineTo(x,b.y0+18);cx.stroke();cx.setLineDash([]);
   cx.font=font(narrow?12:14,600);cx.fillStyle=C.ink;cx.textAlign='center';cx.textBaseline='bottom';cx.fillText(label,x,b.y0+14);cx.restore();}
 
 const yearAt=(t,a,b,y0,y1)=>lerp(y0,y1,reduce?1:sstep(a,b,t));
-/* ============ the five-minute clock ============ */
-// Walt's five scenes run the clock from 0:00 to 5:00, one minute per concept.
 const WALT=['anarchy','balance','trade','misperception','construction'];
 function updateClock(p){
   const ws=WALT.map(id=>SC.find(s=>s.id===id)),ts=SC.find(s=>s.id==='timesup');if(ws.some(s=>!s)||!ts)return;
@@ -320,7 +308,6 @@ function updateClock(p){
   el.classList.toggle('up',secs>=300);
 }
 
-/* ============ veto bars (Walt No. 1) ============ */
 function vetoBars(b,upto,op){
   const rows=DATA.vetoes.rows,col=[C.m1,C.m2,C.m3,C.m4,C.m5];
   const top=18,Y0=rows[0][0],Y1=rows[rows.length-1][0],n=rows.length,bw=(b.x1-b.x0)/n;
@@ -332,15 +319,11 @@ function vetoBars(b,upto,op){
   let total=0;
   rows.forEach((r,i)=>{const yr=r[0];if(yr>upto)return;const grow=clamp(upto-yr+1);let acc=0;
     r.slice(1).forEach((v,j)=>{if(!v)return;const h=(Y(acc)-Y(acc+v))*grow;cx.fillStyle=col[j];cx.fillRect(b.x0+i*bw+.6,Y(acc)-h,Math.max(1,bw-1.2),h);acc+=v;});});
-  // legend
   cx.textAlign='left';cx.textBaseline='middle';cx.font=font(narrow?11:12);let lx=b.x0,ly=b.y0-14;
   DATA.vetoes.members.forEach((m,j)=>{cx.fillStyle=col[j];cx.fillRect(lx,ly-5,10,10);cx.fillStyle=C.ink2;cx.fillText(m,lx+14,ly);lx+=cx.measureText(m).width+30;});
   cx.restore();
 }
 
-/* ============ the zoom ladder (Powers of Ten) ============ */
-// Six nested frames, each F times the one inside it: body, household, society, state, international system, Earth.
-// z is the camera in frame units: at z=i, frame i fills the view. Positions are illustrative, not to scale.
 const F=5;
 const FR=[
  {name:'Body',walt:[],sjo:['Embodiment']},
@@ -352,9 +335,9 @@ const FR=[
 ];
 let SEEDED=null;
 function seeded(){if(SEEDED)return SEEDED;let s=7;const r=()=>{s=(s*16807)%2147483647;return s/2147483647;};
-  const fam=[[-.62,.18],[.6,.22],[-.2,.66],[.3,-.62]];          // household members around the body (frame-1 units)
-  const soc=[];for(let i=0;i<140;i++){const a=r()*6.283,d=.22+r()*.72;soc.push([Math.cos(a)*d,Math.sin(a)*d]);} // people in society
-  const sts=[[-.66,-.62],[.64,-.6],[-.7,.62],[.68,.66],[0,-.78]];   // other states in the system
+  const fam=[[-.62,.18],[.6,.22],[-.2,.66],[.3,-.62]];
+  const soc=[];for(let i=0;i<140;i++){const a=r()*6.283,d=.22+r()*.72;soc.push([Math.cos(a)*d,Math.sin(a)*d]);}
+  const sts=[[-.66,-.62],[.64,-.6],[-.7,.62],[.68,.66],[0,-.78]];
   SEEDED={fam,soc,sts};return SEEDED;}
 function ladderCenter(z=4){const out=narrow?0:sstep(4.6,5.3,z);return narrow?{x:W/2,y:H*.72,out}:{x:lerp(W*.66,W*.84,out),y:H*.52,out};}
 const CLIP_L=()=>narrow?0:W*.45;
@@ -363,17 +346,11 @@ function drawLadder(z,op,o={}){
   const size=i=>base*Math.pow(F,i-z);
   const S=seeded();
   cx.save();cx.beginPath();cx.rect(CLIP_L(),0,W-CLIP_L()-(narrow?0:48),H);cx.clip();cx.globalAlpha=op;
-  // Earth: a circle around the system
   const e=size(5)*.62;if(e<Math.max(W,H)*.75){cx.beginPath();cx.arc(cx0,cy0,e,0,7);cx.fillStyle=C.band;cx.fill();cx.strokeStyle=C.rule;cx.lineWidth=1.2;cx.stroke();}
-  // other states inside the system frame
   const s4=size(4);if(s4>40&&s4<W*8){S.sts.forEach(([dx,dy])=>{const w=size(3)*.82;const x=cx0+dx*s4/2,y=cy0+dy*s4/2;cx.strokeStyle=C.ink3;cx.globalAlpha=op*.55;cx.strokeRect(x-w/2,y-w/2,w,w);});cx.globalAlpha=op;}
-  // society: dots
   const s2=size(2);if(s2>30&&s2<W*8){cx.fillStyle=C.ink3;const r=Math.max(1,Math.min(3,s2/180));S.soc.forEach(([dx,dy])=>{const x=cx0+dx*s2/2,y=cy0+dy*s2/2;if(Math.abs(dx)<.26&&Math.abs(dy)<.26)return;cx.beginPath();cx.arc(x,y,r,0,7);cx.fill();});}
-  // household: four other people
   const s1=size(1);if(s1>20&&s1<W*8)S.fam.forEach(([dx,dy])=>person(cx0+dx*s1/2,cy0+dy*s1/2,size(0)*.42,C.ink2));
-  // the body at the centre
   const s0=size(0);if(s0>3)person(cx0,cy0,s0*.5,C.ink);
-  // frames, labels and concept tags
   FR.forEach((f,i)=>{const s=size(i);if(s<26||s>Math.max(W,H)*3.2)return;
     const vis=clamp((s-26)/60)*clamp((Math.max(W,H)*3.2-s)/(Math.max(W,H)*1.2));
     const x=cx0-s/2,y=cy0-s/2;
@@ -411,23 +388,18 @@ function person(x,y,h,col){if(h<2)return;cx.fillStyle=col;cx.beginPath();cx.arc(
   cx.beginPath();if(cx.roundRect)cx.roundRect(x-h*.2,y-h*.1,h*.4,h*.55,h*.12);else cx.rect(x-h*.2,y-h*.1,h*.4,h*.55);cx.fill();}
 function roundRect(x,y,w,h,r){cx.beginPath();if(cx.roundRect)cx.roundRect(x,y,w,h,r);else cx.rect(x,y,w,h);}
 
-/* ============ helpers for the concept scenes ============ */
-// value of a [[year, v], ...] series at a fractional year (linear between points, clamped at the ends)
 const valAt=(arr,y)=>{if(y<=arr[0][0])return arr[0][1];for(let i=1;i<arr.length;i++)if(arr[i][0]>=y){const [ya,va]=arr[i-1],[yb,vb]=arr[i];return lerp(va,vb,(y-ya)/(yb-ya));}return lastOf(arr)[1];};
 function rng(seed){let s=seed;return()=>{s=(s*16807)%2147483647;return s/2147483647;};}
-// drawing area for the non-axis scenes: the right half on desktop, the lower part on phones
 function area(){if(narrow)return {x0:16,x1:W-16,y0:H*.56,y1:H*.92};const b=box();return {x0:b.x0-30,x1:W-110,y0:H*.18,y1:H*.84};}
 function txt(s,x,y,o={}){cx.font=font(o.px||(narrow?11:13),o.w);cx.fillStyle=o.c||C.ink3;cx.textAlign=o.al||'left';cx.textBaseline=o.bl||'middle';cx.fillText(s,x,y);}
 function note(a,s,op){if(narrow){const i=s.indexOf('. ');if(i>0)s=s.slice(0,i+1);}cx.save();cx.globalAlpha=op;txt(s,a.x0,a.y1+(narrow?14:24),{px:narrow?10:12});cx.restore();}
 const money=v=>v==null?'<small>no data</small>':`$${Math.round(v)}<small> bn</small>`;
 const yrs=v=>v==null?'&nbsp;':`${f1(v)}<small> yrs</small>`;
-// labels that dodge each other: greedy rows, moving away from the bar (dir +1 down, -1 up)
 function placeLabels(list,y0,dir,xmin,xmax,op){
   cx.save();cx.globalAlpha=op;cx.font=font(narrow?11:12.5,600);cx.textBaseline='middle';cx.textAlign='left';
   const rows=[];list.sort((p,q)=>p.x-q.x).forEach(l=>{const w=cx.measureText(l.t).width;let x=clamp(l.x-w/2,xmin,xmax-w);
     let r=0;while(rows[r]!=null&&rows[r]>x-8)r++;rows[r]=x+w;cx.fillStyle=l.c;cx.fillText(l.t,x,y0+dir*r*(narrow?14:17));});
   cx.restore();}
-// the six rungs as a strip above the drawing, with the current one lit
 function levelStrip(level,col,op){if(narrow)return;const a=area(),names=FR.map(f=>f.name);
   cx.font=font(11,600);if(names.reduce((w,n)=>w+cx.measureText(n.toUpperCase()).width+18,0)>a.x1-a.x0+60)return;
   cx.save();cx.globalAlpha=op;cx.font=font(11,600);cx.textBaseline='middle';cx.textAlign='left';let x=a.x0;const y=H*.115;
@@ -436,7 +408,6 @@ function levelStrip(level,col,op){if(narrow)return;const a=area(),names=FR.map(f
     if(i<names.length-1){cx.globalAlpha=op*.4;cx.fillStyle=C.ink3;cx.fillText('·',x-12,y);}});
   cx.restore();}
 
-/* ---- Walt No. 2: the gap between the US and China ---- */
 function balanceChart(b,upto,op){
   const X0=1990,X1=2025,Y1=40,us=DATA.balance.gdp.US.filter(p=>p[0]>=X0),cn=DATA.balance.gdp.China.filter(p=>p[0]>=X0);
   axes(b,X0,X1,Y1,op);
@@ -453,20 +424,16 @@ function balanceChart(b,upto,op){
   labels([eu&&{...eu,t:narrow?'US':'United States'},ec&&{...ec,t:'China'}],op);
 }
 
-/* ---- Walt No. 3: comparative advantage, a made-up two-country example ---- */
-// A can make 20 cloth or 10 wine, B 6 cloth or 6 wine. A is better at both; B gives up less to make wine.
-// Stages: on their own (half and half), each specializes, they trade 4 cloth for 3 wine.
 const TX=[{n:'Country A',can:'can make 20 cloth or 10 wine',v:[[10,5],[16,2],[12,5]],c:C=>C.m3},
           {n:'Country B',can:'can make 6 cloth or 6 wine',v:[[3,3],[0,6],[4,3]],c:C=>C.m4}];
 const TXST=['On their own','Each specializes','They trade'];
-const TXDONE=[.30,.56,.84]; // where each step's picture is complete (clicking a step shows it; play then animates to the next step)
-let TXP=[];  // clickable step pills, filled while drawing
-function txStage(t){return reduce?2:sstep(.32,.42,t)+sstep(.6,.7,t);}  // 0 to 2, smooth between stages
+const TXDONE=[.30,.56,.84];
+let TXP=[];
+function txStage(t){return reduce?2:sstep(.32,.42,t)+sstep(.6,.7,t);}
 function txVal(row,g){const k=Math.min(1,Math.floor(g)),f=g-k;return [lerp(row.v[k][0],row.v[k+1][0],f),lerp(row.v[k][1],row.v[k+1][1],f)];}
 function tradeExample(a,t,op){
   const g=txStage(t),cur=Math.round(g),w=a.x1-a.x0,lab=narrow?70:96,cell=Math.max(4,Math.min(narrow?15:22,(w-lab-50)/16)),sz=cell*.78;
   cx.save();cx.globalAlpha=op;
-  // stage pills
   let px=a.x0;cx.font=font(narrow?11:13,600);
   TXST.forEach((nm,i)=>{const s_=`${i+1} · ${nm}`,pw=cx.measureText(s_).width+20,on=i===cur;
     cx.fillStyle=on?C.walt:C.band;roundRect(px,a.y0,pw,26,13);cx.fill();if(op>.5)TXP.push({x:px,y:a.y0,w:pw,h:26,k:i});txt(s_,px+10,a.y0+13,{c:on?C.bg:C.ink3,w:600,px:narrow?11:13});px+=pw+8;});
@@ -479,22 +446,19 @@ function tradeExample(a,t,op){
       for(let k=0;k<Math.ceil(v-1e-6);k++){const f=clamp(v-k),x=a.x0+lab+k*cell;cx.globalAlpha=op*(.25+.75*f);cx.fillStyle=c2;
         if(shape==='sq')cx.fillRect(x,ry+(cell-sz)/2,sz,sz);else{cx.beginPath();cx.arc(x+sz/2,ry+cell/2,sz/2,0,7);cx.fill();}}
       cx.globalAlpha=op;txt(String(Math.round(v)),a.x0+lab+Math.max(1,Math.ceil(v-1e-6))*cell+6,ry+cell/2,{c:C.ink,w:600,px:narrow?12:15});});
-    // gain over stage 1, shown once they trade
     const gain=clamp(g-1.6)/.4;if(gain>0){const d=row.v[2][0]-row.v[0][0];cx.globalAlpha=op*gain;
       const bx=a.x1-(narrow?64:96),by=y0+(narrow?30:40);cx.fillStyle=col;roundRect(bx,by,narrow?60:88,narrow?24:30,15);cx.fill();
       txt(`+${d} cloth`,bx+(narrow?30:44),by+(narrow?12:15),{al:'center',c:C.bg,w:700,px:narrow?11:14});cx.globalAlpha=op;}});
-  // the trade itself
   const tr=clamp(g-1.1)/.5;if(tr>0&&tr<=1.01||g>1.6){const ax=a.x1-(narrow?100:150),y1=a.y0+46+blockH*.85,y2=a.y0+46+blockH*1.1,o=op*Math.min(1,clamp(g-1.1)*2);
     cx.globalAlpha=o;txt('4 cloth ↓',ax,y1,{al:'right',c:C.walt,w:700,px:narrow?11:14});txt('↑ 3 wine',ax+12,y1,{c:C.m1,w:700,px:narrow?11:14});cx.globalAlpha=op;}
   cx.restore();
 }
 
-/* ---- Walt No. 4: the security dilemma spiral (an illustration, not data) ---- */
 function shield(x,y,s,col){cx.fillStyle=col;cx.beginPath();cx.moveTo(x-s*.5,y-s*.55);cx.lineTo(x+s*.5,y-s*.55);cx.lineTo(x+s*.5,y);cx.quadraticCurveTo(x+s*.45,y+s*.45,x,y+s*.62);cx.quadraticCurveTo(x-s*.45,y+s*.45,x-s*.5,y);cx.closePath();cx.fill();}
 function arrow(x,y,len,dir,col){cx.strokeStyle=col;cx.fillStyle=col;cx.lineWidth=2.2;cx.beginPath();cx.moveTo(x-dir*len/2,y);cx.lineTo(x+dir*(len/2-5),y);cx.stroke();
   cx.beginPath();cx.moveTo(x+dir*len/2,y);cx.lineTo(x+dir*(len/2-8),y-5);cx.lineTo(x+dir*(len/2-8),y+5);cx.closePath();cx.fill();}
 function spiral(a,t,op){
-  const rounds=4,s=(reduce?1:sstep(.04,.52,t))*rounds*2; // eight moves, A then B
+  const rounds=4,s=(reduce?1:sstep(.04,.52,t))*rounds*2;
   const arms=k=>{let n=0;for(let m=k;m<rounds*2;m+=2)n+=clamp(s-m);return n;};
   const seen=k=>{let n=0;for(let m=k;m<rounds*2;m+=2)n+=clamp(s-m-.5);return n;};
   const w=a.x1-a.x0,h=a.y1-a.y0,my=a.y0+h*.5,dy=h*(narrow?.3:.27),sz=narrow?14:20,st=narrow?22:30;
@@ -504,7 +468,6 @@ function spiral(a,t,op){
     txt(S.n,S.x,my+q/2+14,{al:'center',c:C.ink2,w:600,px:narrow?11:13});
     const n=arms(k),ns=seen(k);
     for(let i=0;i<Math.ceil(n);i++){const f=clamp(n-i);cx.globalAlpha=op*f;shield(S.x+S.dir*(q/2+16+i*st),my,sz,S.c);}
-    // how the other side reads the same moves: weapons pointed at it
     const ry=k===0?my-dy:my+dy;
     for(let i=0;i<Math.ceil(ns);i++){const f=clamp(ns-i);cx.globalAlpha=op*f;arrow(S.x+S.dir*(q/2+16+i*st),ry,st-6,S.dir,C.m1);}
     cx.globalAlpha=op;});
@@ -514,7 +477,6 @@ function spiral(a,t,op){
   cx.restore();
 }
 
-/* ---- Walt No. 5: same-sex marriage, place by place ---- */
 function cascade(a,upto,op){
   const L=DATA.ssmList,n=L.length,X0=2000,X1=KEY.ssmLastYear,lw=narrow?4:24;
   const px=y=>lerp(a.x0+20,a.x1-lw,(y-X0)/(X1-X0)),rh=(a.y1-a.y0-26)/n,py=i=>a.y0+i*rh+rh/2,named=rh>=10;
@@ -530,7 +492,6 @@ function cascade(a,upto,op){
   cx.restore();
 }
 
-/* ---- Sjoberg No. 4: life expectancy at birth ---- */
 function lifeBars(a,Y,op){
   const L=DATA.life,A=90,h=a.y1-a.y0,lx=a.x0+(narrow?30:48),px=v=>lerp(lx,a.x1-(narrow?52:80),v/A),bh=narrow?18:28;
   const rows=[{lab:'Born in a high-income country',s:L['High-income countries'],c:C.ink2,y:a.y0+h*.26},{lab:'Born in a low-income country',s:L['Low-income countries'],c:C.sjo,y:a.y0+h*.62}];
@@ -543,7 +504,6 @@ function lifeBars(a,Y,op){
     cx.fillStyle=r.c;cx.globalAlpha=op*.9;cx.fillRect(lx,r.y-bh/2,x-lx,bh);cx.globalAlpha=op;
     if(Y>1961){cx.setLineDash([3,3]);cx.strokeStyle=C.ink3;cx.strokeRect(lx,r.y-bh/2-3,px(v0)-lx,bh+6);cx.setLineDash([]);}
     txt(`${f1(vi)}`,x+8,r.y,{c:C.ink,w:600,px:narrow?12:15});return {v:vi,x};});
-  // the gap between the two bar ends
   const yb=(rows[0].y+rows[1].y)/2+bh*.1,[hi,lo]=ends;
   if(hi.x-lo.x>6){cx.strokeStyle=C.ink;cx.lineWidth=1.5;cx.beginPath();cx.moveTo(lo.x,yb-5);cx.lineTo(lo.x,yb+5);cx.moveTo(lo.x,yb);cx.lineTo(hi.x,yb);cx.moveTo(hi.x,yb-5);cx.lineTo(hi.x,yb+5);cx.stroke();
     txt(`gap ${f1(hi.v-lo.v)} years`,(lo.x+hi.x)/2,yb-12,{al:'center',c:C.ink,w:600,px:narrow?11:13});}
@@ -551,7 +511,6 @@ function lifeBars(a,Y,op){
   cx.restore();
 }
 
-/* ---- Sjoberg No. 2: money that flows into low- and middle-income countries ---- */
 function icon(k,x,y,s,col){cx.save();cx.fillStyle=col;
   if(k==='house'){cx.beginPath();cx.moveTo(x-s*.55,y-s*.05);cx.lineTo(x,y-s*.5);cx.lineTo(x+s*.55,y-s*.05);cx.closePath();cx.fill();cx.fillRect(x-s*.38,y-s*.06,s*.76,s*.52);}
   else if(k==='factory'){cx.beginPath();cx.moveTo(x-s*.5,y+s*.46);cx.lineTo(x-s*.5,y-s*.12);cx.lineTo(x-s*.17,y-s*.34);cx.lineTo(x-s*.17,y-s*.12);cx.lineTo(x+s*.16,y-s*.34);cx.lineTo(x+s*.16,y-s*.12);cx.lineTo(x+s*.5,y-s*.34);cx.lineTo(x+s*.5,y+s*.46);cx.closePath();cx.fill();}
@@ -570,13 +529,11 @@ function flowLanes(a,Y,t,op){
     icon(ic,L1+(a.x1-L1)/2+4,y,narrow?24:34,col);cx.restore();});
 }
 
-/* ---- Sjoberg No. 3: the world as 100 people, poorest first ---- */
 const POVB=[['under $3',1],['$3 to 4.20',.7],['$4.20 to 8.30',.46],['$8.30 to 10',.28],['$10 or more',0]];
 function povGrid(a,Y,op,mark){
   const P=DATA.poverty,Yi=Math.floor(Y+1e-6),cuts=['$3.00','$4.20','$8.30','$10'].map(k=>Math.round(valAt(P[k],Yi)));
   const legH=narrow?38:34,side=narrow?44:150,gs=Math.min(a.x1-a.x0-side,a.y1-a.y0-legH),cell=gs/10,gx=narrow?a.x0+(a.x1-a.x0-gs)/2:a.x0,gy=a.y0+legH;
   cx.save();
-  // legend
   let lx=a.x0,ly=a.y0+6;cx.font=font(narrow?10:12);
   POVB.forEach(([l,al])=>{const w=cx.measureText(l).width+28;if(lx+w>a.x1){lx=a.x0;ly+=16;}
     cx.globalAlpha=op*(al||.25);person(lx+5,ly+2,13,al?C.sjo:C.ink3);cx.globalAlpha=op;txt(l,lx+14,ly,{px:narrow?10:12,c:C.ink2});lx+=w;});
@@ -588,7 +545,6 @@ function povGrid(a,Y,op,mark){
   cx.restore();
 }
 
-/* ---- Sjoberg No. 1: World Bank votes against people ---- */
 function voteRibbons(a,t,op){
   const rows=Object.fromEntries(DATA.hierarchy.rows.map(r=>[r[0],r])),order=['United States','Japan','Germany','France','United Kingdom','China','Russia','Brazil','Türkiye','India','Indonesia','Nigeria','Pakistan','Bangladesh','Ethiopia'];
   const seg=order.map(n=>({n,v:rows[n][1],p:rows[n][2]}));
@@ -611,7 +567,6 @@ function voteRibbons(a,t,op){
   cx.restore();
 }
 
-/* ---- Sjoberg No. 5: CO2 per person, one square per 100 kg ---- */
 function co2Squares(a,Y,op){
   const G=['High-income countries','Upper-middle-income countries','Lower-middle-income countries','Low-income countries'],lab=['High income','Upper-middle','Lower-middle','Low income'];
   const gap=narrow?10:26,gw=(a.x1-a.x0-gap*3)/4,labH=narrow?30:40,cell=Math.min(gw/5,(a.y1-a.y0-labH-26)/26),sq=cell-(cell>7?1.5:.8),base=a.y1-labH;
@@ -626,7 +581,6 @@ function co2Squares(a,Y,op){
   cx.restore();
 }
 
-/* ============ scenes ============ */
 const SC=[
  {id:'start',chapter:'Start',len:80,center:true,
   cap:{eyebrow:'IR 201 · Week 3 · Walt and Sjoberg (2014)',h1:'Five minutes',sub:'What an IR degree leaves out',
@@ -687,7 +641,6 @@ const SC=[
        p:['"If you understand these five concepts well, you now know what most IR undergraduates will remember five years after receiving their diploma." (Walt)'],
        small:'He adds that a real expert would also need deterrence, institutions, democratic peace theory, international finance and more.'},
   draw(t,op){
-    // five tiles, then they gather where the system frame will be
     const names=['Anarchy','Balance of power','Comparative advantage','Misperception and miscalculation','Social construction'];
     const {x:cx0,y:cy0}=ladderCenter(),gw=narrow?W*.86:W*.42,th=narrow?36:50,gap=10;
     const gather=reduce?0:sstep(.62,.78,t),land=reduce?0:sstep(.72,1,t);
@@ -771,7 +724,6 @@ const SC=[
   draw(t,op){const z=lerp(0.05,5.3,reduce?1:sstep(.04,.62,t));drawLadder(z,op,{walt:true,sjo:true});}},
 ];
 
-/* ============ build captions, counters, chapters ============ */
 let tot=0;SC.forEach(s=>tot+=s.len);let acc=0;
 SC.forEach(s=>{s.a=acc/tot;acc+=s.len;s.b=acc/tot;});
 $('track').style.height=(tot+100)+'vh';
@@ -786,8 +738,7 @@ const go=p=>scrollTo({top:track.offsetTop+p*(track.offsetHeight-innerHeight),beh
 SC.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<span>${esc(s.chapter)}</span><i></i>`;b.setAttribute('aria-label',s.chapter);
   b.onclick=()=>{pause();go(i===0?0:s.a+(s.b-s.a)*.62);};$('chapters').appendChild(b);$('segs').appendChild(document.createElement('i'));});
 
-/* ============ player: play a scene, pause, replay, skip to its end, previous / next ============ */
-const T0=.08,T1=.86; // where a scene starts (fading in) and where its animation has finished (before it fades out)
+const T0=.08,T1=.86;
 const PLAY='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4 L16 10 L6 16 Z" fill="currentColor"/></svg>',PAUSE='<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="4" width="3.4" height="12" rx="1" fill="currentColor"/><rect x="11.6" y="4" width="3.4" height="12" rx="1" fill="currentColor"/></svg>';
 let playing=false,plFrom=0,plTo=0,plStart=0,plDur=0;
 const tspan=()=>track.offsetHeight-innerHeight;
@@ -795,12 +746,11 @@ const atS=(i,t)=>SC[i].a+(SC[i].b-SC[i].a)*t;
 const endOf=i=>SC[i].last?SC[i].b:atS(i,T1);
 const sceneAt=p=>{let k=0;SC.forEach((s,i)=>{if(p>=s.a-1e-6)k=i;});return k;};
 function setP(p,snap){scrollTo(0,track.offsetTop+clamp(p)*tspan());readScroll();if(snap){sp=target;dirty=true;}}
-// Only the play button starts playback. Every other control moves to a frame and waits.
-let stopAt=null;   // set by a step label: play then stops at the end of that step
+let stopAt=null;
 function jump(i,t){pause();i=Math.max(0,Math.min(SC.length-1,i));stopAt=null;setP(t==null?endOf(i):atS(i,t),true);}
 function play(){const i=curScene(),s0=atS(i,T0);
   let to=(stopAt!=null&&stopAt>target+1e-4&&sceneAt(stopAt)===i)?stopAt:endOf(i),from=Math.max(target,s0);
-  if(from>=to-1e-4){from=s0;to=endOf(i);}          // already at the end: play the scene again
+  if(from>=to-1e-4){from=s0;to=endOf(i);}
   stopAt=null;setP(from,true);
   plFrom=from;plTo=to;plDur=Math.max(1200,SC[i].len*55*(to-from)/(endOf(i)-s0));plStart=performance.now();playing=true;plUI();}
 function pause(){if(playing){playing=false;plUI();}}
@@ -826,7 +776,6 @@ addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey||e.altKey||$('player').st
   else if(k==='ArrowDown'||k==='ArrowUp'||k==='PageDown'||k==='PageUp')pause();});
 plUI();
 
-/* ============ loop ============ */
 let target=0,sp=0,dirty=true,pinned=null;
 function readScroll(){const span=track.offsetHeight-innerHeight;target=pinned!=null?pinned:clamp((scrollY-track.offsetTop)/span);
   $('bar').style.width=(clamp(scrollY/(document.documentElement.scrollHeight-innerHeight))*100)+'%';}
@@ -854,10 +803,9 @@ function frame(){stepPlay(performance.now());const d=target-sp;if(reduce||Math.a
 addEventListener('scroll',readScroll,{passive:true});
 addEventListener('resize',()=>{resize();readScroll();dirty=true;});
 readTokens();resize();
-// #p=0.55 for local testing, or a plain scene anchor such as #ppp or #scoreboard
 const hp=/^#p=([\d.]+)/.exec(location.hash),hs=location.hash.slice(1);
 const sIdx=SC.findIndex(s=>s.id===hs);
-if(hp){pinned=clamp(parseFloat(hp[1]));$('stage').style.position='fixed';$('stage').style.inset='0';} // test mode: pin the stage, set progress directly (screenshots)
+if(hp){pinned=clamp(parseFloat(hp[1]));$('stage').style.position='fixed';$('stage').style.inset='0';}
 else if(sIdx>0){const s=SC[sIdx];scrollTo(0,track.offsetTop+(s.a+(s.b-s.a)*.62)*(track.offsetHeight-innerHeight));}
 $('board').addEventListener('scroll',e=>{const b=e.currentTarget;b.classList.toggle('end',b.scrollTop+b.clientHeight>=b.scrollHeight-4);},{passive:true});
 readScroll();sp=target;dirty=true;requestAnimationFrame(frame);

@@ -1,8 +1,3 @@
-/* The training programmes page.
-   First screen: a field of noise that gives up a signal. The two programmes: a pair of tabs; the counts tick from one programme's
-   numbers to the other's. The modules: one set of dots that rearranges itself into a figure of the module under the pointer, with
-   its short text and instructor beside it (on phones the module opens in place).
-   Without JavaScript the page is two plain sections with every module's text in view. Under reduced motion nothing travels. */
 (function () {
   'use strict';
   var d = document, de = d.documentElement, page = d.querySelector('[data-pg]');
@@ -28,7 +23,6 @@
     cv.width = Math.round(w * pr); cv.height = Math.round(h * pr); cv.style.height = h + 'px';
     x.setTransform(pr, 0, 0, pr, 0, 0); return x;
   }
-  // one square: where, how large, how strong, how red
   function dot(x, px, py, s, a, r) {
     if (a < .012) return;
     var i = col.ink, e = col.red;
@@ -37,7 +31,6 @@
   }
   tokens();
 
-  /* ---------- first screen: noise that drifts, a signal that holds ---------- */
   var redrawHero = function () {};
   (function () {
     var box = page.querySelector('[data-pg-signal]'); if (!box) return;
@@ -92,9 +85,7 @@
     else build();
   })();
 
-  /* ---------- the modules' figures: each returns its dots as [x, y, size, strength, red] ---------- */
   var FIG = {
-    // likelihood against impact: the corner to watch
     basics: function (W, H, b) {
       var o = [], mx = W * .1, my = H * .13, C = 12, R = 7, i, j, t;
       for (i = 0; i < C; i++) for (j = 0; j < R; j++) {
@@ -103,7 +94,6 @@
       }
       return o;
     },
-    // what is known, then the widening range of what may follow
     cone: function (W, H, b) {
       var o = [], mx = W * .08, xs = W * .4, y0 = H * .56, n = 13, K = 11, i, k, q, m, half, sp, yc, f, ye;
       for (i = 0; i < n; i++) o.push([mx + i * (xs - mx) / (n - 1), y0 - (i / (n - 1)) * H * .05 + Math.sin(i * .95) * H * .028, b, .9, 0]);
@@ -114,7 +104,6 @@
       }
       return o;
     },
-    // branching futures, one of them followed
     tree: function (W, H, b) {
       var o = [], mx = W * .08, X = [mx, W * .36, W * .64, W - mx], off = [0, .2, .105, .052], lv = [[.5]], path = [0, 0, 1, 2], l;
       for (l = 1; l < 4; l++) { lv[l] = []; lv[l - 1].forEach(function (y) { lv[l].push(y - off[l], y + off[l]); }); }
@@ -130,7 +119,6 @@
       });
       return o;
     },
-    // flashpoints and the rings they send out
     flash: function (W, H, b) {
       var o = [], S = [[.24, .6, [[.1, 8], [.2, 14], [.3, 20]]], [.58, .33, [[.09, 8], [.18, 13]]], [.83, .7, [[.08, 7], [.16, 12]]]];
       S.forEach(function (c, ci) {
@@ -141,7 +129,6 @@
       });
       return o;
     },
-    // two series over time, the latest readings marked
     macro: function (W, H, b) {
       var o = [], mx = W * .07, n = 40, i, u;
       for (i = 0; i < n; i++) {
@@ -151,7 +138,6 @@
       }
       return o;
     },
-    // two poles and the one caught between them
     poles: function (W, H, b) {
       var o = [], R = Math.min(W * .16, H * .34), n = 42, g = 9, k, rr, th, u, mid, x0 = W * .22 + R + b * 2.6, x1 = W * .78 - R - b * 2.6;
       [.22, .78].forEach(function (cx, s) {
@@ -160,13 +146,11 @@
       for (k = 0; k < g; k++) { u = k / (g - 1); mid = k === (g - 1) / 2; o.push([x0 + (x1 - x0) * u, H * .5 + Math.sin(u * 6.2832) * H * .035, mid ? b * 1.7 : b * .6, mid ? .95 : .45, mid ? 1 : 0]); }
       return o;
     },
-    // a chart: columns of counted units
     bars: function (W, H, b) {
       var o = [], hs = [3, 5, 8, 6, 10, 4, 7, 5, 2], cell = Math.min((W * .84) / (hs.length * 3.1), (H * .8) / 10.6), x0 = (W - hs.length * cell * 3.1 + cell * 1.1) / 2, base = H * .9;
       hs.forEach(function (h, k) { for (var q = 0; q < h; q++) for (var a = 0; a < 2; a++) o.push([x0 + k * cell * 3.1 + a * cell + cell / 2, base - (q + .5) * cell, cell * .64, .82, h === 10 ? 1 : 0]); });
       return o;
     },
-    // layers of a network, one output
     net: function (W, H, b) {
       var o = [], L = [4, 6, 6, 3], mx = W * .12, step = (H * .76) / 5, pos = [];
       L.forEach(function (n, l) { pos[l] = []; for (var i = 0; i < n; i++) pos[l].push([mx + l * (W - 2 * mx) / (L.length - 1), H / 2 + (i - (n - 1) / 2) * step]); });
@@ -181,7 +165,6 @@
       });
       return o;
     },
-    // every link runs through one hub
     hub: function (W, H, b) {
       var o = [[W / 2, H / 2, b * 2.4, .95, 1]], n = 8, rx = W * .27, ry = H * .27, k, j, th, X, Y;
       function at(a, f) { return [W / 2 + Math.cos(a) * rx * f, H / 2 + Math.sin(a) * ry * f]; }
@@ -196,7 +179,6 @@
       }
       return o;
     },
-    // a chain with one link cut, and the way round it
     chain: function (W, H, b) {
       var o = [], n = 5, mx = W * .1, y = H * .62, X = [], k, j, px, u;
       for (k = 0; k < n; k++) X.push(mx + k * (W - 2 * mx) / (n - 1));
@@ -213,7 +195,6 @@
       for (j = 1; j <= 16; j++) { u = j / 17; o.push([X[2] + (X[4] - X[2]) * u, y - b * 3.6 - Math.sin(u * Math.PI) * H * .36, b * .5, .5, 0]); }
       return o;
     },
-    // a shock, the low point, and two ways out of it
     shock: function (W, H, b) {
       var o = [], mx = W * .07, i, u;
       for (i = 0; i < 14; i++) o.push([mx + i * (W * .36 - mx) / 13, H * .36 + Math.sin(i * 1.7) * H * .008, b, .9, 0]);
@@ -225,14 +206,12 @@
     }
   };
 
-  /* ---------- the stage: one canvas and one text block, moved to wherever the open module is ---------- */
   var stage = d.createElement('div'), cv = d.createElement('canvas'), det = d.createElement('div');
   stage.className = 'pg-stage'; cv.className = 'pg-fig'; cv.setAttribute('aria-hidden', 'true'); det.className = 'pg-det'; det.setAttribute('aria-live', 'polite');
   stage.appendChild(cv); stage.appendChild(det);
   var N = 150, DUR = 950, cur = [], src = [], dst = [], jit = [], st = { W: 0, H: 0, b: 4, key: null, t0: 0, raf: 0, x: null, seen: false, dur: DUR };
   (function () { var R = rng(11); for (var i = 0; i < N; i++) jit.push([R() - .5, R() - .5, R()]); })();
   function copy(a) { return a.map(function (p) { return p.slice(); }); }
-  // a figure's dots spread over the N slots, left to right, so a dot keeps to its side of the stage from one figure to the next
   function target(key) {
     var f = FIG[key](st.W, st.H, st.b).sort(function (p, q) { return p[0] - q[0] || p[1] - q[1]; }), o = [], i, j, last = -1, p;
     for (i = 0; i < N; i++) { j = Math.min(f.length - 1, Math.floor(i * f.length / N)); p = f[j]; o.push([p[0], p[1], p[2], j === last ? 0 : p[3], p[4]]); last = j; }
@@ -288,7 +267,6 @@
     swapT = setTimeout(function () { det.innerHTML = html; det.classList.remove('is-out'); }, 160);
   }
 
-  /* ---------- the programmes and their modules ---------- */
   var panels = [].map.call(page.querySelectorAll('[data-track]'), function (el) {
     return { el: el, id: el.id, mods: [].slice.call(el.querySelectorAll('.pgm')), slot: el.querySelector('.pg-slot'), pill: el.querySelector('.pg-list-pill'), nums: [].slice.call(el.querySelectorAll('.pg-num')), stages: el.querySelector('.pg-stages'), cue: el.querySelector('.pg-cue'), on: -1, counted: false };
   });
@@ -304,7 +282,7 @@
   function pick(P, i, o) {
     o = o || {};
     var w = wide.matches;
-    if (!w && !o.keep && i === P.on) i = -1;   // on phones a second tap closes the module
+    if (!w && !o.keep && i === P.on) i = -1;
     var first = P.on < 0; P.on = i;
     P.mods.forEach(function (li, k) {
       var on = k === i, b = li.querySelector('.pgm-b');
@@ -369,7 +347,6 @@
         e.preventDefault(); btns[to].focus();
       });
     });
-    // the counts tick up the first time they are seen; the stages' line draws whenever the programme comes into view
     new IntersectionObserver(function (es) { if (es[es.length - 1].isIntersecting && !P.counted) count(P, null); }, { threshold: .6 }).observe(P.el.querySelector('.pg-counts'));
     if (P.stages) new IntersectionObserver(function (es) { if (es[es.length - 1].isIntersecting) P.stages.classList.add('is-in'); }, { threshold: .5 }).observe(P.stages);
     if (!calm) P.nums.forEach(function (el) { el.textContent = '0'; });

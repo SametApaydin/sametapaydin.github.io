@@ -1,6 +1,3 @@
-/* The Panolar tab: one field of dots, pinned, that rearranges itself into each dashboard's figure as the page scrolls.
-   The dots are the same throughout; only their places change (real values from figures.json, via panoMinis.js).
-   Without JavaScript, under reduced motion or on very short screens the page stays a plain list with static charts. */
 (function () {
   'use strict';
   var root = document.querySelector('[data-ps]'), dataEl = document.getElementById('pano-data');
@@ -30,9 +27,7 @@
     col.red = hex(s.getPropertyValue('--s4-red') || '#e31a31'); col.rule = s.getPropertyValue('--rule2').trim(); col.bg = s.getPropertyValue('--bg').trim();
     var dark = col.ink[0] > 128; col.gA = dark ? .46 : .36; col.rA = dark ? .95 : .72; col.kA = dark ? .92 : .82;
   }
-  // each scene: dots [x, y, red?, size], plus its rules and words
   function pct(v) { return D.lang === 'tr' ? '%' + fmt(v) : fmt(v) + '%'; }
-  // who carries Türkiye's import risk: 1995 grows to the left, 2024 to the right; one dot is one per cent
   function story() {
     var d = [], tx = [], R = D.shares, cw = narrow ? 56 : 104, s = narrow ? 4.2 : 8, g = narrow ? 5.2 : 11, top = 8, rh = Math.min(narrow ? 44 : 62, (H - top) / R.length), y0 = top + (H - top - rh * R.length) / 2, mid = W / 2, left = mid - cw / 2, right = mid + cw / 2;
     tx.push([left, y0 - 4, D.years[0], 'end', 1], [right, y0 - 4, D.years[D.years.length - 1], 'start', 1]);
@@ -67,7 +62,6 @@
     tx.push([0, base - g - 8, money(whole(v[0]), 'mn')], [W, 14, money(whole(v[n - 1]), 'mn'), 'end'], [0, H - 5, D.armsYears[0]], [W, H - 5, D.armsYears[n - 1], 'end']);
     return { d: d, tx: tx, ln: ln };
   }
-  // trade: the dots become a globe, Türkiye in red, the five partners darkened by value and tied to it by arcs
   function partners() {
     var d = [], tx = [], ln = [], listH = narrow ? 92 : 0, R = Math.min(W / 2 - 2, (H - listH) / 2 - 2), cx = W / 2, cy = (H - listH) / 2, rd = Math.PI / 180, s = Math.max(1.8, R / 68);
     function vec(p) { var l = p[0] * rd, q = p[1] * rd; return [Math.cos(q) * Math.cos(l), Math.cos(q) * Math.sin(l), Math.sin(q)]; }
@@ -106,7 +100,6 @@
     cv.width = Math.round(r.width * pr); cv.height = Math.round(r.height * pr);
     cv.style.width = r.width + 'px'; cv.style.height = r.height + 'px';
     x.setTransform(pr, 0, 0, pr, 0, 0);
-    // the stage: the free space between the words above and the words below, in the tallest scene
     var a = 0, b = r.height;
     items.forEach(function (li) {
       var h = li.querySelector('.pe-line').getBoundingClientRect(), c = li.querySelector('figcaption').getBoundingClientRect();
@@ -129,7 +122,7 @@
     sc.tx.forEach(function (t) {
       x.font = (t[4] ? '500 ' : '400 ') + (narrow ? '12px ' : '13px ') + getComputedStyle(page).fontFamily;
       x.textAlign = t[3] || 'start';
-      if (t[5]) { x.strokeStyle = col.bg; x.lineWidth = 4; x.lineJoin = 'round'; x.strokeText(t[2], ox + t[0], oy + t[1]); }  // a halo keeps labels clear of the dots
+      if (t[5]) { x.strokeStyle = col.bg; x.lineWidth = 4; x.lineJoin = 'round'; x.strokeText(t[2], ox + t[0], oy + t[1]); }
       x.fillStyle = t[4] ? col.inkT : col.ink2; x.fillText(t[2], ox + t[0], oy + t[1]);
     });
     x.globalAlpha = 1;
@@ -150,7 +143,7 @@
       if (I < 1) { var ii = ease(clamp(intro * 1.5 - .5 * (i / N), 0, 1)); X = W / 2 + jit[i][0] * W * .55 + (X - W / 2 - jit[i][0] * W * .55) * ii; Y = H / 2 + jit[i][1] * H * .6 + (Y - H / 2 - jit[i][1] * H * .6) * ii; op *= ii; }
       var ga = col.gA + (col.rA - col.gA) * red;
       var dk = (pa[4] ? 1 : 0) * (1 - ti) + (pb[4] ? 1 : 0) * ti; ga += (col.kA - ga) * dk;
-      ga *= (pa[5] || 1) * (1 - ti) + (pb[5] || 1) * ti;  // the globe's depth
+      ga *= (pa[5] || 1) * (1 - ti) + (pb[5] || 1) * ti;
       x.fillStyle = 'rgba(' + Math.round(col.ink[0] + (col.red[0] - col.ink[0]) * red) + ',' + Math.round(col.ink[1] + (col.red[1] - col.ink[1]) * red) + ',' + Math.round(col.ink[2] + (col.red[2] - col.ink[2]) * red) + ',' + (ga * op).toFixed(3) + ')';
       x.fillRect(ox + X, oy + Y, s, s);
     }
@@ -189,9 +182,7 @@
     var r = root.getBoundingClientRect(), span = r.height - stick.getBoundingClientRect().height, y = scrollY + r.top - headerH + span * k / (items.length - 1);
     scrollTo({ top: y, behavior: smooth ? 'smooth' : 'auto' });
   }
-  // the list above the stage goes to that scene
   links.forEach(function (a, k) { a.addEventListener('click', function (e) { e.preventDefault(); goScene(k, true); }); });
-  // a keyboard visitor reaching a link in another scene: scroll there
   root.addEventListener('focusin', function (e) { var k = items.indexOf(e.target.closest('.pe')); if (k >= 0) goScene(k, false); });
   layout();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);

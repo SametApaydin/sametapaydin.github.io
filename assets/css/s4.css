@@ -1,5 +1,3 @@
-/* The home page (first built as sample S4) and the dashboards list: the globe as the first screen. Instrument Sans only; pure white ground, near-black ink; IPC blue for links and
-   focus only; the IPC red for Türkiye and the active stop only. No boxes, no shadows, no serif. */
 :root{
   --bg:#ffffff; --surface:#ffffff; --ink:#0b0b0b; --ink2:#4f4e4b;
   --brand:#00438d; --focus:#00438d;
@@ -19,14 +17,12 @@
   --brand:#7fb0ee; --focus:#7fb0ee; --s4-redA:.9; --s4-dotA:.08; --s4-dotB:.36;
 }
 
-/* one family: Instrument Sans, also in the shell's consent panel. Type scale: page title 2.5rem, section 1.5rem, sub 1.125rem, text 1rem, small .875rem; tight tracking as sizes grow */
 body.mra{font-size:1rem;line-height:1.55}
 main p{text-wrap:pretty}
 main h1,main h2,main h3,.consent h2{font-family:var(--body)}
 main .num,.s4-fig{font-variant-numeric:tabular-nums lining-nums}
 .s4-wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gutter)}
 
-/* ---------- the first screen ---------- */
 .s4-hero{position:relative;min-height:var(--s4-hh);overflow:hidden}
 .s4-ground{position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none}
 .s4-cv,.s4-still{display:block;width:100%;height:100%}
@@ -40,24 +36,20 @@ main .num,.s4-fig{font-variant-numeric:tabular-nums lining-nums}
 
 .s4-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s4-gap);min-height:var(--s4-hh)}
 .s4-col{grid-column:1/6;position:relative;z-index:1;padding:clamp(2rem,6vh,3.75rem) 0 clamp(2rem,6vh,3.5rem)}
-/* the text flows around the globe: left edge straight, right edge follows the arc set in s4.js. The column keeps its width (the globe's camera reads it); only the text inside runs wider */
 .s4-flow{width:calc(100% + 11rem)}
 .s4-arc{display:none}
 .s4-js .s4-arc{display:block;float:right;width:100%;shape-margin:1.5rem}
 .s4-js .s4-col{padding-bottom:1rem}
-.s4-js .s4-flow .s4-h1,.s4-js .s4-flow .s4-defs p{max-width:none;text-wrap:wrap;text-align:justify;text-align-last:left;hyphens:auto}  /* every line runs to the curve, so the edge reads as the globe's outline */
+.s4-js .s4-flow .s4-h1,.s4-js .s4-flow .s4-defs p{max-width:none;text-wrap:wrap;text-align:justify;text-align-last:left;hyphens:auto}
 .s4-h1{font-size:clamp(1.5rem,1.05rem + 1vw,1.75rem);font-weight:500;line-height:1.18;letter-spacing:-.024em;margin:0;max-width:24em;text-wrap:pretty}
 
-/* what the terms mean, in the text column */
 .s4-defs{margin-top:clamp(1.25rem,3.5vh,2.5rem)}
 .s4-defs h2{font-size:1.0625rem;font-weight:600;line-height:1.25;letter-spacing:-.012em;margin:0 0 .3rem}
 .s4-defs p{font-size:.9375rem;line-height:1.55;color:var(--ink2);margin:0 0 clamp(1rem,2.4vh,1.5rem);max-width:33em}
 .s4-defs p:last-child{margin-bottom:0}
 
-/* the stop's facts: small, in the map's bottom right corner, with the globe showing through a soft see-through ground */
 .s4-panel{position:absolute;z-index:1;right:1.25rem;top:calc(var(--s4-hh) - clamp(1.25rem,3vh,2rem));transform:translateY(-100%);width:14.75rem;text-align:right;background:color-mix(in srgb,var(--bg) 62%,transparent);box-shadow:0 0 18px 14px color-mix(in srgb,var(--bg) 62%,transparent)}
 
-/* the captions: one at a time with JavaScript, a plain list without */
 .s4-caps{list-style:none;margin:0;padding:0}
 .s4-cap+.s4-cap{margin-top:3rem}
 .s4-js .s4-caps{display:grid}
@@ -75,7 +67,6 @@ main .num,.s4-fig{font-variant-numeric:tabular-nums lining-nums}
 .s4-pause i{box-sizing:border-box;width:.56rem;height:.65rem;border-inline:.17rem solid currentColor}
 .s4-pause.is-paused i{border:0;background:currentColor;clip-path:polygon(0 0,100% 50%,0 100%)}
 
-/* ---------- the dashboards tab: centred; with motion, one pinned field of dots (panolar.js); without, a plain list ---------- */
 .s4-lead{margin:0 0 1.8rem;font-size:1.0625rem}
 .pano{text-align:center}
 .pano-h{font-size:clamp(1.75rem,4.8vh,2.5rem);font-weight:500;line-height:1.05;letter-spacing:-.032em;margin:0;padding:clamp(1rem,2.6vh,1.75rem) var(--gutter) 0}
@@ -111,7 +102,6 @@ html:not(:has(.ps-on)) .mra .pi a[aria-current]{color:var(--ink2)}
 .s4-method{margin:clamp(2rem,5vh,3rem) 0 0;font-size:1rem}
 .s4-method a{font-weight:500}
 
-/* with motion: the header stays, the words sit above and below a pinned stage, the dots do the rest */
 .ps-on .ps{height:calc(100svh + 270svh)}
 .ps-on .ps-stick{position:sticky;top:var(--hh,60px);height:calc(100svh - var(--hh,60px));display:flex;flex-direction:column;overflow:hidden}
 .ps-on .ps-cv{position:absolute;left:0;top:0;pointer-events:none}
@@ -120,7 +110,6 @@ html:not(:has(.ps-on)) .mra .pi a[aria-current]{color:var(--ink2)}
 .ps-on .pl{position:relative;flex:1 1 auto;display:grid;width:100%;max-width:none;min-height:0}
 .ps-on .pe{grid-area:1/1;margin:0;padding:clamp(.8rem,2vh,1.4rem) 0 clamp(3rem,6.5vh,3.6rem);display:flex;flex-direction:column;min-height:0;opacity:0;pointer-events:none;transition:opacity calc(var(--t)*.35) var(--ease)}
 .ps-on .pe.is-on{opacity:1;pointer-events:auto}
-/* no fade until the first scene has settled, so the four scenes never show at once; a new scene waits for the old one to go */
 .ps-on:not(.ps-ready) .pe{transition:none}
 .ps-ready .pe.is-on{transition-delay:calc(var(--t)*.2)}
 html.ps-early .pe:not(.is-on){visibility:hidden}
@@ -135,7 +124,6 @@ html.ps-early .pe:not(.is-on){visibility:hidden}
 
 .mra .form{gap:1.1rem}
 main:has(.s4-hero)+.ft{margin-top:0;padding-top:1.5rem}
-/* the space for the introductory video, below the first screen; the frame never grows taller than the screen */
 .s4-video{padding-top:clamp(2.5rem,6vh,4rem);padding-bottom:clamp(2.5rem,6vh,4rem)}
 .s4-video-frame{display:flex;align-items:center;justify-content:center;width:min(100%,calc((100svh - 8rem)*16/9));aspect-ratio:16/9;margin:0 auto;border-radius:var(--r);background:var(--tint)}
 .s4-video-frame h2{margin:0;font-size:1.5rem;font-weight:500;line-height:1.15;letter-spacing:-.024em}
@@ -150,7 +138,6 @@ main:has(.s4-hero)+.ft{margin-top:0;padding-top:1.5rem}
 .mra .form .msg{border:0;background:none;padding:0;border-radius:0;color:var(--ink);font-weight:500}
 .mra .form .note{color:var(--ink2)}
 
-/* ---------- inner pages: heading on the left, text on the right ---------- */
 .art{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s4-gap);align-items:start;padding-top:clamp(2.5rem,6vh,4rem)}
 .art-h{grid-column:1/6;position:sticky;top:clamp(1.5rem,4vh,2.5rem)}
 .art-b{grid-column:6/13;min-width:0}
@@ -172,7 +159,6 @@ main:has(.s4-hero)+.ft{margin-top:0;padding-top:1.5rem}
 .art-b .people span{color:var(--ink2)}
 .art-b address{margin-bottom:.5rem}
 
-/* ---------- tablet and phone: the globe above the caption ---------- */
 @media (max-width:1099px){
   :root{--s4-hh:auto}
   .s4-hero{display:flex;flex-direction:column;min-height:0;padding-bottom:2.5rem}
@@ -185,7 +171,6 @@ main:has(.s4-hero)+.ft{margin-top:0;padding-top:1.5rem}
   .s4-caps{order:4}
   .mra .s4-pause{order:3;align-self:flex-end;margin:0 var(--gutter) .75rem}
   .s4-defs{order:7;margin-top:2.25rem}
-  /* below the globe the facts have their own space, so they keep a readable size */
   .s4-panel{text-align:left}
   .s4-ev{font-size:1.125rem}
   .s4-date,.s4-what{font-size:.875rem}
@@ -204,9 +189,7 @@ main:has(.s4-hero)+.ft{margin-top:0;padding-top:1.5rem}
 html:not(.s4-js) .s4-panel{position:relative;right:auto;top:auto;transform:none;grid-column:8/13;background:var(--bg);box-shadow:none;width:auto;text-align:left;padding:1.5rem;align-self:start;margin:clamp(2rem,6vh,3.75rem) 0 0}
 @media (max-width:1099px){html:not(.s4-js) .s4-panel{padding:0;margin:0;background:none}}
 html:not(.s4-js) .s4-cv{display:none}
-/* the shell's slim header lays its links out as a row (its nav has no display:flex of its own) */
 
-/* tables in article pages (the cookie notice): the table standard's hairlines; on phones each record stacks, with its label */
 .art-b table{width:100%;border-collapse:collapse;margin:1.25rem 0 1.5rem;font-size:.875rem;line-height:1.45}
 .art-b th{text-align:left;font-weight:500;color:var(--ink2);padding:.4rem .75rem .4rem 0;border-bottom:1px solid var(--rule2)}
 .art-b td{padding:.55rem .75rem .55rem 0;border-bottom:1px solid var(--rule);vertical-align:top;overflow-wrap:anywhere}
@@ -229,10 +212,6 @@ html:not(.s4-js) .s4-cv{display:none}
 
 .s4-404{padding-top:clamp(2.5rem,8vh,5rem);padding-bottom:clamp(2.5rem,8vh,5rem)}
 
-/* team (Biz kimiz / Who we are): IPC's Kişiler cards, five in one row across the full page width (the page's <!-- team --> marker; article.njk).
-   Grey portrait, name and role on an IPC-navy fade, e-mail below; each card opens the person's IPC profile. Photos are cropped so every head
-   starts and ends on the same lines; the caption hangs from a fixed line (not the bottom), so every name starts on one line whatever the title */
-/* with a full-width row the page reads as one column: title, lead, text, then the row, all on the same left edge */
 .art:has(.art-wide){display:block}
 .art:has(.art-wide) .art-h{position:static;margin-bottom:1.5rem}
 .art:has(.art-wide) .art-lead{max-width:none;margin-bottom:0}

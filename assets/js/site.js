@@ -1,15 +1,12 @@
-/* Shell behaviour: theme, menu, bar hide-on-scroll, consent panel, prototype forms. No third-party code. */
 (function () {
   'use strict';
   var d = document, root = d.documentElement;
   function ls(k, v) { try { return v === undefined ? localStorage.getItem(k) : localStorage.setItem(k, v); } catch (e) { return null; } }
 
-  /* theme: the shared key of the dashboards (trr-theme) */
-  function applyTheme(t) { root.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light'); } // light unless the reader chose dark
+  function applyTheme(t) { root.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light'); }
   applyTheme(ls('trr-theme'));
   d.addEventListener('click', function (e) {
     var b = e.target.closest('[data-theme-toggle]'); if (!b) return;
-    // on a dashboard its own button does the switch, so its charts redraw
     var own = d.getElementById('themeToggle') || d.getElementById('theme');
     if (own) { own.click(); return; }
     var cur = root.getAttribute('data-theme') || 'light';
@@ -18,12 +15,10 @@
     d.querySelectorAll('[data-theme-toggle]').forEach(function (x) { x.setAttribute('aria-label', x.getAttribute(next === 'dark' ? 'data-l-light' : 'data-l-dark')); });
   });
 
-  /* language word: write the dashboards' key on click, then follow the link */
   d.addEventListener('click', function (e) {
     var a = e.target.closest('[data-lang]'); if (a) ls('trr-lang', a.getAttribute('data-lang'));
   });
 
-  /* header menu (phones) and bar menu (dashboard pages) */
   d.addEventListener('click', function (e) {
     var b = e.target.closest('[data-menu]'); if (!b) return;
     var id = b.getAttribute('aria-controls'), box = id && d.getElementById(id), hd = b.closest('.hd');
@@ -32,28 +27,24 @@
     if (hd) hd.classList.toggle('open', open);
     if (box) box.classList.toggle('open', open);
   });
-  /* the dashboard bar's panel closes with Escape, focus back on its button */
   d.addEventListener('keydown', function (e) {
     var more = d.getElementById('sb-more');
     if (e.key !== 'Escape' || !more || !more.classList.contains('open')) return;
     more.classList.remove('open');
     var b = d.querySelector('.sb [data-menu]'); b.setAttribute('aria-expanded', 'false'); b.focus();
   });
-  /* an English dashboard written in Turkish says so under the bar, at every width, until closed or scrolled past */
   var note = d.querySelector('[data-note]');
   if (note) {
     note.querySelector('[data-note-close]').addEventListener('click', function () { note.hidden = true; });
     if (!note.closest('.sb-row')) addEventListener('scroll', function () { if (scrollY > 200) note.hidden = true; }, { passive: true });
   }
-  /* the dashboard bar's panel closes on a click elsewhere */
   d.addEventListener('click', function (e) {
     var more = d.getElementById('sb-more');
     if (!more || !more.classList.contains('open') || e.target.closest('.sb-more,[data-menu]')) return;
     more.classList.remove('open');
     d.querySelector('.sb [data-menu]').setAttribute('aria-expanded', 'false');
-  }, true);  // capture: the maps stop clicks from bubbling
+  }, true);
 
-  /* site header: a soft pill rests on the current page and follows the pointer; a hairline appears once the page has scrolled */
   var hd = d.querySelector('[data-hd]');
   if (hd) {
     var seen = function () { hd.classList.toggle('scrolled', scrollY > 4); };
@@ -77,13 +68,11 @@
     if (d.fonts && d.fonts.ready) d.fonts.ready.then(rest);
   }
 
-  /* the slim bar hides on scroll down, returns on scroll up (dashboard scroll pages only) */
   var bar = d.querySelector('[data-hide]'), last = 0;
   if (bar) addEventListener('scroll', function () {
     var y = scrollY; bar.classList.toggle('hide', y > last && y > 80); last = y;
   }, { passive: true });
 
-  /* consent panel: the decision is written on a click and kept 365 days */
   var panel = d.getElementById('consent');
   if (panel) {
     var KEY = 'mra-consent';
@@ -103,7 +92,6 @@
     d.addEventListener('click', function (e) { if (e.target.closest('[data-consent-open]')) { var s = stored(); if (s) panel.querySelector('[name=analytics]').checked = !!s.analytics; show(); panel.classList.add('prefs-open'); } });
   }
 
-  /* prototype forms: validate the consent box, show the message, store nothing */
   d.querySelectorAll('form[data-proto]').forEach(function (f) {
     f.addEventListener('submit', function (e) {
       e.preventDefault();

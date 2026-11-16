@@ -1,9 +1,6 @@
-/* The training programmes page. Loaded after s4.css, whose ground, ink and type it keeps: Instrument Sans only, white ground,
-   no boxes. Motion lives in prog.js; without JavaScript the page is two plain sections with every module's text in view. */
 .pg{padding-top:clamp(2.5rem,6vh,4rem)}
 .pg h1,.pg h2,.pg h3,.pg h4{font-family:var(--body)}
 
-/* ---------- first screen: the text on the left, noise and signal on the right ---------- */
 .pg-hero{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s4-gap);align-items:stretch}
 .pg-hero-t{grid-column:1/7;min-width:0}
 .pg-hero h1{font-size:clamp(2rem,1.5rem + 1.4vw,2.75rem);font-weight:500;line-height:1.05;letter-spacing:-.032em;margin:0 0 1.1rem}
@@ -15,7 +12,6 @@
 html:not(.pg-js) .pg-hero-f{display:none}
 html:not(.pg-js) .pg-hero-t{grid-column:1/10}
 
-/* ---------- the two programmes: a word and a pair of tabs ---------- */
 .pg-pick{display:flex;flex-wrap:wrap;align-items:center;gap:.7rem 1.25rem;margin-top:clamp(3rem,8vh,5rem)}
 html:not(.pg-js) .pg-pick{display:none}
 .pg-pick h2{font-size:1rem;font-weight:500;line-height:1.3;letter-spacing:-.008em;margin:0}
@@ -26,7 +22,6 @@ html:not(.pg-js) .pg-pick{display:none}
 .mra .pg-tabs button:focus-visible{outline:2px solid var(--ink);outline-offset:1px;border-radius:999px}
 .pg-tabs-pill{position:absolute;left:0;top:.25rem;bottom:.25rem;width:0;border-radius:999px;background:var(--bg);box-shadow:0 1px 2px rgba(11,11,11,.12);opacity:0;transition:transform calc(var(--t)*.32) var(--ease),width calc(var(--t)*.32) var(--ease)}
 
-/* ---------- one programme ---------- */
 .pg-track{padding-top:clamp(1.75rem,4vh,2.5rem);scroll-margin-top:5rem}
 .pg-js .pg-track:not(.is-on){display:none}
 html:not(.pg-js) .pg-track{padding-top:clamp(3rem,8vh,5rem)}
@@ -44,7 +39,6 @@ html:not(.pg-js) .pg-track{padding-top:clamp(3rem,8vh,5rem)}
 .pg-facts dt{color:var(--ink2)}
 .pg-facts dd{margin:0;font-weight:500}
 
-/* the three stages (institutions): a line that draws itself, a mark at the start of each stage */
 .pg-stages{position:relative;list-style:none;margin:clamp(2.25rem,5vh,3.25rem) 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:var(--s4-gap)}
 .pg-stages::before,.pg-stages::after{content:"";position:absolute;left:0;right:0;top:4px;height:1px;background:var(--rule2)}
 .pg-stages::after{background:var(--ink);transform-origin:0 50%}
@@ -53,7 +47,6 @@ html:not(.pg-js) .pg-track{padding-top:clamp(3rem,8vh,5rem)}
 .pg-stage-k{display:block;font-size:.875rem;line-height:1.3;color:var(--ink2);margin:0 0 .25rem}
 .pg-stage-t{display:block;font-size:1.0625rem;font-weight:500;line-height:1.3;letter-spacing:-.012em;max-width:19em;padding-right:1rem}
 
-/* ---------- the modules: the list on the left, its figure and text on the right ---------- */
 .pg-mods{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--s4-gap);align-items:start;margin-top:clamp(2.75rem,7vh,4.5rem)}
 .pg-mods-l{grid-column:1/7;min-width:0}
 .pg-mods h3{font-size:1.5rem;font-weight:500;line-height:1.15;letter-spacing:-.024em;margin:0 0 .35rem}
@@ -80,7 +73,6 @@ html:not(.pg-js) .pg-mods-l{grid-column:1/10}
 .pg-det .pgm-d{padding:0}
 .pg-det .pgm-intro{font-size:1.0625rem;margin-bottom:1rem}
 
-/* with JavaScript the rows answer the hand */
 .pg-js .pgm-b{cursor:pointer;color:var(--ink2);transition:color calc(var(--t)*.2) var(--ease)}
 .pg-js .pgm.is-on .pgm-b,.pg-js .pgm-b:hover{color:var(--ink)}
 .mra .pgm-b:focus-visible{outline:2px solid var(--ink);outline-offset:-2px;border-radius:12px}
@@ -90,13 +82,11 @@ html:not(.pg-js) .pg-mods-l{grid-column:1/10}
   .pg-det{min-height:9.5rem}
 }
 
-/* ---------- application ---------- */
 .pg-apply{margin-top:clamp(3rem,8vh,5rem)}
 .pg-apply h2{font-size:1.5rem;font-weight:500;line-height:1.15;letter-spacing:-.024em;margin:0 0 .6rem}
 .pg-apply p{margin:0 0 .9rem;max-width:36em}
 .pg-apply p:last-child{margin:1.4rem 0 0}
 
-/* ---------- motion that CSS carries: the stages' line, the panel's arrival ---------- */
 @media (prefers-reduced-motion:no-preference){
   .pg-js .pg-stages::after{transform:scaleX(0);transition:transform calc(var(--t)*1.1) var(--ease)}
   .pg-js .pg-stages li::before{transform:scale(0);transition:transform calc(var(--t)*.3) var(--ease)}
@@ -110,7 +100,6 @@ html:not(.pg-js) .pg-mods-l{grid-column:1/10}
 }
 @keyframes pg-in{from{opacity:0}to{opacity:1}}
 
-/* ---------- tablet and phone: one column; the modules open in place ---------- */
 @media (max-width:899px){
   .pg-hero,.pg-intro,.pg-mods{display:block}
   .pg-hero-f{min-height:0;height:11rem;margin-top:1.75rem}

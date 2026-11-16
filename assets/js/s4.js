@@ -1,10 +1,3 @@
-/* The home page's first screen: the dot globe (first built as sample S4). Türkiye's land dots in transparent red; the globe turns slowly (one turn would take about 90 s),
-   eases onto each shock, sends dotted ripples out from it and a dotted arc with red pulses to Türkiye, holds 6 s and
-   turns on.
-   Same approach as the defence page's globe: land as dots on an orthographic projection, shaded by depth, own maths,
-   no library at run time (the dots and Türkiye's outline come from globe.json, inlined by partials/home.njk).
-   It runs by itself; one button pauses and resumes it. Durations scale with the --t token, so prefers-reduced-motion turns every move
-   into a cut. All captions stay in the page for screen readers; only the current one is visible. */
 (function () {
   'use strict';
   var hero = document.querySelector('[data-s4]');
@@ -16,7 +9,6 @@
   var col = hero.querySelector('.s4-col'), panel = hero.querySelector('.s4-panel'), flow = hero.querySelector('.s4-flow'), arcEl = hero.querySelector('.s4-arc'), arc = null;
   var caps = [].slice.call(hero.querySelectorAll('.s4-cap'));
 
-  /* ---------- maths ---------- */
   var rad = Math.PI / 180;
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
   function vec(lon, lat) { var l = lon * rad, p = lat * rad; return [Math.cos(p) * Math.cos(l), Math.cos(p) * Math.sin(l), Math.sin(p)]; }
@@ -32,12 +24,10 @@
     var s = Math.sin(o), k1 = Math.sin((1 - t) * o) / s, k2 = Math.sin(t * o) / s;
     return [a[0] * k1 + b[0] * k2, a[1] * k1 + b[1] * k2, a[2] * k1 + b[2] * k2];
   }
-  function easeIO(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }  // the --ease token's curve
+  function easeIO(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
   function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
   function sstep(a, b, v) { var t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); }
 
-  /* ---------- data ---------- */
-  // is (lon, lat) inside Türkiye's outline? (ray casting over the outline's rings)
   function inTR(lon, lat) {
     if (lon < 25 || lon > 45 || lat < 35 || lat > 43) return false;
     return G.tr.some(function (ring) {
@@ -61,17 +51,15 @@
   var TRC = vec(G.trc[0], G.trc[1]);
   var STOPS = caps.map(function (li) { return vec(+li.getAttribute('data-lon'), +li.getAttribute('data-lat')); });
 
-  /* ---------- time: every duration is a multiple of --t (1 s, or 1 ms under reduced motion) ---------- */
   var reduce = matchMedia('(prefers-reduced-motion: reduce)');
   function T() {
     var v = getComputedStyle(root).getPropertyValue('--t').trim();
     var n = parseFloat(v) || 1;
     return /ms$/.test(v) ? n / 1000 : n;
   }
-  var HOLD = 6000;           // reading time at each stop (not motion, so not scaled)
-  var SPEED = 12;            // degrees per second while turning: one turn in 30 s
+  var HOLD = 6000;
+  var SPEED = 12;
 
-  /* ---------- layout ---------- */
   var W = 0, H = 0, cx = 0, cy = 0, R = 0, xtPx = 0, narrow = false, cams = [], zooms = [], Z = 1, clear = null;
   var colour = {};
   function readColours() {
@@ -86,7 +74,6 @@
     colour.A = parseFloat(s.getPropertyValue('--s4-dotA')) || .07;
     colour.B = parseFloat(s.getPropertyValue('--s4-dotB')) || .3;
   }
-  // the camera that puts point p at (a, b) on the disk (units of R, b upwards)
   function solve(p, a, b) {
     var ll = lonlat(p), best = 1e9, bl = 0, bp = 0;
     function err(L, P) {
@@ -98,10 +85,7 @@
     for (L = L0 - 2; L <= L0 + 2; L += .2) for (P = P0 - 2; P <= P0 + 2; P += .2) { e = err(L, P); if (e < best) { best = e; bl = L; bp = P; } }
     return vec(bl, bp);
   }
-  // Each stop's camera and scale. The default puts the midpoint of the shock and Türkiye at the focus. If any part of the
-  // line then falls under the stop's facts, into the fade by the text column, off the frame or too near the limb, a far
-  // stop (China, the US) searches for the largest scale and the camera that keep the whole line in the clear.
-  var TREND = [vec(26, 39.5), vec(44.8, 38.5)];  // Türkiye's west and east ends: it must sit clear of both fades
+  var TREND = [vec(26, 39.5), vec(44.8, 38.5)];
   function fits(cam, z, pts) {
     var B = basis(cam), Rz = R * z, xl = cx + xtPx + .3 * Rz;
     function ok(v, pad) {
@@ -130,8 +114,6 @@
     }
     return { cam: first, z: .5 };
   }
-  // Browsers have no Turkish hyphenation, and justified lines need it, so mark the syllable breaks: a break falls before the
-  // consonant that precedes a vowel. Names and the part after an apostrophe are left whole.
   function shyTr() {
     if (document.documentElement.lang !== 'tr') return;
     var V = 'aeıioöuüâîûAEIİOÖUÜ', KEEP = /^(Caldara|Iacoviello)$/;
@@ -150,8 +132,6 @@
     });
   }
   shyTr();
-  // one arc shared by the text and the globe's fade, so the words follow the curve of the land. The wrapped text can make
-  // the hero taller, and the hero's height sets the arc, so this settles on a height that fits the text it produces.
   function setArc() {
     if (narrow) { arc = null; arcEl.style.shapeOutside = ''; arcEl.style.height = ''; return; }
     var cs = getComputedStyle(col), pb = parseFloat(cs.paddingBottom), min = parseFloat(getComputedStyle(hero).minHeight) || 0;
@@ -179,9 +159,7 @@
     if (narrow) { cx = W / 2; cy = H / 2; R = Math.min(.56 * W, .6 * H); xtPx = -2 * R; clear = null; }
     else {
       cx = .63 * W; cy = .5 * H; R = Math.max(.68 * H, .4 * W);
-      // the land fades out before the text column: nothing on the globe sits under the text
       xtPx = col.getBoundingClientRect().right - r.left + 24 - cx;
-      // the stop's facts sit in the map's bottom right corner: the land shows through, but no line or Türkiye goes under them
       var lifted = panel.style.translate; panel.style.translate = '';
       var q = panel.getBoundingClientRect();
       panel.style.translate = lifted;
@@ -191,9 +169,7 @@
     cams = ps.map(function (p) { return p.cam; }); zooms = ps.map(function (p) { return p.z; });
   }
 
-  /* ---------- drawing ---------- */
   var BUCKETS = 10;
-  // the land is drawn once per camera position onto its own canvas; while the globe holds, only the shock's dots are redrawn
   var baseCv = document.createElement('canvas'), basex = baseCv.getContext('2d'), baseKey = null, baseTR = null;
   function fillDots(x, groups, rgb, top, s) {
     for (var k = 1; k < BUCKETS; k++) {
@@ -206,7 +182,6 @@
     var B = basis(cam), e = B.e, n = B.n, c = B.c;
     var s = Math.max(1.4, R / 250), fw = .3, maxA = colour.A + colour.B, Rz = R * Z, xt = xtPx / Rz;
     var x = cx2;
-    // dots, grouped by opacity so each group is one fill; Türkiye's are the same dots in red, shaded the same way
     function bucket(pts, top, base, slope) {
       var groups = [], k; for (k = 0; k < BUCKETS; k++) groups.push([]);
       for (var i = 0; i < pts.length; i += 3) {
@@ -236,22 +211,18 @@
     if (ovOut && ovOut.a > 0) overlay(ovOut.i, 1, 1, ovOut.a, P, s);
     var flash = ovIn ? overlay(ovIn.i, ovIn.ring, ovIn.arc, 1, P, s) : 0;
     fillDots(x, baseTR, colour.red, colour.redA, s);
-    if (flash > .01) fillDots(x, baseTR, colour.red, flash * .6, s);  // a pulse has reached Türkiye
+    if (flash > .01) fillDots(x, baseTR, colour.red, flash * .6, s);
   }
-  // a point on the arc from the shock to Türkiye, t from 0 to 1, raised off the surface: the longer the arc, the higher
   function lift(i, t) {
     var v = slerp(STOPS[i], TRC, t), th = Math.acos(clamp(dot(STOPS[i], TRC), -1, 1)), h = 1 + (.012 + .06 * th) * Math.sin(Math.PI * t);
     return [v[0] * h, v[1] * h, v[2] * h];
   }
-  // a circle of radius rd degrees on the sphere around point E
   function circlePt(E, Bq, rd, phi) {
     var r0 = rd * rad, c0 = Math.cos(r0), s0 = Math.sin(r0), cp = Math.cos(phi), sp = Math.sin(phi);
     return [E[0] * c0 + s0 * (Bq.e[0] * cp + Bq.n[0] * sp), E[1] * c0 + s0 * (Bq.e[1] * cp + Bq.n[1] * sp), E[2] * c0 + s0 * (Bq.e[2] * cp + Bq.n[2] * sp)];
   }
-  var RIPPLE = 3000, RMAX = 5;  // one ripple's life in ms and its reach in degrees
-  var ARC_MS = 2200, TRAVEL = 2000, GAP = 700;  // arc drawing in, one red dot's trip, and the wait between dots: all ms, within HOLD
-  // the shock in the globe's own language, in dots: ripples spread over the surface at the event, a dotted arc rises to
-  // Türkiye and three red dots travel along it. Under reduced motion the ripples and the arc stand still and nothing travels.
+  var RIPPLE = 3000, RMAX = 5;
+  var ARC_MS = 2200, TRAVEL = 2000, GAP = 700;
   function overlay(i, ring, arc, alpha, P, s) {
     var x = cx2, E = STOPS[i], Bq = basis(E), ink = 'rgba(' + colour.ink + ',', calm = reduce.matches, flash = 0, k, j;
     for (k = 0; k < 3; k++) {
@@ -274,19 +245,17 @@
       x.fill();
     }
     if (ring > 0) { x.fillStyle = ink + (alpha * easeOut(ring)).toFixed(3) + ')'; x.beginPath(); x.arc(c0[0], c0[1], 3, 0, Math.PI * 2); x.fill(); }
-    // once the arc is drawn, three red dots set off one after another; each takes TRAVEL to reach Türkiye and does not repeat
     if (!calm && arc >= 1 && alpha >= 1) {
       for (j = 0; j < 3; j++) {
         var u = (fx - ARC_MS - j * GAP) / TRAVEL; if (u < 0) continue;
         if (u >= 1) { flash = Math.max(flash, Math.exp(-(u - 1) * TRAVEL / 340)); continue; }
-        var qp = P(lift(i, (1 - Math.cos(Math.PI * u)) / 2)), sz = s * 1.4;  // starts and ends gently
+        var qp = P(lift(i, (1 - Math.cos(Math.PI * u)) / 2)), sz = s * 1.4;
         x.fillStyle = 'rgba(' + colour.red + ',' + (sstep(0, .1, u) * (1 - sstep(.92, 1, u)) * .6).toFixed(3) + ')';
         x.fillRect(qp[0] - sz / 2, qp[1] - sz / 2, sz, sz);
       }
     }
     return flash;
   }
-  // the no-JS still: the same frame as SVG (make_data.py asks for it once and saves it as src/samples/S4/still.svg)
   function svg(groups, trGroups, s, maxA, P, ovIn) {
     var f1 = function (v) { return Math.round(v * 10) / 10; }, sd = f1(s);
     var o = '<svg class="s4-still" viewBox="0 0 ' + Math.round(W) + ' ' + Math.round(H) + '" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">';
@@ -314,11 +283,9 @@
     return o + '</svg>';
   }
 
-  /* ---------- the cycle ---------- */
   var S = { cam: null, i: 0, mode: 'hold', move: null, holdLeft: HOLD };
   var ovIn = null, ovOut = null, raf = 0, last = 0, suspended = false, paused = false, dirty = true, fx = 0;
 
-  // a move: slow turn at SPEED, ending in a 1.4 s ease onto the stop; short moves are a single 1.4 s ease
   function makeMove(from, to) {
     var t = T(), theta = Math.acos(clamp(dot(from, to), -1, 1)) / rad;
     var v = SPEED / t, ta = .8 * t, td = 1.4 * t, D, prof;
@@ -380,12 +347,10 @@
   }
   function kick() { if (!raf && !suspended && !paused) { raf = requestAnimationFrame(tick); } }
 
-  // pause while off screen or in a background tab
   function setSuspended(v) { suspended = v; if (!v) { last = 0; dirty = true; kick(); } }
   if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { setSuspended(!es[0].isIntersecting); }).observe(hero);
   document.addEventListener('visibilitychange', function () { setSuspended(document.hidden); });
 
-  // theme and size
   function redraw() { readColours(); baseKey = null; dirty = true; if (!raf) frame(S.cam, ovIn, ovOut); }
   new MutationObserver(redraw).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redraw);
@@ -396,10 +361,8 @@
     dirty = true; frame(S.cam, ovIn, ovOut); kick();
   }
   addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(relayout, 120); });
-  // the corner clearing follows the panel's real size once the font has loaded
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
 
-  // the pause button (WCAG 2.2.2): holds the current stop until pressed again
   var pb = hero.querySelector('.s4-pause');
   if (pb) {
     pb.hidden = false;
@@ -411,7 +374,6 @@
     });
   }
 
-  // while the cookie panel is open on desktop, the facts and the button sit just above it
   var consent = document.getElementById('consent');
   function clearConsent() {
     panel.style.translate = '';
@@ -422,17 +384,14 @@
   if (consent) new MutationObserver(clearConsent).observe(consent, { attributes: true, attributeFilter: ['class'] });
   addEventListener('resize', clearConsent);
 
-  /* ---------- start ---------- */
   hero.classList.add('s4-live');
   readColours(); layout();
   setCaption(0);
   if (reduce.matches || T() < .01) {
-    // no rotation: the globe cuts from stop to stop, so every caption is still seen
     Z = zooms[0]; S.cam = cams[0]; arrive(); ovIn.t = 1; ovIn.ring = 1; ovIn.arc = 1;
     frame(S.cam, ovIn, null);
     kick();
   } else {
-    // a short turn in from the east onto the first stop
     var ll = lonlat(cams[0]);
     Z = zooms[0];
     S.cam = vec(ll[0] + 14, ll[1]);

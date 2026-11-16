@@ -1,7 +1,3 @@
-// Loader for the Tab 4 map (October 23, 2026): world geometry plus one source's data, never both (user rule):
-// data.js, BACI (Trade/data/build_map_data.py), or with ?src=tuik data_tuik.js, TÜİK (build_map_data_tuik.py,
-// October 24, 2026). Both set window.MAPDATA in the same layout. Same interface as map-samples/base.js,
-// so the page code is shared with the samples. Requires d3 7.9.0 and topojson-client 3.1.0.
 (function () {
   const GEO = '/assets/vendor/world-atlas-2.0.2-countries-50m.json';
   const V = '20261025e';
@@ -12,7 +8,6 @@
     document.head.appendChild(s);
   });
 
-  // one decimal under 100 mlr $, always ("12,0 mlr $" next to "23,2"), none from 100 mlr $ (October 24, 2026, review F15)
   function fmt(mn) {
     if (mn >= 1000) { const d = mn >= 100000 ? 0 : 1; return (mn / 1000).toLocaleString('tr-TR', { minimumFractionDigits: d, maximumFractionDigits: d }) + ' mlr $'; }
     if (mn >= 1) return Math.round(mn).toLocaleString('tr-TR') + ' mn $';
@@ -23,10 +18,7 @@
     const [topo] = await Promise.all([d3.json(GEO), window.MAPDATA ? null : script((SRC === 'tuik' ? 'data_tuik.js' : 'data.js') + '?v=' + V)]);
     const M = window.MAPDATA;
     let features = topojson.feature(topo, topo.objects.countries).features.filter(f => f.id !== '010');
-    // world-atlas gives Kosovo no code; TÜİK reports it apart (BACI folds it into Serbia), so its shape takes TÜİK's id
     features.forEach(f => { if (f.id == null && f.properties.name === 'Kosovo') f.id = 'XK'; });
-    // features that share a country code are one country: world-atlas codes Ashmore and Cartier Islands 036 like
-    // Australia, and the island used to overwrite the mainland (October 23, 2026). Merge them into one MultiPolygon.
     const seen = {};
     features = features.filter(f => {
       if (f.id == null) return true;
@@ -43,8 +35,7 @@
     });
     const data = {
       years: M.years, families: M.families, order: M.order, tot: M.tot, byId, source: M.source, src: SRC,
-      partial: M.partial || {},                // year -> months covered, for a year that is not complete (TÜİK 2026)
-      // product-group shares of one partner, flow and year
+      partial: M.partial || {},
       mixOf(id, d, yi) {
         const c = byId[id], t = c[d][yi], o = {};
         M.order.forEach((f, i) => { o[f] = t > 0 ? c.m[d][i][yi] / t : 0; });
